@@ -31,6 +31,8 @@ export default class MVideoBody extends React.Component {
 
         /* called when the video has loaded */
         onHeightChanged: PropTypes.func.isRequired,
+
+        scBubbleGroupTimestamp: PropTypes.object,
     };
 
     state = {

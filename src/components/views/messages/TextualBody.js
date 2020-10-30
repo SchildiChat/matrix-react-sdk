@@ -55,6 +55,8 @@ export default class TextualBody extends React.Component {
 
         /* the shape of the tile, used */
         tileShape: PropTypes.string,
+
+        scBubbleGroupTimestamp: PropTypes.object,
     };
 
     constructor(props) {
@@ -408,6 +410,12 @@ export default class TextualBody extends React.Component {
             stripReplyFallback: stripReply,
             ref: this._content,
         });
+
+        let bigContent = "";
+        if (body && body.props && body.props.className && body.props.className.includes("mx_EventTile_bigEmoji")) {
+            bigContent = " sc_EventTile_bigContent";
+        }
+
         if (this.props.replacingEventId) {
             body = [body, this._renderEditedMarker()];
         }
@@ -434,7 +442,7 @@ export default class TextualBody extends React.Component {
         switch (content.msgtype) {
             case "m.emote":
                 return (
-                    <span className="mx_MEmoteBody mx_EventTile_content">
+                    <span className={ "mx_MEmoteBody mx_EventTile_content" + bigContent }>
                         *&nbsp;
                         <span
                             className="mx_MEmoteBody_sender"
@@ -445,20 +453,23 @@ export default class TextualBody extends React.Component {
                         &nbsp;
                         { body }
                         { widgets }
+                        { this.props.scBubbleGroupTimestamp }
                     </span>
                 );
             case "m.notice":
                 return (
-                    <span className="mx_MNoticeBody mx_EventTile_content">
+                    <span className={ "mx_MNoticeBody mx_EventTile_content" + bigContent }>
                         { body }
                         { widgets }
+                        { this.props.scBubbleGroupTimestamp }
                     </span>
                 );
             default: // including "m.text"
                 return (
-                    <span className="mx_MTextBody mx_EventTile_content">
+                    <span className={ "mx_MTextBody mx_EventTile_content" + bigContent }>
                         { body }
                         { widgets }
+                        { this.props.scBubbleGroupTimestamp }
                     </span>
                 );
         }

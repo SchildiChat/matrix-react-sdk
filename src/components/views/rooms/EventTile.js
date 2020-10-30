@@ -695,6 +695,7 @@ export default class EventTile extends React.Component {
             mx_EventTile_unknown: !isBubbleMessage && this.state.verified === E2E_STATE.UNKNOWN,
             mx_EventTile_bad: isEncryptionFailure,
             mx_EventTile_emote: msgtype === 'm.emote',
+            sc_EventTile_bubbleContainer: scBubbleEnabled,
             sc_EventTile_bubbleTailLeftContainer: scBubbleEnabled && !sentByMe && !this.props.continuation,
         });
 
@@ -822,7 +823,7 @@ export default class EventTile extends React.Component {
             />;
         }
 
-        const linkedTimestamp = <a
+        const linkedTimestamp = <a className={scBubbleEnabled ? "sc_bubble_LinkedTimestamp" : ""}
                 href={permalink}
                 onClick={this.onPermalinkClicked}
                 aria-label={formatTime(new Date(this.props.mxEvent.getTs()), this.props.isTwelveHour)}
@@ -970,26 +971,26 @@ export default class EventTile extends React.Component {
                         <div className={classes} tabIndex={-1} aria-live={ariaLive} aria-atomic="true">
                             { ircTimestamp }
                             { ircPadlock }
-                            <div className="mx_EventTile_line">
-                                { groupTimestamp }
+                            <div className="mx_EventTile_line sc_EventTile_bubbleLine">
                                 { groupPadlock }
-                            <div className={bubbleAreaClasses}>
-                            <div className={bubbleClasses}>
-                                { sender }
-                                { thread }
-                                <EventTileType ref={this._tile}
-                                               mxEvent={this.props.mxEvent}
-                                               replacingEventId={this.props.replacingEventId}
-                                               editState={this.props.editState}
-                                               highlights={this.props.highlights}
-                                               highlightLink={this.props.highlightLink}
-                                               showUrlPreview={this.props.showUrlPreview}
-                                               onHeightChanged={this.props.onHeightChanged} />
-                            </div>
-                                { keyRequestInfo }
-                                { reactionsRow }
-                                { actionBar }
-                            </div>
+                                <div className={bubbleAreaClasses}>
+                                    <div className={bubbleClasses}>
+                                        { sender }
+                                        { thread }
+                                        <EventTileType ref={this._tile}
+                                                       mxEvent={this.props.mxEvent}
+                                                       replacingEventId={this.props.replacingEventId}
+                                                       editState={this.props.editState}
+                                                       highlights={this.props.highlights}
+                                                       highlightLink={this.props.highlightLink}
+                                                       showUrlPreview={this.props.showUrlPreview}
+                                                       onHeightChanged={this.props.onHeightChanged}
+                                                       scBubbleGroupTimestamp={groupTimestamp} />
+                                    </div>
+                                    { keyRequestInfo }
+                                    { reactionsRow }
+                                    { actionBar }
+                                </div>
                             </div>
                             {
                                 // The avatar goes after the event tile as it's absolutely positioned to be over the

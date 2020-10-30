@@ -38,6 +38,8 @@ export default class MImageBody extends React.Component {
 
         /* the maximum image height to use */
         maxImageHeight: PropTypes.number,
+
+        scBubbleGroupTimestamp: PropTypes.object,
     };
 
     static contextType = MatrixClientContext;

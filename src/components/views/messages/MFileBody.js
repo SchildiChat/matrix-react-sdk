@@ -126,6 +126,8 @@ export default class MFileBody extends React.Component {
         onHeightChanged: PropTypes.func,
         /* the shape of the tile, used */
         tileShape: PropTypes.string,
+
+        scBubbleGroupTimestamp: PropTypes.object,
     };
 
     constructor(props) {
@@ -253,6 +255,7 @@ export default class MFileBody extends React.Component {
                                 { _t("Decrypt %(text)s", { text: text }) }
                             </AccessibleButton>
                         </div>
+                        { this.props.scBubbleGroupTimestamp }
                     </span>
                 );
             }
@@ -293,6 +296,7 @@ export default class MFileBody extends React.Component {
                             ref={this._iframe}
                             sandbox="allow-scripts allow-downloads allow-downloads-without-user-activation" />
                     </div>
+                    { this.props.scBubbleGroupTimestamp }
                 </span>
             );
         } else if (contentUrl) {
@@ -354,6 +358,7 @@ export default class MFileBody extends React.Component {
                                 { content.info && content.info.size ? filesize(content.info.size) : "" }
                             </div>
                         </div>
+                        { this.props.scBubbleGroupTimestamp }
                     </span>
                 );
             } else {
@@ -365,6 +370,7 @@ export default class MFileBody extends React.Component {
                                 { _t("Download %(text)s", { text: text }) }
                             </a>
                         </div>
+                        { this.props.scBubbleGroupTimestamp }
                     </span>
                 );
             }
@@ -372,6 +378,7 @@ export default class MFileBody extends React.Component {
             const extra = text ? (': ' + text) : '';
             return <span className="mx_MFileBody">
                 { _t("Invalid file%(extra)s", { extra: extra }) }
+                { this.props.scBubbleGroupTimestamp }
             </span>;
         }
     }

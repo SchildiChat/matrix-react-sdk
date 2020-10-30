@@ -17,6 +17,8 @@
 'use strict';
 
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import MFileBody from './MFileBody';
 
 import {MatrixClientPeg} from '../../../MatrixClientPeg';
@@ -25,6 +27,10 @@ import { _t } from '../../../languageHandler';
 import InlineSpinner from '../elements/InlineSpinner';
 
 export default class MAudioBody extends React.Component {
+    static propTypes = {
+        scBubbleGroupTimestamp: PropTypes.object,
+    };
+
     constructor(props) {
         super(props);
         this.state = {

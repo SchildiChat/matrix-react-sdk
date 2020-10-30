@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-$left-gutter: 64px;
+$left-gutter: 56px;
 
 .mx_EventTile {
     max-width: 100%;
@@ -168,7 +168,7 @@ $left-gutter: 64px;
 }
 
 .mx_EventTile_selected > div > a > .mx_MessageTimestamp {
-    left: 3px;
+    left: -4px;
     width: auto;
 }
 
@@ -197,7 +197,7 @@ $left-gutter: 64px;
  */
 .mx_EventTile_selected > .mx_EventTile_line {
     border-left: $accent-color 4px solid;
-    padding-left: 60px;
+    padding-left: calc($left-gutter - 4px) !important;
     background-color: $event-selected-color;
 }
 
@@ -211,7 +211,7 @@ $left-gutter: 64px;
 }
 
 .mx_EventTile_selected.mx_EventTile_info .mx_EventTile_line {
-    padding-left: 78px;
+    padding-left: calc($left-gutter + 14px) !important;
 }
 
 .mx_EventTile:hover .mx_EventTile_line,
@@ -444,7 +444,7 @@ $left-gutter: 64px;
 .mx_EventTile:hover.mx_EventTile_verified .mx_EventTile_line,
 .mx_EventTile:hover.mx_EventTile_unverified .mx_EventTile_line,
 .mx_EventTile:hover.mx_EventTile_unknown .mx_EventTile_line {
-    padding-left: 60px;
+    padding-left: calc($left-gutter - 4px);
 }
 
 .mx_EventTile:hover.mx_EventTile_verified .mx_EventTile_line {
@@ -462,7 +462,7 @@ $left-gutter: 64px;
 .mx_EventTile:hover.mx_EventTile_verified.mx_EventTile_info .mx_EventTile_line,
 .mx_EventTile:hover.mx_EventTile_unverified.mx_EventTile_info .mx_EventTile_line,
 .mx_EventTile:hover.mx_EventTile_unknown.mx_EventTile_info .mx_EventTile_line {
-    padding-left: 78px;
+    padding-left: calc($left-gutter + 14px);
 }
 
 /* End to end encryption stuff */
@@ -474,7 +474,7 @@ $left-gutter: 64px;
 .mx_EventTile:hover.mx_EventTile_verified .mx_EventTile_line > a > .mx_MessageTimestamp,
 .mx_EventTile:hover.mx_EventTile_unverified .mx_EventTile_line > a > .mx_MessageTimestamp,
 .mx_EventTile:hover.mx_EventTile_unknown .mx_EventTile_line > a > .mx_MessageTimestamp {
-    left: 3px;
+    left: 5px;
     width: auto;
 }
 
@@ -629,6 +629,26 @@ $left-gutter: 64px;
     }
 }
 
+.sc_EventTile_bubbleContainer {
+    > .mx_EventTile_avatar {
+        top: 21px;
+    }
+}
+
+.mx_EventTile_e2eIcon {
+    display: none !important;
+}
+
+// .sc_EventTile_bubbleLine {
+//     .mx_EventTile_e2eIcon {
+//         left: 16px;
+
+//         .sc_EventTile_bubbleTailLeftContainer & {
+//             top: 35px;
+//         }
+//     }
+// }
+
 .sc_EventTile_bubbleArea {
     // Max-width 75% for both-side bubbles only
     max-width: 75%;
@@ -694,11 +714,11 @@ $left-gutter: 64px;
 .sc_EventTile_bubble_outgoing_tail::after {
     content: '';
     border: 16px solid transparent;
-    border-bottom-color: $message-bubble-outgoing;
-    border-top: 0;
+    border-top-color: $message-bubble-outgoing;
+    border-bottom: 0;
     position: absolute;
     right: -8px;
-    bottom: 0;
+    top: 0;
 }
 // Left aligned bubbles for outgoing messages as well
 /*
@@ -710,15 +730,3 @@ $left-gutter: 64px;
     background-color: $message-bubble-outgoing;
 }
 */
-
-.sc_EventTile_bubbleTailLeftContainer {
-    .mx_EventTile_e2eIcon, .mx_MessageTimestamp {
-        top: 30px;
-    }
-}
-// Undo sc_EventTile_bubbleTailLeftContainer offset
-.mx_ReplyThread {
-    .mx_EventTile_e2eIcon, .mx_MessageTimestamp {
-        top: 4px;
-    }
-}
