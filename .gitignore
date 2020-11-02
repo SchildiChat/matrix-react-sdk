@@ -11,5 +11,6 @@ package-lock.json
 
 /.idea
 /src/component-index.js
+/src/component-index.js.tmp
 
 .DS_Store
