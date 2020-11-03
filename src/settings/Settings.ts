@@ -247,7 +247,7 @@ export const SETTINGS: {[setting: string]: ISetting} = {
     "showRedactions": {
         supportedLevels: LEVELS_ROOM_SETTINGS_WITH_ROOM,
         displayName: _td('Show a placeholder for removed messages'),
-        default: true,
+        default: false,
         invertedSettingName: 'hideRedactions',
     },
     "showJoinLeaves": {
