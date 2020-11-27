@@ -628,6 +628,11 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         displayName: _td("Enable experimental, compact IRC style layout"),
         default: false,
     },
+    "useBubbleLayout": {
+        supportedLevels: LEVELS_ROOM_SETTINGS_WITH_ROOM,
+        displayName: _td("Enable layout with message bubbles"),
+        default: true,
+    },
     "Widgets.pinned": {
         supportedLevels: LEVELS_ROOM_OR_ACCOUNT,
         default: {},

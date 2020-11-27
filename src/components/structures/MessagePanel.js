@@ -138,6 +138,9 @@ export default class MessagePanel extends React.Component {
         // whether to use the irc layout
         useIRCLayout: PropTypes.bool,
 
+        // whether to use the message bubble layout
+        useBubbleLayout: PropTypes.bool,
+
         // whether or not to show flair at all
         enableFlair: PropTypes.bool,
     };
@@ -613,6 +616,7 @@ export default class MessagePanel extends React.Component {
                         getRelationsForEvent={this.props.getRelationsForEvent}
                         showReactions={this.props.showReactions}
                         useIRCLayout={this.props.useIRCLayout}
+                        useBubbleLayout={this.props.useBubbleLayout}
                         enableFlair={this.props.enableFlair}
                     />
                 </TileErrorBoundary>

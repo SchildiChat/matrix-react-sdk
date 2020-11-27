@@ -228,6 +228,9 @@ export default class EventTile extends React.Component {
         // whether to use the irc layout
         useIRCLayout: PropTypes.bool,
 
+        // whether to use the message bubble layout
+        useBubbleLayout: PropTypes.bool,
+
         // whether or not to show flair at all
         enableFlair: PropTypes.bool,
     };
@@ -686,7 +689,8 @@ export default class EventTile extends React.Component {
 
         const client = MatrixClientPeg.get();
         const me = client && client.getUserId();
-        const scBubbleEnabled = !isBubbleMessage && !isInfoMessage
+        const scBubbleEnabled = this.props.useBubbleLayout
+                && !isBubbleMessage && !isInfoMessage
                 && this.props.tileShape !== 'reply_preview' && this.props.tileShape !== 'reply'
                 && this.props.tileShape !== 'notif' && this.props.tileShape !== 'file_grid';
         const sentByMe = me === this.props.mxEvent.getSender();
@@ -948,6 +952,7 @@ export default class EventTile extends React.Component {
                     this.props.permalinkCreator,
                     this._replyThread,
                     this.props.useIRCLayout,
+                    this.props.useBubbleLayout,
                 );
 
                 var msgOption;

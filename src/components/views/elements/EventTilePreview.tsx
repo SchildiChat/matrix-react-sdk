@@ -36,6 +36,11 @@ interface IProps {
     useIRCLayout: boolean;
 
     /**
+     * Whether to use the message bubble layout or not
+     */
+    useBubbleLayout: boolean;
+
+    /**
      * classnames to apply to the wrapper of the preview
      */
     className: string;
@@ -123,12 +128,14 @@ export default class EventTilePreview extends React.Component<IProps, IState> {
         const className = classnames(this.props.className, {
             "mx_IRCLayout": this.props.useIRCLayout,
             "mx_GroupLayout": !this.props.useIRCLayout,
+            "sc_BubbleLayout": this.props.useBubbleLayout,
         });
 
         return <div className={className}>
             <EventTile
                 mxEvent={event}
                 useIRCLayout={this.props.useIRCLayout}
+                useBubbleLayout={this.props.useBubbleLayout}
                 enableFlair={SettingsStore.getValue(UIFeature.Flair)}
             />
         </div>;

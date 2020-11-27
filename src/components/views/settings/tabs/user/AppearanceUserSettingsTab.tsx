@@ -63,6 +63,7 @@ interface IState extends IThemeState {
     systemFont: string;
     showAdvanced: boolean;
     useIRCLayout: boolean;
+    useBubbleLayout: boolean;
 }
 
 
@@ -84,6 +85,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
             systemFont: SettingsStore.getValue("systemFont"),
             showAdvanced: false,
             useIRCLayout: SettingsStore.getValue("useIRCLayout"),
+            useBubbleLayout: SettingsStore.getValue("useBubbleLayout"),
         };
     }
 
@@ -223,6 +225,16 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
         SettingsStore.setValue("useIRCLayout", null, SettingLevel.DEVICE, val);
     };
 
+    private onBubbleLayoutChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        const val = e.target.value === "true";
+
+        this.setState({
+            useBubbleLayout: val,
+        });
+
+        SettingsStore.setValue("useBubbleLayout", null, SettingLevel.DEVICE, val);
+    };
+
     private renderThemeSection() {
         const themeWatcher = new ThemeWatcher();
         let systemThemeSection: JSX.Element;
@@ -307,6 +319,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                 className="mx_AppearanceUserSettingsTab_fontSlider_preview"
                 message={this.MESSAGE_PREVIEW_TEXT}
                 useIRCLayout={this.state.useIRCLayout}
+                useBubbleLayout={this.state.useBubbleLayout}
             />
             <div className="mx_AppearanceUserSettingsTab_fontSlider">
                 <div className="mx_AppearanceUserSettingsTab_fontSlider_smallText">Aa</div>
@@ -380,6 +393,50 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                         onChange={this.onLayoutChange}
                     >
                         {_t("Modern")}
+                    </StyledRadioButton>
+                </div>
+            </div>
+        </div>;
+    };
+
+    private renderBubbleLayoutSection = () => {
+        return <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_Layout">
+            <span className="mx_SettingsTab_subheading">{_t("Message layout")}</span>
+
+            <div className="mx_AppearanceUserSettingsTab_Layout_RadioButtons">
+                <div className={classNames("mx_AppearanceUserSettingsTab_Layout_RadioButton", {
+                    mx_AppearanceUserSettingsTab_Layout_RadioButton_selected: this.state.useBubbleLayout,
+                })}>
+                    <EventTilePreview
+                        className="mx_AppearanceUserSettingsTab_Layout_RadioButton_preview"
+                        message={this.MESSAGE_PREVIEW_TEXT}
+                        useBubbleLayout={true}
+                    />
+                    <StyledRadioButton
+                        name="layout"
+                        value="true"
+                        checked={this.state.useBubbleLayout}
+                        onChange={this.onBubbleLayoutChange}
+                    >
+                        {_t("Bubbles")}
+                    </StyledRadioButton>
+                </div>
+                <div className="mx_AppearanceUserSettingsTab_spacer" />
+                <div className={classNames("mx_AppearanceUserSettingsTab_Layout_RadioButton", {
+                    mx_AppearanceUserSettingsTab_Layout_RadioButton_selected: !this.state.useBubbleLayout,
+                })}>
+                    <EventTilePreview
+                        className="mx_AppearanceUserSettingsTab_Layout_RadioButton_preview"
+                        message={this.MESSAGE_PREVIEW_TEXT}
+                        useBubbleLayout={false}
+                    />
+                    <StyledRadioButton
+                        name="layout"
+                        value="false"
+                        checked={!this.state.useBubbleLayout}
+                        onChange={this.onBubbleLayoutChange}
+                    >
+                        {_t("No bubbles")}
                     </StyledRadioButton>
                 </div>
             </div>
