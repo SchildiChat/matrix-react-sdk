@@ -367,6 +367,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                         className="mx_AppearanceUserSettingsTab_Layout_RadioButton_preview"
                         message={this.MESSAGE_PREVIEW_TEXT}
                         useIRCLayout={true}
+                        useBubbleLayout={false}
                     />
                     <StyledRadioButton
                         name="layout"
@@ -385,6 +386,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                         className="mx_AppearanceUserSettingsTab_Layout_RadioButton_preview"
                         message={this.MESSAGE_PREVIEW_TEXT}
                         useIRCLayout={false}
+                        useBubbleLayout={false}
                     />
                     <StyledRadioButton
                         name="layout"
@@ -410,6 +412,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                     <EventTilePreview
                         className="mx_AppearanceUserSettingsTab_Layout_RadioButton_preview"
                         message={this.MESSAGE_PREVIEW_TEXT}
+                        useIRCLayout={false}
                         useBubbleLayout={true}
                     />
                     <StyledRadioButton
@@ -428,6 +431,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                     <EventTilePreview
                         className="mx_AppearanceUserSettingsTab_Layout_RadioButton_preview"
                         message={this.MESSAGE_PREVIEW_TEXT}
+                        useIRCLayout={false}
                         useBubbleLayout={false}
                     />
                     <StyledRadioButton
