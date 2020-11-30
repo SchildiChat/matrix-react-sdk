@@ -83,7 +83,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
             useCustomFontSize: SettingsStore.getValue("useCustomFontSize"),
             useSystemFont: SettingsStore.getValue("useSystemFont"),
             systemFont: SettingsStore.getValue("systemFont"),
-            showAdvanced: false,
+            showAdvanced: true,
             useIRCLayout: SettingsStore.getValue("useIRCLayout"),
             useBubbleLayout: SettingsStore.getValue("useBubbleLayout"),
         };
@@ -451,12 +451,13 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
         if (!SettingsStore.getValue(UIFeature.AdvancedSettings)) return null;
 
         const brand = SdkConfig.get().brand;
-        const toggle = <div
-            className="mx_AppearanceUserSettingsTab_AdvancedToggle"
-            onClick={() => this.setState({showAdvanced: !this.state.showAdvanced})}
-        >
-            {this.state.showAdvanced ? "Hide advanced" : "Show advanced"}
-        </div>;
+        // const toggle = <div
+        //     className="mx_AppearanceUserSettingsTab_AdvancedToggle"
+        //     onClick={() => this.setState({showAdvanced: !this.state.showAdvanced})}
+        // >
+        //     {this.state.showAdvanced ? "Hide advanced" : "Show advanced"}
+        // </div>;
+        const toggle = <span className="mx_SettingsTab_subheading">Advanced</span>
 
         let advanced: React.ReactNode;
 
