@@ -21,7 +21,7 @@ export interface ConfigOptions {
 
 export const DEFAULTS: ConfigOptions = {
     // Brand name of the app
-    brand: "Element",
+    brand: "SchildiChat",
     // URL to a page we show in an iframe to configure integrations
     integrations_ui_url: "https://scalar.vector.im/",
     // Base URL to the REST interface of the integrations server
@@ -31,12 +31,12 @@ export const DEFAULTS: ConfigOptions = {
     // Jitsi conference options
     jitsi: {
         // Default conference domain
-        preferredDomain: "jitsi.riot.im",
+        preferredDomain: "meet.jit.si",
     },
     desktopBuilds: {
         available: true,
         logo: require("../res/img/element-desktop-logo.svg"),
-        url: "https://element.io/get-started",
+        url: "https://schildi.chat/desktop",
     },
 };
 
