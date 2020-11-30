@@ -689,7 +689,7 @@ export default class EventTile extends React.Component {
 
         const client = MatrixClientPeg.get();
         const me = client && client.getUserId();
-        const scBubbleEnabled = this.props.useBubbleLayout
+        const scBubbleEnabled = SettingsStore.getValue("useBubbleLayout")
                 && !isBubbleMessage && !isInfoMessage
                 && this.props.tileShape !== 'reply_preview' && this.props.tileShape !== 'reply'
                 && this.props.tileShape !== 'notif' && this.props.tileShape !== 'file_grid';
