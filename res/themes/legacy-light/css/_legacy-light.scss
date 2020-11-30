@@ -91,7 +91,7 @@ $input-darker-bg-color: #eeeeee;
 $input-darker-fg-color: #aaaaaa;
 $input-lighter-bg-color: #ffffff;
 $input-lighter-fg-color: $input-darker-fg-color;
-$input-focused-border-color: #303030;
+$input-focused-border-color: $accent-color;
 $input-valid-border-color: $accent-color;
 $input-invalid-border-color: $warning-color;
 
