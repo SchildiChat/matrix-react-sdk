@@ -51,7 +51,6 @@ export default class PreferencesUserSettingsTab extends React.Component {
         'showDisplaynameChanges',
         'showImages',
         'Pill.shouldShowPillAvatar',
-        'useBubbleLayout',
     ];
 
     static GENERAL_SETTINGS = [
