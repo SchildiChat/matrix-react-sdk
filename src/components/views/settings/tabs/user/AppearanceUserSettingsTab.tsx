@@ -455,7 +455,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
         //     className="mx_AppearanceUserSettingsTab_AdvancedToggle"
         //     onClick={() => this.setState({showAdvanced: !this.state.showAdvanced})}
         // >
-        //     {this.state.showAdvanced ? "Hide advanced" : "Show advanced"}
+        //     {this.state.showAdvanced ? _t("Hide advanced") : _t("Show advanced")}
         // </div>;
         const toggle = <span className="mx_SettingsTab_subheading">Advanced</span>
 

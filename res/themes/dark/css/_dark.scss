@@ -108,6 +108,9 @@ $eventtile-meta-color: $roomtopic-color;
 $header-divider-color: $header-panel-text-primary-color;
 $composer-e2e-icon-color: $header-panel-text-primary-color;
 
+// this probably shouldn't have it's own colour
+$voipcall-plinth-color: #21262c;
+
 // ********************
 
 $theme-button-bg-color: #eeeeee;
@@ -275,6 +278,10 @@ $composer-shadow-color: rgba(0, 0, 0, 0.28);
         tr:nth-child(2n) {
             background-color: #080808;
         }
+    }
+
+    blockquote {
+        color: #919191;
     }
 }
 
