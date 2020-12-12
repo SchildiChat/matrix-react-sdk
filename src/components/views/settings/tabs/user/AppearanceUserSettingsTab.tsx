@@ -216,23 +216,16 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
     };
 
     private onLayoutChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        const val = e.target.value === "true";
+        const isIrc = e.target.value === "irc";
+        const isBubble = e.target.value === "bubble";
 
         this.setState({
-            useIRCLayout: val,
+            useIRCLayout: isIrc,
+            useBubbleLayout: isBubble,
         });
 
-        SettingsStore.setValue("useIRCLayout", null, SettingLevel.DEVICE, val);
-    };
-
-    private onBubbleLayoutChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        const val = e.target.value === "true";
-
-        this.setState({
-            useBubbleLayout: val,
-        });
-
-        SettingsStore.setValue("useBubbleLayout", null, SettingLevel.DEVICE, val);
+        SettingsStore.setValue("useIRCLayout", null, SettingLevel.DEVICE, isIrc);
+        SettingsStore.setValue("useBubbleLayout", null, SettingLevel.DEVICE, isBubble);
     };
 
     private renderThemeSection() {
@@ -356,12 +349,15 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
     }
 
     private renderLayoutSection = () => {
+        const isIrc = this.state.useIRCLayout;
+        const isBubble = this.state.useBubbleLayout;
+
         return <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_Layout">
             <span className="mx_SettingsTab_subheading">{_t("Message layout")}</span>
 
             <div className="mx_AppearanceUserSettingsTab_Layout_RadioButtons">
                 <div className={classNames("mx_AppearanceUserSettingsTab_Layout_RadioButton", {
-                    mx_AppearanceUserSettingsTab_Layout_RadioButton_selected: this.state.useIRCLayout,
+                    mx_AppearanceUserSettingsTab_Layout_RadioButton_selected: isIrc,
                 })}>
                     <EventTilePreview
                         className="mx_AppearanceUserSettingsTab_Layout_RadioButton_preview"
@@ -371,16 +367,16 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                     />
                     <StyledRadioButton
                         name="layout"
-                        value="true"
-                        checked={this.state.useIRCLayout}
+                        value="irc"
+                        checked={isIrc}
                         onChange={this.onLayoutChange}
                     >
-                        {_t("Compact")}
+                        {"IRC"}
                     </StyledRadioButton>
                 </div>
                 <div className="mx_AppearanceUserSettingsTab_spacer" />
                 <div className={classNames("mx_AppearanceUserSettingsTab_Layout_RadioButton", {
-                    mx_AppearanceUserSettingsTab_Layout_RadioButton_selected: !this.state.useIRCLayout,
+                    mx_AppearanceUserSettingsTab_Layout_RadioButton_selected: !isIrc && !isBubble,
                 })}>
                     <EventTilePreview
                         className="mx_AppearanceUserSettingsTab_Layout_RadioButton_preview"
@@ -390,24 +386,16 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                     />
                     <StyledRadioButton
                         name="layout"
-                        value="false"
-                        checked={!this.state.useIRCLayout}
+                        value="normal"
+                        checked={!isIrc && !isBubble}
                         onChange={this.onLayoutChange}
                     >
                         {_t("Modern")}
                     </StyledRadioButton>
                 </div>
-            </div>
-        </div>;
-    };
-
-    private renderBubbleLayoutSection = () => {
-        return <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_Layout">
-            <span className="mx_SettingsTab_subheading">{_t("Message layout")}</span>
-
-            <div className="mx_AppearanceUserSettingsTab_Layout_RadioButtons">
+                <div className="mx_AppearanceUserSettingsTab_spacer" />
                 <div className={classNames("mx_AppearanceUserSettingsTab_Layout_RadioButton", {
-                    mx_AppearanceUserSettingsTab_Layout_RadioButton_selected: this.state.useBubbleLayout,
+                    mx_AppearanceUserSettingsTab_Layout_RadioButton_selected: isBubble,
                 })}>
                     <EventTilePreview
                         className="mx_AppearanceUserSettingsTab_Layout_RadioButton_preview"
@@ -417,30 +405,11 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                     />
                     <StyledRadioButton
                         name="layout"
-                        value="true"
-                        checked={this.state.useBubbleLayout}
-                        onChange={this.onBubbleLayoutChange}
+                        value="bubble"
+                        checked={isBubble}
+                        onChange={this.onLayoutChange}
                     >
-                        {_t("Bubbles")}
-                    </StyledRadioButton>
-                </div>
-                <div className="mx_AppearanceUserSettingsTab_spacer" />
-                <div className={classNames("mx_AppearanceUserSettingsTab_Layout_RadioButton", {
-                    mx_AppearanceUserSettingsTab_Layout_RadioButton_selected: !this.state.useBubbleLayout,
-                })}>
-                    <EventTilePreview
-                        className="mx_AppearanceUserSettingsTab_Layout_RadioButton_preview"
-                        message={this.MESSAGE_PREVIEW_TEXT}
-                        useIRCLayout={false}
-                        useBubbleLayout={false}
-                    />
-                    <StyledRadioButton
-                        name="layout"
-                        value="false"
-                        checked={!this.state.useBubbleLayout}
-                        onChange={this.onBubbleLayoutChange}
-                    >
-                        {_t("No bubbles")}
+                        {_t("Message bubbles")}
                     </StyledRadioButton>
                 </div>
             </div>
@@ -480,14 +449,14 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                     useCheckbox={true}
                     onChange={(checked) => this.setState({useIRCLayout: checked})}
                 />
-                */
-            advanced = <>
                 <SettingsFlag
                     name="useBubbleLayout"
                     level={SettingLevel.DEVICE}
                     useCheckbox={true}
                     onChange={(checked) => this.setState({useBubbleLayout: checked})}
                 />
+                */
+            advanced = <>
                 <SettingsFlag
                     name="useSystemFont"
                     level={SettingLevel.DEVICE}
@@ -527,6 +496,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                     {_t("Appearance Settings only affect this %(brand)s session.", { brand })}
                 </div>
                 {this.renderThemeSection()}
+                {this.renderLayoutSection()}
                 {this.renderFontSection()}
                 {this.renderAdvancedSection()}
             </div>
