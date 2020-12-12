@@ -1290,6 +1290,8 @@ export default class RoomView extends React.Component<IProps, IState> {
                 resultLink={resultLink}
                 permalinkCreator={this.getPermalinkCreatorForRoom(room)}
                 onHeightChanged={onHeightChanged}
+                useIRCLayout={this.state.useIRCLayout}
+                useBubbleLayout={this.state.useBubbleLayout}
             />);
         }
         return ret;
@@ -1869,10 +1871,19 @@ export default class RoomView extends React.Component<IProps, IState> {
                     <div className="mx_RoomView_messagePanel mx_RoomView_messagePanelSearchSpinner" />
                 );
             } else {
+                const searchResultsPanelClassNames = classNames(
+                    "mx_RoomView_messagePanel",
+                    "mx_RoomView_searchResultsPanel",
+                    {
+                        "mx_IRCLayout": this.state.useIRCLayout,
+                        "mx_GroupLayout": !this.state.useIRCLayout,
+                        "sc_BubbleLayout": this.state.useBubbleLayout,
+                    });
+
                 searchResultsPanel = (
                     <ScrollPanel
                         ref={this.searchResultsPanel}
-                        className="mx_RoomView_messagePanel mx_RoomView_searchResultsPanel mx_GroupLayout"
+                        className={searchResultsPanelClassNames}
                         onFillRequest={this.onSearchResultsFillRequest}
                         resizeNotifier={this.props.resizeNotifier}
                     >
