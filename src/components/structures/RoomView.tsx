@@ -1859,6 +1859,12 @@ export default class RoomView extends React.Component<IProps, IState> {
             };
         }
 
+        const layout = {
+            "mx_IRCLayout": this.state.useIRCLayout,
+            "mx_GroupLayout": !this.state.useIRCLayout && !this.state.useBubbleLayout,
+            "sc_BubbleLayout": this.state.useBubbleLayout,
+        };
+
         // if we have search results, we keep the messagepanel (so that it preserves its
         // scroll state), but hide it.
         let searchResultsPanel;
@@ -1874,11 +1880,8 @@ export default class RoomView extends React.Component<IProps, IState> {
                 const searchResultsPanelClassNames = classNames(
                     "mx_RoomView_messagePanel",
                     "mx_RoomView_searchResultsPanel",
-                    {
-                        "mx_IRCLayout": this.state.useIRCLayout,
-                        "mx_GroupLayout": !this.state.useIRCLayout,
-                        "sc_BubbleLayout": this.state.useBubbleLayout,
-                    });
+                    layout,
+                );
 
                 searchResultsPanel = (
                     <ScrollPanel
@@ -1905,11 +1908,8 @@ export default class RoomView extends React.Component<IProps, IState> {
 
         const messagePanelClassNames = classNames(
             "mx_RoomView_messagePanel",
-            {
-                "mx_IRCLayout": this.state.useIRCLayout,
-                "mx_GroupLayout": !this.state.useIRCLayout,
-                "sc_BubbleLayout": this.state.useBubbleLayout,
-            });
+            layout,
+        );
 
         // console.info("ShowUrlPreview for %s is %s", this.state.room.roomId, this.state.showUrlPreview);
         const messagePanel = (

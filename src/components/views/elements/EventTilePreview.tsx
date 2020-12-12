@@ -125,11 +125,13 @@ export default class EventTilePreview extends React.Component<IProps, IState> {
     public render() {
         const event = this.fakeEvent(this.state);
 
-        const className = classnames(this.props.className, {
+        const layout = {
             "mx_IRCLayout": this.props.useIRCLayout,
-            "mx_GroupLayout": !this.props.useIRCLayout,
+            "mx_GroupLayout": !this.props.useIRCLayout && !this.props.useBubbleLayout,
             "sc_BubbleLayout": this.props.useBubbleLayout,
-        });
+        };
+
+        const className = classnames(this.props.className, layout);
 
         return <div className={className}>
             <EventTile
