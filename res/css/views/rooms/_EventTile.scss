@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-$left-gutter: 64px;
+$left-gutter: 56px;
 
 .mx_EventTile {
     max-width: 100%;
@@ -177,7 +177,7 @@ $left-gutter: 64px;
  */
 .mx_EventTile_selected > .mx_EventTile_line {
     border-left: $accent-color 4px solid;
-    padding-left: 60px;
+    padding-left: calc($left-gutter - 4px) !important;
     background-color: $event-selected-color;
 }
 
@@ -191,7 +191,7 @@ $left-gutter: 64px;
 }
 
 .mx_EventTile_selected.mx_EventTile_info .mx_EventTile_line {
-    padding-left: 78px;
+    padding-left: calc($left-gutter + 14px) !important;
 }
 
 .mx_EventTile:hover .mx_EventTile_line,
@@ -417,7 +417,7 @@ $left-gutter: 64px;
 .mx_EventTile:hover.mx_EventTile_verified .mx_EventTile_line,
 .mx_EventTile:hover.mx_EventTile_unverified .mx_EventTile_line,
 .mx_EventTile:hover.mx_EventTile_unknown .mx_EventTile_line {
-    padding-left: 60px;
+    padding-left: calc($left-gutter - 4px);
 }
 
 .mx_EventTile:hover.mx_EventTile_verified .mx_EventTile_line {
@@ -435,7 +435,7 @@ $left-gutter: 64px;
 .mx_EventTile:hover.mx_EventTile_verified.mx_EventTile_info .mx_EventTile_line,
 .mx_EventTile:hover.mx_EventTile_unverified.mx_EventTile_info .mx_EventTile_line,
 .mx_EventTile:hover.mx_EventTile_unknown.mx_EventTile_info .mx_EventTile_line {
-    padding-left: 78px;
+    padding-left: calc($left-gutter + 14px);
 }
 
 /* End to end encryption stuff */

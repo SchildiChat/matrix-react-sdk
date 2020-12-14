@@ -228,6 +228,9 @@ export default class EventTile extends React.Component {
         // whether to use the irc layout
         useIRCLayout: PropTypes.bool,
 
+        // whether to use the message bubble layout
+        useBubbleLayout: PropTypes.bool,
+
         // whether or not to show flair at all
         enableFlair: PropTypes.bool,
     };
@@ -474,7 +477,11 @@ export default class EventTile extends React.Component {
 
             // If hidden, set offset equal to the offset of the final visible avatar or
             // else set it proportional to index
-            left = (hidden ? MAX_READ_AVATARS - 1 : i) * -receiptOffset;
+            if (this.props.useBubbleLayout) {
+                left = (hidden ? MAX_READ_AVATARS - 1 : i) * receiptOffset;
+            } else {
+                left = (hidden ? MAX_READ_AVATARS - 1 : i) * -receiptOffset;
+            }
 
             const userId = receipt.userId;
             let readReceiptInfo;
@@ -504,10 +511,18 @@ export default class EventTile extends React.Component {
         let remText;
         if (!this.state.allReadAvatars) {
             const remainder = receipts.length - MAX_READ_AVATARS;
+
+            let style;
+            if (this.props.useBubbleLayout) {
+                style = { left: "calc(" + toRem(left) + " + " + receiptOffset + "px)" };
+            } else {
+                style = { right: "calc(" + toRem(-left) + " + " + receiptOffset + "px)" };
+            }
+
             if (remainder > 0) {
                 remText = <span className="mx_EventTile_readAvatarRemainder"
                     onClick={this.toggleAllReadAvatars}
-                    style={{ right: "calc(" + toRem(-left) + " + " + receiptOffset + "px)" }}>{ remainder }+
+                    style={style}>{ remainder }+
                 </span>;
             }
         }
@@ -682,6 +697,14 @@ export default class EventTile extends React.Component {
         const isRedacted = isMessageEvent(this.props.mxEvent) && this.props.isRedacted;
         const isEncryptionFailure = this.props.mxEvent.isDecryptionFailure();
 
+        const client = MatrixClientPeg.get();
+        const me = client && client.getUserId();
+        const scBubbleEnabled = this.props.useBubbleLayout
+                && !isBubbleMessage && !isInfoMessage
+                && this.props.tileShape !== 'reply_preview' && this.props.tileShape !== 'reply'
+                && this.props.tileShape !== 'notif' && this.props.tileShape !== 'file_grid';
+        const sentByMe = me === this.props.mxEvent.getSender();
+
         const isEditing = !!this.props.editState;
         const classes = classNames({
             mx_EventTile_bubbleContainer: isBubbleMessage,
@@ -704,6 +727,8 @@ export default class EventTile extends React.Component {
             mx_EventTile_unknown: !isBubbleMessage && this.state.verified === E2E_STATE.UNKNOWN,
             mx_EventTile_bad: isEncryptionFailure,
             mx_EventTile_emote: msgtype === 'm.emote',
+            sc_EventTile_bubbleContainer: scBubbleEnabled,
+            sc_EventTile_bubbleTailLeftContainer: scBubbleEnabled && !sentByMe && !this.props.continuation,
         });
 
         // If the tile is in the Sending state, don't speak the message.
@@ -721,7 +746,10 @@ export default class EventTile extends React.Component {
         let avatarSize;
         let needsSenderProfile;
 
-        if (this.props.tileShape === "notif") {
+        if (scBubbleEnabled && sentByMe) {
+            avatarSize = 0;
+            needsSenderProfile = false;
+        } else if (this.props.tileShape === "notif") {
             avatarSize = 24;
             needsSenderProfile = true;
         } else if (tileHandler === 'messages.RoomCreate' || isBubbleMessage) {
@@ -787,6 +815,7 @@ export default class EventTile extends React.Component {
             getTile={this.getTile}
             getReplyThread={this.getReplyThread}
             onFocusChange={this.onActionBarFocusChange}
+            showLeft={!sentByMe}
         /> : undefined;
 
         const timestamp = this.props.mxEvent.getTs() ?
@@ -835,7 +864,7 @@ export default class EventTile extends React.Component {
             />;
         }
 
-        const linkedTimestamp = <a
+        const linkedTimestamp = <a className={"sc_LinkedTimestamp"}
                 href={permalink}
                 onClick={this.onPermalinkClicked}
                 aria-label={formatTime(new Date(this.props.mxEvent.getTs()), this.props.isTwelveHour)}
@@ -942,41 +971,106 @@ export default class EventTile extends React.Component {
                     this.props.permalinkCreator,
                     this._replyThread,
                     this.props.useIRCLayout,
+                    this.props.useBubbleLayout,
                 );
 
-                // tab-index=-1 to allow it to be focusable but do not add tab stop for it, primarily for screen readers
-                return (
-                    <div className={classes} tabIndex={-1} aria-live={ariaLive} aria-atomic="true">
-                        { ircTimestamp }
-                        <div className="mx_EventTile_msgOption">
-                            { readAvatars }
-                        </div>
-                        { sender }
-                        { ircPadlock }
-                        <div className="mx_EventTile_line">
-                            { groupTimestamp }
-                            { groupPadlock }
-                            { thread }
-                            <EventTileType ref={this._tile}
-                                           mxEvent={this.props.mxEvent}
-                                           replacingEventId={this.props.replacingEventId}
-                                           editState={this.props.editState}
-                                           highlights={this.props.highlights}
-                                           highlightLink={this.props.highlightLink}
-                                           showUrlPreview={this.props.showUrlPreview}
-                                           onHeightChanged={this.props.onHeightChanged} />
-                            { keyRequestInfo }
-                            { reactionsRow }
-                            { actionBar }
-                        </div>
-                        {
-                            // The avatar goes after the event tile as it's absolutely positioned to be over the
-                            // event tile line, so needs to be later in the DOM so it appears on top (this avoids
-                            // the need for further z-indexing chaos)
-                        }
-                        { avatar }
+                let msgOptionClasses = classNames(
+                    "mx_EventTile_msgOption",
+                    { "sc_readReceipts_empty": !this.props.readReceipts || this.props.readReceipts.length === 0 },
+                );
+                const msgOption = (
+                    <div className={msgOptionClasses}>
+                        { readAvatars }
                     </div>
                 );
+
+                if (scBubbleEnabled) {
+                    const bubbleAreaClasses = classNames(
+                        "sc_EventTile_bubbleArea",
+                        {
+                            "sc_EventTile_bubbleArea_right": sentByMe,
+                            "sc_EventTile_bubbleArea_left": !sentByMe,
+                        },
+                    );
+                    const bubbleClasses = classNames(
+                        "sc_EventTile_bubble",
+                        {
+                            "sc_EventTile_bubble_right": sentByMe,
+                            "sc_EventTile_bubble_left": !sentByMe,
+                            "sc_EventTile_bubble_tail": !this.props.continuation,
+                        },
+                    );
+
+
+                    // tab-index=-1 to allow it to be focusable but do not add tab stop for it, primarily for screen readers
+                    return (
+                        <div className={classes} tabIndex={-1} aria-live={ariaLive} aria-atomic="true">
+                            { ircTimestamp }
+                            { ircPadlock }
+                            <div className="mx_EventTile_line sc_EventTile_bubbleLine">
+                                { groupPadlock }
+                                <div className={bubbleAreaClasses}>
+                                    <div className={bubbleClasses}>
+                                        { sender }
+                                        { thread }
+                                        <EventTileType ref={this._tile}
+                                                       mxEvent={this.props.mxEvent}
+                                                       replacingEventId={this.props.replacingEventId}
+                                                       editState={this.props.editState}
+                                                       highlights={this.props.highlights}
+                                                       highlightLink={this.props.highlightLink}
+                                                       showUrlPreview={this.props.showUrlPreview}
+                                                       onHeightChanged={this.props.onHeightChanged}
+                                                       scBubbleGroupTimestamp={groupTimestamp} />
+                                    </div>
+                                    { keyRequestInfo }
+                                    { reactionsRow }
+                                    { actionBar }
+                                </div>
+                            </div>
+                            {
+                                // The avatar goes after the event tile as it's absolutely positioned to be over the
+                                // event tile line, so needs to be later in the DOM so it appears on top (this avoids
+                                // the need for further z-indexing chaos)
+                            }
+                            { avatar }
+                            { msgOption }
+                        </div>
+                    );
+                } else {
+                    // tab-index=-1 to allow it to be focusable but do not add tab stop for it, primarily for screen readers
+                    return (
+                        <div className={classes} tabIndex={-1} aria-live={ariaLive} aria-atomic="true">
+                            { ircTimestamp }
+                            { !this.props.useBubbleLayout ? msgOption : null }
+                            { sender }
+                            { ircPadlock }
+                            <div className="mx_EventTile_line">
+                                { groupTimestamp }
+                                { groupPadlock }
+                                { thread }
+                                <EventTileType ref={this._tile}
+                                            mxEvent={this.props.mxEvent}
+                                            replacingEventId={this.props.replacingEventId}
+                                            editState={this.props.editState}
+                                            highlights={this.props.highlights}
+                                            highlightLink={this.props.highlightLink}
+                                            showUrlPreview={this.props.showUrlPreview}
+                                            onHeightChanged={this.props.onHeightChanged} />
+                                { keyRequestInfo }
+                                { reactionsRow }
+                                { actionBar }
+                            </div>
+                            {
+                                // The avatar goes after the event tile as it's absolutely positioned to be over the
+                                // event tile line, so needs to be later in the DOM so it appears on top (this avoids
+                                // the need for further z-indexing chaos)
+                            }
+                            { avatar }
+                            { this.props.useBubbleLayout ? msgOption : null }
+                        </div>
+                    );
+                }
             }
         }
     }
