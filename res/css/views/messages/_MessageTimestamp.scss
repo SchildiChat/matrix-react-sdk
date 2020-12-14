@@ -19,31 +19,3 @@ limitations under the License.
     font-size: $font-10px;
     font-variant-numeric: tabular-nums;
 }
-
-.sc_EventTile_bubble {
-    .sc_bubble_LinkedTimestamp {
-        float: right;
-        display: flex;
-        margin-left: 1rem;
-
-        .mx_MessageTimestamp {
-            visibility: visible !important;
-            position: unset !important;
-            width: unset !important;
-            text-align: right !important;
-            margin-top: auto;
-            padding-top: 0.3rem;
-            margin-bottom: -0.3rem;
-            font-size: 0.85em;
-        }
-    }
-
-    .sc_EventTile_bigContent .sc_bubble_LinkedTimestamp {
-        height: 57px;
-    }
-
-    .mx_MStickerBody_wrapper + .sc_bubble_LinkedTimestamp {
-        float: unset;
-        display: block;
-    }
-}

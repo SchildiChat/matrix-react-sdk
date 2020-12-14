@@ -37,25 +37,6 @@ $left-gutter: 56px;
             width: 46px; /* 8 + 30 (avatar) + 8 */
         }
 
-        &:not(.mx_EventTile_continuation):not(.mx_EventTile_info) {
-            > .mx_EventTile_avatar {
-                top: 20px;
-            }
-
-            .mx_MessageTimestamp {
-                top: 28px;
-            }
-        }
-
-        .mx_ReplyThread {
-            .mx_EventTile_avatar {
-                top: 14px !important;
-            }
-            .mx_MessageTimestamp {
-                top: 2px !important;
-            }
-        }
-
         .mx_EventTile_line, .mx_EventTile_reply {
             padding-top: 3px;
             padding-bottom: 3px;

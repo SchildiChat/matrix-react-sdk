@@ -25,8 +25,7 @@ limitations under the License.
     border-radius: 4px;
     background: $message-action-bar-bg-color;
     top: -26px;
-    // SC: moved out to mx_MessageActionBar_right
-    //right: 8px;
+    right: 8px;
     user-select: none;
     // Ensure the action bar appears above over things, like the read marker.
     z-index: 1;
@@ -74,14 +73,6 @@ limitations under the License.
     }
 }
 
-.mx_MessageActionBar_left {
-    // 8px like mx_MessageActionBar_right + 60px to align with padded mx_EventTile_line
-    left: 68px;
-}
-
-.mx_MessageActionBar_right {
-    right: 8px;
-}
 
 .mx_MessageActionBar_maskButton {
     width: 27px;
