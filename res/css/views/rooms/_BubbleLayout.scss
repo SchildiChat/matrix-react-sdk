@@ -21,7 +21,7 @@ $left-gutter: 56px;
     // ---- Overrides ----
 
     .mx_RoomView_MessageList {
-        padding-bottom: 0;
+        padding-bottom: 8px;
     }
 
     .mx_RoomTile {
@@ -36,6 +36,7 @@ $left-gutter: 56px;
     .mx_EventTile {
         // SC: no reserved space for read recipts required.
         max-width: 100%;
+        padding-top: 6px;
 
         > .mx_SenderProfile {
             line-height: $font-17px;
@@ -54,10 +55,11 @@ $left-gutter: 56px;
 
         .mx_ReplyThread {
             .mx_EventTile_avatar {
-                top: 14px !important;
+                top: 4px !important;
             }
+
             .mx_MessageTimestamp {
-                top: 2px !important;
+                top: 4px !important;
             }
         }
 
@@ -163,7 +165,7 @@ $left-gutter: 56px;
 
     .sc_EventTile_bubbleContainer {
         > .mx_EventTile_avatar {
-            top: 21px;
+            top: 9px;
         }
     }
 
