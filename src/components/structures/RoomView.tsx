@@ -1846,6 +1846,8 @@ export default class RoomView extends React.Component<IProps, IState> {
                     resizeNotifier={this.props.resizeNotifier}
                     replyToEvent={this.state.replyToEvent}
                     permalinkCreator={this.getPermalinkCreatorForRoom(this.state.room)}
+                    useIRCLayout={this.state.useIRCLayout}
+                    useBubbleLayout={this.state.useBubbleLayout}
                 />;
         }
 

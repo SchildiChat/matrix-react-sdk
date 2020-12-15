@@ -479,8 +479,18 @@ export default class MessageComposer extends React.Component {
             );
         }
 
+        const msgComposerClassNames = classNames(
+            "mx_MessageComposer",
+            {
+                // "mx_IRCLayout": this.props.useIRCLayout,
+                // "mx_GroupLayout": !this.props.useIRCLayout && !this.props.useBubbleLayout,
+                "mx_GroupLayout": !this.props.useBubbleLayout,
+                "sc_BubbleLayout": this.props.useBubbleLayout,
+            },
+        );
+
         return (
-            <div className="mx_MessageComposer mx_GroupLayout">
+            <div className={msgComposerClassNames}>
                 <div className="mx_MessageComposer_wrapper">
                     <ReplyPreview permalinkCreator={this.props.permalinkCreator} />
                     <div className="mx_MessageComposer_row">
