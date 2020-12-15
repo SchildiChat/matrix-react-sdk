@@ -121,7 +121,7 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         isFeature: true,
         displayName: _td("Render LaTeX maths in messages"),
         supportedLevels: LEVELS_FEATURE,
-        default: false,
+        default: true,
     },
     "feature_communities_v2_prototypes": {
         isFeature: true,
@@ -136,13 +136,13 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         isFeature: true,
         displayName: _td("New spinner design"),
         supportedLevels: LEVELS_FEATURE,
-        default: false,
+        default: true,
     },
     "feature_pinning": {
         isFeature: true,
         displayName: _td("Message Pinning"),
         supportedLevels: LEVELS_FEATURE,
-        default: false,
+        default: true,
     },
     "feature_custom_status": {
         isFeature: true,
@@ -185,13 +185,13 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         isFeature: true,
         displayName: _td("Show message previews for reactions in DMs"),
         supportedLevels: LEVELS_FEATURE,
-        default: false,
+        default: true,
     },
     "feature_roomlist_preview_reactions_all": {
         isFeature: true,
         displayName: _td("Show message previews for reactions in all rooms"),
         supportedLevels: LEVELS_FEATURE,
-        default: false,
+        default: true,
     },
     "feature_dehydration": {
         isFeature: true,
