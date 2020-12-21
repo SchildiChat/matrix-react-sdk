@@ -86,5 +86,6 @@ done
 
 popd > /dev/null
 
+# see: https://devops.stackexchange.com/a/5443
 git add -A
-git commit -m "Automatic theme update"
+git diff-index --quiet HEAD || git commit -m "Automatic theme update"
