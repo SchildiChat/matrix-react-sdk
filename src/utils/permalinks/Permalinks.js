@@ -129,6 +129,17 @@ export class RoomPermalinkCreator {
         return getPermalinkConstructor().forEvent(this._roomId, eventId, this._serverCandidates);
     }
 
+    forShareableRoom() {
+        if (this._room) {
+            // Prefer to use canonical alias for permalink if possible
+            const alias = this._room.getCanonicalAlias();
+            if (alias) {
+                return getPermalinkConstructor().forRoom(alias, this._serverCandidates);
+            }
+        }
+        return getPermalinkConstructor().forRoom(this._roomId, this._serverCandidates);
+    }
+
     forRoom() {
         return getPermalinkConstructor().forRoom(this._roomId, this._serverCandidates);
     }
@@ -320,7 +331,7 @@ export function tryTransformPermalinkToLocalHref(permalink: string): string {
         return permalink;
     }
 
-    const m = permalink.match(matrixLinkify.VECTOR_URL_PATTERN);
+    const m = permalink.match(matrixLinkify.ELEMENT_URL_PATTERN);
     if (m) {
         return m[1];
     }
@@ -354,7 +365,7 @@ export function getPrimaryPermalinkEntity(permalink: string): string {
 
         // If not a permalink, try the vector patterns.
         if (!permalinkParts) {
-            const m = permalink.match(matrixLinkify.VECTOR_URL_PATTERN);
+            const m = permalink.match(matrixLinkify.ELEMENT_URL_PATTERN);
             if (m) {
                 // A bit of a hack, but it gets the job done
                 const handler = new ElementPermalinkConstructor("http://localhost");

@@ -564,13 +564,6 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         // This is a tri-state value, where `null` means "prompt the user".
         default: null,
     },
-    "sendReadReceipts": {
-        supportedLevels: LEVELS_ROOM_SETTINGS,
-        displayName: _td(
-            "Send read receipts for messages (requires compatible homeserver to disable)",
-        ),
-        default: true,
-    },
     "showImages": {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
         displayName: _td("Show previews/thumbnails for images"),
@@ -637,6 +630,11 @@ export const SETTINGS: {[setting: string]: ISetting} = {
     "useBubbleLayout": {
         supportedLevels: LEVELS_ROOM_SETTINGS_WITH_ROOM,
         displayName: _td("Enable layout with message bubbles"),
+        default: true,
+    },
+    "showChatEffects": {
+        supportedLevels: LEVELS_ACCOUNT_SETTINGS,
+        displayName: _td("Show chat effects"),
         default: true,
     },
     "Widgets.pinned": {
