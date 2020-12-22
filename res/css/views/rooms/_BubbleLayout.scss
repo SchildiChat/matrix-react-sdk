@@ -182,8 +182,9 @@ $left-gutter: 56px;
     // }
 
     .sc_EventTile_bubbleArea {
-        // Max-width 75% for both-side bubbles only
-        max-width: 75%;
+        // No full width for both-side bubbles only
+        width: 84%;
+        max-width: 88rem;
         padding: 0px;
         margin-bottom: 0;
     }
