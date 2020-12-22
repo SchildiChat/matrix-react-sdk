@@ -125,6 +125,36 @@ $left-gutter: 56px;
         left: 5px;
     }
 
+    .mx_EventTile_isEditing {
+        background-color: transparent;
+    }
+
+    .mx_EditMessageComposer {
+        margin: 0;
+        padding: 0;
+    
+        .mx_EditMessageComposer_buttons {
+            position: unset;
+            margin: 0;
+            margin-left: auto;
+            padding: 0;
+            padding-top: 10px;
+            max-width: 100%;
+            background: transparent;
+            flex-wrap: wrap;
+    
+            .mx_AccessibleButton {
+                padding: 5px 0;
+                width: 11em;
+                max-width: 100%;
+            }
+        }
+    }
+    
+    .mx_BasicMessageComposer {
+        max-width: 100%;
+    }
+
     .mx_ReplyThread, .mx_ReplyPreview {
         padding-top: 2px;
 
