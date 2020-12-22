@@ -34,9 +34,12 @@ $left-gutter: 56px;
     }
 
     .mx_EventTile {
-        // SC: no reserved space for read recipts required.
-        max-width: 100%;
+        // no reserved space for read receipts required.
         padding-top: 6px;
+
+        &.mx_EventTile_info {
+            padding-top: 0px;
+        }
 
         > .mx_SenderProfile {
             line-height: $font-17px;
