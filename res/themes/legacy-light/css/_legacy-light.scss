@@ -295,8 +295,8 @@ $authpage-primary-color: #232f32;
 $authpage-secondary-color: #616161;
 
 $dark-panel-bg-color: $secondary-accent-color;
-$message-bubble-left: $dark-panel-bg-color;
-$message-bubble-right: $dark-panel-bg-color;
+$message-bubble-background: $dark-panel-bg-color;
+$message-bubble-background-self: $dark-panel-bg-color;
 $panel-gradient: rgba(242, 245, 248, 0), rgba(242, 245, 248, 1);
 
 $message-action-bar-bg-color: $primary-bg-color;

@@ -1003,26 +1003,29 @@ export default class EventTile extends React.Component {
                         mediaBody = true;
                     }
 
+                    const showRight = sentByMe;
+                    const showLeft = !sentByMe;
                     const bubbleAreaClasses = classNames(
                         "sc_EventTile_bubbleArea",
                         {
-                            "sc_EventTile_bubbleArea_right": sentByMe,
-                            "sc_EventTile_bubbleArea_left": !sentByMe,
+                            "sc_EventTile_bubbleArea_right": showRight,
+                            "sc_EventTile_bubbleArea_left": showLeft,
                         },
                     );
                     const bubbleClasses = classNames(
                         "sc_EventTile_bubble",
                         {
-                            "sc_EventTile_bubble_right": sentByMe,
-                            "sc_EventTile_bubble_left": !sentByMe,
+                            "sc_EventTile_bubble_self": sentByMe,
+                            "sc_EventTile_bubble_right": showRight,
+                            "sc_EventTile_bubble_left": showLeft,
                             "sc_EventTile_bubble_tail": !this.props.continuation,
                         },
                     );
                     const mediaClasses = classNames(
                         "sc_EventTile_media",
                         {
-                            "sc_EventTile_media_right": sentByMe,
-                            "sc_EventTile_media_left": !sentByMe,
+                            "sc_EventTile_media_right": showRight,
+                            "sc_EventTile_media_left": showLeft,
                         },
                     );
 

@@ -308,7 +308,7 @@ $left-gutter: 56px;
     }
 
     .sc_EventTile_bubble {
-        background-color: $dark-panel-bg-color;
+        background-color: $message-bubble-background;
         padding: 10px;
         border-radius: 2px;
         //margin: 10px auto;
@@ -322,6 +322,15 @@ $left-gutter: 56px;
 
         // Don't inherit bubbleArea alignment
         text-align: left;
+
+        &.sc_EventTile_bubble_tail::before {
+            content: '';
+            border: 16px solid transparent;
+            border-top-color: $message-bubble-background;
+            border-bottom: 0;
+            position: absolute;
+            top: 0;
+        }
 
         > *:not(.mx_ReplyThread_wrapper) {
             .sc_LinkedTimestamp {
@@ -355,20 +364,11 @@ $left-gutter: 56px;
     .sc_EventTile_bubble_left {
         margin-left: 0px;
         margin-right: auto;
-        background-color: $message-bubble-left;
 
         &.sc_EventTile_bubble_tail::before {
-            content: '';
-            border: 16px solid transparent;
-            border-top-color: $message-bubble-left;
-            border-bottom: 0;
-            position: absolute;
             left: -8px;
-            top: 0;
         }
     }
-
-    // Right aligned bubble
 
     .sc_EventTile_bubbleArea_right {
         margin-right: 8px;
@@ -379,16 +379,17 @@ $left-gutter: 56px;
     .sc_EventTile_bubble_right {
         margin-right: 0px;
         margin-left: auto;
-        background-color: $message-bubble-right;
 
         &.sc_EventTile_bubble_tail::before {
-            content: '';
-            border: 16px solid transparent;
-            border-top-color: $message-bubble-right;
-            border-bottom: 0;
-            position: absolute;
             right: -8px;
-            top: 0;
+        }
+    }
+    
+    .sc_EventTile_bubble_self {
+        background-color: $message-bubble-background-self;
+
+        &.sc_EventTile_bubble_tail::before {
+            border-top-color: $message-bubble-background-self;
         }
     }
 }
