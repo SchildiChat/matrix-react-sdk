@@ -991,6 +991,18 @@ export default class EventTile extends React.Component {
                 );
 
                 if (scBubbleEnabled) {
+                    const mediaBodyTypes = ['m.image', 'm.file', 'm.audio', 'm.video'];
+                    const mediaEvTypes = ['m.sticker'];
+                    let mediaBody = false;
+
+                    const content = this.props.mxEvent.getContent();
+                    const type = this.props.mxEvent.getType();
+                    const msgtype = content.msgtype;
+                    if (type && mediaEvTypes.indexOf(type) != -1 ||
+                        msgtype && mediaBodyTypes.indexOf(msgtype) != -1) {
+                        mediaBody = true;
+                    }
+
                     const bubbleAreaClasses = classNames(
                         "sc_EventTile_bubbleArea",
                         {
@@ -1006,7 +1018,13 @@ export default class EventTile extends React.Component {
                             "sc_EventTile_bubble_tail": !this.props.continuation,
                         },
                     );
-
+                    const mediaClasses = classNames(
+                        "sc_EventTile_media",
+                        {
+                            "sc_EventTile_media_right": sentByMe,
+                            "sc_EventTile_media_left": !sentByMe,
+                        },
+                    );
 
                     // tab-index=-1 to allow it to be focusable but do not add tab stop for it, primarily for screen readers
                     return (
@@ -1016,7 +1034,7 @@ export default class EventTile extends React.Component {
                             <div className="mx_EventTile_line sc_EventTile_bubbleLine">
                                 { groupPadlock }
                                 <div className={bubbleAreaClasses}>
-                                    <div className={bubbleClasses}>
+                                    <div className={mediaBody ? mediaClasses : bubbleClasses}>
                                         { sender }
                                         { thread }
                                         <EventTileType ref={this._tile}
@@ -1027,6 +1045,8 @@ export default class EventTile extends React.Component {
                                                        highlightLink={this.props.highlightLink}
                                                        showUrlPreview={this.props.showUrlPreview}
                                                        onHeightChanged={this.props.onHeightChanged}
+                                                       scBubbleAreaClasses={bubbleAreaClasses}
+                                                       scBubbleClasses={bubbleClasses}
                                                        scBubbleGroupTimestamp={groupTimestamp} />
                                     </div>
                                     { keyRequestInfo }

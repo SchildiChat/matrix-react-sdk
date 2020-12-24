@@ -185,6 +185,17 @@ $left-gutter: 56px;
 
     .mx_MImageBody {
         margin-right: 0;
+
+        .mx_MFileBody {
+            display: none;
+        }
+    }
+
+    .sc_EventTile_media_right {
+        .mx_MImageBody_thumbnail {
+            left: unset;
+            right: 0;
+        }
     }
 
     .mx_MessageTimestamp {
