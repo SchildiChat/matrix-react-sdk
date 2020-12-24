@@ -288,7 +288,7 @@ export const SETTINGS: {[setting: string]: ISetting} = {
     "alwaysShowTimestamps": {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
         displayName: _td('Always show message timestamps'),
-        default: false,
+        default: true,
     },
     "autoplayGifsAndVideos": {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
