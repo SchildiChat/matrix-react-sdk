@@ -310,7 +310,7 @@ $left-gutter: 56px;
     .sc_EventTile_bubble {
         background-color: $message-bubble-background;
         padding: 10px;
-        border-radius: 2px;
+        border-radius: 4px;
         //margin: 10px auto;
         max-width: max-content;
         // Min width: respect/"hide" bubble tail
