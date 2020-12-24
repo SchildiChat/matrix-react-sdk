@@ -991,7 +991,7 @@ export default class EventTile extends React.Component {
                 );
 
                 if (scBubbleEnabled) {
-                    const mediaBodyTypes = ['m.image', 'm.file', 'm.audio', 'm.video'];
+                    const mediaBodyTypes = ['m.image', /* 'm.file', */ /* 'm.audio', */ 'm.video'];
                     const mediaEvTypes = ['m.sticker'];
                     let mediaBody = false;
 
@@ -1045,8 +1045,6 @@ export default class EventTile extends React.Component {
                                                        highlightLink={this.props.highlightLink}
                                                        showUrlPreview={this.props.showUrlPreview}
                                                        onHeightChanged={this.props.onHeightChanged}
-                                                       scBubbleAreaClasses={bubbleAreaClasses}
-                                                       scBubbleClasses={bubbleClasses}
                                                        scBubbleGroupTimestamp={groupTimestamp} />
                                     </div>
                                     { keyRequestInfo }

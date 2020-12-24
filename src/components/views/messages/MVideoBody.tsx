@@ -227,7 +227,7 @@ export default class MVideoBody extends React.PureComponent<IProps, IState> {
             }
         }
         return (
-            <span className="mx_MVideoBody">
+            <span className="mx_MVideoBody" style={{ maxWidth: width + "px" }}>
                 <video
                     className="mx_MVideoBody"
                     ref={this.videoRef}

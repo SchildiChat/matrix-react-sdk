@@ -431,7 +431,7 @@ export default class MImageBody extends React.Component {
             </div>
         );
 
-        return this.wrapImage(contentUrl, thumbnail);
+        return {thumbnail: this.wrapImage(contentUrl, thumbnail), maxWidth: maxWidth};
     }
 
     // Overidden by MStickerBody
@@ -477,10 +477,12 @@ export default class MImageBody extends React.Component {
           thumbUrl = this._getThumbUrl();
         }
 
-        const thumbnail = this._messageContent(contentUrl, thumbUrl, content);
+        const messageContent = this._messageContent(contentUrl, thumbUrl, content);
+        const thumbnail = messageContent.thumbnail;
+        const maxWidth = messageContent.maxWidth;
         const fileBody = this.getFileBody();
 
-        return <span className="mx_MImageBody">
+        return <span className="mx_MImageBody" style={{ maxWidth: maxWidth + "px" }}>
             { thumbnail }
             { fileBody }
         </span>;
