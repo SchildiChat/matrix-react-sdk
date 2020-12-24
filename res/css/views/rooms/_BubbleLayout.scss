@@ -192,8 +192,9 @@ $left-gutter: 56px;
         }
 
         .mx_MessageTimestamp {
+            visibility: visible !important;
             text-align: center;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(black, 0.5);
             color: white;
             left: unset;
             right: 0;
