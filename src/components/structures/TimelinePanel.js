@@ -116,6 +116,9 @@ class TimelinePanel extends React.Component {
 
         // whether to use the message bubble layout
         useBubbleLayout: PropTypes.bool,
+
+        // whether to use single side bubbles
+        singleSideBubbles: PropTypes.bool,
     }
 
     // a map from room id to read marker event timestamp
@@ -1447,6 +1450,7 @@ class TimelinePanel extends React.Component {
                 showReactions={this.props.showReactions}
                 useIRCLayout={this.props.useIRCLayout}
                 useBubbleLayout={this.props.useBubbleLayout}
+                singleSideBubbles={this.props.singleSideBubbles}
                 enableFlair={SettingsStore.getValue(UIFeature.Flair)}
             />
         );

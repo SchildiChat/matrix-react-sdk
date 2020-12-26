@@ -182,6 +182,7 @@ export interface IState {
     canReply: boolean;
     useIRCLayout: boolean;
     useBubbleLayout: boolean;
+    singleSideBubbles: boolean;
     matrixClientIsReady: boolean;
     showUrlPreview?: boolean;
     e2eStatus?: E2EStatus;
@@ -197,6 +198,7 @@ export default class RoomView extends React.Component<IProps, IState> {
     private readonly showReadReceiptsWatchRef: string;
     private readonly layoutWatcherRef: string;
     private readonly bubbleLayoutWatcherRef: string;
+    private readonly singleSideBubblesWatcherRef: string;
 
     private unmounted = false;
     private permalinkCreators: Record<string, RoomPermalinkCreator> = {};
@@ -239,6 +241,7 @@ export default class RoomView extends React.Component<IProps, IState> {
             canReply: false,
             useIRCLayout: SettingsStore.getValue("useIRCLayout"),
             useBubbleLayout: SettingsStore.getValue("useBubbleLayout"),
+            singleSideBubbles: SettingsStore.getValue("singleSideBubbles"),
             matrixClientIsReady: this.context && this.context.isInitialSyncComplete(),
         };
 
@@ -269,6 +272,8 @@ export default class RoomView extends React.Component<IProps, IState> {
         this.layoutWatcherRef = SettingsStore.watchSetting("useIRCLayout", null, this.onLayoutChange);
 
         this.bubbleLayoutWatcherRef = SettingsStore.watchSetting("useBubbleLayout", null, this.onBubbleLayoutChange);
+        this.singleSideBubblesWatcherRef = SettingsStore.watchSetting("singleSideBubbles", null,
+            this.onSingleSideBubblesChange);
     }
 
     // TODO: [REACT-WARNING] Move into constructor
@@ -626,6 +631,7 @@ export default class RoomView extends React.Component<IProps, IState> {
 
         SettingsStore.unwatchSetting(this.layoutWatcherRef);
         SettingsStore.unwatchSetting(this.bubbleLayoutWatcherRef);
+        SettingsStore.unwatchSetting(this.singleSideBubblesWatcherRef);
     }
 
     private onLayoutChange = () => {
@@ -637,6 +643,12 @@ export default class RoomView extends React.Component<IProps, IState> {
     private onBubbleLayoutChange = () => {
         this.setState({
             useBubbleLayout: SettingsStore.getValue("useBubbleLayout"),
+        });
+    };
+
+    private onSingleSideBubblesChange = () => {
+        this.setState({
+            singleSideBubbles: SettingsStore.getValue("singleSideBubbles"),
         });
     };
 
@@ -1324,6 +1336,7 @@ export default class RoomView extends React.Component<IProps, IState> {
                 onHeightChanged={onHeightChanged}
                 useIRCLayout={this.state.useIRCLayout}
                 useBubbleLayout={this.state.useBubbleLayout}
+                singleSideBubbles={this.state.singleSideBubbles}
             />);
         }
         return ret;
@@ -1967,6 +1980,7 @@ export default class RoomView extends React.Component<IProps, IState> {
                 showReactions={true}
                 useIRCLayout={this.state.useIRCLayout}
                 useBubbleLayout={this.state.useBubbleLayout}
+                singleSideBubbles={this.state.singleSideBubbles}
             />);
 
         let topUnreadMessagesBar = null;

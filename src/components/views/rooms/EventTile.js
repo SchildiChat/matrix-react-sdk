@@ -231,6 +231,9 @@ export default class EventTile extends React.Component {
         // whether to use the message bubble layout
         useBubbleLayout: PropTypes.bool,
 
+        // whether to use single side bubbles
+        singleSideBubbles: PropTypes.bool,
+
         // whether or not to show flair at all
         enableFlair: PropTypes.bool,
     };
@@ -710,6 +713,8 @@ export default class EventTile extends React.Component {
                 && this.props.tileShape !== 'reply_preview' && this.props.tileShape !== 'reply'
                 && this.props.tileShape !== 'notif' && this.props.tileShape !== 'file_grid';
         const sentByMe = me === this.props.mxEvent.getSender();
+        const showRight = sentByMe && !this.props.singleSideBubbles;
+        const showLeft = !sentByMe || this.props.singleSideBubbles;
 
         const isEditing = !!this.props.editState;
         const classes = classNames({
@@ -734,7 +739,6 @@ export default class EventTile extends React.Component {
             mx_EventTile_bad: isEncryptionFailure,
             mx_EventTile_emote: msgtype === 'm.emote',
             sc_EventTile_bubbleContainer: scBubbleEnabled,
-            sc_EventTile_bubbleTailLeftContainer: scBubbleEnabled && !sentByMe && !this.props.continuation,
         });
 
         // If the tile is in the Sending state, don't speak the message.
@@ -752,7 +756,7 @@ export default class EventTile extends React.Component {
         let avatarSize;
         let needsSenderProfile;
 
-        if (scBubbleEnabled && sentByMe) {
+        if (scBubbleEnabled && showRight) {
             avatarSize = 0;
             needsSenderProfile = false;
         } else if (this.props.tileShape === "notif") {
@@ -821,7 +825,7 @@ export default class EventTile extends React.Component {
             getTile={this.getTile}
             getReplyThread={this.getReplyThread}
             onFocusChange={this.onActionBarFocusChange}
-            showLeft={!sentByMe}
+            showLeft={showLeft}
         /> : undefined;
 
         const timestamp = this.props.mxEvent.getTs() ?
@@ -1003,8 +1007,6 @@ export default class EventTile extends React.Component {
                         mediaBody = true;
                     }
 
-                    const showRight = sentByMe;
-                    const showLeft = !sentByMe;
                     const bubbleAreaClasses = classNames(
                         "sc_EventTile_bubbleArea",
                         {

@@ -141,6 +141,9 @@ export default class MessagePanel extends React.Component {
         // whether to use the message bubble layout
         useBubbleLayout: PropTypes.bool,
 
+        // whether to use single side bubbles
+        singleSideBubbles: PropTypes.bool,
+
         // whether or not to show flair at all
         enableFlair: PropTypes.bool,
     };
@@ -617,6 +620,7 @@ export default class MessagePanel extends React.Component {
                         showReactions={this.props.showReactions}
                         useIRCLayout={this.props.useIRCLayout}
                         useBubbleLayout={this.props.useBubbleLayout}
+                        singleSideBubbles={this.props.singleSideBubbles}
                         enableFlair={this.props.enableFlair}
                     />
                 </TileErrorBoundary>

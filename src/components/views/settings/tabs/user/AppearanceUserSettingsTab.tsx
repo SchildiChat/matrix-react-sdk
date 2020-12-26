@@ -458,6 +458,12 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                 */
             advanced = <>
                 <SettingsFlag
+                    name="singleSideBubbles"
+                    level={SettingLevel.DEVICE}
+                    useCheckbox={true}
+                    disabled={!this.state.useBubbleLayout}
+                />
+                <SettingsFlag
                     name="useSystemFont"
                     level={SettingLevel.DEVICE}
                     useCheckbox={true}

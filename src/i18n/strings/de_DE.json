@@ -2342,6 +2342,7 @@
     "Enable advanced debugging for the room list": "Erweiterte Fehlersuche für die Raumliste aktivieren",
     "Enable experimental, compact IRC style layout": "Kompaktes, experimentelles Layout im IRC-Stil aktivieren",
     "Enable layout with message bubbles": "Layout mit Sprechblasen aktivieren",
+    "Show message bubbles on one side only": "Sprechblasen nur auf einer Seite anzeigen",
     "User menu": "Benutzermenü",
     "%(brand)s Web": "%(brand)s Web",
     "%(brand)s Desktop": "%(brand)s Desktop",

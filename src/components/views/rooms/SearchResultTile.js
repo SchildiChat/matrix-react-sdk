@@ -68,6 +68,7 @@ export default class SearchResultTile extends React.Component {
                         enableFlair={SettingsStore.getValue(UIFeature.Flair)}
                         useIrcLayout={this.props.useIrcLayout}
                         useBubbleLayout={this.props.useBubbleLayout}
+                        singleSideBubbles={this.state.singleSideBubbles}
                     />
                 ));
             }

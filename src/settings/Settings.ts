@@ -632,6 +632,11 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         displayName: _td("Enable layout with message bubbles"),
         default: true,
     },
+    "singleSideBubbles": {
+        supportedLevels: LEVELS_ROOM_SETTINGS_WITH_ROOM,
+        displayName: _td("Show message bubbles on one side only"),
+        default: false,
+    },
     "showChatEffects": {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
         displayName: _td("Show chat effects"),
