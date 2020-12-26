@@ -210,8 +210,15 @@ $left-gutter: 56px;
         padding: 0;
     }
 
-    .mx_MVideoBody {
+    span.mx_MVideoBody {
         display: block;
+        max-width: max-content;
+
+        video.mx_MVideoBody {
+            display: block;
+            width: auto;
+            max-height: 600px;
+        }
 
         .mx_MFileBody {
             display: flex;
