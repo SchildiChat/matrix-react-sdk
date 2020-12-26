@@ -357,6 +357,10 @@ $left-gutter: 56px;
         }
 
         > *:not(.mx_ReplyThread_wrapper) {
+            .markdown-body > blockquote {
+                margin-top: 3px !important;
+            }
+
             .sc_LinkedTimestamp {
                 float: right;
                 display: flex;
