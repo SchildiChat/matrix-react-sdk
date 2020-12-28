@@ -44,6 +44,8 @@ limitations under the License.
         flex-direction: column;
         justify-content: center;
 
+        max-height: 48px; // same as avatar
+
         .mx_RoomTile_name,
         .mx_RoomTile_messagePreview {
             margin: 0 2px;
@@ -66,8 +68,14 @@ limitations under the License.
 
         .mx_RoomTile_messagePreview {
             font-size: $font-13px;
-            line-height: $font-18px;
+            line-height: $font-16px;
+            max-height: 2 * $font-16px;
             color: $roomtile-preview-color;
+            white-space: unset;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            margin-bottom: -3px; // shift the preview down a bit more
         }
 
         .mx_RoomTile_nameWithPreview {
