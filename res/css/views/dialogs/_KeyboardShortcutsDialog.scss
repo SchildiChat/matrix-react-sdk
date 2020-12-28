@@ -43,7 +43,7 @@ limitations under the License.
 
     kbd {
         padding: 5px;
-        border-radius: 4px;
+        border-radius: $border-radius-normal;
         background-color: $reaction-row-button-bg-color;
         margin-right: 5px;
         min-width: 20px;

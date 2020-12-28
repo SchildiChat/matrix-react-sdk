@@ -16,7 +16,7 @@ limitations under the License.
 
 .mx_AddressTile {
     display: inline-block;
-    border-radius: 3px;
+    border-radius: $border-radius-small;
     background-color: rgba(74, 73, 74, 0.1);
     border: solid 1px $input-border-color;
     line-height: $font-26px;

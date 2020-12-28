@@ -30,7 +30,7 @@ limitations under the License.
         grid-column: 1;
         background-color: $dark-panel-bg-color;
         box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
-        border-radius: 8px;
+        border-radius: $border-radius-big;
     }
 
     .mx_Toast_toast {
@@ -39,7 +39,7 @@ limitations under the License.
         color: $primary-fg-color;
         background-color: $dark-panel-bg-color;
         box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
-        border-radius: 8px;
+        border-radius: $border-radius-big;
         overflow: hidden;
         display: grid;
         grid-template-columns: 22px 1fr;

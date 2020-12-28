@@ -17,7 +17,7 @@ limitations under the License.
 // Note: this component expects to be contained within a flexbox
 .mx_RoomSearch {
     flex: 1;
-    border-radius: 8px;
+    border-radius: $border-radius-big;
     background-color: $roomlist-button-bg-color;
     // keep border thickness consistent to prevent movement
     border: 1px solid transparent;

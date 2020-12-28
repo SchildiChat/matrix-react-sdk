@@ -32,7 +32,7 @@ limitations under the License.
     min-width: 204px;
     margin: 0;
     box-sizing: border-box;
-    border-radius: 4px;
+    border-radius: $border-radius-normal;
     border: 1px solid $dialog-close-fg-color;
     background-color: $primary-bg-color;
     max-height: calc(100vh - 20px); // allow 10px padding on both top and bottom
@@ -123,7 +123,7 @@ limitations under the License.
 .mx_NetworkDropdown_server_add {
     padding: 16px 10px 16px 32px;
     position: relative;
-    border-radius: 0 0 4px 4px;
+    border-radius: 0 0 $border-radius-normal $border-radius-normal;
 
     &::before {
         content: "";

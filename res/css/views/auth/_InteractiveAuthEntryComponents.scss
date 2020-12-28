@@ -51,7 +51,7 @@ limitations under the License.
     font-size: 200%;
     font-weight: bold;
     border: 1px solid $strong-input-border-color;
-    border-radius: 3px;
+    border-radius: $border-radius-small;
     width: 6em;
 }
 

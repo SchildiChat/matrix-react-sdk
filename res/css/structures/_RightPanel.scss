@@ -21,7 +21,7 @@ limitations under the License.
     position: relative;
     display: flex;
     flex-direction: column;
-    border-radius: 8px;
+    border-radius: $border-radius-big;
     padding: 4px 0;
     box-sizing: border-box;
     height: 100%;
@@ -106,7 +106,7 @@ limitations under the License.
 
 .mx_RightPanel_headerButton_badge {
     font-size: $font-8px;
-    border-radius: 8px;
+    border-radius: $border-radius-big;
     color: $accent-fg-color;
     background-color: $accent-color;
     font-weight: bold;

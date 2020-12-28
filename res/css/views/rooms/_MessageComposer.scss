@@ -146,7 +146,7 @@ limitations under the License.
 
 .mx_MessageComposer_input pre {
     background-color: $rte-code-bg-color;
-    border-radius: 3px;
+    border-radius: $border-radius-small;
     padding: 10px;
 }
 

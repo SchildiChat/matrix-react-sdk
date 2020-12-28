@@ -51,7 +51,7 @@ limitations under the License.
 .mx_Tooltip {
     display: none;
     position: fixed;
-    border-radius: 8px;
+    border-radius: $border-radius-big;
     box-shadow: 4px 4px 12px 0 $menu-box-shadow-color;
     z-index: 6000; // Higher than context menu so tooltips can be used everywhere
     padding: 10px;

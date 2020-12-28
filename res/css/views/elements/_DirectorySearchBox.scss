@@ -26,7 +26,7 @@ limitations under the License.
     padding-left: 10px;
     padding-right: 10px;
     background-color: $plinth-bg-color;
-    border-radius: 3px;
+    border-radius: $border-radius-small;
     background-image: url('$(res)/img/icon-return.svg');
     background-position: 8px 70%;
     background-repeat: no-repeat;

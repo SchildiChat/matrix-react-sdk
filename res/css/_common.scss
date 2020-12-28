@@ -18,6 +18,7 @@ limitations under the License.
 
 @import "./_font-sizes.scss";
 @import "./_font-weights.scss";
+@import "./_border-radii.scss";
 
 $hover-transition: 0.08s cubic-bezier(.46, .03, .52, .96); // quadratic
 
@@ -166,7 +167,7 @@ input[type=text]:focus, input[type=password]:focus, textarea:focus {
         box-sizing: border-box;
         background-color: transparent;
         color: $input-darker-fg-color;
-        border-radius: 4px;
+        border-radius: $border-radius-normal;
         border: 1px solid rgba($primary-fg-color, .1);
         // these things should probably not be defined globally
         margin: 9px;
@@ -263,7 +264,7 @@ input[type=text]:focus, input[type=password]:focus, textarea:focus {
     padding: 24px;
     max-height: 80%;
     box-shadow: 2px 15px 30px 0 $dialog-shadow-color;
-    border-radius: 8px;
+    border-radius: $border-radius-big;
     overflow-y: auto;
 }
 
@@ -430,7 +431,7 @@ input[type=text]:focus, input[type=password]:focus, textarea:focus {
 /* Spinner Dialog overide */
 .mx_Dialog_wrapper.mx_Dialog_spinner .mx_Dialog {
     width: auto;
-    border-radius: 8px;
+    border-radius: $border-radius-big;
     padding: 0px;
     box-shadow: none;
 
@@ -465,7 +466,7 @@ input[type=text]:focus, input[type=password]:focus, textarea:focus {
 
 .mx_TextInputDialog_input {
     font-size: $font-15px;
-    border-radius: 3px;
+    border-radius: $border-radius-small;
     border: 1px solid $input-border-color;
     padding: 9px;
     color: $primary-fg-color;
@@ -491,7 +492,7 @@ input[type=text]:focus, input[type=password]:focus, textarea:focus {
     top: -3px;
     background-color: white;
     padding: 0 4px;
-    border-radius: 3px;
+    border-radius: $border-radius-small;
     border: 1px solid darkred;
     cursor: help;
     transition-duration: 200ms;
@@ -571,7 +572,7 @@ input[type=text]:focus, input[type=password]:focus, textarea:focus {
     background-color: $tooltip-timeline-bg-color;
     color: $tooltip-timeline-fg-color;
     border: none;
-    border-radius: 3px;
+    border-radius: $border-radius-small;
     padding: 6px 8px;
 }
 

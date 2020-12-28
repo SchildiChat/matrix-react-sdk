@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 .mx_SetEmailDialog_email_input {
-    border-radius: 3px;
+    border-radius: $border-radius-small;
     border: 1px solid $input-border-color;
     padding: 9px;
     color: $input-fg-color;

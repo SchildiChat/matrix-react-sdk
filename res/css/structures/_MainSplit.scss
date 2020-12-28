@@ -35,7 +35,7 @@ limitations under the License.
 
         height: 64px !important; // to match width of the ones on roomlist
         width: 4px !important;
-        border-radius: 4px !important;
+        border-radius: $border-radius-normal !important;
 
         background-color: $primary-fg-color;
         opacity: 0.8;

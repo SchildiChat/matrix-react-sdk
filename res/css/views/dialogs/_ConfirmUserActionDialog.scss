@@ -39,7 +39,7 @@ limitations under the License.
     color: $primary-fg-color;
     background-color: $primary-bg-color;
 
-    border-radius: 3px;
+    border-radius: $border-radius-small;
     border: solid 1px $input-border-color;
     line-height: $font-36px;
     padding-left: 16px;

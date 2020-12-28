@@ -105,7 +105,7 @@ limitations under the License.
             font-size: $font-13px;
             height: 20px;
             line-height: 20px;
-            border-radius: 8px;
+            border-radius: $border-radius-big;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;

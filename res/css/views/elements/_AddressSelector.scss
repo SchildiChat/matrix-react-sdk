@@ -20,7 +20,7 @@ limitations under the License.
     width: 485px;
     max-height: 116px;
     overflow-y: auto;
-    border-radius: 3px;
+    border-radius: $border-radius-small;
     border: solid 1px $accent-color;
     cursor: pointer;
     z-index: 1;

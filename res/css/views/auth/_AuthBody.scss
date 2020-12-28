@@ -20,7 +20,7 @@ limitations under the License.
     font-size: $font-12px;
     color: $authpage-secondary-color;
     background-color: $authpage-body-bg-color;
-    border-radius: 0 4px 4px 0;
+    border-radius: 0 $border-radius-normal $border-radius-normal 0;
     padding: 25px 60px;
     box-sizing: border-box;
 
@@ -160,7 +160,7 @@ limitations under the License.
 
 @media only screen and (max-width: 480px) {
     .mx_AuthBody {
-        border-radius: 4px;
+        border-radius: $border-radius-normal;
         width: auto;
         max-width: 500px;
         padding: 10px;

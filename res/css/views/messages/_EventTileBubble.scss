@@ -17,7 +17,7 @@ limitations under the License.
 .mx_EventTileBubble {
     background-color: $dark-panel-bg-color;
     padding: 10px;
-    border-radius: 8px;
+    border-radius: $border-radius-big;
     margin: 10px auto;
     max-width: 75%;
     box-sizing: border-box;

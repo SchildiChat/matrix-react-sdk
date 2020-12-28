@@ -22,7 +22,7 @@ limitations under the License.
         flex: 1;
         width: 100%; // Needed to make the Field inside grow
         background-color: $user-tile-hover-bg-color;
-        border-radius: 4px;
+        border-radius: $border-radius-normal;
         min-height: 25px;
         padding-left: 8px;
         overflow-x: hidden;
@@ -96,7 +96,7 @@ limitations under the License.
 
     &:hover {
         background-color: $user-tile-hover-bg-color;
-        border-radius: 4px;
+        border-radius: $border-radius-normal;
     }
 
     * {

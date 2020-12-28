@@ -108,7 +108,7 @@ a.mx_Pill {
     margin: 0;
     font-size: 85%;
     background-color: $rte-code-bg-color;
-    border-radius: 3px;
+    border-radius: $border-radius-small;
 }
 
 .mx_Markdown_HR {

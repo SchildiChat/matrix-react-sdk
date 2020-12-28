@@ -43,7 +43,7 @@ limitations under the License.
     .mx_VerificationPanel_qrCode {
         padding: 4px 4px 0 4px;
         background: white;
-        border-radius: 4px;
+        border-radius: $border-radius-normal;
         width: max-content;
         max-width: 100%;
         // Override general user info margin
@@ -102,7 +102,7 @@ limitations under the License.
                 width: 220px !important;
                 height: 220px !important;
                 background-color: #fff;
-                border-radius: 4px;
+                border-radius: $border-radius-normal;
                 vertical-align: middle;
                 text-align: center;
                 padding: 10px;

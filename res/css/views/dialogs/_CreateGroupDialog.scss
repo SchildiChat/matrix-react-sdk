@@ -26,7 +26,7 @@ limitations under the License.
 
 .mx_CreateGroupDialog_input {
     font-size: $font-15px;
-    border-radius: 3px;
+    border-radius: $border-radius-small;
     border: 1px solid $input-border-color;
     padding: 9px;
     color: $primary-fg-color;
@@ -52,10 +52,10 @@ limitations under the License.
 
 .mx_CreateGroupDialog_prefix {
     border-right: 0px;
-    border-radius: 3px 0px 0px 3px;
+    border-radius: $border-radius-small 0px 0px $border-radius-small;
 }
 
 .mx_CreateGroupDialog_suffix {
     border-left: 0px;
-    border-radius: 0px 3px 3px 0px;
+    border-radius: 0px $border-radius-small $border-radius-small 0px;
 }

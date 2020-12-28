@@ -116,7 +116,7 @@ $groupFilterPanelWidth: 56px; // only applies in this file, used for calculation
             .mx_LeftPanel_exploreButton {
                 width: 32px;
                 height: 32px;
-                border-radius: 8px;
+                border-radius: $border-radius-big;
                 background-color: $roomlist-button-bg-color;
                 position: relative;
                 margin-left: 8px;
