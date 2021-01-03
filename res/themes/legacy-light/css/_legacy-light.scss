@@ -136,11 +136,11 @@ $greyed-fg-color: #888;
 
 $neutral-badge-color: #dbdbdb;
 
-$preview-widget-bar-color: #ddd;
-$preview-widget-fg-color: $greyed-fg-color;
+$preview-widget-bar-color: $primary-fg-color;
+$preview-widget-fg-color: unset;
 
-$blockquote-bar-color: #ddd;
-$blockquote-fg-color: #777;
+$blockquote-bar-color: $primary-fg-color;
+$blockquote-fg-color: unset;
 
 $settings-grey-fg-color: #a2a2a2;
 $settings-profile-placeholder-bg-color: #e7e7e7;

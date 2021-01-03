@@ -86,6 +86,12 @@ $dialog-close-fg-color: #aaaaaa;
 $dialog-background-bg-color: $header-panel-bg-color;
 $lightbox-background-bg-color: #000;
 
+$preview-widget-bar-color: #ddd;
+$preview-widget-fg-color: unset;
+
+$blockquote-bar-color: #ddd;
+$blockquote-fg-color: unset;
+
 $settings-grey-fg-color: #a2a2a2;
 $settings-profile-placeholder-bg-color: #383838;
 $settings-profile-overlay-placeholder-fg-color: #454545;
@@ -279,10 +285,6 @@ $composer-shadow-color: rgba(0, 0, 0, 0.28);
         tr:nth-child(2n) {
             background-color: #080808;
         }
-    }
-
-    blockquote {
-        color: #919191;
     }
 }
 

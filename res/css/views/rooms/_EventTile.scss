@@ -500,6 +500,11 @@ $left-gutter: 56px;
         // deliberate constants as we're behind an invert filter
         background-color: #f8f8f8;
     }
+
+    blockquote {
+        color: $blockquote-fg-color;
+        border-left-color: $blockquote-bar-color;
+    }
 }
 
 .mx_EventTile:hover .mx_EventTile_body pre,
