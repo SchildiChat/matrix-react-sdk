@@ -42,6 +42,10 @@ $left-gutter: 56px;
         }
     }
 
+    .mx_LinkPreviewWidget {
+        margin-bottom: 0px;
+    }
+
     .mx_EventTile {
         // no reserved space for read receipts required.
         padding-top: 6px;
