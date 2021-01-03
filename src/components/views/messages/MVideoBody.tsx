@@ -227,22 +227,24 @@ export default class MVideoBody extends React.PureComponent<IProps, IState> {
             }
         }
         return (
-            <span className="mx_MVideoBody">
-                <video
-                    className="mx_MVideoBody"
-                    ref={this.videoRef}
-                    src={contentUrl}
-                    title={content.body}
-                    controls
-                    preload={preload}
-                    muted={autoplay}
-                    autoPlay={autoplay}
-                    height={height}
-                    width={width}
-                    poster={poster}
-                    onPlay={this.videoOnPlay}
-                >
-                </video>
+            <span className="mx_MVideoBody" style={{ maxWidth: width + "px" }}>
+                <span className="sc_MVideoBody_video_container">
+                    <video
+                        className="mx_MVideoBody"
+                        ref={this.videoRef}
+                        src={contentUrl}
+                        title={content.body}
+                        controls
+                        preload={preload}
+                        muted={autoplay}
+                        autoPlay={autoplay}
+                        height={height}
+                        width={width}
+                        poster={poster}
+                        onPlay={this.videoOnPlay}
+                    >
+                    </video>
+                </span>
                 <MFileBody {...this.props} decryptedBlob={this.state.decryptedBlob} />
             </span>
         );

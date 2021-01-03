@@ -48,7 +48,9 @@ $left-gutter: 56px;
         }
 
         > .mx_EventTile_line {
-            padding-left: $left-gutter;
+            padding-left: $left-gutter !important;
+            border-left: none !important;
+            background: transparent !important;
             margin-right: unset;
         }
 
@@ -76,9 +78,9 @@ $left-gutter: 56px;
         color: $accent-color !important;
     }
 
-    .mx_EventTile_selected > div > a > .mx_MessageTimestamp {
-        left: -4px;
-    }
+    // .mx_EventTile_selected > div > a > .mx_MessageTimestamp {
+    //     left: -4px;
+    // }
 
     .mx_EventTile_msgOption {
         float: unset;
@@ -417,6 +419,33 @@ $left-gutter: 56px;
 
         &.sc_EventTile_bubble_tail::before {
             border-top-color: $message-bubble-background-self;
+        }
+    }
+
+    .mx_EventTile_selected {
+        .sc_EventTile_bubble {
+            background: $message-bubble-background-selected;
+
+            &.sc_EventTile_bubble_tail::before {
+                border-top-color: $message-bubble-background-selected;
+            }
+        }
+
+        .mx_MImageBody_thumbnail_container {
+            background: $accent-color;
+            border-radius: $border-radius-normal;
+        }
+        .mx_MImageBody_thumbnail {
+            opacity: 72%;
+        }
+
+        .sc_MVideoBody_video_container {
+            background: $accent-color;
+            border-radius: $border-radius-normal;
+            display: block;
+        }
+        span.mx_MVideoBody video.mx_MVideoBody {
+            opacity: 72%;
         }
     }
 }
