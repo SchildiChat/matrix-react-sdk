@@ -64,7 +64,7 @@ limitations under the License.
     height: 18px;
     background: $primary-bg-color;
     border: 1.3px solid $muted-fg-color;
-    border-radius: 10px;
+    border-radius: $border-radius-bigger;
     margin: 5px auto;
 }
 

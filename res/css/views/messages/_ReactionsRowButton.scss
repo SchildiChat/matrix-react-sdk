@@ -20,7 +20,7 @@ limitations under the License.
     margin-right: 6px;
     padding: 0 6px;
     border: 1px solid $reaction-row-button-border-color;
-    border-radius: 10px;
+    border-radius: $border-radius-bigger;
     background-color: $reaction-row-button-bg-color;
     cursor: pointer;
     user-select: none;

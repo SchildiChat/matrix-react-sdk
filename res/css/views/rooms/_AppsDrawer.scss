@@ -82,11 +82,11 @@ $MiniAppTileHeight: 200px;
 
     .mx_AppTile:first-of-type {
         border-left-width: 8px;
-        border-radius: 10px 0 0 10px;
+        border-radius: $border-radius-bigger 0 0 $border-radius-bigger;
     }
     .mx_AppTile:last-of-type {
         border-right-width: 8px;
-        border-radius: 0 10px 10px 0;
+        border-radius: 0 $border-radius-bigger $border-radius-bigger 0;
     }
 
     .mx_ResizeHandle_horizontal {

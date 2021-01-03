@@ -40,7 +40,7 @@ limitations under the License.
             width: 20px;
             margin: 12px;
             top: 0;
-            border-radius: 10px;
+            border-radius: $border-radius-bigger;
 
             &::before {
                 content: "";

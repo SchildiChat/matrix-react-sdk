@@ -34,7 +34,7 @@ limitations under the License.
         width: 20px;
         height: 20px;
         background-color: $icon-button-color;
-        border-radius: 10px;
+        border-radius: $border-radius-bigger;
         grid-column: 2;
         grid-row: 1;
         margin-left: auto;

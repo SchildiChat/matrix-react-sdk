@@ -353,7 +353,7 @@ limitations under the License.
 .mx_GroupView_changeDelayWarning {
     background-color: $info-plinth-bg-color;
     color: $info-plinth-fg-color;
-    border-radius: 10px;
+    border-radius: $border-radius-bigger;
     text-align: center;
 
     margin: 20px 0px;
