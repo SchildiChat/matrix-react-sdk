@@ -422,6 +422,13 @@ $left-gutter: 56px;
         }
     }
 
+    .sc_EventTile_bubble_notice {
+        opacity: 0.6;
+    }
+    .mx_MNoticeBody {
+        opacity: unset;
+    }
+
     .mx_EventTile_selected {
         .sc_EventTile_bubble {
             background: $message-bubble-background-selected;

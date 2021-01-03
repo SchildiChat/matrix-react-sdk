@@ -998,14 +998,18 @@ export default class EventTile extends React.Component {
                     const mediaBodyTypes = ['m.image', /* 'm.file', */ /* 'm.audio', */ 'm.video'];
                     const mediaEvTypes = ['m.sticker'];
                     let mediaBody = false;
+                    let noticeBody = false;
 
                     const content = this.props.mxEvent.getContent();
                     const type = this.props.mxEvent.getType();
                     const msgtype = content.msgtype;
+
                     if (type && mediaEvTypes.indexOf(type) != -1 ||
                         msgtype && mediaBodyTypes.indexOf(msgtype) != -1) {
                         mediaBody = true;
                     }
+
+                    if (msgtype && msgtype == 'm.notice') noticeBody = true;
 
                     const bubbleAreaClasses = classNames(
                         "sc_EventTile_bubbleArea",
@@ -1021,6 +1025,7 @@ export default class EventTile extends React.Component {
                             "sc_EventTile_bubble_right": showRight,
                             "sc_EventTile_bubble_left": showLeft,
                             "sc_EventTile_bubble_tail": !this.props.continuation,
+                            "sc_EventTile_bubble_notice": noticeBody,
                         },
                     );
                     const mediaClasses = classNames(
