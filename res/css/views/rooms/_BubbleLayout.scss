@@ -33,6 +33,15 @@ $left-gutter: 56px;
         }
     }
 
+    .mx_DateSeparator {
+        margin: 7px 0px 1px 0px;
+
+        > hr {
+            border: none;
+            border-bottom: 1px solid rgba($roomtopic-color, 0.3);
+        }
+    }
+
     .mx_EventTile {
         // no reserved space for read receipts required.
         padding-top: 6px;
