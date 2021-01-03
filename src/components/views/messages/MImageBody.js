@@ -40,6 +40,7 @@ export default class MImageBody extends React.Component {
         maxImageHeight: PropTypes.number,
 
         scBubbleGroupTimestamp: PropTypes.object,
+        scBubbleActionBar: PropTypes.object,
     };
 
     static contextType = MatrixClientContext;
@@ -465,6 +466,7 @@ export default class MImageBody extends React.Component {
                 <span className="mx_MImageBody">
                     <img src={require("../../../../res/img/warning.svg")} width="16" height="16" />
                     { _t("Error decrypting image") }
+                    { this.props.scBubbleActionBar }
                 </span>
             );
         }
@@ -485,6 +487,7 @@ export default class MImageBody extends React.Component {
         return <span className="mx_MImageBody" style={{ maxWidth: maxWidth + "px" }}>
             { thumbnail }
             { fileBody }
+            { this.props.scBubbleActionBar }
         </span>;
     }
 }

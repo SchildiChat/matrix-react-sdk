@@ -46,6 +46,7 @@ export default class MessageEvent extends React.Component {
         maxImageHeight: PropTypes.number,
 
         scBubbleGroupTimestamp: PropTypes.object,
+        scBubbleActionBar: PropTypes.object,
     };
 
     constructor(props) {
@@ -123,6 +124,7 @@ export default class MessageEvent extends React.Component {
             onHeightChanged={this.props.onHeightChanged}
             onMessageAllowed={this.onTileUpdate}
             scBubbleGroupTimestamp={this.props.scBubbleGroupTimestamp}
+            scBubbleActionBar={this.props.scBubbleActionBar}
         />;
     }
 }

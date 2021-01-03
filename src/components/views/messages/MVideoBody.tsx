@@ -28,6 +28,8 @@ interface IProps {
     mxEvent: any;
     /* called when the video has loaded */
     onHeightChanged: () => void;
+
+    scBubbleActionBar: any;
 }
 
 interface IState {
@@ -190,6 +192,7 @@ export default class MVideoBody extends React.PureComponent<IProps, IState> {
                 <span className="mx_MVideoBody">
                     <img src={require("../../../../res/img/warning.svg")} width="16" height="16" />
                     { _t("Error decrypting video") }
+                    { this.props.scBubbleActionBar }
                 </span>
             );
         }
@@ -204,6 +207,7 @@ export default class MVideoBody extends React.PureComponent<IProps, IState> {
                     <div className="mx_MImageBody_thumbnail mx_MImageBody_thumbnail_spinner">
                         <InlineSpinner />
                     </div>
+                    { this.props.scBubbleActionBar }
                 </span>
             );
         }
@@ -246,6 +250,7 @@ export default class MVideoBody extends React.PureComponent<IProps, IState> {
                     </video>
                 </span>
                 <MFileBody {...this.props} decryptedBlob={this.state.decryptedBlob} />
+                { this.props.scBubbleActionBar }
             </span>
         );
     }

@@ -110,7 +110,6 @@ export default class MessageActionBar extends React.PureComponent {
         getTile: PropTypes.func,
         getReplyThread: PropTypes.func,
         onFocusChange: PropTypes.func,
-        showLeft: PropTypes.object,
     };
 
     static contextType = RoomContext;
@@ -195,11 +194,8 @@ export default class MessageActionBar extends React.PureComponent {
             />;
         }
 
-        var actionBarClasses = "mx_MessageActionBar " +
-            (this.props.showLeft ? "mx_MessageActionBar_left" : "mx_MessageActionBar_right");
-
         // aria-live=off to not have this read out automatically as navigating around timeline, gets repetitive.
-        return <Toolbar className={actionBarClasses} aria-label={_t("Message Actions")} aria-live="off">
+        return <Toolbar className="mx_MessageActionBar" aria-label={_t("Message Actions")} aria-live="off">
             {reactButton}
             {replyButton}
             {editButton}

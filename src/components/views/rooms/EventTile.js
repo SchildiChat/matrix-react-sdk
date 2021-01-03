@@ -825,7 +825,6 @@ export default class EventTile extends React.Component {
             getTile={this.getTile}
             getReplyThread={this.getReplyThread}
             onFocusChange={this.onActionBarFocusChange}
-            showLeft={showLeft}
         /> : undefined;
 
         const timestamp = this.props.mxEvent.getTs() ?
@@ -1055,11 +1054,12 @@ export default class EventTile extends React.Component {
                                                        highlightLink={this.props.highlightLink}
                                                        showUrlPreview={this.props.showUrlPreview}
                                                        onHeightChanged={this.props.onHeightChanged}
+                                                       scBubbleActionBar={mediaBody ? actionBar : null}
                                                        scBubbleGroupTimestamp={groupTimestamp} />
+                                        { !mediaBody ? actionBar : null }
                                     </div>
                                     { keyRequestInfo }
                                     { reactionsRow }
-                                    { actionBar }
                                 </div>
                             </div>
                             {

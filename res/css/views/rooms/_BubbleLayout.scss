@@ -174,11 +174,8 @@ $left-gutter: 56px;
     }
 
     .mx_MessageActionBar {
-        right: unset;
-    }
-
-    .mx_MessageActionBar_right {
-        right: 8px;
+        left: unset;
+        right: 0px;
     }
 
     .mx_MFileBody {
@@ -222,6 +219,7 @@ $left-gutter: 56px;
     span.mx_MVideoBody {
         display: block;
         max-width: max-content;
+        position: relative;
 
         video.mx_MVideoBody {
             display: block;
