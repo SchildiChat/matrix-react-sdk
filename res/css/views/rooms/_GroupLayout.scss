@@ -47,6 +47,10 @@ $left-gutter: 56px;
     .mx_EventTile_info .mx_EventTile_line {
         padding-left: calc($left-gutter + 18px);
     }
+
+    li > .mx_DateSeparator {
+        margin-top: 9px;
+    }
 }
 
 /* Compact layout overrides */
