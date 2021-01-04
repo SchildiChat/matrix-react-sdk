@@ -82,11 +82,6 @@ $left-gutter: 56px;
         padding-left: calc($left-gutter + 18px) !important;
     }
 
-    .mx_SenderProfile {
-        // Sender-profile within bubble
-        max-width: 100%;
-    }
-
     .mx_SenderProfile_name {
         color: $accent-color !important;
     }
@@ -361,7 +356,18 @@ $left-gutter: 56px;
         }
 
         > .mx_SenderProfile {
+            // Sender-profile within bubble
+            max-width: 100%;
             margin-bottom: -3px;
+    
+            .mx_Flair {
+                vertical-align: middle;
+                margin-top: -2px;
+    
+                img {
+                    vertical-align: unset;
+                }
+            }
         }
 
         .mx_ReplyThread_wrapper {
