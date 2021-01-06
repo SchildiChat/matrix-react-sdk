@@ -293,7 +293,7 @@ export const SETTINGS: {[setting: string]: ISetting} = {
     "autoplayGifsAndVideos": {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
         displayName: _td('Autoplay GIFs and videos'),
-        default: false,
+        default: true,
     },
     "enableSyntaxHighlightLanguageDetection": {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
