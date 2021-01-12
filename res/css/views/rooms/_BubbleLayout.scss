@@ -22,6 +22,7 @@ $left-gutter: 56px;
 
     .mx_RoomView_MessageList {
         padding-bottom: 8px;
+        padding-right: 10px;
     }
 
     .mx_RoomTile {
@@ -417,7 +418,7 @@ $left-gutter: 56px;
     }
 
     .sc_EventTile_bubbleArea_right {
-        margin-right: 8px;
+        margin-right: 16px;
         margin-left: auto;
         text-align: right;
     }
