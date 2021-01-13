@@ -203,7 +203,7 @@ $left-gutter: 56px;
 .mx_EventTile_searchHighlight {
     background-color: $accent-color;
     color: $accent-fg-color;
-    border-radius: 5px;
+    border-radius: $border-radius-more;
     padding-left: 2px;
     padding-right: 2px;
     cursor: pointer;

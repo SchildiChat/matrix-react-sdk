@@ -39,7 +39,7 @@ limitations under the License.
     flex: none;
     width: 250px;
     border: 1px solid $accent-color;
-    border-radius: 5px;
+    border-radius: $border-radius-more;
     padding: 10px;
     margin-bottom: 1em;
 }

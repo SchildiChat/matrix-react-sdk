@@ -28,7 +28,7 @@ limitations under the License.
 .mx_RestoreKeyBackupDialog_recoveryKeyInput {
     width: 300px;
     border: 1px solid $accent-color;
-    border-radius: 5px;
+    border-radius: $border-radius-more;
     padding: 10px;
 }
 

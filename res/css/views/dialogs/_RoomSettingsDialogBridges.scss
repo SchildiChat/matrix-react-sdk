@@ -31,14 +31,14 @@ limitations under the License.
     border-width: 1px 1px;
     border-color: $primary-hairline-color;
     border-style: solid;
-    border-radius: 5px;
+    border-radius: $border-radius-more;
 
     .column-icon {
         float: left;
         padding-right: 10px;
 
         * {
-            border-radius: 5px;
+            border-radius: $border-radius-more;
             border: 1px solid $input-darker-bg-color;
         }
 
@@ -46,14 +46,14 @@ limitations under the License.
             width: 48px;
             height: 48px;
             background: $input-darker-bg-color;
-            border-radius: 5px;
+            border-radius: $border-radius-more;
         }
 
         .protocol-icon {
             float: left;
             margin-right: 5px;
             img {
-                border-radius: 5px;
+                border-radius: $border-radius-more;
                 border-width: 1px 1px;
                 border-color: $primary-hairline-color;
             }

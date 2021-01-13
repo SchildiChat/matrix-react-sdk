@@ -56,7 +56,7 @@ limitations under the License.
 .mx_MatrixChat_syncError {
     color: $accent-fg-color;
     background-color: $warning-bg-color;
-    border-radius: 5px;
+    border-radius: $border-radius-more;
     display: table;
     padding: 30px;
     position: absolute;
