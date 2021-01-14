@@ -48,6 +48,10 @@ $left-gutter: 56px;
 
         &.mx_EventTile_info {
             padding-top: 0px;
+
+            .mx_EventTile_avatar {
+                left: $left-gutter;
+            }
         }
 
         > .mx_SenderProfile {
@@ -70,6 +74,7 @@ $left-gutter: 56px;
         .mx_EventTile_line, .mx_EventTile_reply {
             padding-top: 3px;
             padding-bottom: 3px;
+            padding-left: $left-gutter;
             line-height: $font-22px;
         }
     }
@@ -87,9 +92,10 @@ $left-gutter: 56px;
         color: $accent-color !important;
     }
 
-    // .mx_EventTile_selected > div > a > .mx_MessageTimestamp {
-    //     left: -4px;
-    // }
+    .mx_EventTile_selected > div > a > .mx_MessageTimestamp {
+        left: 0px;
+        width: 46px;
+    }
 
     .mx_EventTile_msgOption {
         float: unset;
@@ -499,6 +505,7 @@ $left-gutter: 56px;
             }
             .mx_EventTile_avatar {
                 top: 4px;
+                left: $left-gutter;
             }
         }
 
