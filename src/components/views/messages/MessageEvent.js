@@ -45,6 +45,7 @@ export default class MessageEvent extends React.Component {
         /* the maximum image height to use, if the event is an image */
         maxImageHeight: PropTypes.number,
 
+        scBubble: PropTypes.bool,
         scBubbleGroupTimestamp: PropTypes.object,
         scBubbleActionBar: PropTypes.object,
     };
@@ -123,6 +124,7 @@ export default class MessageEvent extends React.Component {
             editState={this.props.editState}
             onHeightChanged={this.props.onHeightChanged}
             onMessageAllowed={this.onTileUpdate}
+            scBubble={this.props.scBubble}
             scBubbleGroupTimestamp={this.props.scBubbleGroupTimestamp}
             scBubbleActionBar={this.props.scBubbleActionBar}
         />;

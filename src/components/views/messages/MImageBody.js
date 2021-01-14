@@ -39,6 +39,7 @@ export default class MImageBody extends React.Component {
         /* the maximum image height to use */
         maxImageHeight: PropTypes.number,
 
+        scBubble: PropTypes.bool,
         scBubbleGroupTimestamp: PropTypes.object,
         scBubbleActionBar: PropTypes.object,
     };
@@ -484,7 +485,7 @@ export default class MImageBody extends React.Component {
         const maxWidth = messageContent.maxWidth;
         const fileBody = this.getFileBody();
 
-        return <span className="mx_MImageBody" style={{ maxWidth: maxWidth + "px" }}>
+        return <span className="mx_MImageBody" style={{ maxWidth: this.props.scBubble ? maxWidth + "px" : null }}>
             { thumbnail }
             { fileBody }
             { this.props.scBubbleActionBar }

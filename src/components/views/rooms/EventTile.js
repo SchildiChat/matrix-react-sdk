@@ -1054,6 +1054,7 @@ export default class EventTile extends React.Component {
                                                        highlightLink={this.props.highlightLink}
                                                        showUrlPreview={this.props.showUrlPreview}
                                                        onHeightChanged={this.props.onHeightChanged}
+                                                       scBubble={true}
                                                        scBubbleActionBar={mediaBody ? actionBar : null}
                                                        scBubbleGroupTimestamp={groupTimestamp} />
                                         { !mediaBody ? actionBar : null }
