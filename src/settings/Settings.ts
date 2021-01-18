@@ -121,7 +121,7 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         isFeature: true,
         displayName: _td("Render LaTeX maths in messages"),
         supportedLevels: LEVELS_FEATURE,
-        default: true,
+        default: false,
     },
     "feature_communities_v2_prototypes": {
         isFeature: true,
