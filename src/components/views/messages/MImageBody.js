@@ -359,7 +359,7 @@ export default class MImageBody extends React.Component {
                         />
                     );
                 }
-                return this.wrapImage(contentUrl, imageElement);
+                return {thumbnail: this.wrapImage(contentUrl, imageElement)};
             }
             infoWidth = this.state.loadedImageDimensions.naturalWidth;
             infoHeight = this.state.loadedImageDimensions.naturalHeight;
