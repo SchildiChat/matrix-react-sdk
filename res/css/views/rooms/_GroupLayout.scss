@@ -55,7 +55,7 @@ $left-gutter: 64px;
 
 /* Compact layout overrides */
 
-.mx_MatrixChat_useCompactLayout {
+.mx_MatrixChat_useCompactLayout .mx_GroupLayout {
     .mx_EventTile {
         padding-top: 4px;
 
