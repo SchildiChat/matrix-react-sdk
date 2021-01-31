@@ -438,12 +438,6 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
             /*
             advanced = <>
                 <SettingsFlag
-                    name="useCompactLayout"
-                    level={SettingLevel.DEVICE}
-                    useCheckbox={true}
-                    disabled={this.state.useIRCLayout}
-                />
-                <SettingsFlag
                     name="useIRCLayout"
                     level={SettingLevel.DEVICE}
                     useCheckbox={true}
@@ -457,6 +451,12 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                 />
                 */
             advanced = <>
+                <SettingsFlag
+                    name="useCompactLayout"
+                    level={SettingLevel.DEVICE}
+                    useCheckbox={true}
+                    disabled={this.state.useIRCLayout || this.state.useBubbleLayout}
+                />
                 <SettingsFlag
                     name="singleSideBubbles"
                     level={SettingLevel.DEVICE}
