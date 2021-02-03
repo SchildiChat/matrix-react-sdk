@@ -125,6 +125,10 @@ $left-gutter: 56px;
         }
     }
 
+    .mx_EventTile_bubbleContainer .mx_EventTile_msgOption {
+        grid-column: unset; // show read avatara like always
+    }    
+
     .mx_EventTile_readAvatars {
         // SC-TODO align left below msg area
         //top: 29px;
