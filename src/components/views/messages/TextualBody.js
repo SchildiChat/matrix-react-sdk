@@ -418,7 +418,10 @@ export default class TextualBody extends React.Component {
         }
 
         if (this.props.replacingEventId) {
-            body = [body, this._renderEditedMarker()];
+            body = <>
+                {body}
+                {this._renderEditedMarker()}
+            </>;
         }
 
         if (this.props.highlightLink) {
