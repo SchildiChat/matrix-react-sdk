@@ -57,8 +57,7 @@ limitations under the License.
     }
 
     &.mx_RoomSearch_focused {
-        box-shadow: 0 0 4px 4px rgba(0, 132, 255, 0.5);
-        border-color: transparent;
+        border-color: $accent-color;
     }
 
     &.mx_RoomSearch_focused, &.mx_RoomSearch_hasQuery {
