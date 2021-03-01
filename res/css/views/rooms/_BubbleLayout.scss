@@ -209,6 +209,7 @@ $left-gutter: 56px;
     .mx_MessageActionBar {
         left: unset;
         right: 0px;
+        direction: ltr;
     }
 
     .mx_MFileBody {
@@ -373,7 +374,7 @@ $left-gutter: 56px;
         //flex-wrap: wrap;
 
         // Don't inherit bubbleArea alignment
-        text-align: left;
+        text-align: start;
 
         &.sc_EventTile_bubble_tail::before {
             content: '';
@@ -387,7 +388,8 @@ $left-gutter: 56px;
         > .mx_SenderProfile {
             // Sender-profile within bubble
             max-width: 100%;
-            margin-bottom: -3px;
+            margin-bottom: 4px;
+            display: block;
         }
 
         .mx_ReplyThread_wrapper {
@@ -400,9 +402,9 @@ $left-gutter: 56px;
             }
 
             .sc_LinkedTimestamp {
-                float: right;
+                float: inline-end;
                 display: flex;
-                margin-left: 1rem;
+                margin-inline-start: 1rem;
 
                 .mx_MessageTimestamp {
                     visibility: visible !important;

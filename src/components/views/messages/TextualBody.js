@@ -478,7 +478,7 @@ export default class TextualBody extends React.Component {
     render() {
         if (this.props.editState) {
             const EditMessageComposer = sdk.getComponent('rooms.EditMessageComposer');
-            return <EditMessageComposer editState={this.props.editState} className="mx_EventTile_content" />;
+            return <EditMessageComposer editState={this.props.editState} className="mx_EventTile_content" dir="auto" />;
         }
         const mxEvent = this.props.mxEvent;
         const content = mxEvent.getContent();
@@ -528,7 +528,7 @@ export default class TextualBody extends React.Component {
         switch (content.msgtype) {
             case "m.emote":
                 return (
-                    <span className={ "mx_MEmoteBody mx_EventTile_content" + bigContent }>
+                    <span className={ "mx_MEmoteBody mx_EventTile_content" + bigContent } dir="auto">
                         *&nbsp;
                         <span
                             className="mx_MEmoteBody_sender"
@@ -544,7 +544,7 @@ export default class TextualBody extends React.Component {
                 );
             case "m.notice":
                 return (
-                    <span className={ "mx_MNoticeBody mx_EventTile_content" + bigContent }>
+                    <span className={ "mx_MNoticeBody mx_EventTile_content" + bigContent } dir="auto">
                         { body }
                         { widgets }
                         { this.props.scBubbleGroupTimestamp }
@@ -552,7 +552,7 @@ export default class TextualBody extends React.Component {
                 );
             default: // including "m.text"
                 return (
-                    <span className={ "mx_MTextBody mx_EventTile_content" + bigContent }>
+                    <span className={ "mx_MTextBody mx_EventTile_content" + bigContent } dir="auto">
                         { body }
                         { widgets }
                         { this.props.scBubbleGroupTimestamp }
