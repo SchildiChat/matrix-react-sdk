@@ -28,15 +28,16 @@ import { FontWatcher } from "../../../../../settings/watchers/FontWatcher";
 import { RecheckThemePayload } from '../../../../../dispatcher/payloads/RecheckThemePayload';
 import { Action } from '../../../../../dispatcher/actions';
 import { IValidationResult, IFieldState } from '../../../elements/Validation';
-import StyledRadioButton from '../../../elements/StyledRadioButton';
 import StyledCheckbox from '../../../elements/StyledCheckbox';
 import SettingsFlag from '../../../elements/SettingsFlag';
 import Field from '../../../elements/Field';
 import EventTilePreview from '../../../elements/EventTilePreview';
 import StyledRadioGroup from "../../../elements/StyledRadioGroup";
-import classNames from 'classnames';
 import { SettingLevel } from "../../../../../settings/SettingLevel";
 import {UIFeature} from "../../../../../settings/UIFeature";
+import {Layout} from "../../../../../settings/Layout";
+import classNames from 'classnames';
+import StyledRadioButton from '../../../elements/StyledRadioButton';
 
 interface IProps {
 }
@@ -62,8 +63,7 @@ interface IState extends IThemeState {
     useSystemFont: boolean;
     systemFont: string;
     showAdvanced: boolean;
-    useIRCLayout: boolean;
-    useBubbleLayout: boolean;
+    layout: Layout;
 }
 
 
@@ -84,8 +84,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
             useSystemFont: SettingsStore.getValue("useSystemFont"),
             systemFont: SettingsStore.getValue("systemFont"),
             showAdvanced: true,
-            useIRCLayout: SettingsStore.getValue("useIRCLayout"),
-            useBubbleLayout: SettingsStore.getValue("useBubbleLayout"),
+            layout: SettingsStore.getValue("layout"),
         };
     }
 
@@ -216,17 +215,29 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
     };
 
     private onLayoutChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        const isIrc = e.target.value === "irc";
-        const isBubble = e.target.value === "bubble";
+        let layout;
+        switch (e.target.value) {
+            case "irc": layout = Layout.IRC; break;
+            case "group": layout = Layout.Group; break;
+            case "bubble": layout = Layout.Bubble; break;
+        }
 
         this.setState({
-            useIRCLayout: isIrc,
-            useBubbleLayout: isBubble,
+            layout: layout,
         });
 
-        SettingsStore.setValue("useIRCLayout", null, SettingLevel.DEVICE, isIrc);
-        SettingsStore.setValue("useBubbleLayout", null, SettingLevel.DEVICE, isBubble);
+        SettingsStore.setValue("layout", null, SettingLevel.DEVICE, layout);
     };
+
+    private onIRCLayoutChange = (enabled: boolean) => {
+        if (enabled) {
+            this.setState({layout: Layout.IRC});
+            SettingsStore.setValue("layout", null, SettingLevel.DEVICE, Layout.IRC);
+        } else {
+            this.setState({layout: Layout.Group});
+            SettingsStore.setValue("layout", null, SettingLevel.DEVICE, Layout.Group);
+        }
+    }
 
     private renderThemeSection() {
         const themeWatcher = new ThemeWatcher();
@@ -311,8 +322,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
             <EventTilePreview
                 className="mx_AppearanceUserSettingsTab_fontSlider_preview"
                 message={this.MESSAGE_PREVIEW_TEXT}
-                useIRCLayout={this.state.useIRCLayout}
-                useBubbleLayout={this.state.useBubbleLayout}
+                layout={this.state.layout}
             />
             <div className="mx_AppearanceUserSettingsTab_fontSlider">
                 <div className="mx_AppearanceUserSettingsTab_fontSlider_smallText">Aa</div>
@@ -349,26 +359,22 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
     }
 
     private renderLayoutSection = () => {
-        const isIrc = this.state.useIRCLayout;
-        const isBubble = this.state.useBubbleLayout;
-
         return <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_Layout">
             <span className="mx_SettingsTab_subheading">{_t("Message layout")}</span>
 
             <div className="mx_AppearanceUserSettingsTab_Layout_RadioButtons">
                 <div className={classNames("mx_AppearanceUserSettingsTab_Layout_RadioButton", {
-                    mx_AppearanceUserSettingsTab_Layout_RadioButton_selected: isIrc,
+                    mx_AppearanceUserSettingsTab_Layout_RadioButton_selected: this.state.layout == Layout.IRC,
                 })}>
                     <EventTilePreview
                         className="mx_AppearanceUserSettingsTab_Layout_RadioButton_preview"
                         message={this.MESSAGE_PREVIEW_TEXT}
-                        useIRCLayout={true}
-                        useBubbleLayout={false}
+                        layout={Layout.IRC}
                     />
                     <StyledRadioButton
                         name="layout"
                         value="irc"
-                        checked={isIrc}
+                        checked={this.state.layout == Layout.IRC}
                         onChange={this.onLayoutChange}
                     >
                         {"IRC"}
@@ -376,18 +382,17 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                 </div>
                 <div className="mx_AppearanceUserSettingsTab_spacer" />
                 <div className={classNames("mx_AppearanceUserSettingsTab_Layout_RadioButton", {
-                    mx_AppearanceUserSettingsTab_Layout_RadioButton_selected: !isIrc && !isBubble,
+                    mx_AppearanceUserSettingsTab_Layout_RadioButton_selected: this.state.layout == Layout.Group,
                 })}>
                     <EventTilePreview
                         className="mx_AppearanceUserSettingsTab_Layout_RadioButton_preview"
                         message={this.MESSAGE_PREVIEW_TEXT}
-                        useIRCLayout={false}
-                        useBubbleLayout={false}
+                        layout={Layout.Group}
                     />
                     <StyledRadioButton
                         name="layout"
-                        value="normal"
-                        checked={!isIrc && !isBubble}
+                        value="group"
+                        checked={this.state.layout == Layout.Group}
                         onChange={this.onLayoutChange}
                     >
                         {_t("Modern")}
@@ -395,18 +400,17 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                 </div>
                 <div className="mx_AppearanceUserSettingsTab_spacer" />
                 <div className={classNames("mx_AppearanceUserSettingsTab_Layout_RadioButton", {
-                    mx_AppearanceUserSettingsTab_Layout_RadioButton_selected: isBubble,
+                    mx_AppearanceUserSettingsTab_Layout_RadioButton_selected: this.state.layout == Layout.Bubble,
                 })}>
                     <EventTilePreview
                         className="mx_AppearanceUserSettingsTab_Layout_RadioButton_preview"
                         message={this.MESSAGE_PREVIEW_TEXT}
-                        useIRCLayout={false}
-                        useBubbleLayout={true}
+                        layout={Layout.Bubble}
                     />
                     <StyledRadioButton
                         name="layout"
                         value="bubble"
-                        checked={isBubble}
+                        checked={this.state.layout == Layout.Bubble}
                         onChange={this.onLayoutChange}
                     >
                         {_t("Message bubbles")}
@@ -449,20 +453,27 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                     useCheckbox={true}
                     onChange={(checked) => this.setState({useBubbleLayout: checked})}
                 />
+                <StyledCheckbox
+                    checked={this.state.layout == Layout.IRC}
+                    onChange={(ev) => this.onIRCLayoutChange(ev.target.checked)}
+                >
+                    {_t("Enable experimental, compact IRC style layout")}
+                </StyledCheckbox>
                 */
             advanced = <>
                 <SettingsFlag
                     name="useCompactLayout"
                     level={SettingLevel.DEVICE}
                     useCheckbox={true}
-                    disabled={this.state.useIRCLayout || this.state.useBubbleLayout}
+                    disabled={!(this.state.layout == Layout.Group)}
                 />
                 <SettingsFlag
                     name="singleSideBubbles"
                     level={SettingLevel.DEVICE}
                     useCheckbox={true}
-                    disabled={!this.state.useBubbleLayout}
+                    disabled={!(this.state.layout == Layout.Bubble)}
                 />
+
                 <SettingsFlag
                     name="useSystemFont"
                     level={SettingLevel.DEVICE}

@@ -27,6 +27,7 @@ import dis from "../../dispatcher/dispatcher";
 
 import {MatrixClientPeg} from '../../MatrixClientPeg';
 import SettingsStore from '../../settings/SettingsStore';
+import {Layout, LayoutPropType} from "../../settings/Layout";
 import {_t} from "../../languageHandler";
 import {haveTileForEvent} from "../views/rooms/EventTile";
 import {textForEvent} from "../../TextForEvent";
@@ -136,11 +137,8 @@ export default class MessagePanel extends React.Component {
         // whether to show reactions for an event
         showReactions: PropTypes.bool,
 
-        // whether to use the irc layout
-        useIRCLayout: PropTypes.bool,
-
-        // whether to use the message bubble layout
-        useBubbleLayout: PropTypes.bool,
+        // which layout to use
+        layout: LayoutPropType,
 
         // whether to use single side bubbles
         singleSideBubbles: PropTypes.bool,
@@ -149,7 +147,6 @@ export default class MessagePanel extends React.Component {
         enableFlair: PropTypes.bool,
     };
 
-    // Force props to be loaded for useIRCLayout
     constructor(props) {
         super(props);
 
@@ -629,8 +626,7 @@ export default class MessagePanel extends React.Component {
                         isSelectedEvent={highlight}
                         getRelationsForEvent={this.props.getRelationsForEvent}
                         showReactions={this.props.showReactions}
-                        useIRCLayout={this.props.useIRCLayout}
-                        useBubbleLayout={this.props.useBubbleLayout}
+                        layout={this.props.layout}
                         singleSideBubbles={this.props.singleSideBubbles}
                         enableFlair={this.props.enableFlair}
                     />
@@ -829,7 +825,7 @@ export default class MessagePanel extends React.Component {
         }
 
         let ircResizer = null;
-        if (this.props.useIRCLayout) {
+        if (this.props.layout == Layout.IRC) {
             ircResizer = <IRCTimelineProfileResizer
                 minWidth={20}
                 maxWidth={600}

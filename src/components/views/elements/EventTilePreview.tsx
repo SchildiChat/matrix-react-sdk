@@ -22,6 +22,7 @@ import * as Avatar from '../../../Avatar';
 import { MatrixClientPeg } from '../../../MatrixClientPeg';
 import EventTile from '../rooms/EventTile';
 import SettingsStore from "../../../settings/SettingsStore";
+import {Layout} from "../../../settings/Layout";
 import {UIFeature} from "../../../settings/UIFeature";
 
 interface IProps {
@@ -33,7 +34,7 @@ interface IProps {
     /**
      * Whether to use the irc layout or not
      */
-    useIRCLayout: boolean;
+    layout: Layout;
 
     /**
      * Whether to use the message bubble layout or not
@@ -125,19 +126,16 @@ export default class EventTilePreview extends React.Component<IProps, IState> {
     public render() {
         const event = this.fakeEvent(this.state);
 
-        const layout = {
-            "mx_IRCLayout": this.props.useIRCLayout,
-            "mx_GroupLayout": !this.props.useIRCLayout && !this.props.useBubbleLayout,
-            "sc_BubbleLayout": this.props.useBubbleLayout,
-        };
-
-        const className = classnames(this.props.className, layout);
+        const className = classnames(this.props.className, {
+            "mx_IRCLayout": this.props.layout == Layout.IRC,
+            "mx_GroupLayout": this.props.layout == Layout.Group,
+            "sc_BubbleLayout": this.props.layout == Layout.Bubble,
+        });
 
         return <div className={className}>
             <EventTile
                 mxEvent={event}
-                useIRCLayout={this.props.useIRCLayout}
-                useBubbleLayout={this.props.useBubbleLayout}
+                layout={this.props.layout}
                 enableFlair={SettingsStore.getValue(UIFeature.Flair)}
             />
         </div>;

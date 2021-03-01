@@ -38,7 +38,6 @@ import CallHandler from '../../CallHandler';
 import dis from '../../dispatcher/dispatcher';
 import Tinter from '../../Tinter';
 import rateLimitedFunc from '../../ratelimitedfunc';
-import * as ObjectUtils from '../../ObjectUtils';
 import * as Rooms from '../../Rooms';
 import eventSearch, { searchPagination } from '../../Searching';
 import { isOnlyCtrlOrCmdIgnoreShiftKeyEvent, Key } from '../../Keyboard';
@@ -48,6 +47,7 @@ import RoomViewStore from '../../stores/RoomViewStore';
 import RoomScrollStateStore from '../../stores/RoomScrollStateStore';
 import WidgetEchoStore from '../../stores/WidgetEchoStore';
 import SettingsStore from "../../settings/SettingsStore";
+import {Layout} from "../../settings/Layout";
 import AccessibleButton from "../views/elements/AccessibleButton";
 import RightPanelStore from "../../stores/RightPanelStore";
 import { haveTileForEvent } from "../views/rooms/EventTile";
@@ -79,6 +79,7 @@ import Notifier from "../../Notifier";
 import { showToast as showNotificationsToast } from "../../toasts/DesktopNotificationsToast";
 import { RoomNotificationStateStore } from "../../stores/notifications/RoomNotificationStateStore";
 import { Container, WidgetLayoutStore } from "../../stores/widgets/WidgetLayoutStore";
+import { objectHasDiff } from "../../utils/objects";
 
 const DEBUG = false;
 let debuglog = function(msg: string) {};
@@ -181,8 +182,7 @@ export interface IState {
     };
     canReact: boolean;
     canReply: boolean;
-    useIRCLayout: boolean;
-    useBubbleLayout: boolean;
+    layout: Layout;
     singleSideBubbles: boolean;
     matrixClientIsReady: boolean;
     showUrlPreview?: boolean;
@@ -240,8 +240,7 @@ export default class RoomView extends React.Component<IProps, IState> {
             statusBarVisible: false,
             canReact: false,
             canReply: false,
-            useIRCLayout: SettingsStore.getValue("useIRCLayout"),
-            useBubbleLayout: SettingsStore.getValue("useBubbleLayout"),
+            layout: SettingsStore.getValue("layout"),
             singleSideBubbles: SettingsStore.getValue("singleSideBubbles"),
             matrixClientIsReady: this.context && this.context.isInitialSyncComplete(),
         };
@@ -270,9 +269,7 @@ export default class RoomView extends React.Component<IProps, IState> {
 
         this.showReadReceiptsWatchRef = SettingsStore.watchSetting("showReadReceipts", null,
             this.onReadReceiptsChange);
-        this.layoutWatcherRef = SettingsStore.watchSetting("useIRCLayout", null, this.onLayoutChange);
-
-        this.bubbleLayoutWatcherRef = SettingsStore.watchSetting("useBubbleLayout", null, this.onBubbleLayoutChange);
+        this.layoutWatcherRef = SettingsStore.watchSetting("layout", null, this.onLayoutChange);
         this.singleSideBubblesWatcherRef = SettingsStore.watchSetting("singleSideBubbles", null,
             this.onSingleSideBubblesChange);
     }
@@ -532,8 +529,7 @@ export default class RoomView extends React.Component<IProps, IState> {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return (!ObjectUtils.shallowEqual(this.props, nextProps) ||
-                !ObjectUtils.shallowEqual(this.state, nextState));
+        return (objectHasDiff(this.props, nextProps) || objectHasDiff(this.state, nextState));
     }
 
     componentDidUpdate() {
@@ -650,13 +646,7 @@ export default class RoomView extends React.Component<IProps, IState> {
 
     private onLayoutChange = () => {
         this.setState({
-            useIRCLayout: SettingsStore.getValue("useIRCLayout"),
-        });
-    };
-
-    private onBubbleLayoutChange = () => {
-        this.setState({
-            useBubbleLayout: SettingsStore.getValue("useBubbleLayout"),
+            layout: SettingsStore.getValue("layout"),
         });
     };
 
@@ -1364,8 +1354,7 @@ export default class RoomView extends React.Component<IProps, IState> {
                 resultLink={resultLink}
                 permalinkCreator={this.getPermalinkCreatorForRoom(room)}
                 onHeightChanged={onHeightChanged}
-                useIRCLayout={this.state.useIRCLayout}
-                useBubbleLayout={this.state.useBubbleLayout}
+                layout={this.state.layout}
                 singleSideBubbles={this.state.singleSideBubbles}
             />);
         }
@@ -1921,8 +1910,7 @@ export default class RoomView extends React.Component<IProps, IState> {
                     resizeNotifier={this.props.resizeNotifier}
                     replyToEvent={this.state.replyToEvent}
                     permalinkCreator={this.getPermalinkCreatorForRoom(this.state.room)}
-                    useIRCLayout={this.state.useIRCLayout}
-                    useBubbleLayout={this.state.useBubbleLayout}
+                    layout={this.state.layout}
                 />;
         }
 
@@ -1937,9 +1925,9 @@ export default class RoomView extends React.Component<IProps, IState> {
         }
 
         const layout = {
-            "mx_IRCLayout": this.state.useIRCLayout,
-            "mx_GroupLayout": !this.state.useIRCLayout && !this.state.useBubbleLayout,
-            "sc_BubbleLayout": this.state.useBubbleLayout,
+            "mx_IRCLayout": this.state.layout == Layout.IRC,
+            "mx_GroupLayout": this.state.layout == Layout.IRC,
+            "sc_BubbleLayout": this.state.layout == Layout.Bubble,
         };
 
         // if we have search results, we keep the messagepanel (so that it preserves its
@@ -2008,8 +1996,7 @@ export default class RoomView extends React.Component<IProps, IState> {
                 permalinkCreator={this.getPermalinkCreatorForRoom(this.state.room)}
                 resizeNotifier={this.props.resizeNotifier}
                 showReactions={true}
-                useIRCLayout={this.state.useIRCLayout}
-                useBubbleLayout={this.state.useBubbleLayout}
+                layout={this.state.layout}
                 singleSideBubbles={this.state.singleSideBubbles}
             />);
 

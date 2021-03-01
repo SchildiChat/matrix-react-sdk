@@ -24,6 +24,7 @@ import {wantsDateSeparator} from '../../../DateUtils';
 import {MatrixEvent} from 'matrix-js-sdk';
 import {makeUserPermalink, RoomPermalinkCreator} from "../../../utils/permalinks/Permalinks";
 import SettingsStore from "../../../settings/SettingsStore";
+import {LayoutPropType} from "../../../settings/Layout";
 import escapeHtml from "escape-html";
 import MatrixClientContext from "../../../contexts/MatrixClientContext";
 import {Action} from "../../../dispatcher/actions";
@@ -42,8 +43,7 @@ export default class ReplyThread extends React.Component {
         onHeightChanged: PropTypes.func.isRequired,
         permalinkCreator: PropTypes.instanceOf(RoomPermalinkCreator).isRequired,
         // Specifies which layout to use.
-        useIRCLayout: PropTypes.bool,
-        useBubbleLayout: PropTypes.bool,
+        layout: LayoutPropType,
     };
 
     static contextType = MatrixClientContext;
@@ -210,7 +210,7 @@ export default class ReplyThread extends React.Component {
         };
     }
 
-    static makeThread(parentEv, onHeightChanged, permalinkCreator, ref, useIRCLayout, useBubbleLayout) {
+    static makeThread(parentEv, onHeightChanged, permalinkCreator, ref, layout) {
         if (!ReplyThread.getParentEventId(parentEv)) {
             return <div className="mx_ReplyThread_wrapper_empty" />;
         }
@@ -219,8 +219,7 @@ export default class ReplyThread extends React.Component {
             onHeightChanged={onHeightChanged}
             ref={ref}
             permalinkCreator={permalinkCreator}
-            useIRCLayout={useIRCLayout}
-            useBubbleLayout={useBubbleLayout}
+            layout={layout}
         />;
     }
 
@@ -388,8 +387,7 @@ export default class ReplyThread extends React.Component {
                     permalinkCreator={this.props.permalinkCreator}
                     isRedacted={ev.isRedacted()}
                     isTwelveHour={SettingsStore.getValue("showTwelveHourTimestamps")}
-                    useIRCLayout={this.props.useIRCLayout}
-                    useBubbleLayout={this.props.useBubbleLayout}
+                    layout={this.props.layout}
                     enableFlair={SettingsStore.getValue(UIFeature.Flair)}
                     replacingEventId={ev.replacingEventId()}
                 />

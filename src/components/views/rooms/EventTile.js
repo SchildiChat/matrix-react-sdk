@@ -27,17 +27,18 @@ import * as TextForEvent from "../../../TextForEvent";
 import * as sdk from "../../../index";
 import dis from '../../../dispatcher/dispatcher';
 import SettingsStore from "../../../settings/SettingsStore";
+import {Layout, LayoutPropType} from "../../../settings/Layout";
 import {EventStatus} from 'matrix-js-sdk';
 import {formatTime} from "../../../DateUtils";
 import {MatrixClientPeg} from '../../../MatrixClientPeg';
 import {ALL_RULE_TYPES} from "../../../mjolnir/BanList";
-import * as ObjectUtils from "../../../ObjectUtils";
 import MatrixClientContext from "../../../contexts/MatrixClientContext";
 import {E2E_STATE} from "./E2EIcon";
 import {toRem} from "../../../utils/units";
 import {WidgetType} from "../../../widgets/WidgetType";
 import RoomAvatar from "../avatars/RoomAvatar";
 import {WIDGET_LAYOUT_EVENT_TYPE} from "../../../stores/widgets/WidgetLayoutStore";
+import {objectHasDiff} from "../../../utils/objects";
 
 const eventTileTypes = {
     'm.room.message': 'messages.MessageEvent',
@@ -227,11 +228,8 @@ export default class EventTile extends React.Component {
         // whether to show reactions for this event
         showReactions: PropTypes.bool,
 
-        // whether to use the irc layout
-        useIRCLayout: PropTypes.bool,
-
-        // whether to use the message bubble layout
-        useBubbleLayout: PropTypes.bool,
+        // which layout to use
+        layout: LayoutPropType,
 
         // whether to use single side bubbles
         singleSideBubbles: PropTypes.bool,
@@ -299,7 +297,7 @@ export default class EventTile extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (!ObjectUtils.shallowEqual(this.state, nextState)) {
+        if (objectHasDiff(this.state, nextState)) {
             return true;
         }
 
@@ -710,7 +708,7 @@ export default class EventTile extends React.Component {
 
         const client = MatrixClientPeg.get();
         const me = client && client.getUserId();
-        const scBubbleEnabled = this.props.useBubbleLayout
+        const scBubbleEnabled = this.props.layout == Layout.Bubble
                 && !isBubbleMessage && !isInfoMessage
                 && this.props.tileShape !== 'reply_preview' && this.props.tileShape !== 'reply'
                 && this.props.tileShape !== 'notif' && this.props.tileShape !== 'file_grid';
@@ -772,7 +770,7 @@ export default class EventTile extends React.Component {
             // joins/parts/etc
             avatarSize = 14;
             needsSenderProfile = false;
-        } else if (this.props.useIRCLayout) {
+        } else if (this.props.layout == Layout.IRC) {
             avatarSize = 14;
             needsSenderProfile = true;
         } else if (this.props.continuation && this.props.tileShape !== "file_grid") {
@@ -883,10 +881,11 @@ export default class EventTile extends React.Component {
                 { timestamp }
             </a>;
 
-        const groupTimestamp = !this.props.useIRCLayout ? linkedTimestamp : null;
-        const ircTimestamp = this.props.useIRCLayout ? linkedTimestamp : null;
-        const groupPadlock = !this.props.useIRCLayout && !isBubbleMessage && this._renderE2EPadlock();
-        const ircPadlock = this.props.useIRCLayout && !isBubbleMessage && this._renderE2EPadlock();
+        const useIRCLayout = this.props.layout == Layout.IRC;
+        const groupTimestamp = !useIRCLayout ? linkedTimestamp : null;
+        const ircTimestamp = useIRCLayout ? linkedTimestamp : null;
+        const groupPadlock = !useIRCLayout && !isBubbleMessage && this._renderE2EPadlock();
+        const ircPadlock = useIRCLayout && !isBubbleMessage && this._renderE2EPadlock();
 
         switch (this.props.tileShape) {
             case 'notif': {
@@ -981,11 +980,10 @@ export default class EventTile extends React.Component {
                     this.props.onHeightChanged,
                     this.props.permalinkCreator,
                     this._replyThread,
-                    this.props.useIRCLayout,
-                    this.props.useBubbleLayout,
+                    this.props.layout,
                 );
 
-                let msgOptionClasses = classNames(
+                const msgOptionClasses = classNames(
                     "mx_EventTile_msgOption",
                     { "sc_readReceipts_empty": !this.props.readReceipts || this.props.readReceipts.length === 0 },
                 );

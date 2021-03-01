@@ -36,6 +36,8 @@ import { isMac } from '../Keyboard';
 import UIFeatureController from "./controllers/UIFeatureController";
 import { UIFeature } from "./UIFeature";
 import { OrderedMultiController } from "./controllers/OrderedMultiController";
+import {Layout} from "./Layout";
+import ReducedMotionController from './controllers/ReducedMotionController';
 
 // These are just a bunch of helper arrays to avoid copy/pasting a bunch of times
 const LEVELS_ROOM_SETTINGS = [
@@ -643,10 +645,9 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         displayName: _td("IRC display name width"),
         default: 80,
     },
-    "useIRCLayout": {
+    "layout": {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
-        displayName: _td("Enable experimental, compact IRC style layout"),
-        default: false,
+        default: Layout.Group,
     },
     "useBubbleLayout": {
         supportedLevels: LEVELS_ROOM_SETTINGS_WITH_ROOM,
@@ -660,8 +661,9 @@ export const SETTINGS: {[setting: string]: ISetting} = {
     },
     "showChatEffects": {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
-        displayName: _td("Show chat effects"),
+        displayName: _td("Show chat effects (animations when receiving e.g. confetti)"),
         default: true,
+        controller: new ReducedMotionController(),
     },
     "Widgets.pinned": { // deprecated
         supportedLevels: LEVELS_ROOM_OR_ACCOUNT,
