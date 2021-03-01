@@ -56,6 +56,9 @@ limitations under the License.
             text-overflow: ellipsis;
             overflow: hidden;
             white-space: nowrap;
+
+            // for rtl
+            text-align: left;
         }
 
         .mx_RoomTile_name {
