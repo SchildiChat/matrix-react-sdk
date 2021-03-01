@@ -647,12 +647,7 @@ export const SETTINGS: {[setting: string]: ISetting} = {
     },
     "layout": {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
-        default: Layout.Group,
-    },
-    "useBubbleLayout": {
-        supportedLevels: LEVELS_ROOM_SETTINGS_WITH_ROOM,
-        displayName: _td("Enable layout with message bubbles"),
-        default: true,
+        default: Layout.Bubble,
     },
     "singleSideBubbles": {
         supportedLevels: LEVELS_ROOM_SETTINGS_WITH_ROOM,

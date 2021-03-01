@@ -486,7 +486,7 @@ export default class EventTile extends React.Component {
 
             // If hidden, set offset equal to the offset of the final visible avatar or
             // else set it proportional to index
-            if (this.props.useBubbleLayout) {
+            if (this.props.layout == Layout.Bubble) {
                 left = (hidden ? MAX_READ_AVATARS - 1 : i) * receiptOffset;
             } else {
                 left = (hidden ? MAX_READ_AVATARS - 1 : i) * -receiptOffset;
@@ -522,7 +522,7 @@ export default class EventTile extends React.Component {
             const remainder = receipts.length - MAX_READ_AVATARS;
 
             let style;
-            if (this.props.useBubbleLayout) {
+            if (this.props.layout == Layout.Bubble) {
                 style = { left: "calc(" + toRem(left) + " + " + receiptOffset + "px)" };
             } else {
                 style = { right: "calc(" + toRem(-left) + " + " + receiptOffset + "px)" };
@@ -1077,7 +1077,7 @@ export default class EventTile extends React.Component {
                     return (
                         <div className={classes} tabIndex={-1} aria-live={ariaLive} aria-atomic="true">
                             { ircTimestamp }
-                            { !this.props.useBubbleLayout ? msgOption : null }
+                            { !(this.props.layout == Layout.Bubble) ? msgOption : null }
                             { sender }
                             { ircPadlock }
                             <div className="mx_EventTile_line">
@@ -1102,7 +1102,7 @@ export default class EventTile extends React.Component {
                                 // the need for further z-indexing chaos)
                             }
                             { avatar }
-                            { this.props.useBubbleLayout ? msgOption : null }
+                            { this.props.layout == Layout.Bubble ? msgOption : null }
                         </div>
                     );
                 }

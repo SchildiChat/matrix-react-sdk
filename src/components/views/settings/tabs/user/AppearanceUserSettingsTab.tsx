@@ -441,18 +441,6 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
             );
             /*
             advanced = <>
-                <SettingsFlag
-                    name="useIRCLayout"
-                    level={SettingLevel.DEVICE}
-                    useCheckbox={true}
-                    onChange={(checked) => this.setState({useIRCLayout: checked})}
-                />
-                <SettingsFlag
-                    name="useBubbleLayout"
-                    level={SettingLevel.DEVICE}
-                    useCheckbox={true}
-                    onChange={(checked) => this.setState({useBubbleLayout: checked})}
-                />
                 <StyledCheckbox
                     checked={this.state.layout == Layout.IRC}
                     onChange={(ev) => this.onIRCLayoutChange(ev.target.checked)}

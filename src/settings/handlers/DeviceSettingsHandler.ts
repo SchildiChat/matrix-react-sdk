@@ -68,6 +68,13 @@ export default class DeviceSettingsHandler extends SettingsHandler {
             return val['value'];
         }
 
+        // Special case for old useBubbleLayout setting
+        if (settingName === "layout") {
+            const settings = this.getSettings() || {};
+            if (settings["useBubbleLayout"]) return Layout.Bubble;
+            return settings[settingName];
+        }
+
         // Special case for old useIRCLayout setting
         if (settingName === "layout") {
             const settings = this.getSettings() || {};
@@ -114,10 +121,11 @@ export default class DeviceSettingsHandler extends SettingsHandler {
             return Promise.resolve();
         }
 
-        // Special case for old useIRCLayout setting
+        // Special case for old useBubbleLayout and useIRCLayout setting
         if (settingName === "layout") {
             const settings = this.getSettings() || {};
 
+            delete settings["useBubbleLayout"];
             delete settings["useIRCLayout"];
             settings["layout"] = newValue;
             localStorage.setItem("mx_local_settings", JSON.stringify(settings));

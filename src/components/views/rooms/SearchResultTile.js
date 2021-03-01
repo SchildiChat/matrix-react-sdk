@@ -66,8 +66,7 @@ export default class SearchResultTile extends React.Component {
                         onHeightChanged={this.props.onHeightChanged}
                         isTwelveHour={SettingsStore.getValue("showTwelveHourTimestamps")}
                         enableFlair={SettingsStore.getValue(UIFeature.Flair)}
-                        useIrcLayout={this.props.useIrcLayout}
-                        useBubbleLayout={this.props.useBubbleLayout}
+                        layout={this.props.layout}
                         singleSideBubbles={this.props.singleSideBubbles}
                     />
                 ));

@@ -32,14 +32,9 @@ interface IProps {
     message: string;
 
     /**
-     * Whether to use the irc layout or not
+     * Which layout to use
      */
     layout: Layout;
-
-    /**
-     * Whether to use the message bubble layout or not
-     */
-    useBubbleLayout: boolean;
 
     /**
      * classnames to apply to the wrapper of the preview
