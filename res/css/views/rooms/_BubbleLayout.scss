@@ -210,7 +210,6 @@ $left-gutter: 56px;
     .mx_MessageActionBar {
         left: unset;
         right: 0px;
-        direction: ltr;
     }
 
     .mx_MFileBody {
@@ -403,15 +402,21 @@ $left-gutter: 56px;
             }
 
             .sc_LinkedTimestamp {
-                float: inline-end;
+                float: right;
                 display: flex;
-                margin-inline-start: 1rem;
+                margin-left: 1rem;
+
+                &:dir(rtl) {
+                    float: none;
+                    margin-left: unset;
+                }
 
                 .mx_MessageTimestamp {
                     visibility: visible !important;
                     position: unset !important;
                     width: unset !important;
                     text-align: right !important;
+                    margin-left: auto;
                     margin-top: auto;
                     padding-top: 0.4rem;
                     margin-bottom: -0.4rem;

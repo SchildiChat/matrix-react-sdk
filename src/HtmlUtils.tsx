@@ -483,7 +483,8 @@ export function bodyToHtml(content: IContent, highlights: string[], opts: IOpts 
             ref={opts.ref}
             className={className}
             dangerouslySetInnerHTML={{ __html: safeBody }}
-        /> : <span key="body" ref={opts.ref} className={className}>{ strippedBody }</span>;
+            dir="auto"
+        /> : <span key="body" ref={opts.ref} className={className} dir="auto">{ strippedBody }</span>;
 }
 
 /**
