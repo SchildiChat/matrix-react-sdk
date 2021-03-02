@@ -997,15 +997,20 @@ export default class EventTile extends React.Component {
                     const mediaBodyTypes = ['m.image', /* 'm.file', */ /* 'm.audio', */ 'm.video'];
                     const mediaEvTypes = ['m.sticker'];
                     let mediaBody = false;
+                    let stickerBody = false;
                     let noticeBody = false;
 
                     const content = this.props.mxEvent.getContent();
                     const type = this.props.mxEvent.getType();
                     const msgtype = content.msgtype;
 
-                    if (type && mediaEvTypes.indexOf(type) != -1 ||
-                        msgtype && mediaBodyTypes.indexOf(msgtype) != -1) {
+                    if (msgtype && mediaBodyTypes.indexOf(msgtype) != -1) {
                         mediaBody = true;
+                    }
+
+                    if (type && mediaEvTypes.indexOf(type) != -1) {
+                        mediaBody = true;
+                        stickerBody = true;
                     }
 
                     if (msgtype && msgtype == 'm.notice') noticeBody = true;
@@ -1030,8 +1035,10 @@ export default class EventTile extends React.Component {
                     const mediaClasses = classNames(
                         "sc_EventTile_media",
                         {
+                            "sc_EventTile_media_self": sentByMe,
                             "sc_EventTile_media_right": showRight,
                             "sc_EventTile_media_left": showLeft,
+                            "sc_EventTile_media_sticker": stickerBody,
                         },
                     );
 
