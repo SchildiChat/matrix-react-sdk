@@ -68,17 +68,13 @@ export default class DeviceSettingsHandler extends SettingsHandler {
             return val['value'];
         }
 
-        // Special case for old useBubbleLayout setting
+        // Special case for old useBubbleLayout and useIRCLayout setting
         if (settingName === "layout") {
             const settings = this.getSettings() || {};
-            if (settings["useBubbleLayout"]) return Layout.Bubble;
-            return settings[settingName];
-        }
 
-        // Special case for old useIRCLayout setting
-        if (settingName === "layout") {
-            const settings = this.getSettings() || {};
             if (settings["useIRCLayout"]) return Layout.IRC;
+            if ("useBubbleLayout" in settings && settings["useBubbleLayout"] === false) return Layout.Group;
+
             return settings[settingName];
         }
 
