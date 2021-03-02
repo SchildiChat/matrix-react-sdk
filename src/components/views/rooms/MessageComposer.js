@@ -38,6 +38,7 @@ import {UPDATE_EVENT} from "../../../stores/AsyncStore";
 import ActiveWidgetStore from "../../../stores/ActiveWidgetStore";
 import { PlaceCallType } from "../../../CallHandler";
 import { CallState } from 'matrix-js-sdk/src/webrtc/call';
+import { Layout } from '../../../settings/Layout';
 
 function ComposerAvatar(props) {
     const MemberStatusMessageAvatar = sdk.getComponent('avatars.MemberStatusMessageAvatar');
@@ -486,10 +487,11 @@ export default class MessageComposer extends React.Component {
         const msgComposerClassNames = classNames(
             "mx_MessageComposer",
             {
-                // "mx_IRCLayout": this.props.useIRCLayout,
-                // "mx_GroupLayout": !this.props.useIRCLayout && !this.props.useBubbleLayout,
-                "mx_GroupLayout": !this.props.useBubbleLayout,
-                "sc_BubbleLayout": this.props.useBubbleLayout,
+                // IRC layout has nothing for message composer so use group layout stuff
+                // "mx_IRCLayout": this.props.layout == Layout.IRC,
+                // "mx_GroupLayout": this.props.layout == Layout.Group,
+                "mx_GroupLayout": this.props.layout == Layout.IRC || this.props.layout == Layout.Group,
+                "sc_BubbleLayout": this.props.layout == Layout.Bubble,
             },
         );
 

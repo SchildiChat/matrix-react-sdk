@@ -198,7 +198,6 @@ export default class RoomView extends React.Component<IProps, IState> {
     private readonly rightPanelStoreToken: EventSubscription;
     private readonly showReadReceiptsWatchRef: string;
     private readonly layoutWatcherRef: string;
-    private readonly bubbleLayoutWatcherRef: string;
     private readonly singleSideBubblesWatcherRef: string;
 
     private unmounted = false;
@@ -640,7 +639,6 @@ export default class RoomView extends React.Component<IProps, IState> {
         // Tinter.tint(); // reset colourscheme
 
         SettingsStore.unwatchSetting(this.layoutWatcherRef);
-        SettingsStore.unwatchSetting(this.bubbleLayoutWatcherRef);
         SettingsStore.unwatchSetting(this.singleSideBubblesWatcherRef);
     }
 
@@ -1926,7 +1924,7 @@ export default class RoomView extends React.Component<IProps, IState> {
 
         const layout = {
             "mx_IRCLayout": this.state.layout == Layout.IRC,
-            "mx_GroupLayout": this.state.layout == Layout.IRC,
+            "mx_GroupLayout": this.state.layout == Layout.Group,
             "sc_BubbleLayout": this.state.layout == Layout.Bubble,
         };
 
