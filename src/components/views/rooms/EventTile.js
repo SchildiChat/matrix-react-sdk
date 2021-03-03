@@ -1023,22 +1023,15 @@ export default class EventTile extends React.Component {
                         },
                     );
                     const bubbleClasses = classNames(
-                        "sc_EventTile_bubble",
                         {
+                            "sc_EventTile_bubble": !mediaBody,
+                            "sc_EventTile_bubble_media": mediaBody,
                             "sc_EventTile_bubble_self": sentByMe,
                             "sc_EventTile_bubble_right": showRight,
                             "sc_EventTile_bubble_left": showLeft,
                             "sc_EventTile_bubble_tail": !this.props.continuation,
                             "sc_EventTile_bubble_notice": noticeBody,
-                        },
-                    );
-                    const mediaClasses = classNames(
-                        "sc_EventTile_media",
-                        {
-                            "sc_EventTile_media_self": sentByMe,
-                            "sc_EventTile_media_right": showRight,
-                            "sc_EventTile_media_left": showLeft,
-                            "sc_EventTile_media_sticker": stickerBody,
+                            "sc_EventTile_bubble_sticker": stickerBody,
                         },
                     );
 
@@ -1050,7 +1043,7 @@ export default class EventTile extends React.Component {
                             <div className="mx_EventTile_line sc_EventTile_bubbleLine">
                                 { groupPadlock }
                                 <div className={bubbleAreaClasses}>
-                                    <div className={mediaBody ? mediaClasses : bubbleClasses}>
+                                    <div className={bubbleClasses}>
                                         { sender }
                                         { thread }
                                         <EventTileType ref={this._tile}

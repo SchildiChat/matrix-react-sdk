@@ -205,6 +205,14 @@ $left-gutter: 56px;
         .mx_MessageTimestamp {
             top: 4px !important;
         }
+
+        .mx_MImageBody_thumbnail, span.mx_MVideoBody video.mx_MVideoBody {
+            border-color: $event-timestamp-color !important;
+        }
+    }
+
+    .mx_MNoticeBody {
+        opacity: unset;
     }
 
     .mx_MessageActionBar {
@@ -220,14 +228,24 @@ $left-gutter: 56px;
     .mx_MFileBody_download {
         display: inline;
     }
+    
+
+    .mx_MessageTimestamp {
+        position: absolute;
+        width: 46px; /* 8 + 30 (avatar) + 8 */
+    }
+
+    .mx_ReactionsRow {
+        margin-right: -6px;
+    }
+
+    a.mx_Pill {
+        max-width: 100%;
+    }
 
     .mx_MImageBody {
         margin-right: 0;
         position: relative;
-
-        padding: 1px;
-        border-radius: $border-radius-normal;
-        background: $message-bubble-background;
 
         .mx_MFileBody_download {
             display: none;
@@ -239,9 +257,9 @@ $left-gutter: 56px;
             background: rgba(0, 0, 0, 0.5);
             color: white;
             left: unset;
-            right: 0;
+            right: 1px;
             top: unset;
-            bottom: 0;
+            bottom: 1px;
             border-radius: $border-radius-normal 0;
             font-size: 0.85em;
             padding: 6px 9px;
@@ -250,21 +268,9 @@ $left-gutter: 56px;
         }
     }
 
-    .sc_EventTile_media_self {
-        .mx_MImageBody {
-            background: $message-bubble-background-self;
-        }
-    }
-    
-    .sc_EventTile_media_sticker {
-        .mx_MImageBody {
-            background: transparent;
-    
-            .mx_MessageTimestamp {
-                padding-left: 10px;
-                padding-right: 10px;
-            }
-        }
+    .mx_MImageBody_thumbnail, span.mx_MVideoBody video.mx_MVideoBody {
+        box-sizing: border-box;
+        border: 1px solid $message-bubble-background;
     }
 
     .mx_MStickerBody_wrapper {
@@ -306,43 +312,6 @@ $left-gutter: 56px;
                 line-height: 1;
             }
         }
-    }
-
-    .sc_EventTile_media {
-        max-width: 600px;
-        position: relative;
-        
-        // maybe:
-        // & + .mx_ReactionsRow {
-        //     margin-top: 0;
-        //     margin-bottom: 0;
-        // }
-    }
-
-    .sc_EventTile_media_right {
-        margin-left: auto;
-
-        > * {
-            margin-left: auto;
-        }
-
-        .mx_MImageBody_thumbnail {
-            left: unset;
-            right: 0;
-        }
-    }
-
-    .mx_MessageTimestamp {
-        position: absolute;
-        width: 46px; /* 8 + 30 (avatar) + 8 */
-    }
-
-    .mx_ReactionsRow {
-        margin-right: -6px;
-    }
-
-    a.mx_Pill {
-        max-width: 100%;
     }
 
     // ---- Bubble specific ----
@@ -481,18 +450,51 @@ $left-gutter: 56px;
     }
     
     .sc_EventTile_bubble_self {
-        background-color: $message-bubble-background-self;
+        &:not(.sc_EventTile_bubble_media) {
+            background-color: $message-bubble-background-self;
 
-        &.sc_EventTile_bubble_tail::before {
-            border-top-color: $message-bubble-background-self;
+            &.sc_EventTile_bubble_tail::before {
+                border-top-color: $message-bubble-background-self;
+            }
+        }
+
+        .mx_MImageBody_thumbnail, span.mx_MVideoBody video.mx_MVideoBody {
+            border-color: $message-bubble-background-self;
         }
     }
 
     .sc_EventTile_bubble_notice {
         opacity: 0.6;
     }
-    .mx_MNoticeBody {
-        opacity: unset;
+
+    .sc_EventTile_bubble_media {
+        max-width: 600px;
+        position: relative;
+
+        &.sc_EventTile_bubble_right {
+            margin-left: auto;
+    
+            > * {
+                margin-left: auto;
+            }
+    
+            .mx_MImageBody_thumbnail {
+                left: unset;
+                right: 0;
+            }
+        }
+        
+        // maybe:
+        // & + .mx_ReactionsRow {
+        //     margin-top: 0;
+        //     margin-bottom: 0;
+        // }
+    }
+    
+    .sc_EventTile_bubble_sticker {
+        .mx_MImageBody_thumbnail {
+            border: none;
+        }
     }
 
     .mx_EventTile_selected {
@@ -504,21 +506,28 @@ $left-gutter: 56px;
             }
         }
 
-        .mx_MImageBody_thumbnail_container {
-            background: $accent-color;
-            border-radius: $border-radius-normal;
-        }
-        .mx_MImageBody_thumbnail {
-            opacity: 0.7;
-        }
+        .sc_EventTile_bubble_media {
+            > .mx_MImageBody {
+                .mx_MImageBody_thumbnail_container {
+                    background: $accent-color;
+                    border-radius: $border-radius-normal;
+                }
+                .mx_MImageBody_thumbnail {
+                    opacity: 0.7;
+                }
+            }
 
-        .sc_MVideoBody_video_container {
-            background: $accent-color;
-            border-radius: $border-radius-normal;
-            display: block;
-        }
-        span.mx_MVideoBody video.mx_MVideoBody {
-            opacity: 0.7;
+            > span.mx_MVideoBody {
+                .sc_MVideoBody_video_container {
+                    background: $accent-color;
+                    border-radius: $border-radius-normal;
+                    display: block;
+                }
+                
+                video.mx_MVideoBody {
+                    opacity: 0.7;
+                }
+            }
         }
     }
 }
