@@ -528,7 +528,8 @@ export default class RoomPreviewBar extends React.Component {
                         "If you think you're seeing this message in error, please " +
                         "<issueLink>submit a bug report</issueLink>.",
                         { errcode: this.props.error.errcode },
-                        { issueLink: label => <a href="https://github.com/vector-im/element-web/issues/new/choose"
+                        { issueLink: label => <a
+                            href="https://github.com/SchildiChat/schildichat-desktop/issues/new/choose"
                             target="_blank" rel="noreferrer noopener">{ label }</a> },
                     ),
                 ];
