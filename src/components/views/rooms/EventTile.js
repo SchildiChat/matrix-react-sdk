@@ -709,7 +709,6 @@ export default class EventTile extends React.Component {
         const client = MatrixClientPeg.get();
         const me = client && client.getUserId();
         const scBubbleEnabled = this.props.layout == Layout.Bubble
-                && !isBubbleMessage && !isInfoMessage
                 && this.props.tileShape !== 'reply_preview' && this.props.tileShape !== 'reply'
                 && this.props.tileShape !== 'notif' && this.props.tileShape !== 'file_grid';
         const sentByMe = me === this.props.mxEvent.getSender();
@@ -718,17 +717,18 @@ export default class EventTile extends React.Component {
 
         const isEditing = !!this.props.editState;
         const classes = classNames({
-            mx_EventTile_bubbleContainer: isBubbleMessage,
+            mx_EventTile_bubbleContainer: isBubbleMessage && this.props.layout != Layout.Bubble,
             mx_EventTile: true,
             mx_EventTile_isEditing: isEditing,
-            mx_EventTile_info: isInfoMessage,
+            mx_EventTile_info: isInfoMessage && this.props.layout != Layout.Bubble,
             mx_EventTile_12hr: this.props.isTwelveHour,
             mx_EventTile_encrypting: this.props.eventSendStatus === 'encrypting',
             mx_EventTile_sending: !isEditing && isSending,
             mx_EventTile_notSent: this.props.eventSendStatus === 'not_sent',
             mx_EventTile_highlight: this.props.tileShape === 'notif' ? false : this.shouldHighlight(),
             mx_EventTile_selected: this.props.isSelectedEvent,
-            mx_EventTile_continuation: this.props.tileShape ? '' : this.props.continuation,
+            mx_EventTile_continuation: !isInfoMessage && !isBubbleMessage &&
+                (this.props.tileShape ? '' : this.props.continuation),
             mx_EventTile_last: this.props.last,
             mx_EventTile_lastInSection: this.props.lastInSection,
             mx_EventTile_contextual: this.props.contextual,
@@ -756,7 +756,7 @@ export default class EventTile extends React.Component {
         let avatarSize;
         let needsSenderProfile;
 
-        if (scBubbleEnabled && showRight) {
+        if (!isInfoMessage && scBubbleEnabled && showRight) {
             avatarSize = 0;
             needsSenderProfile = false;
         } else if (this.props.tileShape === "notif") {
@@ -994,6 +994,8 @@ export default class EventTile extends React.Component {
                 );
 
                 if (scBubbleEnabled) {
+                    const infoBubble = isInfoMessage || isBubbleMessage;
+
                     const mediaBodyTypes = ['m.image', /* 'm.file', */ /* 'm.audio', */ 'm.video'];
                     const mediaEvTypes = ['m.sticker'];
                     let mediaBody = false;
@@ -1015,21 +1017,32 @@ export default class EventTile extends React.Component {
 
                     if (msgtype && msgtype == 'm.notice') noticeBody = true;
 
+                    const bubbleLineClasses = classNames(
+                        "mx_EventTile_line",
+                        "sc_EventTile_bubbleLine",
+                        {
+                            "sc_EventTile_bubbleLine_info": infoBubble,
+                        },
+                    );
                     const bubbleAreaClasses = classNames(
                         "sc_EventTile_bubbleArea",
                         {
-                            "sc_EventTile_bubbleArea_right": showRight,
-                            "sc_EventTile_bubbleArea_left": showLeft,
+                            "sc_EventTile_bubbleArea_right": !infoBubble && showRight,
+                            "sc_EventTile_bubbleArea_left": !infoBubble && showLeft,
+                            "sc_EventTile_bubbleArea_center": infoBubble,
+                            "sc_EventTile_bubbleArea_info": infoBubble,
                         },
                     );
                     const bubbleClasses = classNames(
                         {
                             "sc_EventTile_bubble": !mediaBody,
                             "sc_EventTile_bubble_media": mediaBody,
-                            "sc_EventTile_bubble_self": sentByMe,
-                            "sc_EventTile_bubble_right": showRight,
-                            "sc_EventTile_bubble_left": showLeft,
-                            "sc_EventTile_bubble_tail": !this.props.continuation,
+                            "sc_EventTile_bubble_info": infoBubble,
+                            "sc_EventTile_bubble_self": !infoBubble && sentByMe,
+                            "sc_EventTile_bubble_right": !infoBubble && showRight,
+                            "sc_EventTile_bubble_left": !infoBubble && showLeft,
+                            "sc_EventTile_bubble_center": infoBubble,
+                            "sc_EventTile_bubble_tail": !infoBubble && !this.props.continuation,
                             "sc_EventTile_bubble_notice": noticeBody,
                             "sc_EventTile_bubble_sticker": stickerBody,
                         },
@@ -1040,12 +1053,13 @@ export default class EventTile extends React.Component {
                         <div className={classes} tabIndex={-1} aria-live={ariaLive} aria-atomic="true">
                             { ircTimestamp }
                             { ircPadlock }
-                            <div className="mx_EventTile_line sc_EventTile_bubbleLine">
+                            <div className={bubbleLineClasses}>
                                 { groupPadlock }
                                 <div className={bubbleAreaClasses}>
                                     <div className={bubbleClasses}>
                                         { sender }
                                         { thread }
+                                        { infoBubble ? avatar : null }
                                         <EventTileType ref={this._tile}
                                                        mxEvent={this.props.mxEvent}
                                                        replacingEventId={this.props.replacingEventId}
@@ -1068,7 +1082,7 @@ export default class EventTile extends React.Component {
                                 // event tile line, so needs to be later in the DOM so it appears on top (this avoids
                                 // the need for further z-indexing chaos)
                             }
-                            { avatar }
+                            { !infoBubble ? avatar : null }
                             { msgOption }
                         </div>
                     );
