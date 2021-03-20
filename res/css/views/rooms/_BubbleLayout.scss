@@ -441,6 +441,9 @@ $left-gutter: 56px;
                 display: flex;
                 margin-left: 1rem;
 
+                // Get rid of underline with custom themes
+                text-decoration: none;
+
                 &:dir(rtl) {
                     float: none;
                     margin-left: unset;
