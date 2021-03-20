@@ -126,8 +126,13 @@ export default class MFileBody extends React.Component {
         onHeightChanged: PropTypes.func,
         /* the shape of the tile, used */
         tileShape: PropTypes.string,
-
+        /* whether or not to show the default placeholder for the file. Defaults to true. */
+        showGenericPlaceholder: PropTypes.bool,
         scBubbleGroupTimestamp: PropTypes.object,
+    };
+
+    static defaultProps = {
+        showGenericPlaceholder: true,
     };
 
     constructor(props) {
@@ -147,9 +152,10 @@ export default class MFileBody extends React.Component {
      * link text.
      *
      * @param {Object} content The "content" key of the matrix event.
+     * @param {boolean} withSize Whether to include size information. Default true.
      * @return {string} the human readable link text for the attachment.
      */
-    presentableTextForFile(content) {
+    presentableTextForFile(content, withSize = true) {
         let linkText = _t("Attachment");
         if (content.body && content.body.length > 0) {
             // The content body should be the name of the file including a
@@ -157,7 +163,7 @@ export default class MFileBody extends React.Component {
             linkText = content.body;
         }
 
-        if (content.info && content.info.size) {
+        if (content.info && content.info.size && withSize) {
             // If we know the size of the file then add it as human readable
             // string to the end of the link text so that the user knows how
             // big a file they are downloading.
@@ -220,6 +226,16 @@ export default class MFileBody extends React.Component {
         const fileSize = content.info ? content.info.size : null;
         const fileType = content.info ? content.info.mimetype : "application/octet-stream";
 
+        let placeholder = null;
+        if (this.props.showGenericPlaceholder) {
+            placeholder = (
+                <div className="mx_MFileBody_info">
+                    <span className="mx_MFileBody_info_icon" />
+                    <span className="mx_MFileBody_info_filename">{this.presentableTextForFile(content, false)}</span>
+                </div>
+            );
+        }
+
         if (isEncrypted) {
             if (this.state.decryptedBlob === null) {
                 // Need to decrypt the attachment
@@ -250,6 +266,7 @@ export default class MFileBody extends React.Component {
                 // but it is not guaranteed between various browsers' settings.
                 return (
                     <span className="mx_MFileBody">
+                        {placeholder}
                         <div className="mx_MFileBody_download">
                             <AccessibleButton onClick={decrypt}>
                                 { _t("Decrypt %(text)s", { text: text }) }
@@ -281,6 +298,7 @@ export default class MFileBody extends React.Component {
             // If the attachment is encrypted then put the link inside an iframe.
             return (
                 <span className="mx_MFileBody">
+                    {placeholder}
                     <div className="mx_MFileBody_download">
                         <div style={{display: "none"}}>
                             { /*
@@ -350,6 +368,7 @@ export default class MFileBody extends React.Component {
             if (this.props.tileShape === "file_grid") {
                 return (
                     <span className="mx_MFileBody">
+                        {placeholder}
                         <div className="mx_MFileBody_download">
                             <a className="mx_MFileBody_downloadLink" {...downloadProps}>
                                 { fileName }
@@ -364,6 +383,7 @@ export default class MFileBody extends React.Component {
             } else {
                 return (
                     <span className="mx_MFileBody">
+                        {placeholder}
                         <div className="mx_MFileBody_download">
                             <a {...downloadProps}>
                                 <img src={tintedDownloadImageURL} width="12" height="14" ref={this._downloadImage} />
@@ -377,6 +397,7 @@ export default class MFileBody extends React.Component {
         } else {
             const extra = text ? (': ' + text) : '';
             return <span className="mx_MFileBody">
+                {placeholder}
                 { _t("Invalid file%(extra)s", { extra: extra }) }
                 { this.props.scBubbleGroupTimestamp }
             </span>;

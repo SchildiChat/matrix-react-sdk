@@ -249,7 +249,7 @@ export default class MVideoBody extends React.PureComponent<IProps, IState> {
                     >
                     </video>
                 </span>
-                <MFileBody {...this.props} decryptedBlob={this.state.decryptedBlob} />
+                <MFileBody {...this.props} decryptedBlob={this.state.decryptedBlob} showGenericPlaceholder={false} />
                 { this.props.scBubbleActionBar }
             </span>
         );
