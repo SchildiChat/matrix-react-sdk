@@ -236,13 +236,14 @@ limitations under the License.
 }
 
 .mx_MessageComposer_sendMessage {
-    cursor: pointer;
+    cursor: not-allowed;
     position: relative;
+    margin-left: 4px;
     margin-right: 6px;
     width: 32px;
     height: 32px;
     border-radius: 100%;
-    background-color: $button-bg-color;
+    background-color: $icon-button-color;
 
     &::before {
         position: absolute;
@@ -258,6 +259,11 @@ limitations under the License.
 
         background-color: $button-fg-color;
         content: '';
+    }
+
+    &.mx_MessageComposer_sendMessage_enabled {
+        cursor: pointer;
+        background-color: $button-bg-color;
     }
 }
 

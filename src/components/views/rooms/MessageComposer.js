@@ -46,9 +46,15 @@ ComposerAvatar.propTypes = {
 };
 
 function SendButton(props) {
+    const classes = classNames(
+        "mx_MessageComposer_sendMessage",
+        {
+            "mx_MessageComposer_sendMessage_enabled": props.enabled,
+        },
+    );
     return (
         <AccessibleTooltipButton
-            className="mx_MessageComposer_sendMessage"
+            className={classes}
             onClick={props.onClick}
             title={_t('Send message')}
         />
@@ -355,11 +361,9 @@ export default class MessageComposer extends React.Component {
                 controls.push(<Stickerpicker key="stickerpicker_controls_button" room={this.props.room} />);
             }
 
-            if (!this.state.isComposerEmpty) {
-                controls.push(
-                    <SendButton key="controls_send" onClick={this.sendMessage} />,
-                );
-            }
+            controls.push(
+                <SendButton key="controls_send" onClick={this.sendMessage} enabled={!this.state.isComposerEmpty} />,
+            );
         } else if (this.state.tombstone) {
             const replacementRoomId = this.state.tombstone.getContent()['replacement_room'];
 
