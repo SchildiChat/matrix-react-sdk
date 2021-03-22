@@ -88,6 +88,14 @@ $left-gutter: 56px;
         // For toggle
         position: relative;
 
+        // Consistence with other bubbles
+        .mx_EventTile {
+            padding-top: 0;
+        }
+        .sc_EventTile_bubbleLine_info {
+            margin-top: 6px;
+        }
+
         .mx_EventTile_line {
             padding-top: 3px;
             padding-bottom: 3px;
@@ -353,12 +361,6 @@ $left-gutter: 56px;
         // padding-left: 110px;
         padding-left: 0;
         margin-right: 0;
-
-        // Consistence with other bubbles
-        margin-top: 6px;
-        .mx_EventTile {
-            padding-top: 0;
-        }
     }
 
     .sc_EventTile_bubbleContainer {
@@ -527,7 +529,8 @@ $left-gutter: 56px;
 
     .sc_EventTile_bubble_info {
         text-align: center;
-        background: $roomlist-bg-color;
+        background: transparent;
+        box-shadow: inset 0px 0px 0px 1px rgba($roomtopic-color, 0.15);
 
         .mx_EventTileBubble {
             background-color: transparent;
