@@ -52,8 +52,8 @@ export default class Stickerpicker extends React.Component {
         this._onResize = this._onResize.bind(this);
         this._onFinished = this._onFinished.bind(this);
 
-        this.popoverWidth = 300;
-        this.popoverHeight = 300;
+        this.popoverWidth = 400;
+        this.popoverHeight = 450;
 
         // This is loaded by _acquireScalarClient on an as-needed basis.
         this.scalarClient = null;
@@ -316,8 +316,8 @@ export default class Stickerpicker extends React.Component {
         const rightPad = 10;
 
         // When the sticker picker would be displayed off of the viewport, adjust x
-        //  (302 = width of context menu, including borders)
-        x = Math.min(x, document.body.clientWidth - (302 + rightPad));
+        //  (402 = width of context menu, including borders)
+        x = Math.min(x, document.body.clientWidth - (402 + rightPad));
 
         // Offset the chevron location, which is relative to the left of the context menu
         //  (10 = offset when context menu would not be displayed off viewport)
