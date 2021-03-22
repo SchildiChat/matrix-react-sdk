@@ -1098,7 +1098,14 @@ export default class EventTile extends React.Component {
 
                 const msgOptionClasses = classNames(
                     "mx_EventTile_msgOption",
-                    { "sc_readReceipts_empty": !this.props.readReceipts || this.props.readReceipts.length === 0 },
+                    {
+                        "sc_readReceipts_empty": (
+                            // Don't reserve space below bubbles if there are no read receipts
+                            (!this.props.readReceipts || this.props.readReceipts.length === 0) &&
+                            // ToDo: Maybe incorporate sent/sending state into bubble?!?
+                            !(this._shouldShowSentReceipt || this._shouldShowSendingReceipt)
+                        ),
+                    },
                 );
                 const msgOption = (
                     <div className={msgOptionClasses}>
