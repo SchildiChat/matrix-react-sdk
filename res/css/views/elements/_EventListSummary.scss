@@ -16,6 +16,10 @@ limitations under the License.
 
 .mx_EventListSummary {
     position: relative;
+
+    .mx_DateSeparator {
+        display: none;
+    }
 }
 
 .mx_TextualEvent.mx_EventListSummary_summary {
