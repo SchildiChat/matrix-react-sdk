@@ -17,6 +17,7 @@ limitations under the License.
 import React, {RefObject, useContext, useRef, useState} from "react";
 import {EventType, RoomType} from "matrix-js-sdk/src/@types/event";
 import {Room} from "matrix-js-sdk/src/models/room";
+import {EventSubscription} from "fbemitter";
 
 import MatrixClientContext from "../../contexts/MatrixClientContext";
 import RoomAvatar from "../views/avatars/RoomAvatar";
@@ -31,7 +32,6 @@ import {useRoomMembers} from "../../hooks/useRoomMembers";
 import createRoom, {IOpts, Preset} from "../../createRoom";
 import Field from "../views/elements/Field";
 import {useEventEmitter} from "../../hooks/useEventEmitter";
-import StyledRadioGroup from "../views/elements/StyledRadioGroup";
 import withValidation from "../views/elements/Validation";
 import * as Email from "../../email";
 import defaultDispatcher from "../../dispatcher/dispatcher";
@@ -42,7 +42,6 @@ import ErrorBoundary from "../views/elements/ErrorBoundary";
 import {ActionPayload} from "../../dispatcher/payloads";
 import RightPanel from "./RightPanel";
 import RightPanelStore from "../../stores/RightPanelStore";
-import {EventSubscription} from "fbemitter";
 import {RightPanelPhases} from "../../stores/RightPanelStorePhases";
 import {SetRightPanelPhasePayload} from "../../dispatcher/payloads/SetRightPanelPhasePayload";
 import {useStateArray} from "../../hooks/useStateArray";
@@ -54,6 +53,7 @@ import {EnhancedMap} from "../../utils/maps";
 import AutoHideScrollbar from "./AutoHideScrollbar";
 import MemberAvatar from "../views/avatars/MemberAvatar";
 import {useStateToggle} from "../../hooks/useStateToggle";
+import SpaceStore from "../../stores/SpaceStore";
 
 interface IProps {
     space: Room;
@@ -66,6 +66,7 @@ interface IProps {
 interface IState {
     phase: Phase;
     showRightPanel: boolean;
+    myMembership: string;
 }
 
 enum Phase {
@@ -94,25 +95,120 @@ const useMyRoomMembership = (room: Room) => {
     return membership;
 };
 
-const SpaceLanding = ({ space, onJoinButtonClicked, onRejectButtonClicked }) => {
+const SpacePreview = ({ space, onJoinButtonClicked, onRejectButtonClicked }) => {
     const cli = useContext(MatrixClientContext);
     const myMembership = useMyRoomMembership(space);
-    const joinRule = space.getJoinRule();
-    const userId = cli.getUserId();
 
+    const [busy, setBusy] = useState(false);
+
+    let inviterSection;
     let joinButtons;
     if (myMembership === "invite") {
-        joinButtons = <div className="mx_SpaceRoomView_landing_joinButtons">
-            <FormButton label={_t("Accept Invite")} onClick={onJoinButtonClicked} />
-            <AccessibleButton kind="link" onClick={onRejectButtonClicked}>
-                {_t("Decline")}
-            </AccessibleButton>
-        </div>;
-    } else if (myMembership !== "join" && joinRule === "public") {
-        joinButtons = <div className="mx_SpaceRoomView_landing_joinButtons">
-            <FormButton label={_t("Join")} onClick={onJoinButtonClicked} />
-        </div>;
+        const inviteSender = space.getMember(cli.getUserId())?.events.member?.getSender();
+        const inviter = inviteSender && space.getMember(inviteSender);
+
+        if (inviteSender) {
+            inviterSection = <div className="mx_SpaceRoomView_preview_inviter">
+                <MemberAvatar member={inviter} width={32} height={32} />
+                <div>
+                    <div className="mx_SpaceRoomView_preview_inviter_name">
+                        { _t("<inviter/> invites you", {}, {
+                            inviter: () => <b>{ inviter.name || inviteSender }</b>,
+                        }) }
+                    </div>
+                    { inviter ? <div className="mx_SpaceRoomView_preview_inviter_mxid">
+                        { inviteSender }
+                    </div> : null }
+                </div>
+            </div>;
+        }
+
+        joinButtons = <>
+            <FormButton
+                label={_t("Reject")}
+                kind="secondary"
+                onClick={() => {
+                    setBusy(true);
+                    onRejectButtonClicked();
+                }} />
+            <FormButton
+                label={_t("Accept")}
+                onClick={() => {
+                    setBusy(true);
+                    onJoinButtonClicked();
+                }}
+            />
+        </>;
+    } else {
+        joinButtons = (
+            <FormButton
+                label={_t("Join")}
+                onClick={() => {
+                    setBusy(true);
+                    onJoinButtonClicked();
+                }}
+            />
+        )
     }
+
+    if (busy) {
+        joinButtons = <InlineSpinner />;
+    }
+
+    let visibilitySection;
+    if (space.getJoinRule() === "public") {
+        visibilitySection = <span className="mx_SpaceRoomView_preview_info_public">
+            { _t("Public space") }
+        </span>;
+    } else {
+        visibilitySection = <span className="mx_SpaceRoomView_preview_info_private">
+            { _t("Private space") }
+        </span>;
+    }
+
+    return <div className="mx_SpaceRoomView_preview">
+        { inviterSection }
+        <RoomAvatar room={space} height={80} width={80} viewAvatarOnClick={true} />
+        <h1 className="mx_SpaceRoomView_preview_name">
+            <RoomName room={space} />
+        </h1>
+        <div className="mx_SpaceRoomView_preview_info">
+            { visibilitySection }
+            <RoomMemberCount room={space}>
+                {(count) => count > 0 ? (
+                    <AccessibleButton
+                        className="mx_SpaceRoomView_preview_memberCount"
+                        kind="link"
+                        onClick={() => {
+                            defaultDispatcher.dispatch<SetRightPanelPhasePayload>({
+                                action: Action.SetRightPanelPhase,
+                                phase: RightPanelPhases.RoomMemberList,
+                                refireParams: { space },
+                            });
+                        }}
+                    >
+                        { _t("%(count)s members", { count }) }
+                    </AccessibleButton>
+                ) : null}
+            </RoomMemberCount>
+        </div>
+        <RoomTopic room={space}>
+            {(topic, ref) =>
+                <div className="mx_SpaceRoomView_preview_topic" ref={ref}>
+                    { topic }
+                </div>
+            }
+        </RoomTopic>
+        <div className="mx_SpaceRoomView_preview_joinButtons">
+            { joinButtons }
+        </div>
+    </div>;
+};
+
+const SpaceLanding = ({ space }) => {
+    const cli = useContext(MatrixClientContext);
+    const myMembership = useMyRoomMembership(space);
+    const userId = cli.getUserId();
 
     let inviteButton;
     if (myMembership === "join" && space.canInvite(userId)) {
@@ -161,10 +257,10 @@ const SpaceLanding = ({ space, onJoinButtonClicked, onRejectButtonClicked }) => 
         try {
             const data = await cli.getSpaceSummary(space.roomId, undefined, myMembership !== "join");
 
-            const parentChildRelations = new EnhancedMap<string, string[]>();
+            const parentChildRelations = new EnhancedMap<string, Map<string, ISpaceSummaryEvent>>();
             data.events.map((ev: ISpaceSummaryEvent) => {
                 if (ev.type === EventType.SpaceChild) {
-                    parentChildRelations.getOrCreate(ev.room_id, []).push(ev.state_key);
+                    parentChildRelations.getOrCreate(ev.room_id, new Map()).set(ev.state_key, ev);
                 }
             });
 
@@ -188,11 +284,10 @@ const SpaceLanding = ({ space, onJoinButtonClicked, onRejectButtonClicked }) => 
             <HierarchyLevel
                 spaceId={space.roomId}
                 rooms={roomsMap}
-                editing={false}
                 relations={relations}
                 parents={new Set()}
-                onPreviewClick={roomId => {
-                    showRoom(roomsMap.get(roomId), [], false); // TODO
+                onViewRoomClick={(roomId, autoJoin) => {
+                    showRoom(roomsMap.get(roomId), [], autoJoin);
                 }}
             />
         </AutoHideScrollbar>;
@@ -227,26 +322,7 @@ const SpaceLanding = ({ space, onJoinButtonClicked, onRejectButtonClicked }) => 
                             ) : null}
                         </RoomMemberCount>
                     </div> };
-                    if (myMembership === "invite") {
-                        const inviteSender = space.getMember(userId)?.events.member?.getSender();
-                        const inviter = inviteSender && space.getMember(inviteSender);
-
-                        if (inviteSender) {
-                            return _t("<inviter/> invited you to <name/>", {}, {
-                                name: tags.name,
-                                inviter: () => inviter
-                                    ? <span className="mx_SpaceRoomView_landing_inviter">
-                                        <MemberAvatar member={inviter} width={26} height={26} viewUserOnClick={true} />
-                                        { inviter.name }
-                                    </span>
-                                    : <span className="mx_SpaceRoomView_landing_inviter">
-                                        { inviteSender }
-                                    </span>,
-                            }) as JSX.Element;
-                        } else {
-                            return _t("You have been invited to <name/>", {}, tags) as JSX.Element;
-                        }
-                    } else if (shouldShowSpaceSettings(cli, space)) {
+                    if (shouldShowSpaceSettings(cli, space)) {
                         if (space.getJoinRule() === "public") {
                             return _t("Your public space <name/>", {}, tags) as JSX.Element;
                         } else {
@@ -260,7 +336,6 @@ const SpaceLanding = ({ space, onJoinButtonClicked, onRejectButtonClicked }) => 
         <div className="mx_SpaceRoomView_landing_topic">
             <RoomTopic room={space} />
         </div>
-        { joinButtons }
         <div className="mx_SpaceRoomView_landing_adminButtons">
             { inviteButton }
             { addRoomButtons }
@@ -288,6 +363,7 @@ const SpaceSetupFirstRooms = ({ space, title, description, onFinished }) => {
             placeholder={placeholders[i]}
             value={roomNames[i]}
             onChange={ev => setRoomName(i, ev.target.value)}
+            autoFocus={i === 2}
         />;
     });
 
@@ -320,7 +396,7 @@ const SpaceSetupFirstRooms = ({ space, title, description, onFinished }) => {
     let buttonLabel = _t("Skip for now");
     if (roomNames.some(name => name.trim())) {
         onClick = onNextClick;
-        buttonLabel = busy ? _t("Creating rooms...") : _t("Next")
+        buttonLabel = busy ? _t("Creating rooms...") : _t("Continue")
     }
 
     return <div>
@@ -342,50 +418,40 @@ const SpaceSetupFirstRooms = ({ space, title, description, onFinished }) => {
 
 const SpaceSetupPublicShare = ({ space, onFinished }) => {
     return <div className="mx_SpaceRoomView_publicShare">
-        <h1>{ _t("Share your public space") }</h1>
-        <div className="mx_SpacePublicShare_description">{ _t("At the moment only you can see it.") }</div>
+        <h1>{ _t("Share %(name)s", { name: space.name }) }</h1>
+        <div className="mx_SpacePublicShare_description">
+            { _t("It's just you at the moment, it will be even better with others.") }
+        </div>
 
         <SpacePublicShare space={space} onFinished={onFinished} />
 
         <div className="mx_SpaceRoomView_buttons">
-            <FormButton label={_t("Finish")} onClick={onFinished} />
+            <FormButton label={_t("Go to my first room")} onClick={onFinished} />
         </div>
     </div>;
 };
 
-const SpaceSetupPrivateScope = ({ onFinished }) => {
-    const [option, setOption] = useState<string>(null);
-
+const SpaceSetupPrivateScope = ({ space, onFinished }) => {
     return <div className="mx_SpaceRoomView_privateScope">
         <h1>{ _t("Who are you working with?") }</h1>
-        <div className="mx_SpaceRoomView_description">{ _t("Ensure the right people have access to the space.") }</div>
-
-        <StyledRadioGroup
-            name="privateSpaceScope"
-            value={option}
-            onChange={setOption}
-            definitions={[
-                {
-                    value: "justMe",
-                    className: "mx_SpaceRoomView_privateScope_justMeButton",
-                    label: <React.Fragment>
-                        <h3>{ _t("Just Me") }</h3>
-                        <div>{ _t("A private space just for you") }</div>
-                    </React.Fragment>,
-                }, {
-                    value: "meAndMyTeammates",
-                    className: "mx_SpaceRoomView_privateScope_meAndMyTeammatesButton",
-                    label: <React.Fragment>
-                        <h3>{ _t("Me and my teammates") }</h3>
-                        <div>{ _t("A private space for you and your teammates") }</div>
-                    </React.Fragment>,
-                },
-            ]}
-        />
-
-        <div className="mx_SpaceRoomView_buttons">
-            <FormButton label={_t("Next")} disabled={!option} onClick={() => onFinished(option !== "justMe")} />
+        <div className="mx_SpaceRoomView_description">
+            { _t("Make sure the right people have access to %(name)s", { name: space.name }) }
         </div>
+
+        <AccessibleButton
+            className="mx_SpaceRoomView_privateScope_justMeButton"
+            onClick={() => { onFinished(false) }}
+        >
+            <h3>{ _t("Just me") }</h3>
+            <div>{ _t("A private space to organise your rooms") }</div>
+        </AccessibleButton>
+        <AccessibleButton
+            className="mx_SpaceRoomView_privateScope_meAndMyTeammatesButton"
+            onClick={() => { onFinished(true) }}
+        >
+            <h3>{ _t("Me and my teammates") }</h3>
+            <div>{ _t("A private space for you and your teammates") }</div>
+        </AccessibleButton>
     </div>;
 };
 
@@ -415,6 +481,7 @@ const SpaceSetupPrivateInvite = ({ space, onFinished }) => {
             onChange={ev => setEmailAddress(i, ev.target.value)}
             ref={fieldRefs[i]}
             onValidate={validateEmailRules}
+            autoFocus={i === 0}
         />;
     });
 
@@ -452,9 +519,18 @@ const SpaceSetupPrivateInvite = ({ space, onFinished }) => {
         setBusy(false);
     };
 
+    let onClick = onFinished;
+    let buttonLabel = _t("Skip for now");
+    if (emailAddresses.some(name => name.trim())) {
+        onClick = onNextClick;
+        buttonLabel = busy ? _t("Inviting...") : _t("Continue")
+    }
+
     return <div className="mx_SpaceRoomView_inviteTeammates">
         <h1>{ _t("Invite your teammates") }</h1>
-        <div className="mx_SpaceRoomView_description">{ _t("Ensure the right people have access to the space.") }</div>
+        <div className="mx_SpaceRoomView_description">
+            { _t("Make sure the right people have access. You can invite more later.") }
+        </div>
 
         { error && <div className="mx_SpaceRoomView_errorText">{ error }</div> }
         { fields }
@@ -469,8 +545,7 @@ const SpaceSetupPrivateInvite = ({ space, onFinished }) => {
         </div>
 
         <div className="mx_SpaceRoomView_buttons">
-            <AccessibleButton onClick={onFinished} kind="link">{_t("Skip for now")}</AccessibleButton>
-            <FormButton label={busy ? _t("Inviting...") : _t("Next")} disabled={busy} onClick={onNextClick} />
+            <FormButton label={buttonLabel} disabled={busy} onClick={onClick} />
         </div>
     </div>;
 };
@@ -498,16 +573,25 @@ export default class SpaceRoomView extends React.PureComponent<IProps, IState> {
         this.state = {
             phase,
             showRightPanel: RightPanelStore.getSharedInstance().isOpenForRoom,
+            myMembership: this.props.space.getMyMembership(),
         };
 
         this.dispatcherRef = defaultDispatcher.register(this.onAction);
         this.rightPanelStoreToken = RightPanelStore.getSharedInstance().addListener(this.onRightPanelStoreUpdate);
+        this.context.on("Room.myMembership", this.onMyMembership);
     }
 
     componentWillUnmount() {
         defaultDispatcher.unregister(this.dispatcherRef);
         this.rightPanelStoreToken.remove();
+        this.context.off("Room.myMembership", this.onMyMembership);
     }
+
+    private onMyMembership = (room: Room, myMembership: string) => {
+        if (room.roomId === this.props.space.roomId) {
+            this.setState({ myMembership });
+        }
+    };
 
     private onRightPanelStoreUpdate = () => {
         this.setState({
@@ -545,30 +629,65 @@ export default class SpaceRoomView extends React.PureComponent<IProps, IState> {
         }
     };
 
+    private goToFirstRoom = async () => {
+        const childRooms = SpaceStore.instance.getChildRooms(this.props.space.roomId);
+        if (childRooms.length) {
+            const room = childRooms[0];
+            defaultDispatcher.dispatch({
+                action: "view_room",
+                room_id: room.roomId,
+            });
+            return;
+        }
+
+        let suggestedRooms = SpaceStore.instance.suggestedRooms;
+        if (SpaceStore.instance.activeSpace !== this.props.space) {
+            // the space store has the suggested rooms loaded for a different space, fetch the right ones
+            suggestedRooms = (await SpaceStore.instance.fetchSuggestedRooms(this.props.space, 1)).rooms;
+        }
+
+        if (suggestedRooms.length) {
+            const room = suggestedRooms[0];
+            defaultDispatcher.dispatch({
+                action: "view_room",
+                room_id: room.room_id,
+                oobData: {
+                    avatarUrl: room.avatar_url,
+                    name: room.name || room.canonical_alias || room.aliases.pop() || _t("Empty room"),
+                },
+            });
+            return;
+        }
+
+        this.setState({ phase: Phase.Landing });
+    };
+
     private renderBody() {
         switch (this.state.phase) {
             case Phase.Landing:
-                return <SpaceLanding
-                    space={this.props.space}
-                    onJoinButtonClicked={this.props.onJoinButtonClicked}
-                    onRejectButtonClicked={this.props.onRejectButtonClicked}
-                />;
-
+                if (this.state.myMembership === "join") {
+                    return <SpaceLanding space={this.props.space} />;
+                } else {
+                    return <SpacePreview
+                        space={this.props.space}
+                        onJoinButtonClicked={this.props.onJoinButtonClicked}
+                        onRejectButtonClicked={this.props.onRejectButtonClicked}
+                    />;
+                }
             case Phase.PublicCreateRooms:
                 return <SpaceSetupFirstRooms
                     space={this.props.space}
                     title={_t("What are some things you want to discuss?")}
-                    description={_t("We'll create rooms for each topic.")}
+                    description={_t("Let's create a room for each of them. " +
+                        "You can add more later too, including already existing ones.")}
                     onFinished={() => this.setState({ phase: Phase.PublicShare })}
                 />;
             case Phase.PublicShare:
-                return <SpaceSetupPublicShare
-                    space={this.props.space}
-                    onFinished={() => this.setState({ phase: Phase.Landing })}
-                />;
+                return <SpaceSetupPublicShare space={this.props.space} onFinished={this.goToFirstRoom} />;
 
             case Phase.PrivateScope:
                 return <SpaceSetupPrivateScope
+                    space={this.props.space}
                     onFinished={(invite: boolean) => {
                         this.setState({ phase: invite ? Phase.PrivateInvite : Phase.PrivateCreateRooms });
                     }}
@@ -582,7 +701,8 @@ export default class SpaceRoomView extends React.PureComponent<IProps, IState> {
                 return <SpaceSetupFirstRooms
                     space={this.props.space}
                     title={_t("What projects are you working on?")}
-                    description={_t("We'll create rooms for each of them. You can add existing rooms after setup.")}
+                    description={_t("We'll create rooms for each of them. " +
+                        "You can add more later too, including already existing ones.")}
                     onFinished={() => this.setState({ phase: Phase.Landing })}
                 />;
         }

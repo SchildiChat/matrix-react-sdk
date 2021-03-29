@@ -32,14 +32,16 @@ import * as sdk from "../../../../..";
 import Modal from "../../../../../Modal";
 import dis from "../../../../../dispatcher/dispatcher";
 import {Service, startTermsFlow} from "../../../../../Terms";
-import {SERVICE_TYPES} from "matrix-js-sdk";
+import {SERVICE_TYPES} from "matrix-js-sdk/src/service-types";
 import IdentityAuthClient from "../../../../../IdentityAuthClient";
 import {abbreviateUrl} from "../../../../../utils/UrlUtils";
 import { getThreepidsWithBindStatus } from '../../../../../boundThreepids';
 import Spinner from "../../../elements/Spinner";
 import {SettingLevel} from "../../../../../settings/SettingLevel";
 import {UIFeature} from "../../../../../settings/UIFeature";
+import {replaceableComponent} from "../../../../../utils/replaceableComponent";
 
+@replaceableComponent("views.settings.tabs.user.GeneralUserSettingsTab")
 export default class GeneralUserSettingsTab extends React.Component {
     static propTypes = {
         closeSettingsFn: PropTypes.func.isRequired,

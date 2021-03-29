@@ -16,10 +16,57 @@ limitations under the License.
 
 $SpaceRoomViewInnerWidth: 428px;
 
+@define-mixin SpacePillButton {
+    position: relative;
+    padding: 16px 32px 16px 72px;
+    width: 432px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    border: 1px solid $input-darker-bg-color;
+    font-size: $font-15px;
+    margin: 20px 0;
+
+    > h3 {
+        font-weight: $font-semi-bold;
+        margin: 0 0 4px;
+    }
+
+    > span {
+        color: $secondary-fg-color;
+    }
+
+    &::before {
+        position: absolute;
+        content: '';
+        width: 32px;
+        height: 32px;
+        top: 24px;
+        left: 20px;
+        mask-position: center;
+        mask-repeat: no-repeat;
+        mask-size: 24px;
+        background-color: $tertiary-fg-color;
+    }
+
+    &:hover {
+        border-color: $accent-color;
+
+        &::before {
+            background-color: $accent-color;
+        }
+
+        > span {
+            color: $primary-fg-color;
+        }
+    }
+}
+
 .mx_SpaceRoomView {
     .mx_MainSplit > div:first-child {
         padding: 80px 60px;
         flex-grow: 1;
+        max-height: 100%;
+        overflow-y: auto;
 
         h1 {
             margin: 0;
@@ -69,9 +116,116 @@ $SpaceRoomViewInnerWidth: 428px;
         }
     }
 
-    .mx_SpaceRoomView_landing {
-        overflow-y: auto;
+    .mx_SpaceRoomView_preview {
+        padding: 32px 24px !important; // override default padding from above
+        margin: auto;
+        max-width: 480px;
+        box-sizing: border-box;
+        box-shadow: 2px 15px 30px $dialog-shadow-color;
+        border: 1px solid $input-border-color;
+        border-radius: 8px;
 
+        .mx_SpaceRoomView_preview_inviter {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: $font-15px;
+
+            > div {
+                margin-left: 8px;
+
+                .mx_SpaceRoomView_preview_inviter_name {
+                    line-height: $font-18px;
+                }
+
+                .mx_SpaceRoomView_preview_inviter_mxid {
+                    line-height: $font-24px;
+                    color: $secondary-fg-color;
+                }
+            }
+        }
+
+        > .mx_BaseAvatar_image,
+        > .mx_BaseAvatar > .mx_BaseAvatar_image {
+            border-radius: 12px;
+        }
+
+        h1.mx_SpaceRoomView_preview_name {
+            margin: 20px 0 !important; // override default margin from above
+        }
+
+        .mx_SpaceRoomView_preview_info {
+            color: $tertiary-fg-color;
+            font-size: $font-15px;
+            line-height: $font-24px;
+            margin: 20px 0;
+
+            .mx_SpaceRoomView_preview_info_public,
+            .mx_SpaceRoomView_preview_info_private {
+                padding-left: 20px;
+                position: relative;
+
+                &::before {
+                    position: absolute;
+                    content: "";
+                    width: 20px;
+                    height: 20px;
+                    top: 0;
+                    left: -2px;
+                    mask-position: center;
+                    mask-repeat: no-repeat;
+                    background-color: $tertiary-fg-color;
+                }
+            }
+
+            .mx_SpaceRoomView_preview_info_public::before {
+                mask-size: 12px;
+                mask-image: url("$(res)/img/globe.svg");
+            }
+
+            .mx_SpaceRoomView_preview_info_private::before {
+                mask-size: 14px;
+                mask-image: url("$(res)/img/element-icons/lock.svg");
+            }
+
+            .mx_AccessibleButton_kind_link {
+                color: inherit;
+                position: relative;
+                padding-left: 16px;
+
+                &::before {
+                    content: "·"; // visual separator
+                    position: absolute;
+                    left: 6px;
+                }
+            }
+        }
+
+        .mx_SpaceRoomView_preview_topic {
+            font-size: $font-14px;
+            line-height: $font-22px;
+            color: $secondary-fg-color;
+            margin: 20px 0;
+            max-height: 160px;
+            overflow-y: auto;
+        }
+
+        .mx_SpaceRoomView_preview_joinButtons {
+            margin-top: 20px;
+
+            .mx_AccessibleButton {
+                width: 200px;
+                box-sizing: border-box;
+                padding: 14px 0;
+
+                & + .mx_AccessibleButton {
+                    margin-left: 20px;
+                }
+            }
+        }
+    }
+
+    .mx_SpaceRoomView_landing {
         > .mx_BaseAvatar_image,
         > .mx_BaseAvatar > .mx_BaseAvatar_image {
             border-radius: 12px;
@@ -126,14 +280,6 @@ $SpaceRoomViewInnerWidth: 428px;
 
         .mx_SpaceRoomView_landing_topic {
             font-size: $font-15px;
-        }
-
-        .mx_SpaceRoomView_landing_joinButtons {
-            margin-top: 24px;
-
-            .mx_FormButton {
-                padding: 8px 22px;
-            }
         }
 
         .mx_SpaceRoomView_landing_adminButtons {
@@ -230,64 +376,8 @@ $SpaceRoomViewInnerWidth: 428px;
     }
 
     .mx_SpaceRoomView_privateScope {
-        .mx_RadioButton {
-            width: $SpaceRoomViewInnerWidth;
-            border-radius: 8px;
-            border: 1px solid $space-button-outline-color;
-            padding: 16px 16px 16px 72px;
-            margin-top: 36px;
-            cursor: pointer;
-            box-sizing: border-box;
-            position: relative;
-
-            > div:first-of-type {
-                // hide radio dot
-                display: none;
-            }
-
-            .mx_RadioButton_content {
-                margin: 0;
-
-                > h3 {
-                    margin: 0 0 4px;
-                    font-size: $font-15px;
-                    font-weight: $font-semi-bold;
-                    line-height: $font-18px;
-                }
-
-                > div {
-                    color: $secondary-fg-color;
-                    font-size: $font-15px;
-                    line-height: $font-24px;
-                }
-            }
-
-            &::before {
-                content: "";
-                position: absolute;
-                height: 32px;
-                width: 32px;
-                top: 24px;
-                left: 20px;
-                background-color: $secondary-fg-color;
-                mask-repeat: no-repeat;
-                mask-position: center;
-                mask-size: contain;
-            }
-        }
-
-        .mx_RadioButton_checked {
-            border-color: $accent-color;
-
-            .mx_RadioButton_content {
-                > div {
-                    color: $primary-fg-color;
-                }
-            }
-
-            &::before {
-                background-color: $accent-color;
-            }
+        .mx_AccessibleButton {
+            @mixin SpacePillButton;
         }
 
         .mx_SpaceRoomView_privateScope_justMeButton::before {

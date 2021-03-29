@@ -25,6 +25,7 @@ import { formatCommaSeparatedList } from '../../../utils/FormattingUtils';
 import { isValid3pidInvite } from "../../../RoomInvite";
 import EventListSummary from "./EventListSummary";
 import { Layout } from '../../../settings/Layout';
+import {replaceableComponent} from "../../../utils/replaceableComponent";
 
 interface IProps {
     // An array of member events to summarise
@@ -72,6 +73,7 @@ enum TransitionType {
 
 const SEP = ",";
 
+@replaceableComponent("views.elements.MemberEventListSummary")
 export default class MemberEventListSummary extends React.Component<IProps> {
     static defaultProps = {
         summaryLength: 1,
