@@ -188,6 +188,7 @@ export interface IState {
     canReply: boolean;
     layout: Layout;
     singleSideBubbles: boolean;
+    adaptiveSideBubbles: boolean;
     matrixClientIsReady: boolean;
     showUrlPreview?: boolean;
     e2eStatus?: E2EStatus;
@@ -205,6 +206,7 @@ export default class RoomView extends React.Component<IProps, IState> {
     private readonly showReadReceiptsWatchRef: string;
     private readonly layoutWatcherRef: string;
     private readonly singleSideBubblesWatcherRef: string;
+    private readonly adaptiveSideBubblesWatcherRef: string;
 
     private unmounted = false;
     private permalinkCreators: Record<string, RoomPermalinkCreator> = {};
@@ -247,6 +249,7 @@ export default class RoomView extends React.Component<IProps, IState> {
             canReply: false,
             layout: SettingsStore.getValue("layout"),
             singleSideBubbles: SettingsStore.getValue("singleSideBubbles"),
+            adaptiveSideBubbles: SettingsStore.getValue("adaptiveSideBubbles"),
             matrixClientIsReady: this.context && this.context.isInitialSyncComplete(),
             dragCounter: 0,
         };
@@ -278,6 +281,8 @@ export default class RoomView extends React.Component<IProps, IState> {
         this.layoutWatcherRef = SettingsStore.watchSetting("layout", null, this.onLayoutChange);
         this.singleSideBubblesWatcherRef = SettingsStore.watchSetting("singleSideBubbles", null,
             this.onSingleSideBubblesChange);
+        this.adaptiveSideBubblesWatcherRef = SettingsStore.watchSetting("adaptiveSideBubbles", null,
+            this.onAdaptiveSideBubblesChange);
     }
 
     private onWidgetStoreUpdate = () => {
@@ -560,6 +565,8 @@ export default class RoomView extends React.Component<IProps, IState> {
                 atEndOfLiveTimeline: this.messagePanel.isAtEndOfLiveTimeline(),
             });
         }
+
+        this.onResize();
     }
 
     componentWillUnmount() {
@@ -647,6 +654,7 @@ export default class RoomView extends React.Component<IProps, IState> {
 
         SettingsStore.unwatchSetting(this.layoutWatcherRef);
         SettingsStore.unwatchSetting(this.singleSideBubblesWatcherRef);
+        SettingsStore.unwatchSetting(this.adaptiveSideBubblesWatcherRef);
     }
 
     private onLayoutChange = () => {
@@ -658,6 +666,12 @@ export default class RoomView extends React.Component<IProps, IState> {
     private onSingleSideBubblesChange = () => {
         this.setState({
             singleSideBubbles: SettingsStore.getValue("singleSideBubbles"),
+        });
+    };
+
+    private onAdaptiveSideBubblesChange = () => {
+        this.setState({
+            adaptiveSideBubbles: SettingsStore.getValue("adaptiveSideBubbles"),
         });
     };
 
@@ -1609,6 +1623,21 @@ export default class RoomView extends React.Component<IProps, IState> {
         if (auxPanelMaxHeight < 50) auxPanelMaxHeight = 50;
 
         this.setState({auxPanelMaxHeight: auxPanelMaxHeight});
+
+        if (this.state.adaptiveSideBubbles && this.roomView.current) {
+            const messagelists = this.roomView.current.getElementsByClassName("mx_RoomView_MessageList");
+            let width = 0;
+            for (let i = 0; i < messagelists.length; i++) {
+                const boundingBox = messagelists[i].getBoundingClientRect();
+                console.log(boundingBox.width);
+                if (boundingBox.width > width) width = boundingBox.width;
+            };
+            if (width < 896) {
+                this.setState({singleSideBubbles: false});
+            } else {
+                this.setState({singleSideBubbles: true});
+            }
+        }
     };
 
     private onFullscreenClick = () => {

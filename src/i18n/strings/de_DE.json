@@ -2343,6 +2343,7 @@
     "Enable experimental, compact IRC style layout": "Kompaktes, experimentelles Layout im IRC-Stil aktivieren",
     "Enable layout with message bubbles": "Layout mit Sprechblasen aktivieren",
     "Show message bubbles on one side only": "Sprechblasen nur auf einer Seite anzeigen",
+    "Show message bubbles depending on the width either on both sides or only on one side": "Sprechblasen abhänging von der Breite auf beiden Seiten oder nur einer Seite anzeigen",
     "User menu": "Benutzermenü",
     "%(brand)s Web": "%(brand)s Web",
     "%(brand)s Desktop": "%(brand)s Desktop",

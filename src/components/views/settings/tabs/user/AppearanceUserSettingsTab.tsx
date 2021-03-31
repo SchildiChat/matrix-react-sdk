@@ -65,6 +65,7 @@ interface IState extends IThemeState {
     systemFont: string;
     showAdvanced: boolean;
     layout: Layout;
+    adaptiveSideBubbles: boolean;
 }
 
 @replaceableComponent("views.settings.tabs.user.AppearanceUserSettingsTab")
@@ -86,6 +87,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
             systemFont: SettingsStore.getValue("systemFont"),
             showAdvanced: true,
             layout: SettingsStore.getValue("layout"),
+            adaptiveSideBubbles: SettingsStore.getValue("adaptiveSideBubbles"),
         };
     }
 
@@ -460,6 +462,13 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                     name="singleSideBubbles"
                     level={SettingLevel.DEVICE}
                     useCheckbox={true}
+                    disabled={!(this.state.layout == Layout.Bubble) || this.state.adaptiveSideBubbles}
+                />
+                <SettingsFlag
+                    name="adaptiveSideBubbles"
+                    level={SettingLevel.DEVICE}
+                    useCheckbox={true}
+                    onChange={(checked) => this.setState({adaptiveSideBubbles: checked})}
                     disabled={!(this.state.layout == Layout.Bubble)}
                 />
 

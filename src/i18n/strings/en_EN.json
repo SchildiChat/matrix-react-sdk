@@ -853,6 +853,7 @@
     "IRC display name width": "IRC display name width",
     "Enable layout with message bubbles": "Enable layout with message bubbles",
     "Show message bubbles on one side only": "Show message bubbles on one side only",
+    "Show message bubbles depending on the width either on both sides or only on one side": "Show message bubbles depending on the width either on both sides or only on one side",
     "Show chat effects (animations when receiving e.g. confetti)": "Show chat effects (animations when receiving e.g. confetti)",
     "Collecting app version information": "Collecting app version information",
     "Collecting logs": "Collecting logs",
