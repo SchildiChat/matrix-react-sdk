@@ -559,9 +559,13 @@ $left-gutter: 56px;
             padding-top: unset;
         }
 
-        .mx_TextualEvent {
+        .mx_TextualEvent, .mx_RoomAvatarEvent {
             display: inline;
             opacity: 0.8;
+        }
+
+        .mx_RoomAvatarEvent_avatar {
+            top: unset;
         }
     }
 
