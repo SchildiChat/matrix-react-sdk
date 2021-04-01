@@ -542,6 +542,14 @@ $left-gutter: 56px;
             margin: 0;
             max-width: unset;
             text-align: start;
+
+            &::before, &::after {
+                margin-top: 1px;
+            }
+
+            .mx_EventTileBubble_title {
+                opacity: 0.8;
+            }
         }
 
         .mx_EventTile_avatar {
