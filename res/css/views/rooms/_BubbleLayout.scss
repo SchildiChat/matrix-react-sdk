@@ -665,7 +665,7 @@ $left-gutter: 56px;
             max-width: 104rem;
         }
 
-        .mx_DateSeparator, .mx_EventListSummary {
+        .sc_EventTile_bubbleLine_info, .mx_DateSeparator, .mx_EventListSummary {
             max-width: calc($left-gutter + 104rem);
         }
     }
