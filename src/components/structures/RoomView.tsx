@@ -673,6 +673,8 @@ export default class RoomView extends React.Component<IProps, IState> {
         this.setState({
             adaptiveSideBubbles: SettingsStore.getValue("adaptiveSideBubbles"),
         });
+
+        this.onSingleSideBubblesChange(); // restore default
     };
 
     private onRightPanelStoreUpdate = () => {
@@ -1624,15 +1626,17 @@ export default class RoomView extends React.Component<IProps, IState> {
 
         this.setState({auxPanelMaxHeight: auxPanelMaxHeight});
 
-        if (this.state.adaptiveSideBubbles && this.roomView.current) {
+        // Let the bubble layout choose between single side and both sides by threshold
+        if (this.state.layout == Layout.Bubble && this.state.adaptiveSideBubbles && this.roomView.current) {
+            // ToDo: Find better way to get the current width (references, but which???)
             const messagelists = this.roomView.current.getElementsByClassName("mx_RoomView_MessageList");
             let width = 0;
             for (let i = 0; i < messagelists.length; i++) {
                 const boundingBox = messagelists[i].getBoundingClientRect();
-                console.log(boundingBox.width);
                 if (boundingBox.width > width) width = boundingBox.width;
-            };
-            if (width < 896) {
+            }
+            // ToDo: Make threshold configurable?
+            if (width < 1280) {
                 this.setState({singleSideBubbles: false});
             } else {
                 this.setState({singleSideBubbles: true});

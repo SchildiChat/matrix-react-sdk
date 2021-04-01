@@ -677,7 +677,7 @@ export const SETTINGS: {[setting: string]: ISetting} = {
     "adaptiveSideBubbles": {
         supportedLevels: LEVELS_ROOM_SETTINGS_WITH_ROOM,
         displayName: _td("Show message bubbles depending on the width either on both sides or only on one side"),
-        default: false,
+        default: true,
     },
     "showChatEffects": {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
