@@ -636,6 +636,27 @@ $left-gutter: 56px;
             }
         }
     }
+
+    // single side bubbles overrides
+    &.sc_BubbleLayout_singleSide {
+        .sc_EventTile_bubbleArea {
+            width: calc(100% - 16px);
+            max-width: unset;
+        }
+        
+        .sc_EventTile_bubbleArea_info {
+            width: 80%;
+            max-width: 72rem;
+        }
+
+        .sc_EventTile_bubbleLine {
+            max-width: 104rem;
+        }
+
+        .mx_DateSeparator, .mx_EventListSummary {
+            max-width: calc($left-gutter + 104rem);
+        }
+    }
 }
 
 /* Compact layout overrides */

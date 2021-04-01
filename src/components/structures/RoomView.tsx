@@ -2020,6 +2020,7 @@ export default class RoomView extends React.Component<IProps, IState> {
             "mx_IRCLayout": this.state.layout == Layout.IRC,
             "mx_GroupLayout": this.state.layout == Layout.Group,
             "sc_BubbleLayout": this.state.layout == Layout.Bubble,
+            "sc_BubbleLayout_singleSide": this.state.layout == Layout.Bubble && this.state.singleSideBubbles,
         };
 
         // if we have search results, we keep the messagepanel (so that it preserves its
