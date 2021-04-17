@@ -381,7 +381,7 @@ export const SETTINGS: {[setting: string]: ISetting} = {
     "ctrlFForSearch": {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
         displayName: isMac ? _td("Use Command + F to search") : _td("Use Ctrl + F to search"),
-        default: false,
+        default: true,
     },
     "MessageComposerInput.ctrlEnterToSend": {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
