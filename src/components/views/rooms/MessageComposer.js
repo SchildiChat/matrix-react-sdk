@@ -34,6 +34,7 @@ import {UPDATE_EVENT} from "../../../stores/AsyncStore";
 import ActiveWidgetStore from "../../../stores/ActiveWidgetStore";
 import { Layout } from '../../../settings/Layout';
 import {replaceableComponent} from "../../../utils/replaceableComponent";
+import VoiceRecordComposerTile from "./VoiceRecordComposerTile";
 
 function ComposerAvatar(props) {
     const MemberStatusMessageAvatar = sdk.getComponent('avatars.MemberStatusMessageAvatar');
@@ -194,6 +195,7 @@ export default class MessageComposer extends React.Component {
             hasConference: WidgetStore.instance.doesRoomHaveConference(this.props.room),
             joinedConference: WidgetStore.instance.isJoinedToConferenceIn(this.props.room),
             isComposerEmpty: true,
+            haveRecording: false,
         };
     }
 
@@ -332,6 +334,10 @@ export default class MessageComposer extends React.Component {
         });
     }
 
+    onVoiceUpdate = (haveRecording: boolean) => {
+        this.setState({haveRecording});
+    };
+
     render() {
         const controls = [
             this.state.me ? <ComposerAvatar key="controls_avatar" me={this.state.me} /> : null,
@@ -353,18 +359,33 @@ export default class MessageComposer extends React.Component {
                     permalinkCreator={this.props.permalinkCreator}
                     replyToEvent={this.props.replyToEvent}
                     onChange={this.onChange}
+                    // TODO: @@ TravisR - Disabling the composer doesn't work
+                    disabled={this.state.haveRecording}
                 />,
-                <UploadButton key="controls_upload" roomId={this.props.room.roomId} />,
-                <EmojiButton key="emoji_button" addEmoji={this.addEmoji} />,
             );
 
+            if (!this.state.haveRecording) {
+                controls.push(
+                    <UploadButton key="controls_upload" roomId={this.props.room.roomId} />,
+                    <EmojiButton key="emoji_button" addEmoji={this.addEmoji} />,
+                );
+            }
+
             if (SettingsStore.getValue(UIFeature.Widgets) &&
-                SettingsStore.getValue("MessageComposerInput.showStickersButton")) {
+                SettingsStore.getValue("MessageComposerInput.showStickersButton") &&
+                !this.state.haveRecording) {
                 controls.push(<Stickerpicker key="stickerpicker_controls_button" room={this.props.room} />);
             }
 
+            if (SettingsStore.getValue("feature_voice_messages")) {
+                controls.push(<VoiceRecordComposerTile
+                    key="controls_voice_record"
+                    room={this.props.room}
+                    onRecording={this.onVoiceUpdate} />);
+            }
+
             controls.push(
-                <SendButton key="controls_send" onClick={this.sendMessage} enabled={!this.state.isComposerEmpty} />,
+                <SendButton key="controls_send" onClick={this.sendMessage} enabled={!this.state.isComposerEmpty || this.state.haveRecording} />,
             );
         } else if (this.state.tombstone) {
             const replacementRoomId = this.state.tombstone.getContent()['replacement_room'];
