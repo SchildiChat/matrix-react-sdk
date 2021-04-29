@@ -664,6 +664,7 @@ export default class MessagePanel extends React.Component {
                         layout={this.props.layout}
                         singleSideBubbles={this.props.singleSideBubbles}
                         enableFlair={this.props.enableFlair}
+                        showReadReceipts={this.props.showReadReceipts}
                     />
                 </TileErrorBoundary>
             </li>,

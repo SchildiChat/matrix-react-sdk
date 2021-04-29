@@ -42,6 +42,9 @@ export default class MImageBody extends React.Component {
         /* the maximum image height to use */
         maxImageHeight: PropTypes.number,
 
+        /* the permalinkCreator */
+        permalinkCreator: PropTypes.object,
+
         scBubble: PropTypes.bool,
         scBubbleGroupTimestamp: PropTypes.object,
         scBubbleActionBar: PropTypes.object,
@@ -110,6 +113,7 @@ export default class MImageBody extends React.Component {
                 src: httpUrl,
                 name: content.body && content.body.length > 0 ? content.body : _t('Attachment'),
                 mxEvent: this.props.mxEvent,
+                permalinkCreator: this.props.permalinkCreator,
             };
 
             if (content.info) {
@@ -118,7 +122,7 @@ export default class MImageBody extends React.Component {
                 params.fileSize = content.info.size;
             }
 
-            Modal.createDialog(ImageView, params, "mx_Dialog_lightbox");
+            Modal.createDialog(ImageView, params, "mx_Dialog_lightbox", null, true);
         }
     }
 

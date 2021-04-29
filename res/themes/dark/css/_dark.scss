@@ -85,6 +85,7 @@ $dialog-close-fg-color: #aaaaaa;
 
 $dialog-background-bg-color: $header-panel-bg-color;
 $lightbox-background-bg-color: #000;
+$lightbox-background-bg-opacity: 0.85;
 
 $preview-widget-bar-color: #ddd;
 $preview-widget-fg-color: unset;
@@ -251,7 +252,7 @@ $composer-shadow-color: rgba(0, 0, 0, 0.28);
 @define-mixin mx_DialogButton_secondary {
     // flip colours for the secondary ones
     font-weight: 600;
-    border: 1px solid $accent-color ! important;
+    border: 1px solid $accent-color !important;
     color: $accent-color;
     background-color: $button-secondary-bg-color;
 }

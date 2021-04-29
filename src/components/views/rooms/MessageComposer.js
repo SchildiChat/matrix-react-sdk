@@ -29,12 +29,13 @@ import {aboveLeftOf, ContextMenu, ContextMenuTooltipButton, useContextMenu} from
 import AccessibleTooltipButton from "../elements/AccessibleTooltipButton";
 import ReplyPreview from "./ReplyPreview";
 import {UIFeature} from "../../../settings/UIFeature";
-import WidgetStore from "../../../stores/WidgetStore";
 import {UPDATE_EVENT} from "../../../stores/AsyncStore";
-import ActiveWidgetStore from "../../../stores/ActiveWidgetStore";
 import { Layout } from '../../../settings/Layout';
 import {replaceableComponent} from "../../../utils/replaceableComponent";
 import VoiceRecordComposerTile from "./VoiceRecordComposerTile";
+import {VoiceRecordingStore} from "../../../stores/VoiceRecordingStore";
+import {RecordingState} from "../../../voice/VoiceRecording";
+import Tooltip, {Alignment} from "../elements/Tooltip";
 
 function ComposerAvatar(props) {
     const MemberStatusMessageAvatar = sdk.getComponent('avatars.MemberStatusMessageAvatar');
@@ -185,17 +186,15 @@ export default class MessageComposer extends React.Component {
         this._onRoomStateEvents = this._onRoomStateEvents.bind(this);
         this._onTombstoneClick = this._onTombstoneClick.bind(this);
         this.renderPlaceholderText = this.renderPlaceholderText.bind(this);
-        WidgetStore.instance.on(UPDATE_EVENT, this._onWidgetUpdate);
-        ActiveWidgetStore.on('update', this._onActiveWidgetUpdate);
+        VoiceRecordingStore.instance.on(UPDATE_EVENT, this._onVoiceStoreUpdate);
         this._dispatcherRef = null;
 
         this.state = {
             tombstone: this._getRoomTombstone(),
             canSendMessages: this.props.room.maySendMessage(),
-            hasConference: WidgetStore.instance.doesRoomHaveConference(this.props.room),
-            joinedConference: WidgetStore.instance.isJoinedToConferenceIn(this.props.room),
             isComposerEmpty: true,
             haveRecording: false,
+            recordingTimeLeftSeconds: null, // when set to a number, shows a toast
         };
     }
 
@@ -209,14 +208,6 @@ export default class MessageComposer extends React.Component {
                 this.props.resizeNotifier.notifyTimelineHeightChanged();
             }, 100);
         }
-    };
-
-    _onWidgetUpdate = () => {
-        this.setState({hasConference: WidgetStore.instance.doesRoomHaveConference(this.props.room)});
-    };
-
-    _onActiveWidgetUpdate = () => {
-        this.setState({joinedConference: WidgetStore.instance.isJoinedToConferenceIn(this.props.room)});
     };
 
     componentDidMount() {
@@ -245,8 +236,7 @@ export default class MessageComposer extends React.Component {
         if (MatrixClientPeg.get()) {
             MatrixClientPeg.get().removeListener("RoomState.events", this._onRoomStateEvents);
         }
-        WidgetStore.instance.removeListener(UPDATE_EVENT, this._onWidgetUpdate);
-        ActiveWidgetStore.removeListener('update', this._onActiveWidgetUpdate);
+        VoiceRecordingStore.instance.off(UPDATE_EVENT, this._onVoiceStoreUpdate);
         dis.unregister(this.dispatcherRef);
     }
 
@@ -334,8 +324,18 @@ export default class MessageComposer extends React.Component {
         });
     }
 
-    onVoiceUpdate = (haveRecording: boolean) => {
-        this.setState({haveRecording});
+    _onVoiceStoreUpdate = () => {
+        const recording = VoiceRecordingStore.instance.activeRecording;
+        this.setState({haveRecording: !!recording});
+        if (recording) {
+            // We show a little heads up that the recording is about to automatically end soon. The 3s
+            // display time is completely arbitrary. Note that we don't need to deregister the listener
+            // because the recording instance will clean that up for us.
+            recording.on(RecordingState.EndingSoon, ({secondsLeft}) => {
+                this.setState({recordingTimeLeftSeconds: secondsLeft});
+                setTimeout(() => this.setState({recordingTimeLeftSeconds: null}), 3000);
+            });
+        }
     };
 
     render() {
@@ -359,7 +359,6 @@ export default class MessageComposer extends React.Component {
                     permalinkCreator={this.props.permalinkCreator}
                     replyToEvent={this.props.replyToEvent}
                     onChange={this.onChange}
-                    // TODO: @@ TravisR - Disabling the composer doesn't work
                     disabled={this.state.haveRecording}
                 />,
             );
@@ -380,8 +379,7 @@ export default class MessageComposer extends React.Component {
             if (SettingsStore.getValue("feature_voice_messages")) {
                 controls.push(<VoiceRecordComposerTile
                     key="controls_voice_record"
-                    room={this.props.room}
-                    onRecording={this.onVoiceUpdate} />);
+                    room={this.props.room} />);
             }
 
             controls.push(
@@ -427,8 +425,18 @@ export default class MessageComposer extends React.Component {
             },
         );
 
+        let recordingTooltip;
+        const secondsLeft = Math.round(this.state.recordingTimeLeftSeconds);
+        if (secondsLeft) {
+            recordingTooltip = <Tooltip
+                label={_t("%(seconds)ss left", {seconds: secondsLeft})}
+                alignment={Alignment.Top} yOffset={-50}
+            />;
+        }
+
         return (
             <div className={msgComposerClassNames}>
+                {recordingTooltip}
                 <div className="mx_MessageComposer_wrapper">
                     <ReplyPreview permalinkCreator={this.props.permalinkCreator} />
                     <div className="mx_MessageComposer_row">

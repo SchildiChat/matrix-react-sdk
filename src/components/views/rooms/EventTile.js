@@ -1,8 +1,6 @@
 /*
-Copyright 2015, 2016 OpenMarket Ltd
-Copyright 2017 New Vector Ltd
 Copyright 2019 Michael Telatynski <7t3chguy@gmail.com>
-Copyright 2019, 2020 The Matrix.org Foundation C.I.C.
+Copyright 2019 - 2021 The Matrix.org Foundation C.I.C.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,18 +15,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import ReplyThread from "../elements/ReplyThread";
 import React, {createRef} from 'react';
 import PropTypes from 'prop-types';
 import classNames from "classnames";
 import {EventType} from "matrix-js-sdk/src/@types/event";
+import {EventStatus} from 'matrix-js-sdk/src/models/event';
+
+import ReplyThread from "../elements/ReplyThread";
 import { _t } from '../../../languageHandler';
 import * as TextForEvent from "../../../TextForEvent";
 import * as sdk from "../../../index";
 import dis from '../../../dispatcher/dispatcher';
 import SettingsStore from "../../../settings/SettingsStore";
 import {Layout, LayoutPropType} from "../../../settings/Layout";
-import {EventStatus} from 'matrix-js-sdk/src/models/event';
 import {formatTime} from "../../../DateUtils";
 import {MatrixClientPeg} from '../../../MatrixClientPeg';
 import {ALL_RULE_TYPES} from "../../../mjolnir/BanList";
@@ -43,38 +42,55 @@ import {replaceableComponent} from "../../../utils/replaceableComponent";
 import Tooltip from "../elements/Tooltip";
 
 const eventTileTypes = {
-    'm.room.message': 'messages.MessageEvent',
-    'm.sticker': 'messages.MessageEvent',
-    'm.key.verification.cancel': 'messages.MKeyVerificationConclusion',
-    'm.key.verification.done': 'messages.MKeyVerificationConclusion',
-    'm.room.encryption': 'messages.EncryptionEvent',
-    'm.call.invite': 'messages.TextualEvent',
-    'm.call.answer': 'messages.TextualEvent',
-    'm.call.hangup': 'messages.TextualEvent',
-    'm.call.reject': 'messages.TextualEvent',
+    [EventType.RoomMessage]: 'messages.MessageEvent',
+    [EventType.Sticker]: 'messages.MessageEvent',
+    [EventType.KeyVerificationCancel]: 'messages.MKeyVerificationConclusion',
+    [EventType.KeyVerificationDone]: 'messages.MKeyVerificationConclusion',
+    [EventType.CallInvite]: 'messages.TextualEvent',
+    [EventType.CallAnswer]: 'messages.TextualEvent',
+    [EventType.CallHangup]: 'messages.TextualEvent',
+    [EventType.CallReject]: 'messages.TextualEvent',
 };
 
 const stateEventTileTypes = {
-    'm.room.encryption': 'messages.EncryptionEvent',
-    'm.room.canonical_alias': 'messages.TextualEvent',
-    'm.room.create': 'messages.RoomCreate',
-    'm.room.member': 'messages.TextualEvent',
-    'm.room.name': 'messages.TextualEvent',
-    'm.room.avatar': 'messages.RoomAvatarEvent',
-    'm.room.third_party_invite': 'messages.TextualEvent',
-    'm.room.history_visibility': 'messages.TextualEvent',
-    'm.room.topic': 'messages.TextualEvent',
-    'm.room.power_levels': 'messages.TextualEvent',
-    'm.room.pinned_events': 'messages.TextualEvent',
-    'm.room.server_acl': 'messages.TextualEvent',
+    [EventType.RoomEncryption]: 'messages.EncryptionEvent',
+    [EventType.RoomCanonicalAlias]: 'messages.TextualEvent',
+    [EventType.RoomCreate]: 'messages.RoomCreate',
+    [EventType.RoomMember]: 'messages.TextualEvent',
+    [EventType.RoomName]: 'messages.TextualEvent',
+    [EventType.RoomAvatar]: 'messages.RoomAvatarEvent',
+    [EventType.RoomThirdPartyInvite]: 'messages.TextualEvent',
+    [EventType.RoomHistoryVisibility]: 'messages.TextualEvent',
+    [EventType.RoomTopic]: 'messages.TextualEvent',
+    [EventType.RoomPowerLevels]: 'messages.TextualEvent',
+    [EventType.RoomPinnedEvents]: 'messages.TextualEvent',
+    [EventType.RoomServerAcl]: 'messages.TextualEvent',
     // TODO: Enable support for m.widget event type (https://github.com/vector-im/element-web/issues/13111)
     'im.vector.modular.widgets': 'messages.TextualEvent',
     [WIDGET_LAYOUT_EVENT_TYPE]: 'messages.TextualEvent',
-    'm.room.tombstone': 'messages.TextualEvent',
-    'm.room.join_rules': 'messages.TextualEvent',
-    'm.room.guest_access': 'messages.TextualEvent',
-    'm.room.related_groups': 'messages.TextualEvent',
+    [EventType.RoomTombstone]: 'messages.TextualEvent',
+    [EventType.RoomJoinRules]: 'messages.TextualEvent',
+    [EventType.RoomGuestAccess]: 'messages.TextualEvent',
+    'm.room.related_groups': 'messages.TextualEvent', // legacy communities flair
 };
+
+const stateEventSingular = new Set([
+    EventType.RoomEncryption,
+    EventType.RoomCanonicalAlias,
+    EventType.RoomCreate,
+    EventType.RoomName,
+    EventType.RoomAvatar,
+    EventType.RoomHistoryVisibility,
+    EventType.RoomTopic,
+    EventType.RoomPowerLevels,
+    EventType.RoomPinnedEvents,
+    EventType.RoomServerAcl,
+    WIDGET_LAYOUT_EVENT_TYPE,
+    EventType.RoomTombstone,
+    EventType.RoomJoinRules,
+    EventType.RoomGuestAccess,
+    'm.room.related_groups',
+]);
 
 // Add all the Mjolnir stuff to the renderer
 for (const evType of ALL_RULE_TYPES) {
@@ -132,7 +148,12 @@ export function getHandlerTile(ev) {
         }
     }
 
-    return ev.isState() ? stateEventTileTypes[type] : eventTileTypes[type];
+    if (ev.isState()) {
+        if (stateEventSingular.has(type) && ev.getStateKey() !== "") return undefined;
+        return stateEventTileTypes[type];
+    }
+
+    return eventTileTypes[type];
 }
 
 const MAX_READ_AVATARS = 5;
@@ -242,6 +263,9 @@ export default class EventTile extends React.Component {
 
         // whether or not to show flair at all
         enableFlair: PropTypes.bool,
+
+        // whether or not to show read receipts
+        showReadReceipts: PropTypes.bool,
     };
 
     static defaultProps = {
@@ -869,8 +893,6 @@ export default class EventTile extends React.Component {
             permalink = this.props.permalinkCreator.forEvent(this.props.mxEvent.getId());
         }
 
-        const readAvatars = this.getReadAvatars();
-
         let avatar;
         let sender;
         let avatarSize;
@@ -1002,6 +1024,27 @@ export default class EventTile extends React.Component {
         const groupPadlock = !useIRCLayout && !isBubbleMessage && this._renderE2EPadlock();
         const ircPadlock = useIRCLayout && !isBubbleMessage && this._renderE2EPadlock();
 
+        const msgOptionClasses = classNames(
+            "mx_EventTile_msgOption",
+            {
+                "sc_readReceipts_empty": (
+                    // Don't reserve space below bubbles if there are no read receipts
+                    (!this.props.readReceipts || this.props.readReceipts.length === 0) &&
+                    // ToDo: Maybe incorporate sent/sending state into bubble?!?
+                    !(this._shouldShowSentReceipt || this._shouldShowSendingReceipt)
+                ),
+            },
+        );
+        let msgOption;
+        if (this.props.showReadReceipts) {
+            const readAvatars = this.getReadAvatars();
+            msgOption = (
+                <div className={msgOptionClasses}>
+                    { readAvatars }
+                </div>
+            );
+        }
+
         switch (this.props.tileShape) {
             case 'notif': {
                 const room = this.context.getRoom(this.props.mxEvent.getRoomId());
@@ -1096,23 +1139,6 @@ export default class EventTile extends React.Component {
                     this.props.permalinkCreator,
                     this._replyThread,
                     this.props.layout,
-                );
-
-                const msgOptionClasses = classNames(
-                    "mx_EventTile_msgOption",
-                    {
-                        "sc_readReceipts_empty": (
-                            // Don't reserve space below bubbles if there are no read receipts
-                            (!this.props.readReceipts || this.props.readReceipts.length === 0) &&
-                            // ToDo: Maybe incorporate sent/sending state into bubble?!?
-                            !(this._shouldShowSentReceipt || this._shouldShowSendingReceipt)
-                        ),
-                    },
-                );
-                const msgOption = (
-                    <div className={msgOptionClasses}>
-                        { readAvatars }
-                    </div>
                 );
 
                 if (scBubbleEnabled) {
@@ -1226,6 +1252,7 @@ export default class EventTile extends React.Component {
                                             highlights={this.props.highlights}
                                             highlightLink={this.props.highlightLink}
                                             showUrlPreview={this.props.showUrlPreview}
+                                            permalinkCreator={this.props.permalinkCreator}
                                             onHeightChanged={this.props.onHeightChanged} />
                                 { keyRequestInfo }
                                 { reactionsRow }
