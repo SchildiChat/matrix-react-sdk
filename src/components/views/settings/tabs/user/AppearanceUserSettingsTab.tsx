@@ -397,6 +397,9 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                         className="mx_AppearanceUserSettingsTab_Layout_RadioButton_preview"
                         message={this.MESSAGE_PREVIEW_TEXT}
                         layout={Layout.IRC}
+                        userId={this.state.userId}
+                        displayName={this.state.displayName}
+                        avatarUrl={this.state.avatarUrl}
                     />
                     <StyledRadioButton
                         name="layout"
@@ -415,6 +418,9 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                         className="mx_AppearanceUserSettingsTab_Layout_RadioButton_preview"
                         message={this.MESSAGE_PREVIEW_TEXT}
                         layout={Layout.Group}
+                        userId={this.state.userId}
+                        displayName={this.state.displayName}
+                        avatarUrl={this.state.avatarUrl}
                     />
                     <StyledRadioButton
                         name="layout"
@@ -433,6 +439,9 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                         className="mx_AppearanceUserSettingsTab_Layout_RadioButton_preview"
                         message={this.MESSAGE_PREVIEW_TEXT}
                         layout={Layout.Bubble}
+                        userId={this.state.userId}
+                        displayName={this.state.displayName}
+                        avatarUrl={this.state.avatarUrl}
                     />
                     <StyledRadioButton
                         name="layout"
