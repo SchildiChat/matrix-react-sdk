@@ -80,7 +80,7 @@ const colorToDataURLCache = new Map<string, string>();
 
 export function defaultAvatarUrlForString(s: string): string {
     if (!s) return ""; // XXX: should never happen but empirically does by evidence of a rageshake
-    const defaultColors = ['#0DBD8B', '#368bd6', '#ac3ba8'];
+    const defaultColors = ['#8BC34A', '#368bd6', '#ac3ba8'];
     let total = 0;
     for (let i = 0; i < s.length; ++i) {
         total += s.charCodeAt(i);
