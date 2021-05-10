@@ -21,3 +21,11 @@ span.mx_MVideoBody {
         border-radius: $border-radius-normal;
     }
 }
+
+.mx_EventTile_reply {
+    span.mx_MVideoBody {
+        video.mx_MVideoBody {
+            max-height: 150px !important;
+        }
+    }
+}

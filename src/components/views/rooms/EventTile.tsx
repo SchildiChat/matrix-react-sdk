@@ -1161,6 +1161,7 @@ export default class EventTile extends React.Component<IProps, IState> {
                                 onHeightChanged={this.props.onHeightChanged}
                                 replacingEventId={this.props.replacingEventId}
                                 showUrlPreview={false}
+                                maxImageHeight={150}
                             />
                         </div>
                     </div>
