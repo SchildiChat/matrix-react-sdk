@@ -35,7 +35,7 @@ $activeBorderColor: $secondary-fg-color;
 
     .mx_SpacePanel_spaceTreeWrapper {
         flex: 1;
-        overflow-y: scroll;
+        padding: 8px 8px 16px 0;
     }
 
     .mx_SpacePanel_toggleCollapse {
@@ -59,11 +59,10 @@ $activeBorderColor: $secondary-fg-color;
         margin: 0;
         list-style: none;
         padding: 0;
-        padding-left: 16px;
-    }
 
-    .mx_AutoHideScrollbar {
-        padding: 8px 0 16px;
+        > .mx_SpaceItem {
+            padding-left: 16px;
+        }
     }
 
     .mx_SpaceButton_toggleCollapse {
@@ -80,6 +79,10 @@ $activeBorderColor: $secondary-fg-color;
     .mx_SpaceItem {
         display: inline-flex;
         flex-flow: wrap;
+
+        &.mx_SpaceItem_narrow {
+            align-self: baseline;
+        }
     }
 
     .mx_SpaceItem.collapsed {
@@ -276,7 +279,7 @@ $activeBorderColor: $secondary-fg-color;
         .mx_SpaceButton:hover,
         .mx_SpaceButton:focus-within,
         .mx_SpaceButton_hasMenuOpen {
-            &:not(.mx_SpaceButton_home) {
+            &:not(.mx_SpaceButton_home):not(.mx_SpaceButton_invite) {
                 // Hide the badge container on hover because it'll be a menu button
                 .mx_SpacePanel_badgeContainer {
                     width: 0;

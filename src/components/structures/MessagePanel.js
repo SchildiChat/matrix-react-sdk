@@ -430,8 +430,10 @@ export default class MessagePanel extends React.Component {
             // we get a new DOM node (restarting the animation) when the ghost
             // moves to a different event.
             return (
-                <li key={"_readuptoghost_"+eventId}
-                      className="mx_RoomView_myReadMarker_container">
+                <li
+                    key={"_readuptoghost_"+eventId}
+                    className="mx_RoomView_myReadMarker_container"
+                >
                     { hr }
                 </li>
             );
@@ -1020,14 +1022,14 @@ class CreationGrouper {
 
         ret.push(
             <EventListSummary
-                 key="roomcreationsummary"
-                 events={this.events}
-                 onToggle={panel._onHeightChanged} // Update scroll state
-                 summaryMembers={[ev.sender]}
-                 summaryText={summaryText}
-                 layout={this.layout}
+                key="roomcreationsummary"
+                events={this.events}
+                onToggle={panel._onHeightChanged} // Update scroll state
+                summaryMembers={[ev.sender]}
+                summaryText={summaryText}
+                layout={this.layout}
             >
-                 { eventTiles }
+                { eventTiles }
             </EventListSummary>,
         );
 
@@ -1232,12 +1234,12 @@ class MemberGrouper {
 
         ret.push(
             <MemberEventListSummary key={key}
-                 events={this.events}
-                 onToggle={panel._onHeightChanged} // Update scroll state
-                 startExpanded={highlightInMels}
-                 layout={this.layout}
+                events={this.events}
+                onToggle={panel._onHeightChanged} // Update scroll state
+                startExpanded={highlightInMels}
+                layout={this.layout}
             >
-                 { eventTiles }
+                { eventTiles }
             </MemberEventListSummary>,
         );
 
