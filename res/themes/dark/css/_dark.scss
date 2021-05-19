@@ -9,6 +9,7 @@ $header-panel-text-primary-color: #b3b3b3;
 $header-panel-text-secondary-color: #cccccc;
 $text-primary-color: #ffffff;
 $text-secondary-color: #b3b3b3;
+$quaternary-fg-color: #6F7882;
 $search-bg-color: #303030;
 $search-placeholder-color: #616161;
 $room-highlight-color: #616161;
@@ -214,9 +215,18 @@ $breadcrumb-placeholder-bg-color: #303030;
 
 $user-tile-hover-bg-color: $header-panel-bg-color;
 
-$message-body-panel-bg-color: #38383882;
-$message-body-panel-icon-bg-color: #808080;
-$message-body-panel-fg-color: $primary-fg-color;
+$message-body-panel-fg-color: $secondary-fg-color;
+$message-body-panel-bg-color: #38383882; // "Dark Tile"
+$message-body-panel-icon-fg-color: #21262C; // "Separator"
+$message-body-panel-icon-bg-color: $tertiary-fg-color;
+
+$voice-record-stop-border-color: $quaternary-fg-color;
+$voice-record-waveform-bg-color: $message-body-panel-bg-color;
+$voice-record-waveform-fg-color: $message-body-panel-fg-color;
+$voice-record-waveform-incomplete-fg-color: $quaternary-fg-color;
+$voice-record-icon-color: $quaternary-fg-color;
+$voice-playback-button-bg-color: $message-body-panel-icon-bg-color;
+$voice-playback-button-fg-color: $message-body-panel-icon-fg-color;
 
 // Appearance tab colors
 $appearance-tab-border-color: $room-highlight-color;

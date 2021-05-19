@@ -209,9 +209,19 @@ $breadcrumb-placeholder-bg-color: #303030;
 
 $user-tile-hover-bg-color: $header-panel-bg-color;
 
+$message-body-panel-fg-color: $secondary-fg-color;
 $message-body-panel-bg-color: #38383882;
-$message-body-panel-icon-bg-color: #808080;
-$message-body-panel-fg-color: $primary-fg-color;
+$message-body-panel-icon-fg-color: $primary-bg-color;
+$message-body-panel-icon-bg-color: $secondary-fg-color;
+
+// See non-legacy dark for variable information
+$voice-record-stop-border-color: #6F7882;
+$voice-record-waveform-bg-color: $message-body-panel-bg-color;
+$voice-record-waveform-fg-color: $message-body-panel-fg-color;
+$voice-record-waveform-incomplete-fg-color: #6F7882;
+$voice-record-icon-color: #6F7882;
+$voice-playback-button-bg-color: $tertiary-fg-color;
+$voice-playback-button-fg-color: #21262C;
 
 // Appearance tab colors
 $appearance-tab-border-color: $room-highlight-color;
