@@ -312,7 +312,7 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
         //     rootSpaces.push(space);
         // });
 
-        this.rootSpaces = rootSpaces;
+        this.rootSpaces = sortBy(rootSpaces, space => space.name.toLowerCase());
         this.parentMap = backrefs;
 
         // if the currently selected space no longer exists, remove its selection
