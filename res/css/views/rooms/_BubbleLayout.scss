@@ -273,6 +273,17 @@ $left-gutter: 56px;
 
     .mx_ReactionsRow {
         margin-right: -6px;
+        display: flex;
+        justify-content: left;
+        flex-direction: row;
+
+        .mx_ReactionsRow_addReactionButton {
+            margin-left: unset;
+
+            &::before {
+                left: 0;
+            }
+        }
     }
 
     a.mx_Pill {
@@ -492,6 +503,16 @@ $left-gutter: 56px;
         margin-right: 16px;
         margin-left: auto;
         text-align: right;
+
+        .mx_ReactionsRow {
+            justify-content: right;
+            flex-direction: row-reverse;
+
+            .mx_ReactionsRow_addReactionButton {
+                margin-left: unset;
+                margin-right: 6px; 
+            }
+        }
     }
 
     .sc_EventTile_bubble_right {
