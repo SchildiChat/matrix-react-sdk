@@ -55,9 +55,10 @@ limitations under the License.
     height: 38px;
     border-radius: 19px;
     box-sizing: border-box;
-    background: $primary-bg-color;
-    border: 1.3px solid $muted-fg-color;
+    background: $button-bg-color;
+    border: 1.3px solid #09090900;
     cursor: pointer;
+    box-shadow: 0px 1px 3px 1px #00000021;
 }
 
 .mx_JumpToBottomButton_scrollDown::before {
@@ -70,5 +71,5 @@ limitations under the License.
     mask-image: url('$(res)/img/feather-customised/chevron-down-thin.svg');
     mask-repeat: no-repeat;
     mask-size: contain;
-    background: $muted-fg-color;
+    background: $button-fg-color;
 }
