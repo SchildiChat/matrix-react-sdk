@@ -141,7 +141,6 @@
     "Publish this room to the public in %(domain)s's room directory?": "Publish this room to the public in %(domain)s's room directory?",
     "Logout": "Logout",
     "Low priority": "Low priority",
-    "Normal priority": "Normal priority",
     "%(senderName)s made future room history visible to all room members, from the point they are invited.": "%(senderName)s made future room history visible to all room members, from the point they are invited.",
     "%(senderName)s made future room history visible to all room members, from the point they joined.": "%(senderName)s made future room history visible to all room members, from the point they joined.",
     "%(senderName)s made future room history visible to all room members.": "%(senderName)s made future room history visible to all room members.",
@@ -666,5 +665,6 @@
     "Unrecognised command: %(commandText)s": "Unrecognized command: %(commandText)s",
     "Add some details to help people recognise it.": "Add some details to help people recognize it.",
     "Unrecognised room address:": "Unrecognized room address:",
-    "A private space to organise your rooms": "A private space to organize your rooms"
+    "A private space to organise your rooms": "A private space to organize your rooms",
+    "Message search initialisation failed": "Message search initialization failed"
 }
