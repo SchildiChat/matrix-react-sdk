@@ -27,10 +27,10 @@ limitations under the License.
 .mx_TopUnreadMessagesBar::after {
     content: "";
     position: absolute;
-    top: 6px;
-    left: 17px;
-    width: 4px;
-    height: 4px;
+    top: 5.5px;
+    left: 16.5px;
+    width: 5px;
+    height: 5px;
     border-radius: 16px;
     background-color: $button-fg-color;
     border: none;
@@ -52,7 +52,7 @@ limitations under the License.
     position: absolute;
     width: 36px;
     height: 36px;
-    mask-image: url('$(res)/img/feather-customised/chevron-down-thin.svg');
+    mask-image: url('$(res)/img/feather-customised/chevron-down.svg');
     mask-repeat: no-repeat;
     mask-size: contain;
     background: $button-fg-color;
@@ -75,9 +75,9 @@ limitations under the License.
     position: absolute;
     width: 18px;
     height: 18px;
-    mask-image: url('$(res)/img/cancel.svg');
+    mask-image: url('$(res)/img/icons-close.svg');
     mask-repeat: no-repeat;
-    mask-size: 10px;
-    mask-position: 4px 4px;
+    mask-size: 9px;
+    mask-position: 4.5px 4.5px;
     background: $button-fg-color;
 }
