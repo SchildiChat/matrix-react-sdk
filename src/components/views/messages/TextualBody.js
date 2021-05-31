@@ -202,6 +202,7 @@ export default class TextualBody extends React.Component {
     _wrapInDiv(pre) {
         const div = document.createElement("div");
         div.className = "mx_EventTile_pre_container";
+        div.dir = "auto";
 
         // Insert containing div in place of <pre> block
         pre.parentNode.replaceChild(div, pre);

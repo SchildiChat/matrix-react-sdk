@@ -283,5 +283,5 @@ export function editBodyDiffToHtml(originalContent, editContent) {
         'mx_EventTile_body': true,
         'markdown-body': true,
     });
-    return <span key="body" className={className} dangerouslySetInnerHTML={{ __html: safeBody }} dir="auto" />;
+    return <span key="body" className={className} dangerouslySetInnerHTML={{ __html: safeBody }} />;
 }
