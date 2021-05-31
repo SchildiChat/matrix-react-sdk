@@ -504,11 +504,6 @@ export default class TextualBody extends React.Component {
             ref: this._content,
         });
 
-        let bigContent = "";
-        if (body && body.props && body.props.className && body.props.className.includes("mx_EventTile_bigEmoji")) {
-            bigContent = " sc_EventTile_bigContent";
-        }
-
         if (this.props.replacingEventId) {
             body = <>
                 {body}
@@ -541,7 +536,7 @@ export default class TextualBody extends React.Component {
         switch (content.msgtype) {
             case "m.emote":
                 return (
-                    <span className={ "mx_MEmoteBody mx_EventTile_content" + bigContent } dir="auto">
+                    <span className={ "mx_MEmoteBody mx_EventTile_content" } dir="auto">
                         *&nbsp;
                         <span
                             className="mx_MEmoteBody_sender"
@@ -557,7 +552,7 @@ export default class TextualBody extends React.Component {
                 );
             case "m.notice":
                 return (
-                    <span className={ "mx_MNoticeBody mx_EventTile_content" + bigContent } dir="auto">
+                    <span className={ "mx_MNoticeBody mx_EventTile_content" } dir="auto">
                         { body }
                         { widgets }
                         { this.props.scBubbleGroupTimestamp }
@@ -565,7 +560,7 @@ export default class TextualBody extends React.Component {
                 );
             default: // including "m.text"
                 return (
-                    <span className={ "mx_MTextBody mx_EventTile_content" + bigContent } dir="auto">
+                    <span className={ "mx_MTextBody mx_EventTile_content" } dir="auto">
                         { body }
                         { widgets }
                         { this.props.scBubbleGroupTimestamp }
