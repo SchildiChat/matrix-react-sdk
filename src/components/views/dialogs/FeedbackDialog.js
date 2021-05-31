@@ -26,9 +26,9 @@ import BugReportDialog from "./BugReportDialog";
 import InfoDialog from "./InfoDialog";
 import StyledRadioGroup from "../elements/StyledRadioGroup";
 
-const existingIssuesUrl = "https://github.com/vector-im/element-web/issues" +
+const existingIssuesUrl = "https://github.com/SchildiChat/schildichat-desktop/issues" +
     "?q=is%3Aopen+is%3Aissue+sort%3Areactions-%2B1-desc";
-const newIssueUrl = "https://github.com/vector-im/element-web/issues/new";
+const newIssueUrl = "https://github.com/SchildiChat/schildichat-desktop/issues/new";
 
 
 export default (props) => {

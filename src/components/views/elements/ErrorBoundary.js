@@ -75,7 +75,7 @@ export default class ErrorBoundary extends React.PureComponent {
     render() {
         if (this.state.error) {
             const AccessibleButton = sdk.getComponent('elements.AccessibleButton');
-            const newIssueUrl = "https://github.com/vector-im/element-web/issues/new";
+            const newIssueUrl = "https://github.com/SchildiChat/schildichat-desktop/issues/new";
 
             let bugReportSection;
             if (SdkConfig.get().bug_report_endpoint_url) {

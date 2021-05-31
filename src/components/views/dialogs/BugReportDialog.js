@@ -204,7 +204,7 @@ export default class BugReportDialog extends React.Component {
                             {
                                 a: (sub) => <a
                                     target="_blank"
-                                    href="https://github.com/vector-im/element-web/issues/new"
+                                    href="https://github.com/SchildiChat/schildichat-desktop/issues/new"
                                 >
                                     { sub }
                                 </a>,

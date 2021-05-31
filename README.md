@@ -1,3 +1,5 @@
+# Warning: This information is only partially applicable to SchildiChat, look here instead: https://github.com/SchildiChat/schildichat-desktop
+
 matrix-react-sdk
 ================
 
