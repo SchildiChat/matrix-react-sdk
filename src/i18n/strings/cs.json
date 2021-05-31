@@ -3284,5 +3284,10 @@
     "Add reaction": "Přidat reakci",
     "Send and receive voice messages": "Odeslat a přijmout hlasové zprávy",
     "Your feedback will help make spaces better. The more detail you can go into, the better.": "Vaše zpětná vazba pomůže zlepšit prostory. Čím podrobnější bude, tím lépe.",
-    "If you leave, %(brand)s will reload with Spaces disabled. Communities and custom tags will be visible again.": "Pokud odejdete, %(brand)s se znovu načte s vypnutými Prostory. Skupiny a vlastní značky budou opět viditelné."
+    "If you leave, %(brand)s will reload with Spaces disabled. Communities and custom tags will be visible again.": "Pokud odejdete, %(brand)s se znovu načte s vypnutými Prostory. Skupiny a vlastní značky budou opět viditelné.",
+    "Enable layout with message bubbles": "Povolit bubliny zpráv",
+    "Show message bubbles on one side only": "Bubliny zpráv zobrazit pouze na jedné straně",
+    "Show message bubbles depending on the width either on both sides or only on one side": "Bubliny zpráv zobrazit v závislosti na šířce stránky buď na obou stranách, nebo pouze na jedné straně.",
+    "Message bubbles": "Bubliny zpráv",
+    "Normal priority": "Normální priorita"
 }
