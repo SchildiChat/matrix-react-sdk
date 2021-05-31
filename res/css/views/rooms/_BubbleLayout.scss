@@ -258,7 +258,6 @@ $left-gutter: 56px;
 
     .mx_MFileBody {
         display: flow-root;
-        position: relative;
     }
 
     .mx_MFileBody_download {
@@ -295,6 +294,10 @@ $left-gutter: 56px;
         position: relative;
 
         .mx_MFileBody_download {
+            display: none;
+        }
+
+        .sc_PlaceholderTimestamp {
             display: none;
         }
 
@@ -346,6 +349,10 @@ $left-gutter: 56px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+
+        .sc_PlaceholderTimestamp {
+            display: none;
         }
 
         .sc_LinkedTimestamp {
@@ -453,39 +460,48 @@ $left-gutter: 56px;
                 margin-top: 3px !important;
             }
 
+            .sc_PlaceholderTimestamp {
+                display: inline-flex;
+                margin-inline-start: .7em;
+                opacity: 0;
+
+                .mx_MessageTimestamp {
+                    visibility: visible !important;
+                    position: unset;
+                    width: unset;
+                    text-align: unset;
+                    display: inline;
+                    font-size: 0.85em;
+                }
+
+                &:dir(rtl) {
+                    display: block;
+                    margin-inline-start: unset;
+                }
+            }
+
             .sc_LinkedTimestamp {
-                float: right;
-                display: flex;
-                margin-left: 1rem;
+                position: absolute;
+                inset-block-end: 4px;
+                inset-inline-end: 10px;
 
                 // Get rid of underline with custom themes
                 text-decoration: none;
 
-                &:dir(rtl) {
-                    float: none;
-                    margin-left: unset;
-                }
-
                 .mx_MessageTimestamp {
                     visibility: visible !important;
-                    position: unset !important;
-                    width: unset !important;
-                    text-align: right !important;
-                    margin-left: auto;
-                    margin-top: auto;
-                    padding-top: 0.4rem;
-                    margin-bottom: -0.4rem;
+                    position: unset;
+                    text-align: unset;
+                    display: inline;
                     font-size: 0.85em;
                 }
-            }
 
-            &.sc_EventTile_bigContent .sc_LinkedTimestamp {
-                height: 57px;
-            }
-
-            .mx_MStickerBody_wrapper + .sc_LinkedTimestamp {
-                float: unset;
-                display: block;
+                &:dir(rtl) {
+                    position: absolute;
+                    display: block;
+                    inset-inline-end: unset;
+                    right: 10px;
+                }
             }
         }
     }

@@ -1049,6 +1049,10 @@ export default class EventTile extends React.Component<IProps, IState> {
             { timestamp }
         </a>;
 
+        const placeholderTimestamp = <span className={"sc_PlaceholderTimestamp"}>
+            { timestamp }
+        </span>;
+
         const useIRCLayout = this.props.layout == Layout.IRC;
         const groupTimestamp = !useIRCLayout ? linkedTimestamp : null;
         const ircTimestamp = useIRCLayout ? linkedTimestamp : null;
@@ -1253,7 +1257,7 @@ export default class EventTile extends React.Component<IProps, IState> {
                                             onHeightChanged={this.props.onHeightChanged}
                                             scBubble={true}
                                             scBubbleActionBar={mediaBody ? actionBar : null}
-                                            scBubbleGroupTimestamp={groupTimestamp}
+                                            scBubbleGroupTimestamp={[placeholderTimestamp, groupTimestamp]}
                                         />
                                         { !mediaBody ? actionBar : null }
                                     </div>
