@@ -23,7 +23,7 @@ limitations under the License.
     height: 32px;
     line-height: $font-24px;
     border-radius: $border-radius-normal;
-    background: $primary-bg-color;
+    background: $message-action-bar-bg-color;
     border: 1px solid $input-border-color;
     top: -32px;
     right: 8px;
@@ -56,7 +56,7 @@ limitations under the License.
 
         &:hover {
             background: $roomlist-button-bg-color;
-            border-radius: 6px;
+            border-radius: $border-radius-normal;
             z-index: 1;
         }
     }
