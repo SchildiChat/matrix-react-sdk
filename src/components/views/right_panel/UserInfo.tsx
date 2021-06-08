@@ -1308,7 +1308,7 @@ const BasicUserInfo: React.FC<{
     }
 
     if (pendingUpdateCount > 0) {
-        spinner = <Spinner />;
+        spinner = <Spinner imgClassName="mx_ContextualMenu_spinner" />;
     }
 
     let memberDetails;

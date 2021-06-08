@@ -16,6 +16,7 @@ limitations under the License.
 
 import React from "react";
 import {_t} from "../../../languageHandler";
+import SettingsStore from "../../../settings/SettingsStore";
 import {replaceableComponent} from "../../../utils/replaceableComponent";
 
 interface IProps {
@@ -25,23 +26,35 @@ interface IProps {
 }
 
 @replaceableComponent("views.elements.InlineSpinner")
-export default class InlineSpinner extends React.PureComponent<IProps> {
-    static defaultProps = {
-        w: 16,
-        h: 16,
-    }
-
+export default class InlineSpinner extends React.Component {
     render() {
-        return (
-            <div className="mx_InlineSpinner">
+        const w = this.props.w || 16;
+        const h = this.props.h || 16;
+        const imgClass = this.props.imgClassName || "";
+
+        let icon;
+        if (SettingsStore.getValue('feature_new_spinner')) {
+            icon = (
+                <img
+                    src={require("../../../../res/img/logo-spinner.svg")}
+                    width={w}
+                    height={h}
+                    className={imgClass}
+                    aria-label={_t("Loading...")}
+                />
+            );
+        } else {
+            icon = (
                 <div
                     className="mx_InlineSpinner_icon mx_Spinner_icon"
                     style={{width: this.props.w, height: this.props.h}}
                     aria-label={_t("Loading...")}
-                >
-                    {this.props.children}
-                </div>
-            </div>
+                ></div>
+            );
+        }
+
+        return (
+            <div className="mx_InlineSpinner">{ icon }</div>
         );
     }
 }
