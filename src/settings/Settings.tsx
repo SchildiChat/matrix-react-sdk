@@ -740,7 +740,7 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         default: true,
     },
     "showChatEffects": {
-        supportedLevels: LEVELS_ACCOUNT_SETTINGS,
+        supportedLevels: LEVELS_ROOM_SETTINGS_WITH_ROOM,
         displayName: _td("Show chat effects (animations when receiving e.g. confetti)"),
         default: true,
         controller: new ReducedMotionController(),
