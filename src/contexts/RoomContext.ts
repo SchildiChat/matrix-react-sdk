@@ -43,6 +43,7 @@ const RoomContext = createContext<IState>({
     canReply: false,
     layout: Layout.Group,
     singleSideBubbles: false,
+    adaptiveSideBubbles: false,
     matrixClientIsReady: false,
     dragCounter: 0,
 });
