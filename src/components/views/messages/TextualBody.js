@@ -540,7 +540,7 @@ export default class TextualBody extends React.Component {
         switch (content.msgtype) {
             case "m.emote":
                 return (
-                    <span className={ "mx_MEmoteBody mx_EventTile_content" } dir="auto">
+                    <span className="mx_MEmoteBody mx_EventTile_content" dir="auto">
                         *&nbsp;
                         <span
                             className="mx_MEmoteBody_sender"
@@ -556,7 +556,7 @@ export default class TextualBody extends React.Component {
                 );
             case "m.notice":
                 return (
-                    <span className={ "mx_MNoticeBody mx_EventTile_content" } dir="auto">
+                    <span className="mx_MNoticeBody mx_EventTile_content" dir="auto">
                         { body }
                         { widgets }
                         { this.props.scBubbleGroupTimestamp }
@@ -564,7 +564,7 @@ export default class TextualBody extends React.Component {
                 );
             default: // including "m.text"
                 return (
-                    <span className={ "mx_MTextBody mx_EventTile_content" } dir="auto">
+                    <span className="mx_MTextBody mx_EventTile_content" dir="auto">
                         { body }
                         { widgets }
                         { this.props.scBubbleGroupTimestamp }

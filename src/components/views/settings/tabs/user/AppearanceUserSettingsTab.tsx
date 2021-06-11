@@ -549,10 +549,10 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                 <div className="mx_SettingsTab_SubHeading">
                     {_t("Appearance Settings only affect this %(brand)s session.", { brand })}
                 </div>
-                {this.renderThemeSection()}
-                {this.renderLayoutSection()}
-                {this.renderFontSection()}
-                {this.renderAdvancedSection()}
+                { this.renderThemeSection() }
+                { this.renderLayoutSection() }
+                { this.renderFontSection() }
+                { this.renderAdvancedSection() }
             </div>
         );
     }
