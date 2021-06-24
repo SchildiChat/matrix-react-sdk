@@ -16,8 +16,8 @@ limitations under the License.
 
 import { createContext } from "react";
 
-import {IState} from "../components/structures/RoomView";
-import {Layout} from "../settings/Layout";
+import { IState } from "../components/structures/RoomView";
+import { Layout } from "../settings/Layout";
 
 const RoomContext = createContext<IState>({
     roomLoading: true,
@@ -31,8 +31,6 @@ const RoomContext = createContext<IState>({
     canPeek: false,
     showApps: false,
     isPeeking: false,
-    showingPinned: false,
-    showReadReceipts: true,
     showRightPanel: true,
     joining: false,
     atEndOfLiveTimeline: true,
@@ -44,6 +42,12 @@ const RoomContext = createContext<IState>({
     layout: Layout.Group,
     singleSideBubbles: false,
     adaptiveSideBubbles: false,
+    lowBandwidth: false,
+    showReadReceipts: true,
+    showRedactions: true,
+    showJoinLeaves: true,
+    showAvatarChanges: true,
+    showDisplaynameChanges: true,
     matrixClientIsReady: false,
     dragCounter: 0,
 });

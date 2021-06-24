@@ -378,7 +378,7 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
             this.onLoggedIn();
         }
 
-        const promisesList = [this.firstSyncPromise.promise];
+        const promisesList: Promise<any>[] = [this.firstSyncPromise.promise];
         if (cryptoEnabled) {
             // wait for the client to finish downloading cross-signing keys for us so we
             // know whether or not we have keys set up on this account
@@ -1953,6 +1953,7 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
         // Create and start the client
         await Lifecycle.setLoggedIn(credentials);
         await this.postLoginSetup();
+
         PerformanceMonitor.instance.stop(PerformanceEntryNames.LOGIN);
         PerformanceMonitor.instance.stop(PerformanceEntryNames.REGISTER);
     };
