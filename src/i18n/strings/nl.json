@@ -2479,7 +2479,7 @@
     "Enter a server name": "Geef een servernaam",
     "Continue with %(provider)s": "Doorgaan met %(provider)s",
     "Homeserver": "Homeserver",
-    "You can use the custom server options to sign into other Matrix servers by specifying a different homeserver URL. This allows you to use Element with an existing Matrix account on a different homeserver.": "U kunt de server opties wijzigen om in te loggen bij andere Matrix-servers, wijzig hiervoor de homeserver-URL. Hiermee kunt u Element gebruiken met een al bestaand Matrix-account van een andere homeserver.",
+    "You can use the custom server options to sign into other Matrix servers by specifying a different homeserver URL. This allows you to use Element with an existing Matrix account on a different homeserver.": "U kunt de server opties wijzigen om in te loggen bij andere Matrix-servers, wijzig hiervoor de homeserver-URL. Hiermee kunt u SchildiChat gebruiken met een al bestaand Matrix-account van een andere homeserver.",
     "Server Options": "Server opties",
     "This address is already in use": "Dit adres is al in gebruik",
     "This address is available to use": "Dit adres kan worden gebruikt",
@@ -2560,7 +2560,7 @@
     "Set up Secure Backup": "Beveiligde back-up instellen",
     "Contact your <a>server admin</a>.": "Neem contact op met uw <a>serverbeheerder</a>.",
     "Use app": "Gebruik app",
-    "Element Web is experimental on mobile. For a better experience and the latest features, use our free native app.": "Element Web is experimenteel op mobiel. Voor een betere ervaring en de nieuwste functies kunt u onze gratis app gebruiken.",
+    "Element Web is experimental on mobile. For a better experience and the latest features, use our free native app.": "SchildiChat Web is experimenteel op mobiel. Voor een betere ervaring en de nieuwste functies kunt u onze gratis app gebruiken.",
     "Use app for a better experience": "Gebruik de app voor een betere ervaring",
     "Enable desktop notifications": "Bureaubladmeldingen inschakelen",
     "Don't miss a reply": "Mis geen antwoord",
@@ -3267,5 +3267,10 @@
     "Try different words or check for typos. Some results may not be visible as they're private and you need an invite to join them.": "Probeer andere woorden of controleer op typefouten. Sommige resultaten zijn mogelijk niet zichtbaar omdat ze privé zijn of u een uitnodiging nodig heeft om deel te nemen.",
     "No results for \"%(query)s\"": "Geen resultaten voor \"%(query)s\"",
     "The user you called is busy.": "De gebruiker die u belde is bezet.",
-    "User Busy": "Gebruiker Bezet"
+    "User Busy": "Gebruiker Bezet",
+    "Show message bubbles on one side only": "Boodschappenbubbels slechts aan één kant tonen",
+    "Show message bubbles depending on the width either on both sides or only on one side": "Toon berichtbubbels, afhankelijk van de breedte, aan beide zijden of slechts aan één zijde",
+    "Message bubbles": "Boodschap bellen",
+    "Normal priority": "Normale prioriteit",
+    "Enable layout with message bubbles": "Schakel lay-out in met tekstballonnen"
 }
