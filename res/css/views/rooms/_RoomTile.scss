@@ -21,7 +21,7 @@ limitations under the License.
     position: relative;
 
     contain: content; // Not strict as it will break when resizing a sublist vertically
-    height: 40px;
+    height: 56px;
     box-sizing: border-box;
 
     // The tile is also a flexbox row itself
