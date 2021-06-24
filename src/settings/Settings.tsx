@@ -640,6 +640,12 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         displayName: _td("Show rooms with unread notifications first"),
         default: true,
     },
+    "unifiedRoomList": {
+        supportedLevels: LEVELS_ACCOUNT_SETTINGS,
+        displayName: _td("Show people and rooms in a combined list"),
+        default: true,
+        controller: new ReloadOnChangeController(),
+    },
     "breadcrumbs": {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
         displayName: _td("Show shortcuts to recently viewed rooms above the room list"),

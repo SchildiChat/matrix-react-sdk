@@ -82,6 +82,7 @@ export class Algorithm extends EventEmitter {
      * Set to true to suspend emissions of algorithm updates.
      */
     public updatesInhibited = false;
+    private unifiedRoomList: boolean;
 
     public constructor() {
         super();
@@ -159,6 +160,10 @@ export class Algorithm extends EventEmitter {
         this._cachedRooms[tagId] = algorithm.orderedRooms;
         this.recalculateFilteredRoomsForTag(tagId); // update filter to re-sort the list
         this.recalculateStickyRoom(tagId); // update sticky room to make sure it appears if needed
+    }
+
+    public setUnifiedRoomList(unifiedRoomList: boolean) {
+        this.unifiedRoomList = unifiedRoomList;
     }
 
     public addFilterCondition(filterCondition: IFilterCondition): void {
@@ -571,12 +576,18 @@ export class Algorithm extends EventEmitter {
             if (!inTag) {
                 if (DMRoomMap.shared().getUserIdForRoomId(room.roomId)) {
                     // SC: Unified list for DMs and groups
-                    newTags[DefaultTagID.Unified].push(room);
-                    //newTags[DefaultTagID.DM].push(room);
+                    if (this.unifiedRoomList) {
+                        newTags[DefaultTagID.Unified].push(room);
+                    } else {
+                        newTags[DefaultTagID.DM].push(room);
+                    }
                 } else {
                     // SC: Unified list for DMs and groups
-                    newTags[DefaultTagID.Unified].push(room);
-                    //newTags[DefaultTagID.Untagged].push(room);
+                    if (this.unifiedRoomList) {
+                        newTags[DefaultTagID.Unified].push(room);
+                    } else {
+                        newTags[DefaultTagID.Untagged].push(room);
+                    }
                 }
             }
         }
@@ -613,8 +624,13 @@ export class Algorithm extends EventEmitter {
             tags.push(...this.getTagsOfJoinedRoom(room));
         }
 
-        //if (!tags.length) tags.push(DefaultTagID.Untagged);
-        if (!tags.length) tags.push(DefaultTagID.Unified);
+        if (!tags.length) {
+            if (this.unifiedRoomList) {
+                tags.push(DefaultTagID.Unified);
+            } else {
+                tags.push(DefaultTagID.Untagged);
+            }
+        }
 
         return tags;
     }
@@ -626,8 +642,11 @@ export class Algorithm extends EventEmitter {
             // Check to see if it's a DM if it isn't anything else
             if (DMRoomMap.shared().getUserIdForRoomId(room.roomId)) {
                 // SC: Unified list for DMs and groups
-                tags = [DefaultTagID.Unified];
-                //tags = [DefaultTagID.DM];
+                if (this.unifiedRoomList) {
+                    tags = [DefaultTagID.Unified];
+                } else {
+                    tags = [DefaultTagID.DM];
+                }
             }
         }
 

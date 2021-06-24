@@ -66,6 +66,7 @@ interface IState {
     isNameFiltering: boolean;
     currentRoomId?: string;
     suggestedRooms: ISuggestedRoom[];
+    unifiedRoomList: boolean;
 }
 
 const TAG_ORDER: TagID[] = [
@@ -83,9 +84,11 @@ const TAG_ORDER: TagID[] = [
     DefaultTagID.Archived,
 ];
 const CUSTOM_TAGS_BEFORE_TAG = DefaultTagID.LowPriority;
-const ALWAYS_VISIBLE_TAGS: TagID[] = [
-    //DefaultTagID.DM,
-    //DefaultTagID.Untagged,
+const ALWAYS_VISIBLE_SPLIT_TAGS: TagID[] = [
+    DefaultTagID.DM,
+    DefaultTagID.Untagged,
+];
+const ALWAYS_VISIBLE_UNIFIED_TAGS: TagID[] = [
     DefaultTagID.Unified,
 ];
 
@@ -291,6 +294,7 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
     private customTagStoreRef;
     private tagAesthetics: ITagAestheticsMap;
     private roomStoreToken: fbEmitter.EventSubscription;
+    private readonly unifiedRoomListWatcherRef: string;
 
     constructor(props: IProps) {
         super(props);
@@ -299,11 +303,15 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
             sublists: {},
             isNameFiltering: !!RoomListStore.instance.getFirstNameFilterCondition(),
             suggestedRooms: SpaceStore.instance.suggestedRooms,
+            unifiedRoomList: SettingsStore.getValue("unifiedRoomList"),
         };
 
         // shallow-copy from the template as we need to make modifications to it
         this.tagAesthetics = objectShallowClone(TAG_AESTHETICS);
         this.updateDmAddRoomAction();
+        
+        this.unifiedRoomListWatcherRef = SettingsStore.watchSetting("unifiedRoomList", null,
+            this.onUnifiedRoomListChange);
     }
 
     public componentDidMount(): void {
@@ -321,7 +329,15 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
         defaultDispatcher.unregister(this.dispatcherRef);
         if (this.customTagStoreRef) this.customTagStoreRef.remove();
         if (this.roomStoreToken) this.roomStoreToken.remove();
+
+        SettingsStore.unwatchSetting(this.unifiedRoomListWatcherRef);
     }
+
+    private onUnifiedRoomListChange = () => {
+        this.setState({
+            unifiedRoomList: SettingsStore.getValue("unifiedRoomList"),
+        });
+    };
 
     private onRoomViewStoreUpdate = () => {
         this.setState({
@@ -561,7 +577,7 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
                     showSkeleton={showSkeleton}
                     extraTiles={extraTiles}
                     resizeNotifier={this.props.resizeNotifier}
-                    alwaysVisible={ALWAYS_VISIBLE_TAGS.includes(orderedTagId)}
+                    alwaysVisible={(this.state.unifiedRoomList ? ALWAYS_VISIBLE_UNIFIED_TAGS : ALWAYS_VISIBLE_SPLIT_TAGS).includes(orderedTagId)}
                     onListCollapse={this.props.onListCollapse}
                 />
             });

@@ -486,6 +486,11 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                 */
             advanced = <>
                 <SettingsFlag
+                    name="unifiedRoomList"
+                    level={SettingLevel.DEVICE}
+                    useCheckbox={true}
+                />
+                <SettingsFlag
                     name="useCompactLayout"
                     level={SettingLevel.DEVICE}
                     useCheckbox={true}

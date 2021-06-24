@@ -38,6 +38,7 @@ import {SpaceWatcher} from "./SpaceWatcher";
 
 interface IState {
     tagsEnabled?: boolean;
+    unifiedRoomList?: boolean;
 }
 
 /**
@@ -68,6 +69,7 @@ export class RoomListStoreClass extends AsyncStoreWithClient<IState> {
 
     private readonly watchedSettings = [
         'feature_custom_tags',
+        'unifiedRoomList',
         'advancedRoomListLogging', // TODO: Remove watch: https://github.com/vector-im/element-web/issues/14602
     ];
 
@@ -146,8 +148,10 @@ export class RoomListStoreClass extends AsyncStoreWithClient<IState> {
 
     private async readAndCacheSettingsFromStore() {
         const tagsEnabled = SettingsStore.getValue("feature_custom_tags");
+        const unifiedRoomList = SettingsStore.getValue("unifiedRoomList");
         await this.updateState({
             tagsEnabled,
+            unifiedRoomList,
         });
         await this.updateAlgorithmInstances();
     }
@@ -582,6 +586,9 @@ export class RoomListStoreClass extends AsyncStoreWithClient<IState> {
                 await this.setAndPersistListOrder(tag, listOrder);
             }
         }
+
+        // SC: Unified list for DMs and groups
+        this.algorithm.setUnifiedRoomList(this.state.unifiedRoomList);
     }
 
     private onAlgorithmListUpdated = () => {
@@ -754,7 +761,13 @@ export class RoomListStoreClass extends AsyncStoreWithClient<IState> {
     public getTagsForRoom(room: Room): TagID[] {
         var algorithmTags = this.algorithm.getTagsForRoom(room);
 
-        if (!algorithmTags) return [DefaultTagID.Unified];
+        if (!algorithmTags) {
+            if (this.state.unifiedRoomList) {
+                return [DefaultTagID.Unified];
+            } else {
+                return [DefaultTagID.Untagged];
+            }
+        };
 
         const dmTagIndex = algorithmTags.indexOf(DefaultTagID.DM);
         if (dmTagIndex !== -1) {
