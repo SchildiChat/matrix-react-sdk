@@ -737,7 +737,7 @@
     "Enable desktop notifications": "Enable desktop notifications",
     "Enable": "Enable",
     "Use app for a better experience": "Use app for a better experience",
-    "Element Web is experimental on mobile. For a better experience and the latest features, use our free native app.": "SchildiChat Web is experimental on mobile. For a better experience and the latest features, use our free native app.",
+    "Element Web is experimental on mobile. For a better experience and the latest features, use our free native app.": "Element Web is experimental on mobile. For a better experience and the latest features, use our free native app.",
     "Use app": "Use app",
     "Your homeserver has exceeded its user limit.": "Your homeserver has exceeded its user limit.",
     "This homeserver has been blocked by it's administrator.": "This homeserver has been blocked by it's administrator.",
@@ -795,7 +795,6 @@
     "Send and receive voice messages": "Send and receive voice messages",
     "Render LaTeX maths in messages": "Render LaTeX maths in messages",
     "Communities v2 prototypes. Requires compatible homeserver. Highly experimental - use with caution.": "Communities v2 prototypes. Requires compatible homeserver. Highly experimental - use with caution.",
-    "New spinner design": "New spinner design",
     "Message Pinning": "Message Pinning",
     "Custom user status messages": "Custom user status messages",
     "Group & filter rooms by custom tags (refresh to apply changes)": "Group & filter rooms by custom tags (refresh to apply changes)",
@@ -2020,7 +2019,7 @@
     "This address is available to use": "This address is available to use",
     "This address is already in use": "This address is already in use",
     "Server Options": "Server Options",
-    "You can use the custom server options to sign into other Matrix servers by specifying a different homeserver URL. This allows you to use Element with an existing Matrix account on a different homeserver.": "You can use the custom server options to sign into other Matrix servers by specifying a different homeserver URL. This allows you to use SchildiChat with an existing Matrix account on a different homeserver.",
+    "You can use the custom server options to sign into other Matrix servers by specifying a different homeserver URL. This allows you to use Element with an existing Matrix account on a different homeserver.": "You can use the custom server options to sign into other Matrix servers by specifying a different homeserver URL. This allows you to use Element with an existing Matrix account on a different homeserver.",
     "Join millions for free on the largest public server": "Join millions for free on the largest public server",
     "Homeserver": "Homeserver",
     "Continue with %(provider)s": "Continue with %(provider)s",
@@ -2978,10 +2977,5 @@
     "Esc": "Esc",
     "Enter": "Enter",
     "Space": "Space",
-    "End": "End",
-    "Enable layout with message bubbles": "Enable layout with message bubbles",
-    "Show message bubbles on one side only": "Show message bubbles on one side only",
-    "Show message bubbles depending on the width either on both sides or only on one side": "Show message bubbles depending on the width either on both sides or only on one side",
-    "Message bubbles": "Message bubbles",
-    "Normal priority": "Normal priority"
+    "End": "End"
 }
