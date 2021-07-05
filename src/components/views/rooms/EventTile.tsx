@@ -1183,28 +1183,31 @@ export default class EventTile extends React.Component<IProps, IState> {
                         this.props.alwaysShowTimestamps || this.state.hover,
                     );
                 }
-                return (
-                    <li className={classes} aria-live={ariaLive} aria-atomic="true" data-scroll-tokens={scrollToken}>
-                        { ircTimestamp }
-                        { avatar }
-                        { sender }
-                        { ircPadlock }
-                        <div className="mx_EventTile_reply">
-                            { groupTimestamp }
-                            { groupPadlock }
-                            { thread }
-                            <EventTileType ref={this.tile}
-                                mxEvent={this.props.mxEvent}
-                                highlights={this.props.highlights}
-                                highlightLink={this.props.highlightLink}
-                                onHeightChanged={this.props.onHeightChanged}
-                                replacingEventId={this.props.replacingEventId}
-                                showUrlPreview={false}
-                                maxImageHeight={150}
-                            />
-                        </div>
-                    </li>
-                );
+                return React.createElement(this.props.as || "li", {
+                    "className": classes,
+                    "aria-live": ariaLive,
+                    "aria-atomic": true,
+                    "data-scroll-tokens": scrollToken,
+                }, [
+                    ircTimestamp,
+                    avatar,
+                    sender,
+                    ircPadlock,
+                    <div className="mx_EventTile_reply" key="mx_EventTile_reply">
+                        { groupTimestamp }
+                        { groupPadlock }
+                        { thread }
+                        <EventTileType ref={this.tile}
+                            mxEvent={this.props.mxEvent}
+                            highlights={this.props.highlights}
+                            highlightLink={this.props.highlightLink}
+                            onHeightChanged={this.props.onHeightChanged}
+                            replacingEventId={this.props.replacingEventId}
+                            showUrlPreview={false}
+                            maxImageHeight={150}
+                        />
+                    </div>,
+                ]);
             }
             default: {
                 const thread = ReplyThread.makeThread(
