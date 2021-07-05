@@ -18,14 +18,14 @@ limitations under the License.
 */
 
 import SettingsStore from "../../settings/SettingsStore";
-import {LayoutPropType} from "../../settings/Layout";
-import React, {createRef} from 'react';
+import { LayoutPropType } from "../../settings/Layout";
+import React, { createRef } from 'react';
 import ReactDOM from "react-dom";
 import PropTypes from 'prop-types';
-import {EventTimeline} from "matrix-js-sdk/src/models/event-timeline";
-import {TimelineWindow} from "matrix-js-sdk/src/timeline-window";
+import { EventTimeline } from "matrix-js-sdk/src/models/event-timeline";
+import { TimelineWindow } from "matrix-js-sdk/src/timeline-window";
 import { _t } from '../../languageHandler';
-import {MatrixClientPeg} from "../../MatrixClientPeg";
+import { MatrixClientPeg } from "../../MatrixClientPeg";
 import RoomContext from "../../contexts/RoomContext";
 import UserActivity from "../../UserActivity";
 import Modal from "../../Modal";
@@ -34,10 +34,9 @@ import * as sdk from "../../index";
 import { Key } from '../../Keyboard';
 import Timer from '../../utils/Timer';
 import shouldHideEvent from '../../shouldHideEvent';
-import EditorStateTransfer from '../../utils/EditorStateTransfer';
-import {haveTileForEvent} from "../views/rooms/EventTile";
-import {UIFeature} from "../../settings/UIFeature";
-import {replaceableComponent} from "../../utils/replaceableComponent";
+import { haveTileForEvent } from "../views/rooms/EventTile";
+import { UIFeature } from "../../settings/UIFeature";
+import { replaceableComponent } from "../../utils/replaceableComponent";
 import { arrayFastClone } from "../../utils/arrays";
 
 const PAGINATE_SIZE = 20;
@@ -71,6 +70,8 @@ class TimelinePanel extends React.Component {
         manageReadReceipts: PropTypes.bool,
         sendReadReceiptOnLoad: PropTypes.bool,
         manageReadMarkers: PropTypes.bool,
+        // with this enabled it'll listen and react to Action.ComposerInsert and `edit_event`
+        manageComposerDispatches: PropTypes.bool,
 
         // true to give the component a 'display: none' style.
         hidden: PropTypes.bool,
@@ -442,21 +443,10 @@ class TimelinePanel extends React.Component {
     };
 
     onAction = payload => {
-        if (payload.action === 'ignore_state_changed') {
-            this.forceUpdate();
-        }
-        if (payload.action === "edit_event") {
-            const editState = payload.event ? new EditorStateTransfer(payload.event) : null;
-            this.setState({editState}, () => {
-                if (payload.event && this._messagePanel.current) {
-                    this._messagePanel.current.scrollToEventIfNeeded(
-                        payload.event.getId(),
-                    );
-                }
-            });
-        }
-        if (payload.action === "scroll_to_bottom") {
-            this.jumpToLiveTimeline();
+        switch (payload.action) {
+            case "ignore_state_changed":
+                this.forceUpdate();
+                break;
         }
     };
 
@@ -846,6 +836,12 @@ class TimelinePanel extends React.Component {
             }
         }
     };
+
+    scrollToEventIfNeeded = (eventId) => {
+        if (this._messagePanel.current) {
+            this._messagePanel.current.scrollToEventIfNeeded(eventId);
+        }
+    }
 
     /* scroll to show the read-up-to marker. We put it 1/3 of the way down
      * the container.
@@ -1454,7 +1450,7 @@ class TimelinePanel extends React.Component {
                 tileShape={this.props.tileShape}
                 resizeNotifier={this.props.resizeNotifier}
                 getRelationsForEvent={this.getRelationsForEvent}
-                editState={this.state.editState}
+                editState={this.props.editState}
                 showReactions={this.props.showReactions}
                 layout={this.props.layout}
                 singleSideBubbles={this.props.singleSideBubbles}

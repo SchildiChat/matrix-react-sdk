@@ -525,11 +525,11 @@ class RoomStateExplorer extends React.PureComponent<IExplorerProps, IRoomStateEx
 }
 
 interface IAccountDataExplorerState {
+    [inputId: string]: boolean | string | any;
     isRoomAccountData: boolean;
     event?: MatrixEvent;
     editing: boolean;
     queryEventType: string;
-    [inputId: string]: boolean | string;
 }
 
 class AccountDataExplorer extends React.PureComponent<IExplorerProps, IAccountDataExplorerState> {
@@ -766,7 +766,7 @@ class VerificationExplorer extends React.PureComponent<IExplorerProps> {
     render() {
         const cli = this.context;
         const room = this.props.room;
-        const inRoomChannel = cli.crypto._inRoomVerificationRequests;
+        const inRoomChannel = cli.crypto.inRoomVerificationRequests;
         const inRoomRequests = (inRoomChannel._requestsByRoomId || new Map()).get(room.roomId) || new Map();
 
         return (<div>

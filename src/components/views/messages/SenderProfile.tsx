@@ -15,12 +15,12 @@
  */
 
 import React from 'react';
-import Flair from '../elements/Flair.js';
+import Flair from '../elements/Flair';
 import FlairStore from '../../../stores/FlairStore';
-import {getUserNameColorClass} from '../../../utils/FormattingUtils';
+import { getUserNameColorClass } from '../../../utils/FormattingUtils';
 import MatrixClientContext from "../../../contexts/MatrixClientContext";
-import {replaceableComponent} from "../../../utils/replaceableComponent";
-import MatrixEvent from "matrix-js-sdk/src/models/event";
+import { replaceableComponent } from "../../../utils/replaceableComponent";
+import { MatrixEvent } from "matrix-js-sdk/src/models/event";
 
 interface IProps {
     mxEvent: MatrixEvent;
@@ -140,7 +140,7 @@ export default class SenderProfile extends React.Component<IProps, IState> {
         }
 
         return (
-            <div className="mx_SenderProfile mx_SenderProfile_hover" dir="auto" onClick={this.props.onClick}>
+            <div className="mx_SenderProfile" dir="auto" onClick={this.props.onClick}>
                 <span className={`mx_SenderProfile_displayName ${colorClass}`}>
                     { displayName }
                 </span>
