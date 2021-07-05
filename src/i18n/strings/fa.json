@@ -1194,7 +1194,7 @@
     "Join millions for free on the largest public server": "به بزرگترین سرور عمومی با میلیون ها نفر کاربر بپیوندید",
     "%(ssoButtons)s Or %(usernamePassword)s": "%(ssoButtons)s یا %(usernamePassword)s",
     "Your new account (%(newAccountId)s) is registered, but you're already logged into a different account (%(loggedInUserId)s).": "حساب جدید شما (%(newAccountId)s) s) ثبت شده‌است ، اما شما قبلاً به حساب کاربری دیگری (%(loggedInUserId)s) وارد شده‌اید.",
-    "You can use the custom server options to sign into other Matrix servers by specifying a different homeserver URL. This allows you to use Element with an existing Matrix account on a different homeserver.": "می توانید از طریق گزینه‌ی سرور سفارشی با استفاده از آدرس سروری دیگر، به دیگر سرورهای Matrix متصل شوید. با این کار می توانید از Element جهت اتصال به یک اکانت ماتریکس بر روی سروری دیگر استفاده کنید.",
+    "You can use the custom server options to sign into other Matrix servers by specifying a different homeserver URL. This allows you to use Element with an existing Matrix account on a different homeserver.": "می توانید از طریق گزینه‌ی سرور سفارشی با استفاده از آدرس سروری دیگر، به دیگر سرورهای Matrix متصل شوید. با این کار می توانید از SchildiChat جهت اتصال به یک اکانت ماتریکس بر روی سروری دیگر استفاده کنید.",
     "Continue with previous account": "با حساب کاربری قبلی ادامه دهید",
     "<a>Log in</a> to your new account.": "به حساب کاربری جدید خود <a>وارد شوید</a>.",
     "You can now close this window or <a>log in</a> to your new account.": "اکنون می توانید این پنجره را ببندید یا به حساب کاربری جدید خود <a>وارد شوید</a>.",

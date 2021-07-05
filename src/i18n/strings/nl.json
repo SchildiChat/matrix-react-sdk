@@ -2479,7 +2479,7 @@
     "Enter a server name": "Geef een servernaam",
     "Continue with %(provider)s": "Doorgaan met %(provider)s",
     "Homeserver": "Homeserver",
-    "You can use the custom server options to sign into other Matrix servers by specifying a different homeserver URL. This allows you to use Element with an existing Matrix account on a different homeserver.": "U kunt de server opties wijzigen om in te loggen bij andere Matrix-servers, wijzig hiervoor de homeserver-URL. Hiermee kunt u Element gebruiken met een al bestaand Matrix-account van een andere homeserver.",
+    "You can use the custom server options to sign into other Matrix servers by specifying a different homeserver URL. This allows you to use Element with an existing Matrix account on a different homeserver.": "U kunt de server opties wijzigen om in te loggen bij andere Matrix-servers, wijzig hiervoor de homeserver-URL. Hiermee kunt u SchildiChat gebruiken met een al bestaand Matrix-account van een andere homeserver.",
     "Server Options": "Server opties",
     "This address is already in use": "Dit adres is al in gebruik",
     "This address is available to use": "Dit adres kan worden gebruikt",
@@ -2560,7 +2560,7 @@
     "Set up Secure Backup": "Beveiligde back-up instellen",
     "Contact your <a>server admin</a>.": "Neem contact op met uw <a>serverbeheerder</a>.",
     "Use app": "Gebruik app",
-    "Element Web is experimental on mobile. For a better experience and the latest features, use our free native app.": "Element Web is experimenteel op mobiel. Voor een betere ervaring en de nieuwste functies kunt u onze gratis app gebruiken.",
+    "Element Web is experimental on mobile. For a better experience and the latest features, use our free native app.": "SchildiChat Web is experimenteel op mobiel. Voor een betere ervaring en de nieuwste functies kunt u onze gratis app gebruiken.",
     "Use app for a better experience": "Gebruik de app voor een betere ervaring",
     "Enable desktop notifications": "Bureaubladmeldingen inschakelen",
     "Don't miss a reply": "Mis geen antwoord",
@@ -3285,5 +3285,10 @@
     "If you have permissions, open the menu on any message and select <b>Pin</b> to stick them here.": "Als u de rechten heeft, open dan het menu op elk bericht en selecteer <b>Vastprikken</b> om ze hier te zetten.",
     "Nothing pinned, yet": "Nog niks vastgeprikt",
     "End-to-end encryption isn't enabled": "Eind-tot-eind-versleuteling is uitgeschakeld",
-    "Your private messages are normally encrypted, but this room isn't. Usually this is due to an unsupported device or method being used, like email invites. <a>Enable encryption in settings.</a>": "Uw privéberichten zijn normaal gesproken versleuteld, maar dit gesprek niet. Meestal is dit te wijten aan een niet-ondersteund apparaat of methode die wordt gebruikt, zoals e-mailuitnodigingen. <a>Versleuting inschakelen in instellingen.</a>"
+    "Your private messages are normally encrypted, but this room isn't. Usually this is due to an unsupported device or method being used, like email invites. <a>Enable encryption in settings.</a>": "Uw privéberichten zijn normaal gesproken versleuteld, maar dit gesprek niet. Meestal is dit te wijten aan een niet-ondersteund apparaat of methode die wordt gebruikt, zoals e-mailuitnodigingen. <a>Versleuting inschakelen in instellingen.</a>",
+    "Show message bubbles on one side only": "Boodschappenbubbels slechts aan één kant tonen",
+    "Show message bubbles depending on the width either on both sides or only on one side": "Toon berichtbubbels, afhankelijk van de breedte, aan beide zijden of slechts aan één zijde",
+    "Message bubbles": "Boodschap bellen",
+    "Normal priority": "Normale prioriteit",
+    "Enable layout with message bubbles": "Schakel lay-out in met tekstballonnen"
 }
