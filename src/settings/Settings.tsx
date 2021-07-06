@@ -202,7 +202,7 @@ export const SETTINGS: {[setting: string]: ISetting} = {
     "feature_spaces.space_dm_badges": {
         displayName: _td("Show notification badges for People in Spaces"),
         supportedLevels: LEVELS_FEATURE,
-        default: false,
+        default: true,
         controller: new ReloadOnChangeController(),
     },
     "feature_dnd": {
