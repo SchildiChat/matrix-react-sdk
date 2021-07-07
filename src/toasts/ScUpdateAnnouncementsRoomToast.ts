@@ -68,7 +68,7 @@ const TOAST_KEY = "scupdateannouncementroom";
 
 export const showToast = () => {
     PlatformPeg.get().canSelfUpdate().then((b) => {
-        // if (b) return;
+        if (b) return;
 
         if (!SdkConfig.get()['sc_update_announcement_room']) return;
 
