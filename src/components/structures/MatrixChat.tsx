@@ -66,6 +66,7 @@ import {
     showToast as showAnalyticsToast,
     hideToast as hideAnalyticsToast,
 } from "../../toasts/AnalyticsToast";
+import { showToast as showScUpdateRoomToast } from "../../toasts/ScUpdateAnnouncementsRoomToast";
 import {showToast as showNotificationsToast} from "../../toasts/DesktopNotificationsToast";
 import { OpenToTabPayload } from "../../dispatcher/payloads/OpenToTabPayload";
 import ErrorDialog from "../views/dialogs/ErrorDialog";
@@ -1286,6 +1287,9 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
             // The toast contains further logic to detect mobile platforms,
             // check if it has been dismissed before, etc.
             showMobileGuideToast();
+        }
+        if (SettingsStore.getValue("scShowUpdateAnnouncementRoomToast")) {
+            showScUpdateRoomToast();
         }
     }
 
