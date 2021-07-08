@@ -276,6 +276,12 @@ $left-gutter: 56px;
         display: flex;
         justify-content: left;
         flex-direction: row;
+        flex-wrap: wrap;
+
+        margin-top: 0;
+        > * {
+            margin-top: 6px;
+        }
 
         .mx_ReactionsRow_addReactionButton {
             margin-left: unset;
@@ -529,6 +535,11 @@ $left-gutter: 56px;
             .mx_ReactionsRow_addReactionButton {
                 margin-left: unset;
                 margin-right: 6px; 
+            }
+
+            .mx_ReactionsRow_showAll {
+                margin-left: -4px;
+                margin-right: 10px;
             }
         }
     }
