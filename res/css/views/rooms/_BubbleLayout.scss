@@ -688,6 +688,34 @@ $left-gutter: 56px;
         }
     }
 
+    .mx_NewRoomIntro {
+        margin-left: $left-gutter;
+        margin-right: $left-gutter;
+        text-align: center;
+
+        .mx_MiniAvatarUploader {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        // ToDo: Wrap this somehow into the real bubble layout
+        .mx_EventTileBubble {
+            text-align: start;
+            background-color: transparent;
+            box-shadow: inset 0px 0px 0px 1px rgba($roomtopic-color, 0.15);
+            text-align: start;
+            margin-bottom: 3rem;
+
+            &::before, &::after {
+                margin-top: 1px;
+            }
+
+            .mx_EventTileBubble_title {
+                opacity: 0.8;
+            }
+        }
+    }
+
     // single side bubbles overrides
     &.sc_BubbleLayout_singleSide {
         .sc_EventTile_bubbleArea {
@@ -704,7 +732,12 @@ $left-gutter: 56px;
             max-width: 104rem;
         }
 
-        .sc_EventTile_bubbleLine_info, .mx_DateSeparator, .mx_EventListSummary {
+        .mx_NewRoomIntro {
+            max-width: calc(104rem - $left-gutter);
+        }
+
+        .sc_EventTile_bubbleLine_info, .mx_DateSeparator, .mx_EventListSummary,
+        .mx_RoomView_MessageList > li > .mx_Spinner {
             max-width: calc($left-gutter + 104rem);
         }
     }
