@@ -196,7 +196,7 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         description: _td("If disabled, you can still add Direct Messages to Personal Spaces. " +
             "If enabled, you'll automatically see everyone who is a member of the Space."),
         supportedLevels: LEVELS_FEATURE,
-        default: true,
+        default: false,
         controller: new ReloadOnChangeController(),
     },
     "feature_spaces.space_dm_badges": {
