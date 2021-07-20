@@ -1597,8 +1597,8 @@
     "A new version of %(brand)s is available!": "Nová verzia %(brand)su je dostupná!",
     "Which officially provided instance you are using, if any": "Ktorú oficiálne poskytovanú inštanciu používate, ak nejakú",
     "Use your account to sign in to the latest version": "Použite svoj účet na prihlásenie sa do najnovšej verzie",
-    "We’re excited to announce Riot is now Element": "Sme nadšený oznámiť, že Riot je odteraz SchildiChat",
-    "Riot is now Element!": "Riot je odteraz SchildiChat!",
+    "We’re excited to announce Riot is now Element": "Sme nadšený oznámiť, že Riot je odteraz Element",
+    "Riot is now Element!": "Riot je odteraz Element!",
     "Learn More": "Dozvedieť sa viac",
     "Light": "Svetlý",
     "Dark": "Tmavý",
@@ -2080,10 +2080,5 @@
     "The call was answered on another device.": "Hovor bol prijatý na inom zariadení.",
     "The call could not be established": "Hovor nemohol byť realizovaný",
     "The other party declined the call.": "Druhá strana odmietla hovor.",
-    "Call Declined": "Hovor odmietnutý",
-    "Enable layout with message bubbles": "Povolenie rozloženia s bublinami správ",
-    "Show message bubbles on one side only": "Zobrazenie bublín správ len na jednej strane",
-    "Show message bubbles depending on the width either on both sides or only on one side": "Zobrazenie bublín správ v závislosti od šírky buď na oboch stranách, alebo len na jednej strane",
-    "Message bubbles": "Bubliny správ",
-    "Normal priority": "Normálna priorita"
+    "Call Declined": "Hovor odmietnutý"
 }
