@@ -188,6 +188,12 @@ $left-gutter: 56px;
     .mx_EventTile_content {
         // Handled by bubble
         margin-right: unset;
+
+        .markdown-body {
+            p, ul, ol, dl, blockquote, pre, table {
+                margin-bottom: 8px;
+            }
+        }
     }
 
     // Explicit relationships so that it doesn't apply to nested EventTile components (e.g in Replies)
@@ -262,7 +268,7 @@ $left-gutter: 56px;
     }
 
     .mx_MFileBody_download {
-        display: inline;
+        display: inline-block;
     }
     
 
@@ -465,6 +471,16 @@ $left-gutter: 56px;
         > *:not(.mx_ReplyThread_wrapper) {
             .markdown-body > blockquote {
                 margin-top: 3px !important;
+            }
+
+            .markdown-body > .mx_EventTile_pre_container:last-child {
+                pre {
+                    margin-bottom: 0;
+                }
+            }
+
+            .markdown-body > :last-child {
+                display: inline;
             }
 
             .sc_PlaceholderTimestamp {
