@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import React from 'react';
+import React, { createRef } from 'react';
 import classNames from "classnames";
 import { EventType } from "matrix-js-sdk/src/@types/event";
 import { EventStatus, MatrixEvent } from "matrix-js-sdk/src/models/event";
@@ -47,6 +47,13 @@ import { StaticNotificationState } from "../../../stores/notifications/StaticNot
 import NotificationBadge from "./NotificationBadge";
 import { ComposerInsertPayload } from "../../../dispatcher/payloads/ComposerInsertPayload";
 import { Action } from '../../../dispatcher/actions';
+import MemberAvatar from '../avatars/MemberAvatar';
+import SenderProfile from '../messages/SenderProfile';
+import MessageTimestamp from '../messages/MessageTimestamp';
+import TooltipButton from '../elements/TooltipButton';
+import ReadReceiptMarker from "./ReadReceiptMarker";
+import MessageActionBar from "../messages/MessageActionBar";
+import ReactionsRow from '../messages/ReactionsRow';
 
 const eventTileTypes = {
     [EventType.RoomMessage]: 'messages.MessageEvent',
@@ -176,10 +183,18 @@ const MAX_READ_AVATARS = 5;
 // |    '--------------------------------------'              |
 // '----------------------------------------------------------'
 
-interface IReadReceiptProps {
+export interface IReadReceiptProps {
     userId: string;
     roomMember: RoomMember;
     ts: number;
+}
+
+export enum TileShape {
+    Notif = "notif",
+    FileGrid = "file_grid",
+    Reply = "reply",
+    ReplyPreview = "reply_preview",
+    Pinned = "pinned",
 }
 
 interface IProps {
@@ -248,7 +263,7 @@ interface IProps {
     // It could also be done by subclassing EventTile, but that'd be quite
     // boiilerplatey.  So just make the necessary render decisions conditional
     // for now.
-    tileShape?: 'notif' | 'file_grid' | 'reply' | 'reply_preview';
+    tileShape?: TileShape;
 
     // show twelve hour timestamps
     isTwelveHour?: boolean;
@@ -260,7 +275,7 @@ interface IProps {
     showReactions?: boolean;
 
     // which layout to use
-    layout: Layout;
+    layout?: Layout;
 
     // whether to use single side bubbles
     singleSideBubbles?: boolean;
@@ -283,10 +298,10 @@ interface IProps {
     permalinkCreator?: RoomPermalinkCreator;
 
     // Symbol of the root node
-    as?: string
+    as?: string;
 
     // whether or not to always show timestamps
-    alwaysShowTimestamps?: boolean
+    alwaysShowTimestamps?: boolean;
 }
 
 interface IState {
@@ -309,13 +324,15 @@ interface IState {
 export default class EventTile extends React.Component<IProps, IState> {
     private suppressReadReceiptAnimation: boolean;
     private isListeningForReceipts: boolean;
-    private ref: React.RefObject<unknown>;
     private tile = React.createRef();
     private replyThread = React.createRef();
+
+    public readonly ref = createRef<HTMLElement>();
 
     static defaultProps = {
         // no-op function because onHeightChanged is optional yet some sub-components assume its existence
         onHeightChanged: function() {},
+        layout: Layout.Group,
     };
 
     static contextType = MatrixClientContext;
@@ -348,8 +365,6 @@ export default class EventTile extends React.Component<IProps, IState> {
         // to determine if we've already subscribed and use a combination of other flags to find
         // out if we should even be subscribed at all.
         this.isListeningForReceipts = false;
-
-        this.ref = React.createRef();
     }
 
     /**
@@ -664,7 +679,6 @@ export default class EventTile extends React.Component<IProps, IState> {
             return (<span className="mx_EventTile_readAvatars" />);
         }
 
-        const ReadReceiptMarker = sdk.getComponent('rooms.ReadReceiptMarker');
         const avatars = [];
         const receiptOffset = 15;
         let left = 0;
@@ -739,7 +753,7 @@ export default class EventTile extends React.Component<IProps, IState> {
         </span>;
     }
 
-    onSenderProfileClick = event => {
+    onSenderProfileClick = () => {
         const mxEvent = this.props.mxEvent;
         dis.dispatch<ComposerInsertPayload>({
             action: Action.ComposerInsert,
@@ -847,10 +861,6 @@ export default class EventTile extends React.Component<IProps, IState> {
     };
 
     render() {
-        const MessageTimestamp = sdk.getComponent('messages.MessageTimestamp');
-        const SenderProfile = sdk.getComponent('messages.SenderProfile');
-        const MemberAvatar = sdk.getComponent('avatars.MemberAvatar');
-
         //console.info("EventTile showUrlPreview for %s is %s", this.props.mxEvent.getId(), this.props.showUrlPreview);
 
         const content = this.props.mxEvent.getContent();
@@ -883,7 +893,7 @@ export default class EventTile extends React.Component<IProps, IState> {
         // This shouldn't happen: the caller should check we support this type
         // before trying to instantiate us
         if (!tileHandler) {
-            const {mxEvent} = this.props;
+            const { mxEvent } = this.props;
             console.warn(`Event type not supported: type:${mxEvent.getType()} isState:${mxEvent.isState()}`);
             return <div className="mx_EventTile mx_EventTile_info mx_MNoticeBody">
                 <div className="mx_EventTile_line">
@@ -899,9 +909,9 @@ export default class EventTile extends React.Component<IProps, IState> {
 
         const client = MatrixClientPeg.get();
         const me = client && client.getUserId();
-        const scBubbleEnabled = this.props.layout == Layout.Bubble
-                && this.props.tileShape !== 'reply_preview' && this.props.tileShape !== 'reply'
-                && this.props.tileShape !== 'notif' && this.props.tileShape !== 'file_grid';
+        const scBubbleEnabled = this.props.layout === Layout.Bubble
+                && this.props.tileShape !== TileShape.ReplyPreview && this.props.tileShape !== TileShape.Reply
+                && this.props.tileShape !== TileShape.Notif && this.props.tileShape !== TileShape.FileGrid;
         const sentByMe = me === this.props.mxEvent.getSender();
         const showRight = sentByMe && !this.props.singleSideBubbles;
         const showLeft = !sentByMe || this.props.singleSideBubbles;
@@ -915,7 +925,7 @@ export default class EventTile extends React.Component<IProps, IState> {
             mx_EventTile_12hr: this.props.isTwelveHour,
             // Note: we keep the `sending` state class for tests, not for our styles
             mx_EventTile_sending: !isEditing && isSending,
-            mx_EventTile_highlight: this.props.tileShape === 'notif' ? false : this.shouldHighlight(),
+            mx_EventTile_highlight: this.props.tileShape === TileShape.Notif ? false : this.shouldHighlight(),
             mx_EventTile_selected: this.props.isSelectedEvent,
             mx_EventTile_continuation: !isInfoMessage && !isBubbleMessage &&
                 (this.props.tileShape ? '' : this.props.continuation),
@@ -953,7 +963,7 @@ export default class EventTile extends React.Component<IProps, IState> {
         if (!isInfoMessage && scBubbleEnabled && showRight) {
             avatarSize = 0;
             needsSenderProfile = false;
-        } else if (this.props.tileShape === "notif") {
+        } else if (this.props.tileShape === TileShape.Notif) {
             avatarSize = 24;
             needsSenderProfile = true;
         } else if (tileHandler === 'messages.RoomCreate' || isBubbleMessage) {
@@ -967,7 +977,7 @@ export default class EventTile extends React.Component<IProps, IState> {
         } else if (this.props.layout == Layout.IRC) {
             avatarSize = 14;
             needsSenderProfile = true;
-        } else if (this.props.continuation && this.props.tileShape !== "file_grid") {
+        } else if (this.props.continuation && this.props.tileShape !== TileShape.FileGrid) {
             // no avatar or sender profile for continuation messages
             avatarSize = 0;
             needsSenderProfile = false;
@@ -997,7 +1007,11 @@ export default class EventTile extends React.Component<IProps, IState> {
         }
 
         if (needsSenderProfile) {
-            if (!this.props.tileShape || this.props.tileShape === 'reply' || this.props.tileShape === 'reply_preview') {
+            if (
+                !this.props.tileShape
+                || this.props.tileShape === TileShape.Reply
+                || this.props.tileShape === TileShape.ReplyPreview
+            ) {
                 sender = <SenderProfile onClick={this.onSenderProfileClick}
                     mxEvent={this.props.mxEvent}
                     enableFlair={this.props.enableFlair}
@@ -1007,7 +1021,6 @@ export default class EventTile extends React.Component<IProps, IState> {
             }
         }
 
-        const MessageActionBar = sdk.getComponent('messages.MessageActionBar');
         const actionBar = !isEditing ? <MessageActionBar
             mxEvent={this.props.mxEvent}
             reactions={this.state.reactions}
@@ -1045,10 +1058,9 @@ export default class EventTile extends React.Component<IProps, IState> {
             _t(
                 '<requestLink>Re-request encryption keys</requestLink> from your other sessions.',
                 {},
-                {'requestLink': (sub) => <a onClick={this.onRequestKeysClick}>{ sub }</a>},
+                { 'requestLink': (sub) => <a onClick={this.onRequestKeysClick}>{ sub }</a> },
             );
 
-        const TooltipButton = sdk.getComponent('elements.TooltipButton');
         const keyRequestInfo = isEncryptionFailure && !isRedacted ?
             <div className="mx_EventTile_keyRequestInfo">
                 <span className="mx_EventTile_keyRequestInfo_text">
@@ -1059,7 +1071,6 @@ export default class EventTile extends React.Component<IProps, IState> {
 
         let reactionsRow;
         if (!isRedacted) {
-            const ReactionsRow = sdk.getComponent('messages.ReactionsRow');
             reactionsRow = <ReactionsRow
                 mxEvent={this.props.mxEvent}
                 reactions={this.state.reactions}
@@ -1107,7 +1118,7 @@ export default class EventTile extends React.Component<IProps, IState> {
         }
 
         switch (this.props.tileShape) {
-            case 'notif': {
+            case TileShape.Notif: {
                 const room = this.context.getRoom(this.props.mxEvent.getRoomId());
                 return React.createElement(this.props.as || "li", {
                     "className": classes,
@@ -1135,11 +1146,12 @@ export default class EventTile extends React.Component<IProps, IState> {
                             highlightLink={this.props.highlightLink}
                             showUrlPreview={this.props.showUrlPreview}
                             onHeightChanged={this.props.onHeightChanged}
+                            tileShape={this.props.tileShape}
                         />
                     </div>,
                 ]);
             }
-            case 'file_grid': {
+            case TileShape.FileGrid: {
                 return React.createElement(this.props.as || "li", {
                     "className": classes,
                     "aria-live": ariaLive,
@@ -1170,10 +1182,10 @@ export default class EventTile extends React.Component<IProps, IState> {
                 ]);
             }
 
-            case 'reply':
-            case 'reply_preview': {
+            case TileShape.Reply:
+            case TileShape.ReplyPreview: {
                 let thread;
-                if (this.props.tileShape === 'reply_preview') {
+                if (this.props.tileShape === TileShape.ReplyPreview) {
                     thread = ReplyThread.makeThread(
                         this.props.mxEvent,
                         this.props.onHeightChanged,
@@ -1436,11 +1448,11 @@ class E2ePadlock extends React.Component<IE2ePadlockProps, IE2ePadlockState> {
     }
 
     onHoverStart = () => {
-        this.setState({hover: true});
+        this.setState({ hover: true });
     };
 
     onHoverEnd = () => {
-        this.setState({hover: false});
+        this.setState({ hover: false });
     };
 
     render() {
@@ -1478,11 +1490,11 @@ class SentReceipt extends React.PureComponent<ISentReceiptProps, ISentReceiptSta
     }
 
     onHoverStart = () => {
-        this.setState({hover: true});
+        this.setState({ hover: true });
     };
 
     onHoverEnd = () => {
-        this.setState({hover: false});
+        this.setState({ hover: false });
     };
 
     render() {

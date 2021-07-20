@@ -60,6 +60,8 @@ const COLOR_REGEX = /^#[0-9a-fA-F]{6}$/;
 
 export const PERMITTED_URL_SCHEMES = ['http', 'https', 'ftp', 'mailto', 'magnet'];
 
+const MEDIA_API_MXC_REGEX = /\/_matrix\/media\/r0\/(?:download|thumbnail)\/(.+?)\/(.+?)(?:[?/]|$)/;
+
 /*
  * Return true if the given string contains emoji
  * Uses a much, much simpler regex than emojibase's so will give false
@@ -138,7 +140,7 @@ export function getHtmlText(insaneHtml: string): string {
         selfClosing: [],
         allowedSchemes: [],
         disallowedTagsMode: 'discard',
-    })
+    });
 }
 
 /**
@@ -176,18 +178,31 @@ const transformTags: IExtendedSanitizeOptions["transformTags"] = { // custom to 
         return { tagName, attribs };
     },
     'img': function(tagName: string, attribs: sanitizeHtml.Attributes) {
+        let src = attribs.src;
         // Strip out imgs that aren't `mxc` here instead of using allowedSchemesByTag
         // because transformTags is used _before_ we filter by allowedSchemesByTag and
         // we don't want to allow images with `https?` `src`s.
         // We also drop inline images (as if they were not present at all) when the "show
         // images" preference is disabled. Future work might expose some UI to reveal them
         // like standalone image events have.
-        if (!attribs.src || !attribs.src.startsWith('mxc://') || !SettingsStore.getValue("showImages")) {
-            return { tagName, attribs: {}};
+        if (!src || !SettingsStore.getValue("showImages")) {
+            return { tagName, attribs: {} };
         }
+
+        if (!src.startsWith("mxc://")) {
+            const match = MEDIA_API_MXC_REGEX.exec(src);
+            if (match) {
+                src = `mxc://${match[1]}/${match[2]}`;
+            }
+        }
+
+        if (!src.startsWith("mxc://")) {
+            return { tagName, attribs: {} };
+        }
+
         const width = Number(attribs.width) || 800;
         const height = Number(attribs.height) || 600;
-        attribs.src = mediaFromMxc(attribs.src).getThumbnailOfSourceHttp(width, height);
+        attribs.src = mediaFromMxc(src).getThumbnailOfSourceHttp(width, height);
         return { tagName, attribs };
     },
     'code': function(tagName: string, attribs: sanitizeHtml.Attributes) {
@@ -358,11 +373,11 @@ interface IOpts {
     stripReplyFallback?: boolean;
     returnString?: boolean;
     forComposerQuote?: boolean;
-    ref?: React.Ref<any>;
+    ref?: React.Ref<HTMLSpanElement>;
 }
 
 export interface IOptsReturnNode extends IOpts {
-    returnString: false;
+    returnString: false | undefined;
 }
 
 export interface IOptsReturnString extends IOpts {
@@ -403,9 +418,14 @@ export function bodyToHtml(content: IContent, highlights: string[], opts: IOpts 
     try {
         if (highlights && highlights.length > 0) {
             const highlighter = new HtmlHighlighter("mx_EventTile_searchHighlight", opts.highlightLink);
-            const safeHighlights = highlights.map(function(highlight) {
-                return sanitizeHtml(highlight, sanitizeParams);
-            });
+            const safeHighlights = highlights
+                // sanitizeHtml can hang if an unclosed HTML tag is thrown at it
+                // A search for `<foo` will make the browser crash
+                // an alternative would be to escape HTML special characters
+                // but that would bring no additional benefit as the highlighter
+                // does not work with those special chars
+                .filter((highlight: string): boolean => !highlight.includes("<"))
+                .map((highlight: string): string => sanitizeHtml(highlight, sanitizeParams));
             // XXX: hacky bodge to temporarily apply a textFilter to the sanitizeParams structure.
             sanitizeParams.textFilter = function(safeText) {
                 return highlighter.applyHighlights(safeText, safeHighlights).join('');

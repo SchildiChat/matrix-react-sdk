@@ -465,7 +465,7 @@ export const SETTINGS: {[setting: string]: ISetting} = {
     },
     "ctrlFForSearch": {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
-        displayName: isMac ? _td("Use Command + F to search") : _td("Use Ctrl + F to search"),
+        displayName: isMac ? _td("Use Command + F to search timeline") : _td("Use Ctrl + F to search timeline"),
         default: true,
     },
     "MessageComposerInput.ctrlEnterToSend": {
@@ -615,14 +615,6 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         },
         default: false,
         controller: new UIFeatureController(UIFeature.URLPreviews),
-    },
-    "roomColor": {
-        supportedLevels: LEVELS_ROOM_SETTINGS_WITH_ROOM,
-        displayName: _td("Room Colour"),
-        default: {
-            primary_color: null, // Hex string, eg: #000000
-            secondary_color: null, // Hex string, eg: #000000
-        },
     },
     "notificationsEnabled": {
         supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS,

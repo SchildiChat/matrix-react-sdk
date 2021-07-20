@@ -42,6 +42,7 @@ import { useStateToggle } from "../../hooks/useStateToggle";
 import { getChildOrder } from "../../stores/SpaceStore";
 import AccessibleTooltipButton from "../views/elements/AccessibleTooltipButton";
 import { linkifyElement } from "../../HtmlUtils";
+import { getDisplayAliasForAliasSet } from "../../Rooms";
 
 interface IHierarchyProps {
     space: Room;
@@ -58,7 +59,7 @@ export interface ISpaceSummaryRoom {
     avatar_url?: string;
     guest_can_join: boolean;
     name?: string;
-    num_joined_members: number
+    num_joined_members: number;
     room_id: string;
     topic?: string;
     world_readable: boolean;
@@ -112,12 +113,12 @@ const Tile: React.FC<ITileProps> = ({
         ev.preventDefault();
         ev.stopPropagation();
         onViewRoomClick(false);
-    }
+    };
     const onJoinClick = (ev: ButtonEvent) => {
         ev.preventDefault();
         ev.stopPropagation();
         onViewRoomClick(true);
-    }
+    };
 
     let button;
     if (joinedRoom) {
@@ -137,7 +138,7 @@ const Tile: React.FC<ITileProps> = ({
         } else {
             checkbox = <TextWithTooltip
                 tooltip={_t("You don't have permission")}
-                onClick={ev => { ev.stopPropagation() }}
+                onClick={ev => { ev.stopPropagation(); }}
             >
                 <StyledCheckbox disabled={true} />
             </TextWithTooltip>;
@@ -340,7 +341,7 @@ export const HierarchyLevel = ({
                 </Tile>
             ))
         }
-    </React.Fragment>
+    </React.Fragment>;
 };
 
 // mutate argument refreshToken to force a reload
@@ -635,9 +636,9 @@ const SpaceRoomDirectory: React.FC<IProps> = ({ space, onFinished, initialText }
             <div className="mx_Dialog_content">
                 { _t("If you can't find the room you're looking for, ask for an invite or <a>create a new room</a>.",
                     null,
-                    {a: sub => {
+                    { a: sub => {
                         return <AccessibleButton kind="link" onClick={onCreateRoomClick}>{sub}</AccessibleButton>;
-                    }},
+                    } },
                 ) }
 
                 <SpaceHierarchy
@@ -666,5 +667,5 @@ export default SpaceRoomDirectory;
 // Similar to matrix-react-sdk's MatrixTools.getDisplayAliasForRoom
 // but works with the objects we get from the public room list
 function getDisplayAliasForRoom(room: ISpaceSummaryRoom) {
-    return room.canonical_alias || (room.aliases ? room.aliases[0] : "");
+    return getDisplayAliasForAliasSet(room.canonical_alias, room.aliases);
 }

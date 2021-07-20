@@ -20,6 +20,7 @@ import LabelledToggleSwitch from "../elements/LabelledToggleSwitch";
 import { _t } from "../../../languageHandler";
 import { MatrixClientPeg } from "../../../MatrixClientPeg";
 import { replaceableComponent } from "../../../utils/replaceableComponent";
+import DirectoryCustomisations from '../../../customisations/Directory';
 
 interface IProps {
     roomId: string;
@@ -44,7 +45,7 @@ export default class RoomPublishSetting extends React.PureComponent<IProps, ISta
     private onRoomPublishChange = (e) => {
         const valueBefore = this.state.isRoomPublished;
         const newValue = !valueBefore;
-        this.setState({isRoomPublished: newValue});
+        this.setState({ isRoomPublished: newValue });
         const client = MatrixClientPeg.get();
 
         client.setRoomDirectoryVisibility(
@@ -52,24 +53,29 @@ export default class RoomPublishSetting extends React.PureComponent<IProps, ISta
             newValue ? 'public' : 'private',
         ).catch(() => {
             // Roll back the local echo on the change
-            this.setState({isRoomPublished: valueBefore});
+            this.setState({ isRoomPublished: valueBefore });
         });
     };
 
     componentDidMount() {
         const client = MatrixClientPeg.get();
         client.getRoomDirectoryVisibility(this.props.roomId).then((result => {
-            this.setState({isRoomPublished: result.visibility === 'public'});
+            this.setState({ isRoomPublished: result.visibility === 'public' });
         }));
     }
 
     render() {
         const client = MatrixClientPeg.get();
 
+        const enabled = (
+            DirectoryCustomisations.requireCanonicalAliasAccessToPublish?.() === false ||
+            this.props.canSetCanonicalAlias
+        );
+
         return (
             <LabelledToggleSwitch value={this.state.isRoomPublished}
                 onChange={this.onRoomPublishChange}
-                // disabled={!this.props.canSetCanonicalAlias}
+                // disabled={!enabled}
                 label={_t("Publish this room to the public in %(domain)s's room directory?", {
                     domain: client.getDomain(),
                 })}
