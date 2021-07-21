@@ -231,6 +231,9 @@ $appearance-tab-border-color: $room-highlight-color;
 
 $composer-shadow-color: tranparent;
 
+// Background for code in event tile
+$eventtile-code-bg-color: #121212;
+
 // ***** Mixins! *****
 
 @define-mixin mx_DialogButton {

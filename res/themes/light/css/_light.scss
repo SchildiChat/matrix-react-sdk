@@ -352,6 +352,9 @@ $groupFilterPanel-background-blur-amount: 20px;
 
 $composer-shadow-color: rgba(0, 0, 0, 0.04);
 
+// Background for code in event tile
+$eventtile-code-bg-color: #00000010;
+
 // ***** Mixins! *****
 
 @define-mixin mx_DialogButton {

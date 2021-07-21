@@ -477,7 +477,7 @@ $hover-select-border: 4px;
 
     pre, code {
         font-family: $monospace-font-family !important;
-        background-color: $header-panel-bg-color;
+        background-color: $eventtile-code-bg-color;
     }
 
     pre {
@@ -486,6 +486,10 @@ $hover-select-border: 4px;
         // https://github.com/vector-im/vector-web/issues/754
         overflow-x: overlay;
         overflow-y: visible;
+
+        code {
+            background-color: transparent;
+        }
     }
 }
 
