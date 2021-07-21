@@ -115,7 +115,7 @@ limitations under the License.
 
             // These colors need to be hardcoded because they don't change with the theme
             &.mx_ThemeSelector_light {
-                background-color: #f3f8fd;
+                background-color: #fafafa;
                 color: #2e2f32;
             }
 
@@ -134,7 +134,7 @@ limitations under the License.
 
             &.mx_ThemeSelector_black {
                 background-color: #000000;
-                color: #f3f8fd;
+                color: #fafafa;
 
                 > input > div {
                     border-color: $input-darker-bg-color;
