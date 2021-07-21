@@ -482,6 +482,11 @@ $left-gutter: 56px;
             .markdown-body > p:last-child {
                 display: inline;
             }
+            
+            .markdown-body > blockquote:last-child {
+                display: inline-block;
+                max-width: 100%;
+            }
 
             .sc_PlaceholderTimestamp {
                 display: inline-flex;
