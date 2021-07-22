@@ -193,6 +193,10 @@ $left-gutter: 56px;
             p, ul, ol, dl, blockquote, pre, table {
                 margin-bottom: 8px;
             }
+
+            blockquote > :last-child {
+                margin-bottom: 0;
+            }
         }
     }
 
