@@ -77,6 +77,9 @@ export default class MessageComposerFormatBar extends React.PureComponent<IProps
             left = parentRect.right - parentRect.left - width - rightOffset;
         }
         this.formatBarRef.current.style.left = `${left}px`;
+
+        // 12 is half the height of the bar (e.g. to center it) and 16 is an offset that felt ok.
+        this.formatBarRef.current.style.top = `${selectionRect.top - parentRect.top - 16 - 12}px`;
     }
 
     public hide(): void {
