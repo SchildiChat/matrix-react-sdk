@@ -340,7 +340,7 @@ export default class RoomPreviewBar extends React.Component {
                     footer = (
                         <div>
                             <Spinner w={20} h={20} />
-                            {_t("Loading room preview")}
+                            { _t("Loading room preview") }
                         </div>
                     );
                 }
@@ -465,11 +465,11 @@ export default class RoomPreviewBar extends React.Component {
                 if (inviteMember) {
                     inviterElement = <span>
                         <span className="mx_RoomPreviewBar_inviter">
-                            {inviteMember.rawDisplayName}
-                        </span> ({inviteMember.userId})
+                            { inviteMember.rawDisplayName }
+                        </span> ({ inviteMember.userId })
                     </span>;
                 } else {
-                    inviterElement = (<span className="mx_RoomPreviewBar_inviter">{this.props.inviterName}</span>);
+                    inviterElement = (<span className="mx_RoomPreviewBar_inviter">{ this.props.inviterName }</span>);
                 }
 
                 const isDM = this._isDMInvite();
@@ -538,7 +538,8 @@ export default class RoomPreviewBar extends React.Component {
                         { errcode: this.props.error.errcode },
                         { issueLink: label => <a
                             href="https://github.com/SchildiChat/schildichat-desktop/issues/new/choose"
-                            target="_blank" rel="noreferrer noopener">{ label }</a> },
+                            target="_blank"
+                            rel="noreferrer noopener">{ label }</a> },
                     ),
                 ];
                 break;
@@ -550,7 +551,7 @@ export default class RoomPreviewBar extends React.Component {
             if (!Array.isArray(subTitle)) {
                 subTitle = [subTitle];
             }
-            subTitleElements = subTitle.map((t, i) => <p key={`subTitle${i}`}>{t}</p>);
+            subTitleElements = subTitle.map((t, i) => <p key={`subTitle${i}`}>{ t }</p>);
         }
 
         let titleElement;

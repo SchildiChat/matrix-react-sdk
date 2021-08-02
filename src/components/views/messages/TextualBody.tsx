@@ -17,7 +17,6 @@ limitations under the License.
 import React, { createRef, SyntheticEvent } from 'react';
 import ReactDOM from 'react-dom';
 import highlight from 'highlight.js';
-import { MatrixEvent } from 'matrix-js-sdk/src/models/event';
 import { MsgType } from "matrix-js-sdk/src/@types/event";
 
 import * as HtmlUtils from '../../../HtmlUtils';
@@ -38,39 +37,13 @@ import { replaceableComponent } from "../../../utils/replaceableComponent";
 import UIStore from "../../../stores/UIStore";
 import { ComposerInsertPayload } from "../../../dispatcher/payloads/ComposerInsertPayload";
 import { Action } from "../../../dispatcher/actions";
-import { TileShape } from '../rooms/EventTile';
-import EditorStateTransfer from "../../../utils/EditorStateTransfer";
 import GenericTextContextMenu from "../context_menus/GenericTextContextMenu";
 import Spoiler from "../elements/Spoiler";
 import QuestionDialog from "../dialogs/QuestionDialog";
 import MessageEditHistoryDialog from "../dialogs/MessageEditHistoryDialog";
 import EditMessageComposer from '../rooms/EditMessageComposer';
 import LinkPreviewGroup from '../rooms/LinkPreviewGroup';
-
-interface IProps {
-    /* the MatrixEvent to show */
-    mxEvent: MatrixEvent;
-
-    /* a list of words to highlight */
-    highlights?: string[];
-
-    /* link URL for the highlights */
-    highlightLink?: string;
-
-    /* should show URL previews for this event */
-    showUrlPreview?: boolean;
-
-    /* the shape of the tile, used */
-    tileShape?: TileShape;
-
-    editState?: EditorStateTransfer;
-    replacingEventId?: string;
-
-    /* callback for when our widget has loaded */
-    onHeightChanged(): void;
-
-    scBubbleGroupTimestamp?: any;
-}
+import { IBodyProps } from "./IBodyProps";
 
 interface IState {
     // the URLs (if any) to be previewed with a LinkPreviewWidget inside this TextualBody.
@@ -81,7 +54,7 @@ interface IState {
 }
 
 @replaceableComponent("views.messages.TextualBody")
-export default class TextualBody extends React.Component<IProps, IState> {
+export default class TextualBody extends React.Component<IBodyProps, IState> {
     private readonly contentRef = createRef<HTMLSpanElement>();
 
     private unmounted = false;
@@ -478,10 +451,10 @@ export default class TextualBody extends React.Component<IProps, IState> {
 
         const tooltip = <div>
             <div className="mx_Tooltip_title">
-                {_t("Edited at %(date)s", { date: dateString })}
+                { _t("Edited at %(date)s", { date: dateString }) }
             </div>
             <div className="mx_Tooltip_sub">
-                {_t("Click to view edits")}
+                { _t("Click to view edits") }
             </div>
         </div>;
 
@@ -492,14 +465,14 @@ export default class TextualBody extends React.Component<IProps, IState> {
                 title={_t("Edited at %(date)s. Click to view edits.", { date: dateString })}
                 tooltip={tooltip}
             >
-                <span>{`(${_t("edited")})`}</span>
+                <span>{ `(${_t("edited")})` }</span>
             </AccessibleTooltipButton>
         );
     }
 
     render() {
         if (this.props.editState) {
-            return <EditMessageComposer editState={this.props.editState} className="mx_EventTile_content" dir="auto" />;
+            return <EditMessageComposer editState={this.props.editState} className="mx_EventTile_content" />;
         }
         const mxEvent = this.props.mxEvent;
         const content = mxEvent.getContent();
@@ -517,8 +490,8 @@ export default class TextualBody extends React.Component<IProps, IState> {
 
         if (this.props.replacingEventId) {
             body = <>
-                {body}
-                {this.renderEditedMarker()}
+                { body }
+                { this.renderEditedMarker() }
             </>;
         }
 
@@ -543,7 +516,7 @@ export default class TextualBody extends React.Component<IProps, IState> {
         switch (content.msgtype) {
             case MsgType.Emote:
                 return (
-                    <span className="mx_MEmoteBody mx_EventTile_content" dir="auto">
+                    <div className="mx_MEmoteBody mx_EventTile_content" dir="auto">
                         *&nbsp;
                         <span
                             className="mx_MEmoteBody_sender"
@@ -555,23 +528,23 @@ export default class TextualBody extends React.Component<IProps, IState> {
                         { body }
                         { widgets }
                         { this.props.scBubbleGroupTimestamp }
-                    </span>
+                    </div>
                 );
             case MsgType.Notice:
                 return (
-                    <span className="mx_MNoticeBody mx_EventTile_content" dir="auto">
+                    <div className="mx_MNoticeBody mx_EventTile_content" dir="auto">
                         { body }
                         { widgets }
                         { this.props.scBubbleGroupTimestamp }
-                    </span>
+                    </div>
                 );
             default: // including "m.text"
                 return (
-                    <span className="mx_MTextBody mx_EventTile_content" dir="auto">
+                    <div className="mx_MTextBody mx_EventTile_content" dir="auto">
                         { body }
                         { widgets }
                         { this.props.scBubbleGroupTimestamp }
-                    </span>
+                    </div>
                 );
         }
     }

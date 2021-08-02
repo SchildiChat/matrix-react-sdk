@@ -24,8 +24,8 @@ import { _t } from '../../../languageHandler';
 import { formatCommaSeparatedList } from '../../../utils/FormattingUtils';
 import { isValid3pidInvite } from "../../../RoomInvite";
 import EventListSummary from "./EventListSummary";
-import { Layout } from '../../../settings/Layout';
 import { replaceableComponent } from "../../../utils/replaceableComponent";
+import { Layout } from '../../../settings/Layout';
 
 interface IProps extends Omit<ComponentProps<typeof EventListSummary>, "summaryText" | "summaryMembers"> {
     // The maximum number of names to show in either each summary e.g. 2 would result "A, B and 234 others left"
@@ -70,6 +70,7 @@ export default class MemberEventListSummary extends React.Component<IProps> {
         summaryLength: 1,
         threshold: 3,
         avatarsMaxLength: 5,
+        layout: Layout.Group,
     };
 
     shouldComponentUpdate(nextProps) {
@@ -456,7 +457,7 @@ export default class MemberEventListSummary extends React.Component<IProps> {
             startExpanded={this.props.startExpanded}
             children={this.props.children}
             summaryMembers={[...latestUserAvatarMember.values()]}
-            summaryText={this.generateSummary(aggregate.names, orderedTransitionSequences)}
-            layout={this.props.layout} />;
+            layout={this.props.layout}
+            summaryText={this.generateSummary(aggregate.names, orderedTransitionSequences)} />;
     }
 }

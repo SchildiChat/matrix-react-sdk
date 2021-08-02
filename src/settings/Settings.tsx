@@ -41,6 +41,7 @@ import { Layout } from "./Layout";
 import ReducedMotionController from './controllers/ReducedMotionController';
 import IncompatibleController from "./controllers/IncompatibleController";
 import SdkConfig from "../SdkConfig";
+import NewLayoutSwitcherController from './controllers/NewLayoutSwitcherController';
 
 // These are just a bunch of helper arrays to avoid copy/pasting a bunch of times
 const LEVELS_ROOM_SETTINGS = [
@@ -838,7 +839,7 @@ export const SETTINGS: {[setting: string]: ISetting} = {
     [UIFeature.IdentityServer]: {
         supportedLevels: LEVELS_UI_FEATURE,
         default: true,
-        // Identity Server (Discovery) Settings make no sense if 3PIDs in general are hidden
+        // Identity server (discovery) settings make no sense if 3PIDs in general are hidden
         controller: new UIFeatureController(UIFeature.ThirdPartyID),
     },
     [UIFeature.ThirdPartyID]: {

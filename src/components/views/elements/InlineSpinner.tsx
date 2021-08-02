@@ -35,7 +35,7 @@ export default class InlineSpinner extends React.PureComponent<IProps> {
     render() {
         const w = this.props.w || 16;
         const h = this.props.h || 16;
-        const imgClass = "mx_InlineSpinner_icon mx_Spinner_icon";
+        const imgClassName = "mx_InlineSpinner_icon mx_Spinner_icon";
 
         let icon;
         if (SettingsStore.getValue('feature_new_spinner')) {
@@ -44,17 +44,19 @@ export default class InlineSpinner extends React.PureComponent<IProps> {
                     src={require("../../../../res/img/logo-spinner.svg")}
                     width={w}
                     height={h}
-                    className={imgClass}
+                    className={imgClassName}
                     aria-label={_t("Loading...")}
                 />
             );
         } else {
             icon = (
                 <div
-                    className={imgClass}
+                    className={imgClassName}
                     style={{ width: this.props.w, height: this.props.h }}
                     aria-label={_t("Loading...")}
-                ></div>
+                >
+                    { this.props.children }
+                </div>
             );
         }
 

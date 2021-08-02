@@ -123,8 +123,8 @@ $voipcall-plinth-color: #383838;
 
 // ********************
 
-$theme-button-bg-color: #eeeeee;
-$dialpad-button-bg-color: #6F7882;
+$theme-button-bg-color: #e3e8f0;
+$dialpad-button-bg-color: #394049;
 
 $roomlist-button-bg-color: rgba(144, 144, 144, 0.2); // Buttons include the filter box, explore button, and sublist buttons
 $roomlist-filter-active-bg-color: $bg-color;
@@ -217,9 +217,9 @@ $breadcrumb-placeholder-bg-color: #303030;
 $user-tile-hover-bg-color: $header-panel-bg-color;
 
 $message-body-panel-fg-color: $secondary-fg-color;
-$message-body-panel-bg-color: #38383882; // "Dark Tile"
-$message-body-panel-icon-fg-color: #383838; // "Separator"
-$message-body-panel-icon-bg-color: $tertiary-fg-color;
+$message-body-panel-bg-color: #394049; // "Dark Tile"
+$message-body-panel-icon-fg-color: $secondary-fg-color;
+$message-body-panel-icon-bg-color: #21262C; // "System Dark"
 
 $voice-record-stop-border-color: $quaternary-fg-color;
 $voice-record-waveform-incomplete-fg-color: $quaternary-fg-color;
@@ -299,4 +299,12 @@ $eventtile-code-bg-color: #121212;
 // highlight.js overrides
 .hljs-tag {
     color: inherit; // Without this they'd be weirdly blue which doesn't match the theme
+}
+
+.hljs-addition {
+    background: #1a4b59;
+}
+
+.hljs-deletion {
+    background: #53232a;
 }

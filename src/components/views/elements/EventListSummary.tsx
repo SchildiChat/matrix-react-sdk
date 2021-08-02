@@ -38,9 +38,9 @@ interface IProps {
     // An array of EventTiles to render when expanded
     children: ReactNode[];
     // Called when the event list expansion is toggled
-    onToggle?(): void,
-    // which layout to use
-    layout: Layout,
+    onToggle?(): void;
+    // The layout currently used
+    layout?: Layout;
 }
 
 const EventListSummary: React.FC<IProps> = ({
@@ -67,7 +67,7 @@ const EventListSummary: React.FC<IProps> = ({
     // If we are only given few events then just pass them through
     if (events.length < threshold) {
         return (
-            <li className="mx_EventListSummary" data-scroll-tokens={eventIds}>
+            <li className="mx_EventListSummary" data-scroll-tokens={eventIds} data-expanded={true} data-layout={layout}>
                 { children }
             </li>
         );
@@ -113,13 +113,18 @@ const EventListSummary: React.FC<IProps> = ({
     }
 
     return (
-        <li className="mx_EventListSummary" data-scroll-tokens={eventIds}>
+        <li className="mx_EventListSummary" data-scroll-tokens={eventIds} data-expanded={expanded + ""} data-layout={layout}>
             <AccessibleButton className="mx_EventListSummary_toggle" onClick={toggleExpanded} aria-expanded={expanded}>
                 { expanded ? _t('collapse') : _t('expand') }
             </AccessibleButton>
             { body }
         </li>
     );
+};
+
+EventListSummary.defaultProps = {
+    startExpanded: false,
+    layout: Layout.Group,
 };
 
 export default EventListSummary;
