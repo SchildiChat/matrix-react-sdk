@@ -1890,7 +1890,7 @@
     "Set the name of a font installed on your system & %(brand)s will attempt to use it.": "Nustatykite sistemoje įdiegto šrifto pavadinimą ir %(brand)s bandys jį naudoti.",
     "Modern": "Modernus",
     "Compact": "Kompaktiškas",
-    "Message layout": "Žinutės išdėstymas",
+    "Message layout": "Žinučių išdėstymas",
     "Use between %(min)s pt and %(max)s pt": "Naudokite dydį tarp %(min)s pt ir %(max)s pt",
     "Custom font size can only be between %(min)s pt and %(max)s pt": "Pasirinktinis šrifto dydis gali būti tik tarp %(min)s pt ir %(max)s pt",
     "Size must be a number": "Dydis turi būti skaičius",
@@ -2099,7 +2099,7 @@
     "New? <a>Create account</a>": "Naujas vartotojas? <a>Sukurkite paskyrą</a>",
     "Forgot password?": "Pamiršote slaptažodį?",
     "Preparing to download logs": "Ruošiamasi parsiųsti žurnalus",
-    "You can use the custom server options to sign into other Matrix servers by specifying a different homeserver URL. This allows you to use Element with an existing Matrix account on a different homeserver.": "Jūs galite naudoti serverio parinktis, norėdami prisijungti prie kitų Matrix serverių, nurodydami kitą serverio URL. Tai leidžia jums naudoti Element su egzistuojančia paskyra kitame serveryje.",
+    "You can use the custom server options to sign into other Matrix servers by specifying a different homeserver URL. This allows you to use Element with an existing Matrix account on a different homeserver.": "Jūs galite naudoti serverio parinktis, norėdami prisijungti prie kitų Matrix serverių, nurodydami kitą serverio URL. Tai leidžia jums naudoti SchildiChat su egzistuojančia paskyra kitame serveryje.",
     "Server Options": "Serverio Parinktys",
     "Your homeserver": "Jūsų serveris",
     "Download logs": "Parsisiųsti žurnalus",
@@ -2433,5 +2433,8 @@
     "Identity server (%(server)s)": "Tapatybės serveris (%(server)s)",
     "Could not connect to identity server": "Nepavyko prisijungti prie tapatybės serverio",
     "Not a valid identity server (status code %(code)s)": "Netinkamas tapatybės serveris (statuso kodas %(code)s)",
-    "Identity server URL must be HTTPS": "Tapatybės Serverio URL privalo būti HTTPS"
+    "Identity server URL must be HTTPS": "Tapatybės Serverio URL privalo būti HTTPS",
+    "Normal priority": "Normalaus prioriteto",
+    "Message bubbles": "Žinučių burbulai",
+    "Show people and rooms in a combined list": "Asmenų ir kambarių rodymas bendrame sąraše"
 }
