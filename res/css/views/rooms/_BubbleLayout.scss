@@ -45,6 +45,7 @@ $left-gutter: 56px;
     .mx_EventTile {
         // no reserved space for read receipts required.
         padding-top: 6px;
+        position: relative;
 
         &.mx_EventTile_info {
             padding-top: 0px;
@@ -78,6 +79,10 @@ $left-gutter: 56px;
             line-height: $font-22px;
             min-height: $font-22px;
         }
+    }
+
+    .mx_EventTile_continuation {
+        padding-top: 0 !important;
     }
 
     .mx_EventTile_line, .mx_EventTile_reply {
@@ -405,6 +410,7 @@ $left-gutter: 56px;
     .sc_EventTile_bubbleContainer {
         > .mx_EventTile_avatar {
             top: 9px;
+            left: 8px;
         }
     }
 

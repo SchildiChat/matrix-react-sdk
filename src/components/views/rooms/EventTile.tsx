@@ -1248,9 +1248,6 @@ export default class EventTile extends React.Component<IProps, IState> {
                             "onMouseEnter": () => this.setState({ hover: true }),
                             "onMouseLeave": () => this.setState({ hover: false }),
                         }, <>
-                            { ircTimestamp }
-                            { sender }
-                            { ircPadlock }
                             <div className={bubbleLineClasses} key="mx_EventTile_line">
                                 { groupPadlock }
                                 <div className={bubbleAreaClasses}>
