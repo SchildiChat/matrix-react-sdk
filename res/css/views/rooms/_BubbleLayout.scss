@@ -266,7 +266,7 @@ $left-gutter: 54px;
             top: 4px !important;
         }
 
-        .mx_MImageBody_thumbnail, span.mx_MVideoBody video.mx_MVideoBody {
+        .mx_MImageBody_thumbnail, .sc_MVideoBody_video_container {
             border-color: $event-timestamp-color !important;
         }
     }
@@ -350,7 +350,7 @@ $left-gutter: 54px;
         }
     }
 
-    .mx_MImageBody_thumbnail, span.mx_MVideoBody video.mx_MVideoBody {
+    .mx_MImageBody_thumbnail, .sc_MVideoBody_video_container {
         box-sizing: border-box;
         border: 1px solid $message-bubble-background;
     }
@@ -361,7 +361,7 @@ $left-gutter: 54px;
 
     span.mx_MVideoBody {
         display: block;
-        max-width: max-content;
+        max-width: 600px;
         position: relative;
         text-align: right;
 
@@ -369,7 +369,8 @@ $left-gutter: 54px;
             display: block;
             width: auto;
             max-height: 600px;
-            max-width: 600px;
+            max-width: 100%;
+            border-radius: unset;
         }
 
         .mx_MFileBody {
@@ -400,6 +401,12 @@ $left-gutter: 54px;
                 line-height: 1;
             }
         }
+    }
+
+    .sc_MVideoBody_video_container {
+        display: block;
+        border-radius: $border-radius-normal;
+        overflow: hidden;
     }
 
     // ---- Bubble specific ----
