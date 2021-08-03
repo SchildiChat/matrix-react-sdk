@@ -216,6 +216,7 @@ export default class MVideoBody extends React.PureComponent<IBodyProps, IState> 
                 <span className="mx_MVideoBody">
                     <img src={require("../../../../res/img/warning.svg")} width="16" height="16" />
                     { _t("Error decrypting video") }
+                    { this.props.scBubbleGroupTimestamp }
                     { this.props.scBubbleActionBar }
                 </span>
             );
@@ -231,6 +232,7 @@ export default class MVideoBody extends React.PureComponent<IBodyProps, IState> 
                     <div className="mx_MImageBody_thumbnail mx_MImageBody_thumbnail_spinner">
                         <InlineSpinner />
                     </div>
+                    { this.props.scBubbleGroupTimestamp }
                     { this.props.scBubbleActionBar }
                 </span>
             );
@@ -271,6 +273,7 @@ export default class MVideoBody extends React.PureComponent<IBodyProps, IState> 
                     onPlay={this.videoOnPlay}
                 />
                 { this.props.tileShape && <MFileBody {...this.props} showGenericPlaceholder={false} /> }
+                { this.props.scBubbleGroupTimestamp }
                 { this.props.scBubbleActionBar }
             </span>
         );

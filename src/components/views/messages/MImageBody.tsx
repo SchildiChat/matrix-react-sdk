@@ -428,6 +428,7 @@ export default class MImageBody extends React.Component<IBodyProps, IState> {
                 <div className="mx_MImageBody">
                     <img src={require("../../../../res/img/warning.svg")} width="16" height="16" />
                     { _t("Error decrypting image") }
+                    { this.props.scBubbleGroupTimestamp }
                     { this.props.scBubbleActionBar }
                 </div>
             );
@@ -447,6 +448,7 @@ export default class MImageBody extends React.Component<IBodyProps, IState> {
         return <div className="mx_MImageBody">
             { thumbnail }
             { fileBody }
+            { this.props.scBubbleGroupTimestamp }
             { this.props.scBubbleActionBar }
         </div>;
     }
