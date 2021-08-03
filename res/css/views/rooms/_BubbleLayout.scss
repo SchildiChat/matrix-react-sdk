@@ -42,6 +42,11 @@ $left-gutter: 56px;
         margin-bottom: 0px;
     }
 
+    .mx_LinkPreviewGroup > .mx_AccessibleButton {
+        margin-top: 15px;
+        margin-bottom: -2.2rem; // make timestamp fit on the same line
+    }
+
     .mx_EventTile {
         // no reserved space for read receipts required.
         padding-top: 6px;
