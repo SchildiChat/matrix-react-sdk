@@ -493,10 +493,11 @@ $left-gutter: 56px;
                 display: inline;
             }
             
-            .markdown-body > blockquote:last-child {
-                display: inline-block;
-                max-width: 100%;
-            }
+            // ToDo: Find a way to have this not break if plain text follows after
+            // .markdown-body > blockquote:last-child {
+            //     display: inline-block;
+            //     max-width: 100%;
+            // }
 
             .sc_PlaceholderTimestamp {
                 display: inline-flex;
