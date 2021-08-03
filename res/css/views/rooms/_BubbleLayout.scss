@@ -323,6 +323,7 @@ $left-gutter: 56px;
     .mx_MImageBody {
         margin-right: 0;
         position: relative;
+        max-width: 600px;
 
         .mx_MFileBody_download {
             display: none;
@@ -367,6 +368,7 @@ $left-gutter: 56px;
             display: block;
             width: auto;
             max-height: 600px;
+            max-width: 600px;
         }
 
         .mx_MFileBody {
@@ -677,7 +679,7 @@ $left-gutter: 56px;
     }
 
     .sc_EventTile_bubble_media {
-        max-width: 600px;
+        max-width: max-content;
         position: relative;
 
         &.sc_EventTile_bubble_right {
