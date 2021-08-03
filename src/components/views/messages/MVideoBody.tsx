@@ -212,14 +212,14 @@ export default class MVideoBody extends React.PureComponent<IBodyProps, IState> 
         const autoplay = SettingsStore.getValue("autoplayGifsAndVideos");
 
         if (this.state.error !== null) {
-            return (
+            return (<>
                 <span className="mx_MVideoBody">
                     <img src={require("../../../../res/img/warning.svg")} width="16" height="16" />
                     { _t("Error decrypting video") }
-                    { this.props.scBubbleGroupTimestamp }
                     { this.props.scBubbleActionBar }
                 </span>
-            );
+                { this.props.scBubbleGroupTimestamp }
+            </>);
         }
 
         // Important: If we aren't autoplaying and we haven't decrypred it yet, show a video with a poster.
@@ -227,15 +227,15 @@ export default class MVideoBody extends React.PureComponent<IBodyProps, IState> 
             // Need to decrypt the attachment
             // The attachment is decrypted in componentDidMount.
             // For now add an img tag with a spinner.
-            return (
+            return (<>
                 <span className="mx_MVideoBody">
                     <div className="mx_MImageBody_thumbnail mx_MImageBody_thumbnail_spinner">
                         <InlineSpinner />
                     </div>
-                    { this.props.scBubbleGroupTimestamp }
                     { this.props.scBubbleActionBar }
                 </span>
-            );
+                { this.props.scBubbleGroupTimestamp }
+            </>);
         }
 
         const contentUrl = this.getContentUrl();
@@ -256,26 +256,28 @@ export default class MVideoBody extends React.PureComponent<IBodyProps, IState> 
                 preload = "none";
             }
         }
-        return (
+        return (<>
             <span className="mx_MVideoBody">
-                <video
-                    className="mx_MVideoBody"
-                    ref={this.videoRef}
-                    src={contentUrl}
-                    title={content.body}
-                    controls
-                    preload={preload}
-                    muted={autoplay}
-                    autoPlay={autoplay}
-                    height={height}
-                    width={width}
-                    poster={poster}
-                    onPlay={this.videoOnPlay}
-                />
-                { this.props.tileShape && <MFileBody {...this.props} showGenericPlaceholder={false} /> }
+                <span className="sc_MVideoBody_video_container">
+                    <video
+                        className="mx_MVideoBody"
+                        ref={this.videoRef}
+                        src={contentUrl}
+                        title={content.body}
+                        controls
+                        preload={preload}
+                        muted={autoplay}
+                        autoPlay={autoplay}
+                        height={height}
+                        width={width}
+                        poster={poster}
+                        onPlay={this.videoOnPlay}
+                    />
+                    { this.props.tileShape && <MFileBody {...this.props} showGenericPlaceholder={false} /> }
+                    { this.props.scBubbleActionBar }
+                </span>
                 { this.props.scBubbleGroupTimestamp }
-                { this.props.scBubbleActionBar }
             </span>
-        );
+        </>);
     }
 }
