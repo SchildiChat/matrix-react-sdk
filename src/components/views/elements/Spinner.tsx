@@ -15,8 +15,7 @@ limitations under the License.
 */
 
 import React from "react";
-import { _t } from "../../../languageHandler";
-import SettingsStore from "../../../settings/SettingsStore";
+import SvgSpinner from "./SvgSpinner";
 
 interface IProps {
     w?: number;
@@ -31,34 +30,16 @@ export default class Spinner extends React.PureComponent<IProps> {
     };
 
     public render() {
-        const { w, h, message } = this.props;
-        const imgClassName = "mx_Spinner_icon";
-
-        let icon;
-        if (SettingsStore.getValue('feature_new_spinner')) {
-            icon = (
-                <img
-                    src={require("../../../../res/img/logo-spinner.svg")}
-                    width={w}
-                    height={h}
-                    className={imgClassName}
-                    aria-label={_t("Loading...")}
-                />
-            );
-        } else {
-            icon = (
-                <div
-                    className={imgClassName}
-                    style={{ width: w, height: h }}
-                    aria-label={_t("Loading...")}
-                />
-            );
-        }
-
         return (
             <div className="mx_Spinner">
-                { message && <React.Fragment><div className="mx_Spinner_Msg">{ message }</div>&nbsp;</React.Fragment> }
-                { icon }
+                { this.props.message &&
+                    <React.Fragment><div className="mx_Spinner_Msg">{ this.props.message }</div>&nbsp;</React.Fragment>
+                }
+                <SvgSpinner
+                    w={this.props.w}
+                    h={this.props.h}
+                    className="mx_Spinner_icon"
+                />
             </div>
         );
     }
