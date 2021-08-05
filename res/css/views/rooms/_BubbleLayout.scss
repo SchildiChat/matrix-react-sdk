@@ -43,8 +43,8 @@ $left-gutter: 54px;
     }
 
     .mx_LinkPreviewGroup > .mx_AccessibleButton {
-        margin-top: 15px;
-        margin-bottom: -2.2rem; // make timestamp fit on the same line
+        margin-top: 8px;
+        margin-bottom: -$font-18px; // make timestamp fit on the same line
     }
 
     .mx_EventTile {
