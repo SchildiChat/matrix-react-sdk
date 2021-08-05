@@ -680,6 +680,36 @@ $left-gutter: 54px;
         .mx_RoomAvatarEvent_avatar {
             top: unset;
         }
+
+        .mx_CallEvent {
+            background-color: transparent;
+            padding: 0;
+            margin: 0;
+            border-radius: unset;
+            max-width: unset;
+            height: unset;
+    
+            .mx_CallEvent_info {
+                margin-left: unset;
+    
+                .mx_BaseAvatar {
+                    margin-top: unset;
+                }
+    
+                .mx_CallEvent_info_basic {
+                    text-align: left;
+    
+                    .mx_CallEvent_sender {
+                        opacity: 0.8;
+                    }
+                }
+            }
+    
+            .mx_CallEvent_content {
+                margin-right: unset;
+                margin-left: 16px;
+            }
+        }
     }
 
     .sc_EventTile_bubble_notice {
