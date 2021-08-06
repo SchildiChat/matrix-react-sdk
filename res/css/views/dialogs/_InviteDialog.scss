@@ -256,7 +256,7 @@ limitations under the License.
 
     .mx_InviteDialog_userTile_pill {
         background-color: $username-variant1-color;
-        border-radius: 12px;
+        border-radius: $border-radius-12px;
         display: inline-block;
         height: 24px;
         line-height: $font-24px;
