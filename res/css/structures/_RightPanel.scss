@@ -21,7 +21,7 @@ limitations under the License.
     position: relative;
     display: flex;
     flex-direction: column;
-    border-radius: $border-radius-big;
+    border-radius: $border-radius-8px;
     padding: 4px 0;
     box-sizing: border-box;
     height: 100%;
@@ -177,7 +177,7 @@ $pulse-color: $pinned-unread-color;
 
 .mx_RightPanel_headerButton_badge {
     font-size: $font-8px;
-    border-radius: $border-radius-big;
+    border-radius: $border-radius-8px;
     color: $accent-fg-color;
     background-color: $accent-color;
     font-weight: bold;

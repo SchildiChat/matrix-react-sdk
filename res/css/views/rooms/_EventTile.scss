@@ -109,7 +109,7 @@ $hover-select-border: 4px;
     .mx_EventTile_line, .mx_EventTile_reply {
         position: relative;
         padding-left: $left-gutter;
-        border-radius: $border-radius-big;
+        border-radius: $border-radius-8px;
     }
 
     .mx_EventTile_reply {
@@ -151,7 +151,7 @@ $hover-select-border: 4px;
     .mx_EventTile_searchHighlight {
         background-color: $accent-color;
         color: $accent-fg-color;
-        border-radius: $border-radius-more;
+        border-radius: $border-radius-5px;
         padding-left: 2px;
         padding-right: 2px;
         cursor: pointer;

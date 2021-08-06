@@ -145,7 +145,7 @@ limitations under the License.
     width: 4px;
     position: absolute;
     left: -12px;
-    border-radius: 0 $border-radius-small $border-radius-small 0;
+    border-radius: 0 $border-radius-3px $border-radius-3px 0;
 }
 
 .mx_GroupFilterPanel .mx_TagTile.mx_AccessibleButton:focus {
@@ -164,7 +164,7 @@ limitations under the License.
     position: absolute;
     right: -5px;
     top: -8px;
-    border-radius: $border-radius-big;
+    border-radius: $border-radius-8px;
     background-color: $neutral-badge-color;
     color: #000;
     font-weight: 600;
@@ -183,7 +183,7 @@ limitations under the License.
     position: absolute;
     right: -4px;
     top: -2px;
-    border-radius: $border-radius-big;
+    border-radius: $border-radius-8px;
     color: $accent-fg-color;
     font-weight: 600;
     font-size: $font-14px;

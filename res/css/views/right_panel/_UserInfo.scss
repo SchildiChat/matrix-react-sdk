@@ -28,7 +28,7 @@ limitations under the License.
         cursor: pointer;
         position: absolute;
         top: 0;
-        border-radius: $border-radius-normal;
+        border-radius: $border-radius-4px;
         background-color: $dark-panel-bg-color;
         margin: 9px;
         z-index: 1; // render on top of the right panel

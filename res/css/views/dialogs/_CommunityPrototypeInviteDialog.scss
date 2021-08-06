@@ -29,7 +29,7 @@ limitations under the License.
             .mx_AccessibleButton {
                 display: inline-block;
                 background-color: $focus-bg-color; // XXX: Abuse of variables
-                border-radius: $border-radius-normal;
+                border-radius: $border-radius-4px;
                 padding: 3px 5px;
                 font-size: $font-12px;
                 float: right;

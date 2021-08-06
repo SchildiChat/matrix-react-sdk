@@ -96,7 +96,7 @@ limitations under the License.
 
     .mx_LeftPanelWidget_resizerHandle {
         cursor: ns-resize;
-        border-radius: $border-radius-small;
+        border-radius: $border-radius-3px;
 
         // Override styles from library
         width: unset !important;

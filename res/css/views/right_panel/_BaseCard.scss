@@ -40,7 +40,7 @@ limitations under the License.
             width: 20px;
             margin: 12px;
             top: 0;
-            border-radius: $border-radius-bigger;
+            border-radius: $border-radius-10px;
 
             &::before {
                 content: "";
@@ -105,7 +105,7 @@ limitations under the License.
             font-size: $font-13px;
             height: 20px;
             line-height: 20px;
-            border-radius: $border-radius-big;
+            border-radius: $border-radius-8px;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;

@@ -154,7 +154,7 @@ limitations under the License.
             top: 0;
             left: 0;
             backface-visibility: hidden;
-            border-radius: $border-radius-normal;
+            border-radius: $border-radius-4px;
         }
 
         &::after {
@@ -192,7 +192,7 @@ limitations under the License.
 
 .mx_DevTools_VerificationRequest {
     border: 1px solid #cccccc;
-    border-radius: $border-radius-small;
+    border-radius: $border-radius-3px;
     padding: 1px 5px;
     margin-bottom: 6px;
     font-family: $monospace-font-family;

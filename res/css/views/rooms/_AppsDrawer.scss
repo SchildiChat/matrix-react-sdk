@@ -48,7 +48,7 @@ $MiniAppTileHeight: 200px;
         &::after {
             content: '';
             position: absolute;
-            border-radius: $border-radius-small;
+            border-radius: $border-radius-3px;
 
             // The combination of these two should make the pill 4px high
             top: 6px;
@@ -75,7 +75,7 @@ $MiniAppTileHeight: 200px;
 
             height: 64px; // to match width of the ones on roomlist
             width: 4px;
-            border-radius: $border-radius-normal;
+            border-radius: $border-radius-4px;
 
             content: '';
 
@@ -101,11 +101,11 @@ $MiniAppTileHeight: 200px;
 
     .mx_AppTile:first-of-type {
         border-left-width: 8px;
-        border-radius: $border-radius-bigger 0 0 $border-radius-bigger;
+        border-radius: $border-radius-10px 0 0 $border-radius-10px;
     }
     .mx_AppTile:last-of-type {
         border-right-width: 8px;
-        border-radius: 0 $border-radius-bigger $border-radius-bigger 0;
+        border-radius: 0 $border-radius-10px $border-radius-10px 0;
     }
 
     .mx_ResizeHandle_horizontal {
@@ -156,7 +156,7 @@ $MinWidth: 240px;
     margin: 0;
     padding: 0;
     border: 5px solid $widget-menu-bar-bg-color;
-    border-radius: $border-radius-big;
+    border-radius: $border-radius-8px;
     display: flex;
     flex-direction: column;
     background-color: $widget-menu-bar-bg-color;
@@ -239,7 +239,7 @@ $MinWidth: 240px;
     height: 100%;
     width: 100%;
     overflow: hidden;
-    border-radius: $border-radius-big;
+    border-radius: $border-radius-8px;
     background-color: $widget-body-bg-color;
 }
 
@@ -247,7 +247,7 @@ $MinWidth: 240px;
     height: $MiniAppTileHeight;
     width: 100%;
     overflow: hidden;
-    border-radius: $border-radius-big;
+    border-radius: $border-radius-8px;
 }
 
 .mx_AppTile .mx_AppTileBody,
@@ -342,7 +342,7 @@ $MinWidth: 240px;
 
     // match bg of border so that the cut corners have the right fill
     background-color: $widget-body-bg-color !important;
-    border-radius: $border-radius-big;
+    border-radius: $border-radius-8px;
 }
 
 .mx_AppLoading .mx_Spinner {
