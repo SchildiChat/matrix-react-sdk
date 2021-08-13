@@ -295,6 +295,11 @@ $left-gutter: 54px;
     .mx_MFileBody_info {
         display: inline-block;
     }
+
+    .sc_LinkedTimestamp {
+        // Get rid of underline with custom themes
+        text-decoration: none;
+    }
     
 
     .mx_MessageTimestamp {
@@ -552,9 +557,6 @@ $left-gutter: 54px;
                 position: absolute;
                 inset-block-end: 4px;
                 inset-inline-end: 10px;
-
-                // Get rid of underline with custom themes
-                text-decoration: none;
 
                 .mx_MessageTimestamp {
                     visibility: visible !important;
