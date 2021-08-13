@@ -214,6 +214,17 @@ $left-gutter: 54px;
         }
     }
 
+    // No unnecessary horizontal scrolling of code blocks
+    .markdown-body {
+        pre {
+            padding-left: calc(16px + 1em);
+
+            .mx_EventTile_lineNumber {
+                padding-left: 0;
+            }
+        }
+    }
+
     // Explicit relationships so that it doesn't apply to nested EventTile components (e.g in Replies)
     .mx_EventTile:hover.mx_EventTile_verified .mx_EventTile_line > a > .mx_MessageTimestamp,
     .mx_EventTile:hover.mx_EventTile_unverified .mx_EventTile_line > a > .mx_MessageTimestamp,
