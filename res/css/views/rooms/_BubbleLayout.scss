@@ -477,6 +477,7 @@ $left-gutter: 54px;
         // Don't inherit bubbleArea alignment
         text-align: start;
 
+        // ToDo: make the tail some sort of absolutely positioned rotated cutout
         &.sc_EventTile_bubble_tail::before {
             content: '';
             border: 16px solid transparent;
@@ -484,6 +485,7 @@ $left-gutter: 54px;
             border-bottom: 0;
             position: absolute;
             top: 0;
+            z-index: -1; // bring the tail behind the bubble
         }
 
         > .mx_SenderProfile {
