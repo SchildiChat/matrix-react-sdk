@@ -59,7 +59,8 @@ function ComposerAvatar(props: IComposerAvatarProps) {
 
 interface ISendButtonProps {
     onClick: () => void;
-    enabled: boolean;
+    enabled?: boolean;
+    title?: string; // defaults to something generic
 }
 
 function SendButton(props: ISendButtonProps) {
@@ -73,7 +74,7 @@ function SendButton(props: ISendButtonProps) {
         <AccessibleTooltipButton
             className={classes}
             onClick={props.onClick}
-            title={_t('Send message')}
+            title={props.title ?? _t('Send message')}
         />
     );
 }
@@ -403,18 +404,17 @@ export default class MessageComposer extends React.Component<IProps, IState> {
                 controls.push(<Stickerpicker key="stickerpicker_controls_button" room={this.props.room} />);
             }
 
-            if (SettingsStore.getValue("feature_voice_messages")) {
-                controls.push(<VoiceRecordComposerTile
-                    key="controls_voice_record"
-                    ref={c => this.voiceRecordingButton = c}
-                    room={this.props.room} />);
-            }
+            controls.push(<VoiceRecordComposerTile
+                key="controls_voice_record"
+                ref={c => this.voiceRecordingButton = c}
+                room={this.props.room} />);
 
             controls.push(
                 <SendButton
                     key="controls_send"
                     onClick={this.sendMessage}
                     enabled={!this.state.isComposerEmpty || this.state.haveRecording}
+                    title={this.state.haveRecording ? _t("Send voice message") : undefined}
                 />,
             );
         } else if (this.state.tombstone) {

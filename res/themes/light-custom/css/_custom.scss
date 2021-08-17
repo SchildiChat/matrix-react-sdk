@@ -145,6 +145,6 @@ $settings-grey-fg-color: $primary-fg-color;
 $eventtile-code-bg-color: var(--roomlist-background-color);
 
 // bubble layout variables
-$message-bubble-background: var(--timeline-bubble-background-incoming);
-$message-bubble-background-self: var(--timeline-bubble-background-outgoing);
-$message-bubble-background-selected: var(--timeline-bubble-background-selected);
+$message-bubble-background: var(--eventbubble-others-bg, $message-bubble-background);
+$message-bubble-background-self: var(--eventbubble-self-bg, $message-bubble-background-self);
+$message-bubble-background-selected: var(--eventbubble-selected-bg, $message-bubble-background-selected);

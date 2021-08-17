@@ -8,9 +8,12 @@
 /* Noto Color Emoji contains digits, in fixed-width, therefore causing
    digits in flowed text to stand out.
    TODO: Consider putting all emoji fonts to the end rather than the front. */
-$font-family: Inter, Twemoji, 'Apple Color Emoji', 'Segoe UI Emoji', Arial, Helvetica, Sans-Serif, 'Noto Color Emoji';
+$font-family: 'Inter', 'Twemoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Arial', 'Helvetica', sans-serif, 'Noto Color Emoji';
 
-$monospace-font-family: Inconsolata, Twemoji, 'Apple Color Emoji', 'Segoe UI Emoji', Courier, monospace, 'Noto Color Emoji';
+$monospace-font-family: 'Inconsolata', 'Twemoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Courier', monospace, 'Noto Color Emoji';
+
+// Colors from Figma Compound https://www.figma.com/file/X4XTH9iS2KGJ2wFKDqkyed/Compound?node-id=557%3A0
+$system: #F4F6FA;
 
 // unified palette
 // try to use these colors when possible
@@ -137,10 +140,10 @@ $preview-widget-fg-color: unset;
 $blockquote-bar-color: #bdbdbd;
 $blockquote-fg-color: unset;
 
-$settings-grey-fg-color: #9e9e9e;
-$settings-profile-placeholder-bg-color: #f5f5f5;
-$settings-profile-overlay-placeholder-fg-color: #212121;
-$settings-profile-button-bg-color: #e0e0e0;
+$settings-grey-fg-color: #a2a2a2;
+$settings-profile-placeholder-bg-color: $system;
+$settings-profile-overlay-placeholder-fg-color: #2e2f32;
+$settings-profile-button-bg-color: #e7e7e7;
 $settings-profile-button-fg-color: $settings-profile-overlay-placeholder-fg-color;
 $settings-subsection-fg-color: #616161;
 
@@ -167,8 +170,7 @@ $eventtile-meta-color: $roomtopic-color;
 $composer-e2e-icon-color: #757575;
 $header-divider-color: #757575;
 
-// this probably shouldn't have it's own colour
-$voipcall-plinth-color: #ffffff;
+$voipcall-plinth-color: $system;
 
 // ********************
 
@@ -330,7 +332,7 @@ $user-tile-hover-bg-color: $header-panel-bg-color;
 $message-body-panel-fg-color: $secondary-fg-color;
 $message-body-panel-bg-color: #e0e0e0; // "Separator"
 $message-body-panel-icon-fg-color: $secondary-fg-color;
-$message-body-panel-icon-bg-color: #f5f5f5;
+$message-body-panel-icon-bg-color: $system;
 
 // These two don't change between themes. They are the $warning-color, but we don't
 // want custom themes to affect them by accident.
@@ -391,7 +393,7 @@ $eventtile-code-bg-color: #00000010;
 @define-mixin mx_DialogButton_secondary {
     // flip colours for the secondary ones
     font-weight: 600;
-    border: 1px solid $accent-color ! important;
+    border: 1px solid $accent-color !important;
     color: $accent-color;
     background-color: $button-secondary-bg-color;
 }
