@@ -2377,7 +2377,7 @@
     "Access your secure message history and set up secure messaging by entering your recovery passphrase.": "Kcem ɣer umazray aɣelsan n yiznan-inek·inem syen sbadu tirawt taɣelsant s usekcem n tefyirt tuffirt n uɛeddi.",
     "Access your secure message history and set up secure messaging by entering your recovery key.": "Kcem ɣer umazray aɣelsan n yiznan-ik·im syen sbadu tirawt taɣelsant s usekcem n tsarut n uɛeddi.",
     "Missing captcha public key in homeserver configuration. Please report this to your homeserver administrator.": "Txuṣṣ tsarut tazayezt n captcha deg umtawi n uqeddac agejdan. Ttxil-k·m azen aneqqis ɣef waya i unedbal n uqeddac-ik·im agejdan.",
-    "Enter the location of your Element Matrix Services homeserver. It may use your own domain name or be a subdomain of <a>element.io</a>.": "Sekcem adeg n uqeddac-ik·im agejdan n umeẓlu n SchildiChat Matrix. Yezmer ad iseqdec isem n taɣult-ik·im uzzig neɣ ad yili d taɣult tarnawt n <a>schildi.chat</a>.",
+    "Enter the location of your Element Matrix Services homeserver. It may use your own domain name or be a subdomain of <a>element.io</a>.": "Sekcem adeg n uqeddac-ik·im agejdan n umeẓlu n Element Matrix. Yezmer ad iseqdec isem n taɣult-ik·im uzzig neɣ ad yili d taɣult tarnawt n <a>element.io</a>.",
     "No identity server is configured so you cannot add an email address in order to reset your password in the future.": "Ulac aqeddac n timagit yettusiwlen, ɣef waya ur tettizmireḍ ara ad ternuḍ tansa n yimayl i wakken ad twennzeḍ awal-ik·im uffir ɣer sdat.",
     "If you don't specify an email address, you won't be able to reset your password. Are you sure?": "Ma yella ur d-tefrineḍ ara tansa n yimayl, ur tettizmireḍ ara ad twennzeḍ awal-ik·im uffir. Tebɣiḍ?",
     "Set an email for account recovery. Use email or phone to optionally be discoverable by existing contacts.": "Sbadu imayl i tririt n umiḍan. Seqdec imayl neɣ tiliɣri i wakken ad tettwaf s uxtiṛi sɣur inermisen i yellan.",
@@ -2754,17 +2754,5 @@
     "(an error occurred)": "(tella-d tuccḍa)",
     "(connection failed)": "(tuqqna ur teddi ara)",
     "🎉 All servers are banned from participating! This room can no longer be used.": "🎉 Iqeddcen akk ttwagedlen seg uttekki! Taxxamt-a dayen ur tettuseqdac ara.",
-    "Try again": "Ɛreḍ tikkelt-nniḍen",
-    "Integration manager": "Amsefrak n umsidef",
-    "Your %(brand)s doesn't allow you to use an integration manager to do this. Please contact an admin.": "%(brand)s-ik·im ur ak·am yefki ara tisirag i useqdec n umsefrak n umsidef i wakken ad tgeḍ aya. Ttxil-k·m nermes anedbal.",
-    "Using this widget may share data <helpIcon /> with %(widgetDomain)s & your integration manager.": "Aseqdec n uwiǧit-a yezmer ad yebḍu isefka <helpIcon/> d %(widgetDomain)s & amsefrak-inek·inem n umsidef.",
-    "Identity server is": "Aqeddac n timagit d",
-    "Integration managers receive configuration data, and can modify widgets, send room invites, and set power levels on your behalf.": "Imsefrak n yimsidaf remmsen-d isefka n uswel, syen ad uɣalen zemren ad beddlen iwiǧiten, ad aznen tinubgiwin ɣer texxamin, ad yesbadu daɣen tazmert n yiswiren s yiswiren deg ubdil-ik·im.",
-    "Use an integration manager to manage bots, widgets, and sticker packs.": "Seqdec amsefrak n umsidef i usefrek n yibuten, n yiwiǧiten d tɣawsiwin n usenteḍ.",
-    "Use an integration manager <b>(%(serverName)s)</b> to manage bots, widgets, and sticker packs.": "Seqdec amsefrak n umsidef <b>(%(serverName)s)</b> i usefrek n yibuten, n yiwiǧiten d tɣawsiwin n usenteḍ.",
-    "Identity server": "Aqeddac n timagit",
-    "Identity server (%(server)s)": "Aqeddac n timagit (%(server)s)",
-    "Could not connect to identity server": "Ur izmir ara ad yeqqen ɣer uqeddac n timagit",
-    "Not a valid identity server (status code %(code)s)": "Aqeddac n timagit mačči d ameɣtu (status code %(code)s)",
-    "Identity server URL must be HTTPS": "URL n uqeddac n timagit ilaq ad yili d HTTPS"
+    "Try again": "Ɛreḍ tikkelt-nniḍen"
 }

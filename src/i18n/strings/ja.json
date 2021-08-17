@@ -2305,7 +2305,7 @@
     "Your homeserver has exceeded one of its resource limits.": "ホームサーバーはリソースの上限に達しました。",
     "Your homeserver has exceeded its user limit.": "あなたのホームサーバーはユーザー数の上限に達しました。",
     "Use app": "アプリを使う",
-    "Element Web is experimental on mobile. For a better experience and the latest features, use our free native app.": "SchildiChat Webはモバイル端末ではまだ試験的です。より良い体験と最新の機能を得るには、無料のネイティブアプリを使用してください。",
+    "Element Web is experimental on mobile. For a better experience and the latest features, use our free native app.": "Element Webはモバイル端末ではまだ試験的です。より良い体験と最新の機能を得るには、無料のネイティブアプリを使用してください。",
     "Use app for a better experience": "より良い体験のためにアプリを使用する",
     "Enable": "有効",
     "Enable desktop notifications": "デスクトップ通知を有効にする",
@@ -2503,16 +2503,5 @@
     "Support": "サポート",
     "You can change these anytime.": "ここで入力した情報はいつでも編集できます。",
     "Add some details to help people recognise it.": "情報を入力してください。",
-    "View dev tools": "開発者ツールを表示",
-    "To view %(spaceName)s, you need an invite": "%(spaceName)s を閲覧するには招待が必要です",
-    "Integration manager": "インテグレーションマネージャ",
-    "Identity server is": "アイデンティティ・サーバー",
-    "Integration managers receive configuration data, and can modify widgets, send room invites, and set power levels on your behalf.": "インテグレーションマネージャは設定データを受け取り、ユーザーの代わりにウィジェットの変更、部屋への招待の送信、権限レベルの設定を行うことができます。",
-    "Use an integration manager to manage bots, widgets, and sticker packs.": "インテグレーションマネージャを使用して、ボット、ウィジェット、ステッカーパックを管理します。",
-    "Use an integration manager <b>(%(serverName)s)</b> to manage bots, widgets, and sticker packs.": "インテグレーションマネージャ <b>(%(serverName)s)</b> を使用して、ボット、ウィジェット、ステッカーパックを管理します。",
-    "Identity server": "認証サーバ",
-    "Identity server (%(server)s)": "identity サーバー (%(server)s)",
-    "Could not connect to identity server": "identity サーバーに接続できませんでした",
-    "Not a valid identity server (status code %(code)s)": "有効な identity サーバーではありません (ステータスコード %(code)s)",
-    "Identity server URL must be HTTPS": "identityサーバーのURLは HTTPS スキーマである必要があります"
+    "View dev tools": "開発者ツールを表示"
 }

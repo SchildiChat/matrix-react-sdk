@@ -980,7 +980,7 @@
     "General failure": "Општа грешка",
     "Copy": "Копирај",
     "Go Back": "Назад",
-    "We’re excited to announce Riot is now Element": "Са радошћу објављујемо да је Рајот (Riot) сада Елемент (SchildiChat)",
+    "We’re excited to announce Riot is now Element": "Са радошћу објављујемо да је Рајот (Riot) сада Елемент (Element)",
     "Riot is now Element!": "Рајот (Riot) је сада Елемент!",
     "Send a bug report with logs": "Пошаљи извештај о грешци са записницима",
     "Light": "Светла",
@@ -1039,8 +1039,8 @@
     "Start a conversation with someone using their name, username (like <userId/>) or email address.": "Започните разговор са неким користећи њихово име, корисничко име (као нпр.: <userId/>) или мејл адресу.",
     "Go": "Напред",
     "Go to Element": "Иди у Елемент",
-    "We’re excited to announce Riot is now Element!": "Са одушевљењем објављујемо да је Рајот (Riot) сада Елемент (SchildiChat)!",
-    "Learn more at <a>element.io/previously-riot</a>": "Сазнајте више на страници <a>schildi.chat/previously-riot</a>",
+    "We’re excited to announce Riot is now Element!": "Са одушевљењем објављујемо да је Рајот (Riot) сада Елемент (Element)!",
+    "Learn more at <a>element.io/previously-riot</a>": "Сазнајте више на страници <a>element.io/previously-riot</a>",
     "Looks good!": "Изгледа добро!",
     "Send a Direct Message": "Пошаљи директну поруку",
     "Switch theme": "Промени тему",
@@ -1760,7 +1760,5 @@
     "You're already in a call with this person.": "Већ разговарате са овом особом.",
     "Already in call": "Већ у позиву",
     "Whether you're using %(brand)s as an installed Progressive Web App": "Без обзира да ли користите %(brand)s као инсталирану Прогресивну веб апликацију",
-    "Whether or not you're using the 'breadcrumbs' feature (avatars above the room list)": "Без обзира да ли користите функцију „breadcrumbs“ (аватари изнад листе соба)",
-    "Using this widget may share data <helpIcon /> with %(widgetDomain)s & your integration manager.": "Коришћење овог виџета може да дели податке <helpIcon /> са %(widgetDomain)s и вашим интеграционим менаџером.",
-    "Identity server is": "Идентитетски сервер је"
+    "Whether or not you're using the 'breadcrumbs' feature (avatars above the room list)": "Без обзира да ли користите функцију „breadcrumbs“ (аватари изнад листе соба)"
 }
