@@ -118,11 +118,15 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
     private spaceOrderLocalEchoMap = new Map<string, string>();
     private _restrictedJoinRuleSupport?: IRoomCapability;
     private _allRoomsInHome: boolean = SettingsStore.getValue("Spaces.allRoomsInHome");
+    private _showSpaceMemberDMs: boolean = SettingsStore.getValue("Spaces.showSpaceMemberDMs");
+    private _showSpaceDMBadges: boolean = SettingsStore.getValue("Spaces.showSpaceDMBadges");
 
     constructor() {
         super(defaultDispatcher, {});
 
         SettingsStore.monitorSetting("Spaces.allRoomsInHome", null);
+        SettingsStore.monitorSetting("Spaces.showSpaceMemberDMs", null);
+        SettingsStore.monitorSetting("Spaces.showSpaceDMBadges", null);
     }
 
     public get invitedSpaces(): Room[] {
@@ -143,6 +147,14 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
 
     public get allRoomsInHome(): boolean {
         return this._allRoomsInHome;
+    }
+
+    public get showSpaceMemberDMs(): boolean {
+        return this._showSpaceMemberDMs;
+    }
+
+    public get showSpaceDMBadges(): boolean {
+        return this._showSpaceDMBadges;
     }
 
     public async setActiveRoomInSpace(space: Room | null): Promise<void> {
@@ -539,13 +551,15 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
                 const roomIds = new Set(childRooms.map(r => r.roomId));
                 const space = this.matrixClient?.getRoom(spaceId);
 
-                // Add relevant DMs
-                space?.getMembers().forEach(member => {
-                    if (member.membership !== "join" && member.membership !== "invite") return;
-                    DMRoomMap.shared().getDMRoomsForUserId(member.userId).forEach(roomId => {
-                        roomIds.add(roomId);
+                if (this.showSpaceMemberDMs) {
+                    // Add relevant DMs
+                    space?.getMembers().forEach(member => {
+                        if (member.membership !== "join" && member.membership !== "invite") return;
+                        DMRoomMap.shared().getDMRoomsForUserId(member.userId).forEach(roomId => {
+                            roomIds.add(roomId);
+                        });
                     });
-                });
+                }
 
                 const newPath = new Set(parentPath).add(spaceId);
                 childSpaces.forEach(childSpace => {
@@ -575,7 +589,7 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
                 if (!roomIds.has(room.roomId)) return false;
 
                 if (DMRoomMap.shared().getUserIdForRoomId(room.roomId)) {
-                    return s === HOME_SPACE;
+                    return s === HOME_SPACE || this.showSpaceDMBadges;
                 }
 
                 return true;
@@ -816,7 +830,18 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
                     const newValue = SettingsStore.getValue("Spaces.allRoomsInHome");
                     if (this.allRoomsInHome !== newValue) {
                         this._allRoomsInHome = newValue;
-                        this.emit(UPDATE_HOME_BEHAVIOUR, this.allRoomsInHome);
+                        this.rebuild(); // rebuild everything
+                    }
+                } else if (settingUpdatedPayload.settingName === "Spaces.showSpaceMemberDMs") {
+                    const newValue = SettingsStore.getValue("Spaces.showSpaceMemberDMs");
+                    if (this.showSpaceMemberDMs !== newValue) {
+                        this._showSpaceMemberDMs = newValue;
+                        this.rebuild(); // rebuild everything
+                    }
+                } else if (settingUpdatedPayload.settingName === "Spaces.showSpaceDMBadges") {
+                    const newValue = SettingsStore.getValue("Spaces.showSpaceDMBadges");
+                    if (this.showSpaceDMBadges !== newValue) {
+                        this._showSpaceDMBadges = newValue;
                         this.rebuild(); // rebuild everything
                     }
                 }

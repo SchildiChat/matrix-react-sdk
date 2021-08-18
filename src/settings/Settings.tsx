@@ -782,6 +782,18 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
         default: true,
     },
+    "Spaces.showSpaceMemberDMs": {
+        displayName: _td("Show people in spaces"),
+        description: _td("If disabled, you can still add Direct Messages to Personal Spaces. " +
+            "If enabled, you'll automatically see everyone who is a member of the Space."),
+        supportedLevels: LEVELS_ACCOUNT_SETTINGS,
+        default: false,
+    },
+    "Spaces.showSpaceDMBadges": {
+        displayName: _td("Show notification badges for People in Spaces"),
+        supportedLevels: LEVELS_ACCOUNT_SETTINGS,
+        default: true,
+    },
     [UIFeature.RoomHistorySettings]: {
         supportedLevels: LEVELS_UI_FEATURE,
         default: true,

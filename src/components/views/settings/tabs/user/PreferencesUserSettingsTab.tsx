@@ -50,6 +50,8 @@ export default class PreferencesUserSettingsTab extends React.Component<{}, ISta
 
     static SPACES_SETTINGS = [
         "Spaces.allRoomsInHome",
+        "Spaces.showSpaceMemberDMs",
+        "Spaces.showSpaceDMBadges",
     ];
 
     static KEYBINDINGS_SETTINGS = [
