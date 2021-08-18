@@ -277,7 +277,13 @@ $left-gutter: 54px;
             top: 4px !important;
         }
 
-        .mx_MImageBody_thumbnail, .sc_MVideoBody_video_container {
+        .mx_MImageBody_thumbnail_container {
+            border: 1px solid $event-timestamp-color !important;
+            border-radius: $border-radius-4px;
+            overflow: hidden;
+        }
+        
+        .sc_MVideoBody_video_container {
             border-color: $event-timestamp-color !important;
         }
     }
@@ -336,6 +342,8 @@ $left-gutter: 54px;
         margin-right: 0;
         position: relative;
         max-width: 600px;
+        overflow: hidden;
+        border-radius: $border-radius-4px;
 
         .mx_MFileBody_download {
             display: none;
@@ -351,10 +359,10 @@ $left-gutter: 54px;
             background: rgba(0, 0, 0, 0.5);
             color: white;
             left: unset;
-            right: 1px;
+            right: 0;
             top: unset;
-            bottom: 1px;
-            border-radius: $border-radius-4px 0;
+            bottom: 0;
+            border-top-left-radius: $border-radius-4px;
             font-size: 0.85em;
             padding: 6px 9px;
             width: unset;
@@ -362,7 +370,11 @@ $left-gutter: 54px;
         }
     }
 
-    .mx_MImageBody_thumbnail, .sc_MVideoBody_video_container {
+    .mx_MImageBody_thumbnail {
+        border-radius: unset;
+    }
+
+    .mx_MImageBody, .sc_MVideoBody_video_container {
         box-sizing: border-box;
         border: 1px solid $message-bubble-background;
     }
@@ -624,7 +636,7 @@ $left-gutter: 54px;
             }
         }
 
-        .mx_MImageBody_thumbnail, span.mx_MVideoBody video.mx_MVideoBody {
+        .mx_MImageBody, span.mx_MVideoBody video.mx_MVideoBody {
             border-color: $message-bubble-background-self;
         }
     }
@@ -753,8 +765,13 @@ $left-gutter: 54px;
     }
     
     .sc_EventTile_bubble_sticker {
-        .mx_MImageBody_thumbnail {
+        .mx_MImageBody {
             border: none;
+
+            .mx_MessageTimestamp {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
         }
     }
 
@@ -769,10 +786,8 @@ $left-gutter: 54px;
 
         .sc_EventTile_bubble_media {
             > .mx_MImageBody {
-                .mx_MImageBody_thumbnail_container {
-                    background: $accent-color;
-                    border-radius: $border-radius-4px;
-                }
+                background: $accent-color;
+                
                 .mx_MImageBody_thumbnail {
                     opacity: 0.7;
                 }
