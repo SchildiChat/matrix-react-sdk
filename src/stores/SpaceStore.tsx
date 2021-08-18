@@ -830,6 +830,7 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
                     const newValue = SettingsStore.getValue("Spaces.allRoomsInHome");
                     if (this.allRoomsInHome !== newValue) {
                         this._allRoomsInHome = newValue;
+                        this.emit(UPDATE_HOME_BEHAVIOUR, this.allRoomsInHome);
                         this.rebuild(); // rebuild everything
                     }
                 } else if (settingUpdatedPayload.settingName === "Spaces.showSpaceMemberDMs") {
