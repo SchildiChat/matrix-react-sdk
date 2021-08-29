@@ -436,14 +436,14 @@ export default class MImageBody extends React.Component<IBodyProps, IState> {
         const content = this.props.mxEvent.getContent<IMediaEventContent>();
 
         if (this.state.error !== null) {
-            return (
+            return <div className="sc_MImageBody_container">
                 <div className="mx_MImageBody">
                     <img src={require("../../../../res/img/warning.svg")} width="16" height="16" />
                     { _t("Error decrypting image") }
                     { this.props.scBubbleGroupTimestamp }
-                    { this.props.scBubbleActionBar }
                 </div>
-            );
+                { this.props.scBubbleActionBar }
+            </div>;
         }
 
         const contentUrl = this.getContentUrl();
@@ -457,10 +457,12 @@ export default class MImageBody extends React.Component<IBodyProps, IState> {
         const thumbnail = this.messageContent(contentUrl, thumbUrl, content);
         const fileBody = this.getFileBody();
 
-        return <div className="mx_MImageBody">
-            { thumbnail }
-            { fileBody }
-            { this.props.scBubbleGroupTimestamp }
+        return <div className="sc_MImageBody_container">
+            <div className="mx_MImageBody">
+                { thumbnail }
+                { fileBody }
+                { this.props.scBubbleGroupTimestamp }
+            </div>
             { this.props.scBubbleActionBar }
         </div>;
     }
