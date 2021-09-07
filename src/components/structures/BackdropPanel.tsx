@@ -22,6 +22,9 @@ interface IProps {
 }
 
 export const BackdropPanel: React.FC<IProps> = ({ backgroundImage, blurMultiplier }) => {
+    // SC: no damn avatar background in room list
+    return null;
+
     if (!backgroundImage) return null;
 
     const styles: CSSProperties = {};
