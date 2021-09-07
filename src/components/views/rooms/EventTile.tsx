@@ -869,13 +869,19 @@ export default class EventTile extends React.Component<IProps, IState> {
 
     render() {
         const msgtype = this.props.mxEvent.getContent().msgtype;
-        const { tileHandler, isBubbleMessage, isInfoMessage } = getEventDisplayInfo(this.props.mxEvent);
+        const eventType = this.props.mxEvent.getType() as EventType;
+        const {
+            tileHandler,
+            isBubbleMessage,
+            isInfoMessage,
+            isLeftAlignedBubbleMessage,
+        } = getEventDisplayInfo(this.props.mxEvent);
 
         // This shouldn't happen: the caller should check we support this type
         // before trying to instantiate us
         if (!tileHandler) {
             const { mxEvent } = this.props;
-            console.warn(`Event type not supported: type:${mxEvent.getType()} isState:${mxEvent.isState()}`);
+            console.warn(`Event type not supported: type:${eventType} isState:${mxEvent.isState()}`);
             return <div className="mx_EventTile mx_EventTile_info mx_MNoticeBody">
                 <div className="mx_EventTile_line">
                     { _t('This event could not be displayed') }
@@ -900,6 +906,7 @@ export default class EventTile extends React.Component<IProps, IState> {
         const isEditing = !!this.props.editState;
         const classes = classNames({
             mx_EventTile_bubbleContainer: isBubbleMessage && this.props.layout != Layout.Bubble,
+            mx_EventTile_leftAlignedBubble: isLeftAlignedBubbleMessage,
             mx_EventTile: true,
             mx_EventTile_isEditing: isEditing,
             mx_EventTile_info: isInfoMessage && this.props.layout !== Layout.Bubble,
@@ -908,8 +915,10 @@ export default class EventTile extends React.Component<IProps, IState> {
             mx_EventTile_sending: !isEditing && isSending,
             mx_EventTile_highlight: this.props.tileShape === TileShape.Notif ? false : this.shouldHighlight(),
             mx_EventTile_selected: this.props.isSelectedEvent,
-            mx_EventTile_continuation: !isInfoMessage && !isBubbleMessage &&
-                (this.props.tileShape ? '' : this.props.continuation),
+            mx_EventTile_continuation: !isInfoMessage && !isBubbleMessage && (
+                (this.props.tileShape ? '' : this.props.continuation) ||
+                eventType === EventType.CallInvite
+            ),
             mx_EventTile_last: this.props.last,
             mx_EventTile_lastInSection: this.props.lastInSection,
             mx_EventTile_contextual: this.props.contextual,
@@ -959,8 +968,11 @@ export default class EventTile extends React.Component<IProps, IState> {
         } else if (this.props.layout == Layout.IRC) {
             avatarSize = 14;
             needsSenderProfile = true;
-        } else if (this.props.continuation && this.props.tileShape !== TileShape.FileGrid) {
-            // no avatar or sender profile for continuation messages
+        } else if (
+            (this.props.continuation && this.props.tileShape !== TileShape.FileGrid) ||
+            eventType === EventType.CallInvite
+        ) {
+            // no avatar or sender profile for continuation messages and call tiles
             avatarSize = 0;
             needsSenderProfile = false;
         } else {
@@ -1061,7 +1073,7 @@ export default class EventTile extends React.Component<IProps, IState> {
             />;
         }
 
-        const linkedTimestamp = <a className={"sc_LinkedTimestamp"}
+        const linkedTimestamp = <a className="sc_LinkedTimestamp"
             href={permalink}
             onClick={this.onPermalinkClicked}
             aria-label={formatTime(new Date(this.props.mxEvent.getTs()), this.props.isTwelveHour)}
@@ -1069,7 +1081,7 @@ export default class EventTile extends React.Component<IProps, IState> {
             { timestamp }
         </a>;
 
-        const placeholderTimestamp = <span className={"sc_PlaceholderTimestamp"}>
+        const placeholderTimestamp = <span className="sc_PlaceholderTimestamp">
             { timestamp }
         </span>;
 
@@ -1266,7 +1278,7 @@ export default class EventTile extends React.Component<IProps, IState> {
                                             callEventGrouper={this.props.callEventGrouper}
                                             scBubble={true}
                                             scBubbleActionBar={mediaBody ? actionBar : null}
-                                            scBubbleGroupTimestamp={<>{placeholderTimestamp}{groupTimestamp}</>}
+                                            scBubbleGroupTimestamp={<>{ placeholderTimestamp }{ groupTimestamp }</>}
                                         />
                                         { !mediaBody ? actionBar : null }
                                     </div>

@@ -32,6 +32,7 @@ replace_colors() {
     sed -i 's|#2e2f32|#212121|gi' "$f"
     sed -i 's|#232f32|#212121|gi' "$f"
     sed -i 's|#27303a|#212121|gi' "$f"
+    sed -i 's|#17191C|#212121|gi' "$f"
     sed -i 's|#181b21|#303030|gi' "$f"
     sed -i 's|#1A1D23|#303030|gi' "$f"
     sed -i 's|#20252B|#303030|gi' "$f"
@@ -44,7 +45,6 @@ replace_colors() {
     sed -i 's|#3c4556|#424242|gi' "$f"
     sed -i 's|#3d3b39|#424242|gi' "$f"
     sed -i 's|#45474a|#424242|gi' "$f"
-    sed -i 's|#2e2f32|#424242|gi' "$f"
     sed -i 's|#454545|#424242|gi' "$f"
     sed -i 's|#2e3649|#424242|gi' "$f"
     sed -i 's|#4e5054|#424242|gi' "$f"
@@ -53,9 +53,11 @@ replace_colors() {
     sed -i 's|#616b7f|#616161|gi' "$f"
     sed -i 's|#5c6470|#616161|gi' "$f"
     sed -i 's|#737D8C|#757575|gi' "$f"
+    sed -i 's|#6F7882|#757575|gi' "$f"
     sed -i 's|#91A1C0|#757575|gi' "$f" # icon in button color
     sed -i 's|#8D99A5|#808080|gi' "$f"
     sed -i 's|#8E99A4|#808080|gi' "$f" # maybe use #9e9e9e instead
+    sed -i 's|#8D97A5|#808080|gi' "$f"
     sed -i 's|#a2a2a2|#9e9e9e|gi' "$f"
     sed -i 's|#9fa9ba|#aaaaaa|gi' "$f" # maybe use #9e9e9e instead
     sed -i 's|#B9BEC6|#b3b3b3|gi' "$f" # maybe use #bdbdbd instead

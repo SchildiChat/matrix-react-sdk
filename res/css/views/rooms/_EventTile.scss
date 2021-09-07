@@ -499,13 +499,10 @@ $hover-select-border: 4px;
         code {
             background-color: transparent;
         }
-    }
 
-    blockquote {
-        color: $blockquote-fg-color;
-        margin: 0 0 16px;
-        padding: 0 15px;
-        border-left: 4px solid $blockquote-bar-color;
+        &::-webkit-scrollbar-corner {
+            background: transparent;
+        }
     }
 }
 
@@ -598,8 +595,10 @@ $hover-select-border: 4px;
 }
 
 .mx_EventTile_content .markdown-body blockquote {
-    border-left: 2px solid $blockquote-bar-color;
+    color: $blockquote-fg-color;
+    margin: 0 0 16px;
     padding: 2px 10px;
+    border-left: 2px solid $blockquote-bar-color;
 }
 
 .mx_EventTile_content .markdown-body .hljs {

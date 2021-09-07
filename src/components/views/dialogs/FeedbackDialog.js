@@ -28,7 +28,7 @@ import StyledRadioGroup from "../elements/StyledRadioGroup";
 
 const existingIssuesUrl = "https://github.com/SchildiChat/schildichat-desktop/issues" +
     "?q=is%3Aopen+is%3Aissue+sort%3Areactions-%2B1-desc";
-const newIssueUrl = "https://github.com/SchildiChat/schildichat-desktop/issues/new";
+const newIssueUrl = "https://github.com/SchildiChat/schildichat-desktop/issues/new/choose";
 
 export default (props) => {
     const [rating, setRating] = useState("");
