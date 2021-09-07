@@ -1,16 +1,16 @@
 // Colors from Figma Compound https://www.figma.com/file/X4XTH9iS2KGJ2wFKDqkyed/Compound?node-id=559%3A741
-$accent: #0DBD8B;
+$accent: #8BC34A;
 $alert: #FF5B55;
 $links: #0086e6;
 $primary-content: #ffffff;
-$secondary-content: #A9B2BC;
-$tertiary-content: #8E99A4;
-$quaternary-content: #6F7882;
-$quinary-content: #394049;
-$system: #21262C;
-$background: #15191E;
+$secondary-content: #b3b3b3;
+$tertiary-content: #808080;
+$quaternary-content: #757575;
+$quinary-content: #424242;
+$system: #383838;
+$background: #212121;
 $panels: rgba($system, 0.9);
-$panel-base: #8D97A5; // This color is not intended for use in the app
+$panel-base: #808080; // This color is not intended for use in the app
 $panel-selected: rgba($panel-base, 0.3);
 $panel-hover: rgba($panel-base, 0.1);
 $panel-actions: rgba($panel-base, 0.2);
@@ -23,16 +23,16 @@ $space-nav: rgba($panel-base, 0.1);
 $bg-color: $background;
 $base-color: $bg-color;
 $base-text-color: $primary-content;
-$header-panel-bg-color: #20252B;
+$header-panel-bg-color: #303030;
 $header-panel-border-color: #000000;
-$header-panel-text-primary-color: #B9BEC6;
-$header-panel-text-secondary-color: #c8c8cd;
+$header-panel-text-primary-color: #b3b3b3;
+$header-panel-text-secondary-color: #cccccc;
 $text-primary-color: $primary-content;
-$text-secondary-color: #B9BEC6;
+$text-secondary-color: #b3b3b3;
 $quaternary-fg-color: $quaternary-content;
-$search-bg-color: #181b21;
-$search-placeholder-color: #61708b;
-$room-highlight-color: #343a46;
+$search-bg-color: #303030;
+$search-placeholder-color: #616161;
+$room-highlight-color: #424242;
 
 // typical text (dark-on-white in light skin)
 $primary-fg-color: $text-primary-color;
@@ -140,7 +140,7 @@ $composer-e2e-icon-color: $header-panel-text-primary-color;
 
 // ********************
 
-$theme-button-bg-color: #e3e8f0;
+$theme-button-bg-color: #e0e0e0;
 $dialpad-button-bg-color: $quinary-content;
 
 $roomlist-button-bg-color: rgba(144, 144, 144, 0.2); // Buttons include the filter box, explore button, and sublist buttons
