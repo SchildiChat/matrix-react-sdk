@@ -660,9 +660,17 @@ $left-gutter: 54px;
     }
 
     .sc_EventTile_bubble_info {
+        &::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            box-shadow: inset 0px 0px 0px 1px $roomtopic-color;
+            opacity: 0.15;
+            border-radius: $border-radius-4px;
+        }
+
         text-align: center;
         background: transparent;
-        box-shadow: inset 0px 0px 0px 1px rgba($roomtopic-color, 0.15);
 
         .mx_EventTileBubble {
             background-color: transparent;
