@@ -16,11 +16,15 @@ limitations under the License.
 */
 
 import SettingController from "./SettingController";
-import { DEFAULT_THEME, enumerateThemes } from "../../theme";
+import { enumerateThemes } from "../../theme";
 import { SettingLevel } from "../SettingLevel";
 
 export default class ThemeController extends SettingController {
     public static isLogin = false;
+
+    public constructor(private defaultTheme: string) {
+        super();
+    }
 
     public getValueOverride(
         level: SettingLevel,
@@ -30,12 +34,12 @@ export default class ThemeController extends SettingController {
     ): any {
         if (!calculatedValue) return null; // Don't override null themes
 
-        if (ThemeController.isLogin) return 'light';
+        if (ThemeController.isLogin) return this.defaultTheme;
 
         const themes = enumerateThemes();
         // Override in case some no longer supported theme is stored here
         if (!themes[calculatedValue]) {
-            return DEFAULT_THEME;
+            return this.defaultTheme;
         }
 
         return null; // no override

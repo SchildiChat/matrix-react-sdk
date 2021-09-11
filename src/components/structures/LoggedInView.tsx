@@ -69,6 +69,7 @@ import classNames from 'classnames';
 import GroupFilterPanel from './GroupFilterPanel';
 import CustomRoomTagPanel from './CustomRoomTagPanel';
 import { mediaFromMxc } from "../../customisations/Media";
+import { RecheckThemePayload } from '../../dispatcher/payloads/RecheckThemePayload';
 
 // We need to fetch each pinned message individually (if we don't already have it)
 // so each pinned message may trigger a request. Limit the number per room for sanity.
@@ -168,11 +169,13 @@ class LoggedInView extends React.Component<IProps, IState> {
             activeCalls: CallHandler.sharedInstance().getAllActiveCalls(),
         };
 
+        // recheck theme because custom themes stored in the account might only be loaded at this stage
+        dis.dispatch<RecheckThemePayload>({ action: Action.RecheckTheme });
+
         // stash the MatrixClient in case we log out before we are unmounted
         this._matrixClient = this.props.matrixClient;
 
         MediaDeviceHandler.loadDevices();
-
         fixupColorFonts();
 
         this._roomView = React.createRef();

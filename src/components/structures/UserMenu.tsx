@@ -32,7 +32,6 @@ import FeedbackDialog from "../views/dialogs/FeedbackDialog";
 import Modal from "../../Modal";
 import LogoutDialog from "../views/dialogs/LogoutDialog";
 import SettingsStore from "../../settings/SettingsStore";
-import { getCustomTheme } from "../../theme";
 import AccessibleButton, { ButtonEvent } from "../views/elements/AccessibleButton";
 import SdkConfig from "../../SdkConfig";
 import { getHomePageUrl } from "../../utils/pages";
@@ -59,6 +58,7 @@ import RoomName from "../views/elements/RoomName";
 import { replaceableComponent } from "../../utils/replaceableComponent";
 import InlineSpinner from "../views/elements/InlineSpinner";
 import TooltipButton from "../views/elements/TooltipButton";
+import { Theme } from "../../settings/Theme";
 interface IProps {
     isMinimized: boolean;
 }
@@ -67,7 +67,7 @@ type PartialDOMRect = Pick<DOMRect, "width" | "left" | "top" | "height">;
 
 interface IState {
     contextMenuPosition: PartialDOMRect;
-    isDarkTheme: boolean;
+    themeInUse: Theme;
     selectedSpace?: Room;
     pendingRoomJoin: Set<string>;
 }
@@ -75,7 +75,7 @@ interface IState {
 @replaceableComponent("structures.UserMenu")
 export default class UserMenu extends React.Component<IProps, IState> {
     private dispatcherRef: string;
-    private themeWatcherRef: string;
+    private themeInUseWatcherRef: string;
     private dndWatcherRef: string;
     private buttonRef: React.RefObject<HTMLButtonElement> = createRef();
     private tagStoreRef: fbEmitter.EventSubscription;
@@ -85,7 +85,7 @@ export default class UserMenu extends React.Component<IProps, IState> {
 
         this.state = {
             contextMenuPosition: null,
-            isDarkTheme: this.isUserOnDarkTheme(),
+            themeInUse: SettingsStore.getValue("theme_in_use"),
             pendingRoomJoin: new Set<string>(),
         };
 
@@ -104,13 +104,13 @@ export default class UserMenu extends React.Component<IProps, IState> {
 
     public componentDidMount() {
         this.dispatcherRef = defaultDispatcher.register(this.onAction);
-        this.themeWatcherRef = SettingsStore.watchSetting("theme", null, this.onThemeChanged);
+        this.themeInUseWatcherRef = SettingsStore.watchSetting("theme_in_use", null, this.onThemeInUseChanged);
         this.tagStoreRef = GroupFilterOrderStore.addListener(this.onTagStoreUpdate);
         MatrixClientPeg.get().on("Room", this.onRoom);
     }
 
     public componentWillUnmount() {
-        if (this.themeWatcherRef) SettingsStore.unwatchSetting(this.themeWatcherRef);
+        if (this.themeInUseWatcherRef) SettingsStore.unwatchSetting(this.themeInUseWatcherRef);
         if (this.dndWatcherRef) SettingsStore.unwatchSetting(this.dndWatcherRef);
         if (this.dispatcherRef) defaultDispatcher.unregister(this.dispatcherRef);
         OwnProfileStore.instance.off(UPDATE_EVENT, this.onProfileUpdate);
@@ -129,18 +129,6 @@ export default class UserMenu extends React.Component<IProps, IState> {
         this.forceUpdate(); // we don't have anything useful in state to update
     };
 
-    private isUserOnDarkTheme(): boolean {
-        if (SettingsStore.getValue("use_system_theme")) {
-            return window.matchMedia("(prefers-color-scheme: dark)").matches;
-        } else {
-            const theme = SettingsStore.getValue("theme");
-            if (theme.startsWith("custom-")) {
-                return getCustomTheme(theme.substring("custom-".length)).is_dark;
-            }
-            return theme === "dark";
-        }
-    }
-
     private onProfileUpdate = async () => {
         // the store triggered an update, so force a layout update. We don't
         // have any state to store here for that to magically happen.
@@ -151,8 +139,8 @@ export default class UserMenu extends React.Component<IProps, IState> {
         this.setState({ selectedSpace });
     };
 
-    private onThemeChanged = () => {
-        this.setState({ isDarkTheme: this.isUserOnDarkTheme() });
+    private onThemeInUseChanged = () => {
+        this.setState({ themeInUse: SettingsStore.getValue("theme_in_use") });
     };
 
     private onAction = (ev: ActionPayload) => {
@@ -217,11 +205,8 @@ export default class UserMenu extends React.Component<IProps, IState> {
         ev.preventDefault();
         ev.stopPropagation();
 
-        // Disable system theme matching if the user hits this button
-        SettingsStore.setValue("use_system_theme", null, SettingLevel.DEVICE, false);
-
-        const newTheme = this.state.isDarkTheme ? "light" : "dark";
-        SettingsStore.setValue("theme", null, SettingLevel.DEVICE, newTheme); // set at same level as Appearance tab
+        const newTheme = this.state.themeInUse === Theme.Dark ? Theme.Light : Theme.Dark;
+        SettingsStore.setValue("theme_in_use", null, SettingLevel.DEVICE, newTheme); // set at same level as Appearance tab
     };
 
     private onSettingsOpen = (ev: ButtonEvent, tabId: string) => {
@@ -541,17 +526,20 @@ export default class UserMenu extends React.Component<IProps, IState> {
         >
             <div className="mx_UserMenu_contextMenu_header">
                 { primaryHeader }
-                <AccessibleTooltipButton
-                    className="mx_UserMenu_contextMenu_themeButton"
-                    onClick={this.onSwitchThemeClick}
-                    title={this.state.isDarkTheme ? _t("Switch to light mode") : _t("Switch to dark mode")}
-                >
-                    <img
-                        src={require("../../../res/img/element-icons/roomlist/dark-light-mode.svg")}
-                        alt={_t("Switch theme")}
-                        width={16}
-                    />
-                </AccessibleTooltipButton>
+                { this.state.themeInUse !== Theme.System ?
+                    <AccessibleTooltipButton
+                        className="mx_UserMenu_contextMenu_themeButton"
+                        onClick={this.onSwitchThemeClick}
+                        title={this.state.themeInUse === Theme.Dark ?
+                            _t("Switch to light mode") : _t("Switch to dark mode")}
+                    >
+                        <img
+                            src={require("../../../res/img/element-icons/roomlist/dark-light-mode.svg")}
+                            alt={_t("Switch theme")}
+                            width={16}
+                        />
+                    </AccessibleTooltipButton> : null
+                }
             </div>
             { topSection }
             { primaryOptionList }

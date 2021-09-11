@@ -21,11 +21,12 @@ import { Action } from '../../dispatcher/actions';
 import ThemeController from "../controllers/ThemeController";
 import { setTheme } from "../../theme";
 import { ActionPayload } from '../../dispatcher/payloads';
-import { SettingLevel } from "../SettingLevel";
+import { Theme } from '../Theme';
 
 export default class ThemeWatcher {
-    private themeWatchRef: string;
-    private systemThemeWatchRef: string;
+    private lightThemeWatchRef: string;
+    private darkThemeWatchRef: string;
+    private themeInUseWatchRef: string;
     private dispatcherRef: string;
 
     private preferDark: MediaQueryList;
@@ -34,8 +35,9 @@ export default class ThemeWatcher {
     private currentTheme: string;
 
     constructor() {
-        this.themeWatchRef = null;
-        this.systemThemeWatchRef = null;
+        this.lightThemeWatchRef = null;
+        this.darkThemeWatchRef = null;
+        this.themeInUseWatchRef = null;
         this.dispatcherRef = null;
 
         // we have both here as each may either match or not match, so by having both
@@ -47,8 +49,9 @@ export default class ThemeWatcher {
     }
 
     public start() {
-        this.themeWatchRef = SettingsStore.watchSetting("theme", null, this.onChange);
-        this.systemThemeWatchRef = SettingsStore.watchSetting("use_system_theme", null, this.onChange);
+        this.lightThemeWatchRef = SettingsStore.watchSetting("light_theme", null, this.onChange);
+        this.darkThemeWatchRef = SettingsStore.watchSetting("dark_theme", null, this.onChange);
+        this.themeInUseWatchRef = SettingsStore.watchSetting("theme_in_use", null, this.onChange);
         if (this.preferDark.addEventListener) {
             this.preferDark.addEventListener('change', this.onChange);
             this.preferLight.addEventListener('change', this.onChange);
@@ -61,8 +64,9 @@ export default class ThemeWatcher {
             this.preferDark.removeEventListener('change', this.onChange);
             this.preferLight.removeEventListener('change', this.onChange);
         }
-        SettingsStore.unwatchSetting(this.systemThemeWatchRef);
-        SettingsStore.unwatchSetting(this.themeWatchRef);
+        SettingsStore.unwatchSetting(this.themeInUseWatchRef);
+        SettingsStore.unwatchSetting(this.darkThemeWatchRef);
+        SettingsStore.unwatchSetting(this.lightThemeWatchRef);
         dis.unregister(this.dispatcherRef);
     }
 
@@ -88,46 +92,22 @@ export default class ThemeWatcher {
     }
 
     public getEffectiveTheme(): string {
-        // Dev note: Much of this logic is replicated in the AppearanceUserSettingsTab
+        let themeToUse = Theme.Light;
 
-        // XXX: checking the isLight flag here makes checking it in the ThemeController
-        // itself completely redundant since we just override the result here and we're
-        // now effectively just using the ThemeController as a place to store the static
-        // variable. The system theme setting probably ought to have an equivalent
-        // controller that honours the same flag, although probablt better would be to
-        // have the theme logic in one place rather than split between however many
-        // different places.
-        if (ThemeController.isLogin) return 'light';
+        if (!ThemeController.isLogin) {
+            themeToUse = SettingsStore.getValue('theme_in_use');
 
-        // If the user has specifically enabled the system matching option (excluding default),
-        // then use that over anything else. We pick the lowest possible level for the setting
-        // to ensure the ordering otherwise works.
-        const systemThemeExplicit = SettingsStore.getValueAt(
-            SettingLevel.DEVICE, "use_system_theme", null, false, true);
-        if (systemThemeExplicit) {
-            console.log("returning explicit system theme");
-            if (this.preferDark.matches) return 'dark';
-            if (this.preferLight.matches) return 'light';
+            if (themeToUse === Theme.System) {
+                if (this.preferDark.matches) themeToUse = Theme.Dark;
+                if (this.preferLight.matches) themeToUse = Theme.Light;
+            }
         }
 
-        // If the user has specifically enabled the theme (without the system matching option being
-        // enabled specifically and excluding the default), use that theme. We pick the lowest possible
-        // level for the setting to ensure the ordering otherwise works.
-        const themeExplicit = SettingsStore.getValueAt(
-            SettingLevel.DEVICE, "theme", null, false, true);
-        if (themeExplicit) {
-            console.log("returning explicit theme: " + themeExplicit);
-            return themeExplicit;
+        if (themeToUse === Theme.Dark) {
+            return SettingsStore.getValue('dark_theme');
+        } else {
+            return SettingsStore.getValue('light_theme');
         }
-
-        // If the user hasn't really made a preference in either direction, assume the defaults of the
-        // settings and use those.
-        if (SettingsStore.getValue('use_system_theme')) {
-            if (this.preferDark.matches) return 'dark';
-            if (this.preferLight.matches) return 'light';
-        }
-        console.log("returning theme value");
-        return SettingsStore.getValue('theme');
     }
 
     public isSystemThemeSupported() {

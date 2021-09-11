@@ -40,13 +40,16 @@ import { Layout } from "../../../../../settings/Layout";
 import { replaceableComponent } from "../../../../../utils/replaceableComponent";
 import { compare } from "../../../../../utils/strings";
 import LayoutSwitcher from "../../LayoutSwitcher";
+import StyledRadioButton from '../../../elements/StyledRadioButton';
+import { Theme } from '../../../../../settings/Theme';
 
 interface IProps {
 }
 
 interface IThemeState {
-    theme: string;
-    useSystemTheme: boolean;
+    lightTheme: string;
+    darkTheme: string;
+    themeInUse: Theme;
 }
 
 export interface CustomThemeMessage {
@@ -85,7 +88,9 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
 
         this.state = {
             fontSize: (SettingsStore.getValue("baseFontSize", null) + FontWatcher.SIZE_DIFF).toString(),
-            ...this.calculateThemeState(),
+            lightTheme: SettingsStore.getValue("light_theme"),
+            darkTheme: SettingsStore.getValue("dark_theme"),
+            themeInUse: SettingsStore.getValue("theme_in_use"),
             customThemeUrl: "",
             customThemeMessage: { isError: false, text: "" },
             useCustomFontSize: SettingsStore.getValue("useCustomFontSize"),
@@ -118,62 +123,44 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
         this.unmounted = true;
     }
 
-    private calculateThemeState(): IThemeState {
-        // We have to mirror the logic from ThemeWatcher.getEffectiveTheme so we
-        // show the right values for things.
-
-        const themeChoice: string = SettingsStore.getValue("theme");
-        const systemThemeExplicit: boolean = SettingsStore.getValueAt(
-            SettingLevel.DEVICE, "use_system_theme", null, false, true);
-        const themeExplicit: string = SettingsStore.getValueAt(
-            SettingLevel.DEVICE, "theme", null, false, true);
-
-        // If the user has enabled system theme matching, use that.
-        if (systemThemeExplicit) {
-            return {
-                theme: themeChoice,
-                useSystemTheme: true,
-            };
-        }
-
-        // If the user has set a theme explicitly, use that (no system theme matching)
-        if (themeExplicit) {
-            return {
-                theme: themeChoice,
-                useSystemTheme: false,
-            };
-        }
-
-        // Otherwise assume the defaults for the settings
-        return {
-            theme: themeChoice,
-            useSystemTheme: SettingsStore.getValueAt(SettingLevel.DEVICE, "use_system_theme"),
-        };
-    }
-
-    private onThemeChange = (newTheme: string): void => {
-        if (this.state.theme === newTheme) return;
+    private onLightThemeChange = (newTheme: string): void => {
+        if (this.state.lightTheme === newTheme) return;
 
         // doing getValue in the .catch will still return the value we failed to set,
         // so remember what the value was before we tried to set it so we can revert
-        const oldTheme: string = SettingsStore.getValue('theme');
-        SettingsStore.setValue("theme", null, SettingLevel.DEVICE, newTheme).catch(() => {
+        const oldTheme: string = SettingsStore.getValue('light_theme');
+        SettingsStore.setValue("light_theme", null, SettingLevel.DEVICE, newTheme).catch(() => {
             dis.dispatch<RecheckThemePayload>({ action: Action.RecheckTheme });
-            this.setState({ theme: oldTheme });
+            this.setState({ lightTheme: oldTheme });
         });
-        this.setState({ theme: newTheme });
+        this.setState({ lightTheme: newTheme });
         // The settings watcher doesn't fire until the echo comes back from the
         // server, so to make the theme change immediately we need to manually
         // do the dispatch now
-        // XXX: The local echoed value appears to be unreliable, in particular
-        // when settings custom themes(!) so adding forceTheme to override
-        // the value from settings.
-        dis.dispatch<RecheckThemePayload>({ action: Action.RecheckTheme, forceTheme: newTheme });
+        dis.dispatch<RecheckThemePayload>({ action: Action.RecheckTheme });
     };
 
-    private onUseSystemThemeChanged = (checked: boolean): void => {
-        this.setState({ useSystemTheme: checked });
-        SettingsStore.setValue("use_system_theme", null, SettingLevel.DEVICE, checked);
+    private onDarkThemeChange = (newTheme: string): void => {
+        if (this.state.darkTheme === newTheme) return;
+
+        // doing getValue in the .catch will still return the value we failed to set,
+        // so remember what the value was before we tried to set it so we can revert
+        const oldTheme: string = SettingsStore.getValue('dark_theme');
+        SettingsStore.setValue("dark_theme", null, SettingLevel.DEVICE, newTheme).catch(() => {
+            dis.dispatch<RecheckThemePayload>({ action: Action.RecheckTheme });
+            this.setState({ darkTheme: oldTheme });
+        });
+        this.setState({ darkTheme: newTheme });
+        // The settings watcher doesn't fire until the echo comes back from the
+        // server, so to make the theme change immediately we need to manually
+        // do the dispatch now
+        dis.dispatch<RecheckThemePayload>({ action: Action.RecheckTheme });
+    };
+
+    private onThemeInUseChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        const themeInUse = e.target.value as Theme;
+        this.setState({ themeInUse: themeInUse });
+        SettingsStore.setValue("theme_in_use", null, SettingLevel.DEVICE, themeInUse);
         dis.dispatch<RecheckThemePayload>({ action: Action.RecheckTheme });
     };
 
@@ -263,12 +250,36 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
         let systemThemeSection: JSX.Element;
         if (themeWatcher.isSystemThemeSupported()) {
             systemThemeSection = <div>
-                <StyledCheckbox
-                    checked={this.state.useSystemTheme}
-                    onChange={(e) => this.onUseSystemThemeChanged(e.target.checked)}
-                >
-                    { SettingsStore.getDisplayName("use_system_theme") }
-                </StyledCheckbox>
+                <label>
+                    <StyledRadioButton
+                        name="theme_in_use"
+                        value={Theme.Light}
+                        checked={this.state.themeInUse === Theme.Light}
+                        onChange={this.onThemeInUseChange}
+                    >
+                        { _t("Light") }
+                    </StyledRadioButton>
+                </label>
+                <label>
+                    <StyledRadioButton
+                        name="theme_in_use"
+                        value={Theme.Dark}
+                        checked={this.state.themeInUse === Theme.Dark}
+                        onChange={this.onThemeInUseChange}
+                    >
+                        { _t("Dark") }
+                    </StyledRadioButton>
+                </label>
+                <label>
+                    <StyledRadioButton
+                        name="theme_in_use"
+                        value={Theme.System}
+                        checked={this.state.themeInUse === Theme.System}
+                        onChange={this.onThemeInUseChange}
+                    >
+                        { _t("System") }
+                    </StyledRadioButton>
+                </label>
             </div>;
         }
 
@@ -320,15 +331,27 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                 { systemThemeSection }
                 <div className="mx_ThemeSelectors">
                     <StyledRadioGroup
-                        name="theme"
+                        name="light_theme"
                         definitions={orderedThemes.map(t => ({
                             value: t.id,
                             label: t.name,
-                            disabled: this.state.useSystemTheme,
                             className: "mx_ThemeSelector_" + t.id,
                         }))}
-                        onChange={this.onThemeChange}
-                        value={this.state.useSystemTheme ? undefined : this.state.theme}
+                        onChange={this.onLightThemeChange}
+                        value={this.state.lightTheme}
+                        outlined
+                    />
+                </div>
+                <div className="mx_ThemeSelectors">
+                    <StyledRadioGroup
+                        name="dark_theme"
+                        definitions={orderedThemes.map(t => ({
+                            value: t.id,
+                            label: t.name,
+                            className: "mx_ThemeSelector_" + t.id,
+                        }))}
+                        onChange={this.onDarkThemeChange}
+                        value={this.state.darkTheme}
                         outlined
                     />
                 </div>

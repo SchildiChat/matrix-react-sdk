@@ -17,7 +17,6 @@ limitations under the License.
 
 import { _t } from "./languageHandler";
 
-export const DEFAULT_THEME = "light";
 import SettingsStore from "./settings/SettingsStore";
 import ThemeWatcher from "./settings/watchers/ThemeWatcher";
 

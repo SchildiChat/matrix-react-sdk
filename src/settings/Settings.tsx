@@ -42,7 +42,7 @@ import ReducedMotionController from './controllers/ReducedMotionController';
 import IncompatibleController from "./controllers/IncompatibleController";
 import SdkConfig from "../SdkConfig";
 import PseudonymousAnalyticsController from './controllers/PseudonymousAnalyticsController';
-import NewLayoutSwitcherController from './controllers/NewLayoutSwitcherController';
+import { Theme } from './Theme';
 
 // These are just a bunch of helper arrays to avoid copy/pasting a bunch of times
 const LEVELS_ROOM_SETTINGS = [
@@ -476,19 +476,23 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         // We force the value to true because the invertedSettingName causes it to flip
         controller: new UIFeatureController(UIFeature.Communities, true),
     },
-    "theme": {
+    "light_theme": {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
         default: "light",
-        controller: new ThemeController(),
+        controller: new ThemeController("light"),
+    },
+    "dark_theme": {
+        supportedLevels: LEVELS_ACCOUNT_SETTINGS,
+        default: "dark",
+        controller: new ThemeController("dark"),
+    },
+    "theme_in_use": {
+        supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS,
+        default: Theme.System,
     },
     "custom_themes": {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
         default: [],
-    },
-    "use_system_theme": {
-        supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS,
-        default: true,
-        displayName: _td("Match system theme"),
     },
     "useSystemFont": {
         supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS,
