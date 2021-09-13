@@ -156,7 +156,7 @@ export default class DeviceSettingsHandler extends SettingsHandler {
         if (settingName === "theme_in_use") {
             const settings = this.getSettings() || {};
 
-            if (settings["theme"]) {
+            if (settings["theme"] && !settings["use_system_theme"]) {
                 settings["dark_theme"] = settings["theme"];
                 settings["light_theme"] = settings["theme"];
             }
@@ -176,7 +176,7 @@ export default class DeviceSettingsHandler extends SettingsHandler {
         if (settingName === "light_theme" || settingName === "dark_theme") {
             const settings = this.getSettings() || {};
 
-            if (settings["theme"]) {
+            if (settings["theme"] && !settings["use_system_theme"]) {
                 if (settingName === "light_theme") settings["dark_theme"] = settings["theme"];
                 if (settingName === "dark_theme") settings["light_theme"] = settings["theme"];
             }
