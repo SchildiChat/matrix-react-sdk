@@ -487,7 +487,7 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         controller: new ThemeController("dark"),
     },
     "theme_in_use": {
-        supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS,
+        supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS_WITH_CONFIG,
         default: Theme.System,
     },
     "custom_themes": {
