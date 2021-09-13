@@ -79,6 +79,16 @@ limitations under the License.
     }
 }
 
+.mx_AppearanceUserSettingsTab_themeInUseSection {
+    $radio-bg-color: $input-darker-bg-color;
+    color: $primary-fg-color;
+
+    > .mx_ThemeInUseSelectors {
+        display: flex;
+        flex-direction: row;
+    }
+}
+
 .mx_AppearanceUserSettingsTab_themeSection {
     $radio-bg-color: $input-darker-bg-color;
     color: $primary-fg-color;
@@ -87,15 +97,17 @@ limitations under the License.
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-
-        margin-top: 4px;
-        margin-bottom: 30px;
+        margin-top: -10px;
 
         > .mx_RadioButton {
-            padding: $font-16px;
+            padding: $font-5px $font-10px;
             box-sizing: border-box;
             border-radius: $border-radius-10px;
-            width: 180px;
+            width: 150px;
+
+            min-height: 5rem;
+            display: flex;
+            align-items: center;
 
             background: $radio-bg-color;
             opacity: 0.4;
@@ -103,11 +115,19 @@ limitations under the License.
             flex-shrink: 1;
             flex-grow: 0;
 
-            margin-right: 15px;
+            margin-right: 10px;
             margin-top: 10px;
 
             font-weight: 600;
             color: $muted-fg-color;
+
+            .mx_RadioButton_content {
+                margin-right: 0
+            }
+
+            .mx_RadioButton_spacer {
+                display: none;
+            }
 
             > span {
                 justify-content: center;
@@ -147,6 +167,18 @@ limitations under the License.
                     }
                 }
             }
+        }
+    }
+}
+
+.mx_AppearanceUserSettingsTab_addCustomThemeSection {
+    > form {
+        display: flex;
+        flex-direction: row;
+
+        .mx_Field_input {
+            margin: 0;
+            margin-right: 10px;
         }
     }
 }

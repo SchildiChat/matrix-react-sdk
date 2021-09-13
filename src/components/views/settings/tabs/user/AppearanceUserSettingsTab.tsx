@@ -29,7 +29,6 @@ import { FontWatcher } from "../../../../../settings/watchers/FontWatcher";
 import { RecheckThemePayload } from '../../../../../dispatcher/payloads/RecheckThemePayload';
 import { Action } from '../../../../../dispatcher/actions';
 import { IValidationResult, IFieldState } from '../../../elements/Validation';
-import StyledCheckbox from '../../../elements/StyledCheckbox';
 import SettingsFlag from '../../../elements/SettingsFlag';
 import Field from '../../../elements/Field';
 import EventTilePreview from '../../../elements/EventTilePreview';
@@ -247,29 +246,28 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
 
     private renderThemeSection() {
         const themeWatcher = new ThemeWatcher();
-        let systemThemeSection: JSX.Element;
-        if (themeWatcher.isSystemThemeSupported()) {
-            systemThemeSection = <div>
-                <label>
-                    <StyledRadioButton
-                        name="theme_in_use"
-                        value={Theme.Light}
-                        checked={this.state.themeInUse === Theme.Light}
-                        onChange={this.onThemeInUseChange}
-                    >
-                        { _t("Light") }
-                    </StyledRadioButton>
-                </label>
-                <label>
-                    <StyledRadioButton
-                        name="theme_in_use"
-                        value={Theme.Dark}
-                        checked={this.state.themeInUse === Theme.Dark}
-                        onChange={this.onThemeInUseChange}
-                    >
-                        { _t("Dark") }
-                    </StyledRadioButton>
-                </label>
+        const themeInUseSection = <div className="mx_ThemeInUseSelectors">
+            <label>
+                <StyledRadioButton
+                    name="theme_in_use"
+                    value={Theme.Light}
+                    checked={this.state.themeInUse === Theme.Light}
+                    onChange={this.onThemeInUseChange}
+                >
+                    { _t("Light") }
+                </StyledRadioButton>
+            </label>
+            <label>
+                <StyledRadioButton
+                    name="theme_in_use"
+                    value={Theme.Dark}
+                    checked={this.state.themeInUse === Theme.Dark}
+                    onChange={this.onThemeInUseChange}
+                >
+                    { _t("Dark") }
+                </StyledRadioButton>
+            </label>
+            { themeWatcher.isSystemThemeSupported() ?
                 <label>
                     <StyledRadioButton
                         name="theme_in_use"
@@ -279,9 +277,9 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                     >
                         { _t("System") }
                     </StyledRadioButton>
-                </label>
-            </div>;
-        }
+                </label> : null
+            }
+        </div>;
 
         let customThemeForm: JSX.Element;
         if (SettingsStore.getValue("feature_custom_themes")) {
@@ -294,7 +292,8 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                 }
             }
             customThemeForm = (
-                <div className='mx_SettingsTab_section'>
+                <div className='mx_SettingsTab_section mx_AppearanceUserSettingsTab_addCustomThemeSection'>
+                    <span className="mx_SettingsTab_subheading">{ _t("Add custom theme") }</span>
                     <form onSubmit={this.onAddCustomTheme}>
                         <Field
                             label={_t("Custom theme URL")}
@@ -325,10 +324,13 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
         const customThemes = themes.filter(p => !builtInThemes.includes(p))
             .sort((a, b) => compare(a.name, b.name));
         const orderedThemes = [...builtInThemes, ...customThemes];
-        return (
+        return <>
+            <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_themeInUseSection">
+                <span className="mx_SettingsTab_subheading">{ _t("Theme in use") }</span>
+                { themeInUseSection }
+            </div>
             <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_themeSection">
-                <span className="mx_SettingsTab_subheading">{ _t("Theme") }</span>
-                { systemThemeSection }
+                <span className="mx_SettingsTab_subheading">{ _t("Light theme") }</span>
                 <div className="mx_ThemeSelectors">
                     <StyledRadioGroup
                         name="light_theme"
@@ -342,6 +344,9 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                         outlined
                     />
                 </div>
+            </div>
+            <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_themeSection">
+                <span className="mx_SettingsTab_subheading">{ _t("Dark theme") }</span>
                 <div className="mx_ThemeSelectors">
                     <StyledRadioGroup
                         name="dark_theme"
@@ -355,9 +360,9 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                         outlined
                     />
                 </div>
-                { customThemeForm }
             </div>
-        );
+            { customThemeForm }
+        </>;
     }
 
     private renderFontSection() {
