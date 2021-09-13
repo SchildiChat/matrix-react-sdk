@@ -85,15 +85,6 @@ export default class DeviceSettingsHandler extends SettingsHandler {
 
             if (settings["use_system_theme"]) return Theme.System;
 
-            const theme = settings["theme"];
-            if (theme) {
-                if (theme === "light") {
-                    return Theme.Light;
-                } else if (theme === "dark") {
-                    return Theme.Dark;
-                }
-            }
-
             return settings[settingName];
         }
 
