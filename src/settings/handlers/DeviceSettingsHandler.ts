@@ -21,6 +21,7 @@ import { MatrixClientPeg } from "../../MatrixClientPeg";
 import { SettingLevel } from "../SettingLevel";
 import { CallbackFn, WatchManager } from "../WatchManager";
 import { Layout } from "../Layout";
+import { Theme } from "../Theme";
 
 /**
  * Gets and sets settings at the "device" level for the current device.
@@ -78,6 +79,36 @@ export default class DeviceSettingsHandler extends SettingsHandler {
             return settings[settingName];
         }
 
+        // Special case for old use_system_theme and theme setting
+        if (settingName === "theme_in_use") {
+            const settings = this.getSettings() || {};
+
+            if (settings["use_system_theme"]) return Theme.System;
+
+            const theme = settings["theme"];
+            if (theme) {
+                if (theme === "light") {
+                    return Theme.Light;
+                } else if (theme === "dark") {
+                    return Theme.Dark;
+                }
+            }
+
+            return settings[settingName];
+        }
+
+        // Special cases for old theme setting
+        if (settingName === "light_theme" || settingName === "dark_theme") {
+            const settings = this.getSettings() || {};
+
+            const theme = settings["theme"];
+            if (theme && !settings["use_system_theme"]) {
+                return theme;
+            }
+
+            return settings[settingName];
+        }
+
         const settings = this.getSettings() || {};
         return settings[settingName];
     }
@@ -127,6 +158,46 @@ export default class DeviceSettingsHandler extends SettingsHandler {
             localStorage.setItem("mx_local_settings", JSON.stringify(settings));
 
             this.watchers.notifyUpdate(settingName, null, SettingLevel.DEVICE, newValue);
+            return Promise.resolve();
+        }
+
+        // Special case for old use_system_theme setting
+        if (settingName === "theme_in_use") {
+            const settings = this.getSettings() || {};
+
+            if (settings["theme"]) {
+                settings["dark_theme"] = settings["theme"];
+                settings["light_theme"] = settings["theme"];
+            }
+
+            delete settings["use_system_theme"];
+            delete settings["theme"];
+            settings["theme_in_use"] = newValue;
+            localStorage.setItem("mx_local_settings", JSON.stringify(settings));
+
+            this.watchers.notifyUpdate("theme_in_use", null, SettingLevel.DEVICE, settings["theme_in_use"]);
+            this.watchers.notifyUpdate("light_theme", null, SettingLevel.DEVICE, settings["light_theme"]);
+            this.watchers.notifyUpdate("dark_theme", null, SettingLevel.DEVICE, settings["dark_theme"]);
+            return Promise.resolve();
+        }
+
+        // Special cases for old theme setting
+        if (settingName === "light_theme" || settingName === "dark_theme") {
+            const settings = this.getSettings() || {};
+
+            if (settings["theme"]) {
+                if (settingName === "light_theme") settings["dark_theme"] = settings["theme"];
+                if (settingName === "dark_theme") settings["light_theme"] = settings["theme"];
+            }
+
+            delete settings["use_system_theme"];
+            delete settings["theme"];
+            settings[settingName] = newValue;
+            localStorage.setItem("mx_local_settings", JSON.stringify(settings));
+
+            this.watchers.notifyUpdate("theme_in_use", null, SettingLevel.DEVICE, settings["theme_in_use"]);
+            this.watchers.notifyUpdate("light_theme", null, SettingLevel.DEVICE, settings["light_theme"]);
+            this.watchers.notifyUpdate("dark_theme", null, SettingLevel.DEVICE, settings["dark_theme"]);
             return Promise.resolve();
         }
 
