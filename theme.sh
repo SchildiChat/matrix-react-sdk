@@ -100,7 +100,7 @@ replace_colors() {
     sed -i "s|rgba(3, 179, 129,|rgba($M_ACCENT_DEC,|gi" "$f"
     sed -i "s|\\(\$accent-color-alt: \\).*;|\\1$M_LINK;|gi" "$f"
     sed -i "s|\\(\$accent-color-darker: \\).*;|\\1$M_ACCENT_DARK;|gi" "$f"
-    sed -i "s|\\(\$roomtile-default-badge-bg-color: \\).*;|\\1$M_ACCENT;|gi" "$f"
+    sed -i "s|\\(\$roomtile-default-badge-bg-color: \\).*;|\\1\$accent-color;|gi" "$f"
     sed -i "s|\\(\$reaction-row-button-selected-bg-color: \\).*;|\\1$BG_ACCENT;|gi" "$f"
 }
 
