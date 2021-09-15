@@ -73,8 +73,20 @@ export default class DeviceSettingsHandler extends SettingsHandler {
         if (settingName === "layout") {
             const settings = this.getSettings() || {};
 
-            if (settings["useIRCLayout"]) return Layout.IRC;
-            if ("useBubbleLayout" in settings && settings["useBubbleLayout"] === false) return Layout.Group;
+            // Set the new layout setting and delete the old one so that we
+            // can delete this block of code after some time
+            let write = false;
+            if (settings["useIRCLayout"]) {
+                settings["layout"] = Layout.IRC;
+                delete settings["useIRCLayout"];
+                write = true;
+            }
+            if ("useBubbleLayout" in settings) {
+                if (settings["useBubbleLayout"] === false) settings["layout"] = Layout.Group;
+                delete settings["useBubbleLayout"];
+                write = true;
+            }
+            if (write) localStorage.setItem("mx_local_settings", JSON.stringify(settings));
 
             return settings[settingName];
         }

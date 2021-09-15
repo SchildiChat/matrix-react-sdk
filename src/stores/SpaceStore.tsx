@@ -157,9 +157,9 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
         return this._showSpaceDMBadges;
     }
 
-    public async setActiveRoomInSpace(space: Room | null): Promise<void> {
+    public setActiveRoomInSpace(space: Room | null): void {
         if (space && !space.isSpaceRoom()) return;
-        if (space !== this.activeSpace) await this.setActiveSpace(space);
+        if (space !== this.activeSpace) this.setActiveSpace(space);
 
         if (space) {
             const roomId = this.getNotificationState(space.roomId).getFirstRoomWithNotifications();
@@ -202,7 +202,7 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
      * @param contextSwitch whether to switch the user's context,
      * should not be done when the space switch is done implicitly due to another event like switching room.
      */
-    public async setActiveSpace(space: Room | null, contextSwitch = true) {
+    public setActiveSpace(space: Room | null, contextSwitch = true) {
         if (space === this.activeSpace || (space && !space.isSpaceRoom())) return;
 
         this._activeSpace = space;
@@ -305,11 +305,15 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
         }
 
         if (space) {
-            const suggestedRooms = await this.fetchSuggestedRooms(space);
-            if (this._activeSpace === space) {
-                this._suggestedRooms = suggestedRooms;
-                this.emit(SUGGESTED_ROOMS, this._suggestedRooms);
-            }
+            this.loadSuggestedRooms(space);
+        }
+    }
+
+    private async loadSuggestedRooms(space) {
+        const suggestedRooms = await this.fetchSuggestedRooms(space);
+        if (this._activeSpace === space) {
+            this._suggestedRooms = suggestedRooms;
+            this.emit(SUGGESTED_ROOMS, this._suggestedRooms);
         }
     }
 
@@ -680,6 +684,14 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
                     this.onSpaceUpdate();
                     this.emit(room.roomId);
                 }
+
+                if (room === this.activeSpace && // current space
+                    this.matrixClient.getRoom(ev.getStateKey())?.getMyMembership() !== "join" && // target not joined
+                    ev.getPrevContent().suggested !== ev.getContent().suggested // suggested flag changed
+                ) {
+                    this.loadSuggestedRooms(room);
+                }
+
                 break;
 
             case EventType.SpaceParent:
@@ -692,12 +704,14 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
                 }
                 this.emit(room.roomId);
                 break;
+        }
+    };
 
-            case EventType.RoomMember:
-                if (room.isSpaceRoom()) {
-                    this.onSpaceMembersChange(ev);
-                }
-                break;
+    // listening for m.room.member events in onRoomState above doesn't work as the Member object isn't updated by then
+    private onRoomStateMembers = (ev: MatrixEvent) => {
+        const room = this.matrixClient.getRoom(ev.getRoomId());
+        if (room?.isSpaceRoom()) {
+            this.onSpaceMembersChange(ev);
         }
     };
 
@@ -757,6 +771,7 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
             this.matrixClient.removeListener("Room.myMembership", this.onRoom);
             this.matrixClient.removeListener("Room.accountData", this.onRoomAccountData);
             this.matrixClient.removeListener("RoomState.events", this.onRoomState);
+            this.matrixClient.removeListener("RoomState.members", this.onRoomStateMembers);
             this.matrixClient.removeListener("accountData", this.onAccountData);
         }
         await this.reset();
@@ -768,6 +783,7 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
         this.matrixClient.on("Room.myMembership", this.onRoom);
         this.matrixClient.on("Room.accountData", this.onRoomAccountData);
         this.matrixClient.on("RoomState.events", this.onRoomState);
+        this.matrixClient.on("RoomState.members", this.onRoomStateMembers);
         this.matrixClient.on("accountData", this.onAccountData);
 
         this.matrixClient.getCapabilities().then(capabilities => {
@@ -780,7 +796,8 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
         // restore selected state from last session if any and still valid
         const lastSpaceId = window.localStorage.getItem(ACTIVE_SPACE_LS_KEY);
         if (lastSpaceId) {
-            this.setActiveSpace(this.matrixClient.getRoom(lastSpaceId));
+            // don't context switch here as it may break permalinks
+            this.setActiveSpace(this.matrixClient.getRoom(lastSpaceId), false);
         }
     }
 

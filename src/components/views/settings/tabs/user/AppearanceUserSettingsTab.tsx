@@ -70,7 +70,7 @@ interface IState extends IThemeState {
     layout: Layout;
     adaptiveSideBubbles: boolean;
     // User profile data for the message preview
-    userId: string;
+    userId?: string;
     displayName: string;
     avatarUrl: string;
 }
@@ -98,8 +98,8 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
             showAdvanced: true,
             layout: SettingsStore.getValue("layout"),
             adaptiveSideBubbles: SettingsStore.getValue("adaptiveSideBubbles"),
-            userId: "@erim:fink.fink",
-            displayName: "Erimayas Fink",
+            userId: null,
+            displayName: null,
             avatarUrl: null,
         };
     }

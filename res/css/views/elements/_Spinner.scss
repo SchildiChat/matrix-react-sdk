@@ -23,10 +23,10 @@ limitations under the License.
     flex: 1;
 }
 
-.mx_Spinner_icon {
-    color: $accent-color;
-}
-
 .mx_MatrixChat_middlePanel .mx_Spinner {
     height: auto;
+}
+
+.mx_Spinner_icon {
+    color: $accent-color;
 }
