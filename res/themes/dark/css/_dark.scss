@@ -20,14 +20,14 @@ $space-nav: rgba($panel-base, 0.1);
 
 // unified palette
 // try to use these colors when possible
-$header-panel-bg-color: #20252B;
+$header-panel-bg-color: #303030;
 $header-panel-border-color: #000000;
-$header-panel-text-primary-color: #B9BEC6;
-$header-panel-text-secondary-color: #c8c8cd;
-$text-secondary-color: #B9BEC6;
-$search-bg-color: #181b21;
-$search-placeholder-color: #61708b;
-$room-highlight-color: #343a46;
+$header-panel-text-primary-color: #b3b3b3;
+$header-panel-text-secondary-color: #cccccc;
+$text-secondary-color: #b3b3b3;
+$search-bg-color: #303030;
+$search-placeholder-color: #616161;
+$room-highlight-color: #424242;
 
 // typical text (dark-on-white in light skin)
 $muted-fg-color: $header-panel-text-primary-color;
@@ -49,7 +49,7 @@ $info-plinth-fg-color: #888;
 
 $preview-bar-bg-color: $header-panel-bg-color;
 
-$groupFilterPanel-bg-color: rgba(38, 39, 43, 0.82);
+$groupFilterPanel-bg-color: rgba(48, 48, 48, 0.82);
 $inverted-bg-color: $background;
 
 // used by AddressSelector
@@ -114,7 +114,7 @@ $settings-subsection-fg-color: $text-secondary-color;
 
 $topleftmenu-color: $primary-content;
 $roomheader-color: $primary-content;
-$roomheader-addroom-bg-color: rgba(92, 100, 112, 0.3);
+$roomheader-addroom-bg-color: rgba(97, 97, 97, 0.3);
 $roomheader-addroom-fg-color: $primary-content;
 $groupFilterPanel-button-color: $header-panel-text-primary-color;
 $groupheader-button-color: $header-panel-text-primary-color;
@@ -128,10 +128,10 @@ $composer-e2e-icon-color: $header-panel-text-primary-color;
 
 // ********************
 
-$theme-button-bg-color: #e3e8f0;
+$theme-button-bg-color: #e0e0e0;
 
-$roomlist-button-bg-color: rgba(141, 151, 165, 0.2); // Buttons include the filter box, explore button, and sublist buttons
-$roomlist-bg-color: rgba(33, 38, 44, 0.90);
+$roomlist-button-bg-color: rgba(144, 144, 144, 0.2); // Buttons include the filter box, explore button, and sublist buttons
+$roomlist-bg-color: rgba(48, 48, 48, 0.90);
 $roomlist-header-color: $tertiary-content;
 $roomsublist-divider-color: $primary-content;
 $roomsublist-skeleton-ui-bg: linear-gradient(180deg, #3e444c 0%, #3e444c00 100%);
@@ -140,7 +140,7 @@ $groupFilterPanel-divider-color: $roomlist-header-color;
 
 $roomtile-preview-color: $secondary-content;
 $roomtile-default-badge-bg-color: #8BC34A;
-$roomtile-selected-bg-color: rgba(141, 151, 165, 0.2);
+$roomtile-selected-bg-color: rgba(144, 144, 144, 0.2);
 
 // ********************
 
