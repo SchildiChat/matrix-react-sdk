@@ -144,6 +144,7 @@ export default class PreferencesUserSettingsTab extends React.Component<IProps, 
         "Spaces.allRoomsInHome",
         "Spaces.showSpaceMemberDMs",
         "Spaces.showSpaceDMBadges",
+        "Spaces.returnToPreviouslyOpenedRoom",
     ];
 
     static COMMUNITIES_SETTINGS = [
