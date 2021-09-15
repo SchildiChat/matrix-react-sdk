@@ -40,7 +40,7 @@ import { arrayFastClone } from "../../../utils/arrays";
 import { ElementWidget } from "../../../stores/widgets/StopGapWidget";
 import { replaceableComponent } from "../../../utils/replaceableComponent";
 import { ELEMENT_CLIENT_ID } from "../../../identifiers";
-import SettingsStore from "../../../settings/SettingsStore";
+import ThemeWatcher from '../../../settings/watchers/ThemeWatcher';
 
 interface IProps {
     widgetDefinition: IModalWidgetOpenRequestData;
@@ -133,7 +133,7 @@ export default class ModalWidgetDialog extends React.PureComponent<IProps, IStat
             userDisplayName: OwnProfileStore.instance.displayName,
             userHttpAvatarUrl: OwnProfileStore.instance.getHttpAvatarUrl(),
             clientId: ELEMENT_CLIENT_ID,
-            clientTheme: SettingsStore.getValue("theme"),
+            clientTheme: ThemeWatcher.getCurrentTheme(),
             clientLanguage: getUserLanguage(),
         });
 

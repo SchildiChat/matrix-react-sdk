@@ -156,8 +156,7 @@ export function getCustomTheme(themeName) {
  */
 export async function setTheme(theme) {
     if (!theme) {
-        const themeWatcher = new ThemeWatcher();
-        theme = themeWatcher.getEffectiveTheme();
+        theme = ThemeWatcher.getCurrentTheme();
     }
     clearCustomTheme();
     let stylesheetName = theme;

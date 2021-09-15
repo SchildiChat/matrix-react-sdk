@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 import url from 'url';
-import SettingsStore from "./settings/SettingsStore";
 import { Service, startTermsFlow, TermsInteractionCallback, TermsNotSignedError } from './Terms';
 import { MatrixClientPeg } from "./MatrixClientPeg";
 import request from "browser-request";
@@ -24,6 +23,7 @@ import SdkConfig from "./SdkConfig";
 import { WidgetType } from "./widgets/WidgetType";
 import { SERVICE_TYPES } from "matrix-js-sdk/src/service-types";
 import { Room } from "matrix-js-sdk/src/models/room";
+import ThemeWatcher from './settings/watchers/ThemeWatcher';
 
 // The version of the integration manager API we're intending to work with
 const imApiVersion = "1.1";
@@ -276,7 +276,7 @@ export default class ScalarAuthClient {
         url += "?scalar_token=" + encodeURIComponent(this.scalarToken);
         url += "&room_id=" + encodeURIComponent(roomId);
         url += "&room_name=" + encodeURIComponent(roomName);
-        url += "&theme=" + encodeURIComponent(SettingsStore.getValue("theme"));
+        url += "&theme=" + encodeURIComponent(ThemeWatcher.getCurrentTheme());
         if (id) {
             url += '&integ_id=' + encodeURIComponent(id);
         }

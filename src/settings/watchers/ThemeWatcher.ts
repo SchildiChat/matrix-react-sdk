@@ -19,7 +19,7 @@ import SettingsStore from '../SettingsStore';
 import dis from '../../dispatcher/dispatcher';
 import { Action } from '../../dispatcher/actions';
 import ThemeController from "../controllers/ThemeController";
-import { setTheme } from "../../theme";
+import { setTheme, getCustomTheme } from "../../theme";
 import { ActionPayload } from '../../dispatcher/payloads';
 import { Theme } from '../Theme';
 
@@ -32,7 +32,7 @@ export default class ThemeWatcher {
     private preferDark: MediaQueryList;
     private preferLight: MediaQueryList;
 
-    private currentTheme: string;
+    private static currentTheme: string;
 
     constructor() {
         this.lightThemeWatchRef = null;
@@ -45,7 +45,7 @@ export default class ThemeWatcher {
         this.preferDark = (<any>global).matchMedia("(prefers-color-scheme: dark)");
         this.preferLight = (<any>global).matchMedia("(prefers-color-scheme: light)");
 
-        this.currentTheme = this.getEffectiveTheme();
+        ThemeWatcher.currentTheme = this.getEffectiveTheme();
     }
 
     public start() {
@@ -84,10 +84,10 @@ export default class ThemeWatcher {
     // XXX: forceTheme param added here as local echo appears to be unreliable
     // https://github.com/vector-im/element-web/issues/11443
     public recheck(forceTheme?: string) {
-        const oldTheme = this.currentTheme;
-        this.currentTheme = forceTheme === undefined ? this.getEffectiveTheme() : forceTheme;
-        if (oldTheme !== this.currentTheme) {
-            setTheme(this.currentTheme);
+        const oldTheme = ThemeWatcher.currentTheme;
+        ThemeWatcher.currentTheme = forceTheme === undefined ? this.getEffectiveTheme() : forceTheme;
+        if (oldTheme !== ThemeWatcher.currentTheme) {
+            setTheme(ThemeWatcher.currentTheme);
         }
     }
 
@@ -112,5 +112,31 @@ export default class ThemeWatcher {
 
     public isSystemThemeSupported() {
         return this.preferDark.matches || this.preferLight.matches;
+    }
+
+    public static getCurrentTheme(): string {
+        return ThemeWatcher.currentTheme;
+    }
+
+    /**
+     * For widgets/stickers/... who only support light/dark
+     * @returns "light" or "dark"
+    */
+    public static getCurrentThemeSimplified(): string {
+        let theme = ThemeWatcher.currentTheme;
+        if (theme.startsWith("custom-")) {
+            const customTheme = getCustomTheme(theme.substr(7));
+            theme = customTheme.is_dark ? "dark" : "light";
+        }
+
+        // only allow light/dark through, defaulting to dark as that was previously the only state
+        // accounts for legacy-light/legacy-dark themes too
+        if (theme.includes("light")) {
+            theme = "light";
+        } else {
+            theme = "dark";
+        }
+
+        return theme;
     }
 }

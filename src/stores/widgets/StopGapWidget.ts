@@ -110,20 +110,7 @@ export class ElementWidget extends Widget {
             domain = "jitsi.riot.im";
         }
 
-        let theme = new ThemeWatcher().getEffectiveTheme();
-        if (theme.startsWith("custom-")) {
-            const customTheme = getCustomTheme(theme.substr(7));
-            // Jitsi only understands light/dark
-            theme = customTheme.is_dark ? "dark" : "light";
-        }
-
-        // only allow light/dark through, defaulting to dark as that was previously the only state
-        // accounts for legacy-light/legacy-dark themes too
-        if (theme.includes("light")) {
-            theme = "light";
-        } else {
-            theme = "dark";
-        }
+        const theme = ThemeWatcher.getCurrentThemeSimplified();
 
         return {
             ...super.rawData,
@@ -201,7 +188,7 @@ export class StopGapWidget extends EventEmitter {
             userDisplayName: OwnProfileStore.instance.displayName,
             userHttpAvatarUrl: OwnProfileStore.instance.getHttpAvatarUrl(),
             clientId: ELEMENT_CLIENT_ID,
-            clientTheme: SettingsStore.getValue("theme"),
+            clientTheme: ThemeWatcher.getCurrentTheme(),
             clientLanguage: getUserLanguage(),
         };
         const templated = this.mockWidget.getCompleteUrl(Object.assign(defaults, fromCustomisation), opts?.asPopout);
