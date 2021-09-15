@@ -48,6 +48,7 @@ import SpaceStore, { ISuggestedRoom, SUGGESTED_ROOMS } from "../../../stores/Spa
 import { showAddExistingRooms, showCreateNewRoom, showSpaceInvite } from "../../../utils/space";
 import { replaceableComponent } from "../../../utils/replaceableComponent";
 import RoomAvatar from "../avatars/RoomAvatar";
+import SettingsStore from "../../../settings/SettingsStore";
 
 interface IProps {
     onKeyDown: (ev: React.KeyboardEvent) => void;
@@ -128,10 +129,10 @@ const TAG_AESTHETICS: ITagAestheticsMap = {
         addDirectRoomLabel: _td("Start chat"),
         addGroupRoomLabel: _td("Create new room"),
         onAddDirectRoom: (dispatcher?: Dispatcher<ActionPayload>) => {
-            (dispatcher || defaultDispatcher).dispatch({action: 'view_create_chat'})
+            (dispatcher || defaultDispatcher).dispatch({ action: 'view_create_chat' });
         },
         onAddGroupRoom: (dispatcher?: Dispatcher<ActionPayload>) => {
-            (dispatcher || defaultDispatcher).dispatch({action: 'view_create_room'})
+            (dispatcher || defaultDispatcher).dispatch({ action: 'view_create_room' });
         },
     },
     [DefaultTagID.DM]: {

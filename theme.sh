@@ -96,6 +96,7 @@ replace_colors() {
     sed -i "s|#5c56f5|$M_ACCENT|gi" "$f"
     sed -i "s|#74d12c|$M_ACCENT|gi" "$f"
     sed -i "s|#76CFA6|$M_ACCENT|gi" "$f"
+    sed -i "s|#03b381|$M_ACCENT|gi" "$f"
     sed -i "s|rgba(3, 179, 129,|rgba($M_ACCENT_DEC,|gi" "$f"
     sed -i "s|\\(\$accent-color-alt: \\).*;|\\1$M_LINK;|gi" "$f"
     sed -i "s|\\(\$accent-color-darker: \\).*;|\\1$M_ACCENT_DARK;|gi" "$f"
