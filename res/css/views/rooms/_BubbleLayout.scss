@@ -543,8 +543,10 @@ $left-gutter: 54px;
             .sc_PlaceholderTimestamp {
                 display: inline-flex;
                 margin-inline-start: .7em;
-                opacity: 0;
-                line-height: inherit; // don't add additional height
+
+                // don't add additional height
+                height: 0;
+                overflow-y: hidden;
 
                 .mx_MessageTimestamp {
                     visibility: visible !important;
