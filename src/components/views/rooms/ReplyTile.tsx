@@ -28,10 +28,12 @@ import { replaceableComponent } from '../../../utils/replaceableComponent';
 import { getEventDisplayInfo, isVoiceMessage } from '../../../utils/EventUtils';
 import MFileBody from "../messages/MFileBody";
 import MVoiceMessageBody from "../messages/MVoiceMessageBody";
+import { UserNameColorMode } from '../../../settings/UserNameColorMode';
 
 interface IProps {
     mxEvent: MatrixEvent;
     permalinkCreator?: RoomPermalinkCreator;
+    userNameColorMode?: UserNameColorMode;
     highlights?: string[];
     highlightLink?: string;
     onHeightChanged?(): void;
@@ -132,6 +134,7 @@ export default class ReplyTile extends React.PureComponent<IProps> {
             sender = <SenderProfile
                 mxEvent={mxEvent}
                 enableFlair={false}
+                userNameColorMode={this.props.userNameColorMode}
             />;
         }
 
@@ -156,6 +159,7 @@ export default class ReplyTile extends React.PureComponent<IProps> {
                         highlights={this.props.highlights}
                         highlightLink={this.props.highlightLink}
                         onHeightChanged={this.props.onHeightChanged}
+                        userNameColorMode={this.props.userNameColorMode}
                         showUrlPreview={false}
                         overrideBodyTypes={msgtypeOverrides}
                         overrideEventTypes={evOverrides}

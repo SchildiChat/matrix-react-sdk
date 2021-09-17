@@ -48,6 +48,7 @@ import Spinner from "../views/elements/Spinner";
 import EditorStateTransfer from '../../utils/EditorStateTransfer';
 import ErrorDialog from '../views/dialogs/ErrorDialog';
 import { debounce } from 'lodash';
+import { UserNameColorMode } from '../../settings/UserNameColorMode';
 
 const PAGINATE_SIZE = 20;
 const INITIAL_SIZE = 20;
@@ -112,6 +113,9 @@ interface IProps {
 
     // whether to use single side bubbles
     singleSideBubbles?: boolean;
+
+    // Specifies which userNameColorMode to use.
+    userNameColorMode?: UserNameColorMode;
 
     // whether to always show timestamps for an event
     alwaysShowTimestamps?: boolean;
@@ -1533,6 +1537,7 @@ class TimelinePanel extends React.Component<IProps, IState> {
                 showReactions={this.props.showReactions}
                 layout={this.props.layout}
                 singleSideBubbles={this.props.singleSideBubbles}
+                userNameColorMode={this.props.userNameColorMode}
                 enableFlair={SettingsStore.getValue(UIFeature.Flair)}
                 hideThreadedMessages={this.props.hideThreadedMessages}
             />

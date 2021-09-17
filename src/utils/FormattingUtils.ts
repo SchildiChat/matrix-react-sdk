@@ -15,7 +15,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import { Room } from 'matrix-js-sdk/src';
 import { _t } from '../languageHandler';
+import { UserNameColorMode } from '../settings/UserNameColorMode';
+import DMRoomMap from './DMRoomMap';
 import { jsxJoin } from './ReactUtils';
 
 /**
@@ -88,9 +91,23 @@ export function hashCode(str: string): number {
     return Math.abs(hash);
 }
 
-export function getUserNameColorClass(userId: string): string {
-    const colorNumber = (hashCode(userId) % 8) + 1;
-    return `mx_Username_color${colorNumber}`;
+export function getUserNameColorClass(mode?: UserNameColorMode, userId?: string, room?: Room): string {
+    if (mode === UserNameColorMode.MXID) {
+        const colorNumber = (hashCode(userId) % 8) + 1;
+        return `mx_Username_color${colorNumber}`;
+    } else if (mode === UserNameColorMode.PowerLevel) {
+        const user = room?.getMember(userId);
+        const powerLevel: number = user?.powerLevel;
+
+        if (powerLevel >= 100) return "mx_Username_color_pl100";
+        if (powerLevel >= 95) return "mx_Username_color_pl95";
+        if (powerLevel >= 51) return "mx_Username_color_pl51";
+        if (powerLevel >= 50) return "mx_Username_color_pl50";
+        if (powerLevel >= 1) return "mx_Username_color_pl1";
+        return "mx_Username_color_pl0";
+    } else {
+        return "mx_Username_color_accent";
+    }
 }
 
 /**

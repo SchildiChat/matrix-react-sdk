@@ -30,11 +30,13 @@ import MatrixClientContext from "../../../contexts/MatrixClientContext";
 import { getUserNameColorClass } from "../../../utils/FormattingUtils";
 import AccessibleTooltipButton from "../elements/AccessibleTooltipButton";
 import { TileShape } from "./EventTile";
+import { UserNameColorMode } from "../../../settings/UserNameColorMode";
 
 interface IProps {
     room: Room;
     event: MatrixEvent;
     onUnpinClicked?(): void;
+    userNameColorMode?: UserNameColorMode;
 }
 
 const AVATAR_SIZE = 24;
@@ -76,7 +78,7 @@ export default class PinnedEventTile extends React.Component<IProps> {
                 fallbackUserId={sender}
             />
 
-            <span className={"mx_PinnedEventTile_sender " + getUserNameColorClass(sender)}>
+            <span className={"mx_PinnedEventTile_sender " + getUserNameColorClass(this.props.userNameColorMode, sender, this.props.room)}>
                 { senderProfile?.name || sender }
             </span>
 

@@ -507,6 +507,8 @@ input[type=text]:focus, input[type=password]:focus, textarea:focus {
 
 // username colors
 // used by SenderProfile & RoomPreviewBar
+
+// per MXID
 .mx_Username_color1 {
     color: $username-variant1-color;
 }
@@ -537,6 +539,36 @@ input[type=text]:focus, input[type=password]:focus, textarea:focus {
 
 .mx_Username_color8 {
     color: $username-variant8-color;
+}
+
+// per power level
+.mx_Username_color_pl100 {
+    color: $username-pl100-color;
+}
+
+.mx_Username_color_pl95 {
+    color: $username-pl95-color;
+}
+
+.mx_Username_color_pl51 {
+    color: $username-pl51-color;
+}
+
+.mx_Username_color_pl50 {
+    color: $username-pl50-color;
+}
+
+.mx_Username_color_pl1 {
+    color: $username-pl1-color;
+}
+
+.mx_Username_color_pl0 {
+    color: $username-pl0-color;
+}
+
+// uniform
+.mx_Username_color_accent {
+    color: $accent-color;
 }
 
 @define-mixin mx_Tooltip_dark {

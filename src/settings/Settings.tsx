@@ -43,6 +43,7 @@ import IncompatibleController from "./controllers/IncompatibleController";
 import SdkConfig from "../SdkConfig";
 import PseudonymousAnalyticsController from './controllers/PseudonymousAnalyticsController';
 import { Theme } from './Theme';
+import { UserNameColorMode } from './UserNameColorMode';
 
 // These are just a bunch of helper arrays to avoid copy/pasting a bunch of times
 const LEVELS_ROOM_SETTINGS = [
@@ -501,6 +502,18 @@ export const SETTINGS: {[setting: string]: ISetting} = {
     "custom_themes": {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
         default: [],
+    },
+    "userNameColorModeDM": {
+        supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS_WITH_CONFIG,
+        default: UserNameColorMode.Uniform,
+    },
+    "userNameColorModeGroup": {
+        supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS_WITH_CONFIG,
+        default: UserNameColorMode.Uniform,
+    },
+    "userNameColorModePublic": {
+        supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS_WITH_CONFIG,
+        default: UserNameColorMode.Uniform,
     },
     "useSystemFont": {
         supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS,

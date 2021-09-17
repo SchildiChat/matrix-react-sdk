@@ -37,11 +37,13 @@ import TimelinePanel from "./TimelinePanel";
 import Spinner from "../views/elements/Spinner";
 import { TileShape } from '../views/rooms/EventTile';
 import { Layout } from "../../settings/Layout";
+import { UserNameColorMode } from '../../settings/UserNameColorMode';
 
 interface IProps {
     roomId: string;
     onClose: () => void;
     resizeNotifier: ResizeNotifier;
+    userNameColorMode?: UserNameColorMode;
 }
 
 interface IState {
@@ -269,6 +271,7 @@ class FilePanel extends React.Component<IProps, IState> {
                         resizeNotifier={this.props.resizeNotifier}
                         empty={emptyState}
                         layout={Layout.Group}
+                        userNameColorMode={this.props.userNameColorMode}
                     />
                 </BaseCard>
             );

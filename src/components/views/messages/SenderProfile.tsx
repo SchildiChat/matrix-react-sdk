@@ -23,11 +23,13 @@ import FlairStore from '../../../stores/FlairStore';
 import { getUserNameColorClass } from '../../../utils/FormattingUtils';
 import MatrixClientContext from "../../../contexts/MatrixClientContext";
 import { replaceableComponent } from "../../../utils/replaceableComponent";
+import { UserNameColorMode } from '../../../settings/UserNameColorMode';
 
 interface IProps {
     mxEvent: MatrixEvent;
     onClick?(): void;
     enableFlair: boolean;
+    userNameColorMode?: UserNameColorMode;
 }
 
 interface IState {
@@ -101,7 +103,8 @@ export default class SenderProfile extends React.Component<IProps, IState> {
 
     render() {
         const { mxEvent } = this.props;
-        const colorClass = getUserNameColorClass(mxEvent.getSender());
+        const colorClass = getUserNameColorClass(this.props.userNameColorMode,
+            mxEvent.getSender(), this.context.getRoom(this.props.mxEvent.getRoomId()));
         const { msgtype } = mxEvent.getContent();
 
         const disambiguate = mxEvent.sender?.disambiguate;

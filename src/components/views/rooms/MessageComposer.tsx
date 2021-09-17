@@ -46,6 +46,7 @@ import { Action } from "../../../dispatcher/actions";
 import EditorModel from "../../../editor/model";
 import EmojiPicker from '../emojipicker/EmojiPicker';
 import MemberStatusMessageAvatar from "../avatars/MemberStatusMessageAvatar";
+import { UserNameColorMode } from '../../../settings/UserNameColorMode';
 
 interface IComposerAvatarProps {
     me: object;
@@ -195,6 +196,7 @@ interface IProps {
     showReplyPreview?: boolean;
     e2eStatus?: E2EStatus;
     layout: Layout;
+    userNameColorMode?: UserNameColorMode;
     compact?: boolean;
 }
 
@@ -486,7 +488,10 @@ export default class MessageComposer extends React.Component<IProps, IState> {
                 { recordingTooltip }
                 <div className="mx_MessageComposer_wrapper">
                     { this.props.showReplyPreview && (
-                        <ReplyPreview permalinkCreator={this.props.permalinkCreator} />
+                        <ReplyPreview
+                            permalinkCreator={this.props.permalinkCreator}
+                            userNameColorMode={this.props.userNameColorMode}
+                        />
                     ) }
                     <div className="mx_MessageComposer_row">
                         { controls }

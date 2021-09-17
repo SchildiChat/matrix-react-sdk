@@ -53,6 +53,7 @@ import PinnedMessagesCard from "../views/right_panel/PinnedMessagesCard";
 import { throttle } from 'lodash';
 import SpaceStore from "../../stores/SpaceStore";
 import { RoomPermalinkCreator } from '../../utils/permalinks/Permalinks';
+import { UserNameColorMode } from '../../settings/UserNameColorMode';
 
 interface IProps {
     room?: Room; // if showing panels for a given room, this is set
@@ -60,6 +61,7 @@ interface IProps {
     user?: User; // used if we know the user ahead of opening the panel
     resizeNotifier: ResizeNotifier;
     permalinkCreator?: RoomPermalinkCreator;
+    userNameColorMode?: UserNameColorMode;
 }
 
 interface IState {
@@ -305,12 +307,21 @@ export default class RightPanel extends React.Component<IProps, IState> {
 
             case RightPanelPhases.PinnedMessages:
                 if (SettingsStore.getValue("feature_pinning")) {
-                    panel = <PinnedMessagesCard room={this.props.room} onClose={this.onClose} />;
+                    panel = <PinnedMessagesCard
+                        room={this.props.room}
+                        onClose={this.onClose}
+                        userNameColorMode={this.props.userNameColorMode}
+                    />;
                 }
                 break;
 
             case RightPanelPhases.FilePanel:
-                panel = <FilePanel roomId={roomId} resizeNotifier={this.props.resizeNotifier} onClose={this.onClose} />;
+                panel = <FilePanel
+                    roomId={roomId}
+                    resizeNotifier={this.props.resizeNotifier}
+                    onClose={this.onClose}
+                    userNameColorMode={this.props.userNameColorMode}
+                />;
                 break;
 
             case RightPanelPhases.ThreadView:

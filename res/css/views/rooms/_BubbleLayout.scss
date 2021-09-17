@@ -139,14 +139,6 @@ $left-gutter: 54px;
         text-align: left;
     }
 
-    .mx_SenderProfile_displayName {
-        color: $accent-color !important;
-    }
-
-    .mx_ReplyThread {
-        border-left-color: $accent-color !important;
-    }
-
     .mx_EventTile_selected > div > a > .mx_MessageTimestamp {
         left: 0px;
         width: 46px;

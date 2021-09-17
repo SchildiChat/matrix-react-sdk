@@ -23,6 +23,7 @@ import { replaceableComponent } from "../../../utils/replaceableComponent";
 import ReplyTile from './ReplyTile';
 import { MatrixEvent } from 'matrix-js-sdk/src/models/event';
 import { EventSubscription } from 'fbemitter';
+import { UserNameColorMode } from '../../../settings/UserNameColorMode';
 
 function cancelQuoting() {
     dis.dispatch({
@@ -33,6 +34,7 @@ function cancelQuoting() {
 
 interface IProps {
     permalinkCreator: RoomPermalinkCreator;
+    userNameColorMode?: UserNameColorMode;
 }
 
 interface IState {
@@ -94,6 +96,7 @@ export default class ReplyPreview extends React.Component<IProps, IState> {
                     <ReplyTile
                         mxEvent={this.state.event}
                         permalinkCreator={this.props.permalinkCreator}
+                        userNameColorMode={this.props.userNameColorMode}
                     />
                 </div>
             </div>

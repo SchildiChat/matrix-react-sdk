@@ -34,6 +34,7 @@ import Spinner from './Spinner';
 import ReplyTile from "../rooms/ReplyTile";
 import Pill from './Pill';
 import { Room } from 'matrix-js-sdk/src/models/room';
+import { UserNameColorMode } from '../../../settings/UserNameColorMode';
 
 interface IProps {
     // the latest event in this chain of replies
@@ -43,6 +44,8 @@ interface IProps {
     permalinkCreator: RoomPermalinkCreator;
     // Specifies which layout to use.
     layout?: Layout;
+    // Specifies which userNameColorMode to use.
+    userNameColorMode?: UserNameColorMode;
     // Whether to always show a timestamp
     alwaysShowTimestamps?: boolean;
 }
@@ -237,6 +240,7 @@ export default class ReplyThread extends React.Component<IProps, IState> {
         permalinkCreator: RoomPermalinkCreator,
         ref: React.RefObject<ReplyThread>,
         layout: Layout,
+        userNameColorMode: UserNameColorMode,
         alwaysShowTimestamps: boolean,
     ): JSX.Element {
         if (!ReplyThread.getParentEventId(parentEv)) return null;
@@ -246,6 +250,7 @@ export default class ReplyThread extends React.Component<IProps, IState> {
             ref={ref}
             permalinkCreator={permalinkCreator}
             layout={layout}
+            userNameColorMode={userNameColorMode}
             alwaysShowTimestamps={alwaysShowTimestamps}
         />;
     }
@@ -332,7 +337,9 @@ export default class ReplyThread extends React.Component<IProps, IState> {
     };
 
     private getReplyThreadColorClass(ev: MatrixEvent): string {
-        return getUserNameColorClass(ev.getSender()).replace("Username", "ReplyThread");
+        return getUserNameColorClass(this.props.userNameColorMode,
+            ev.getSender(), this.context.getRoom(ev.getRoomId()))
+            .replace("Username", "ReplyThread");
     }
 
     render() {
@@ -373,6 +380,7 @@ export default class ReplyThread extends React.Component<IProps, IState> {
                     mxEvent={ev}
                     onHeightChanged={this.props.onHeightChanged}
                     permalinkCreator={this.props.permalinkCreator}
+                    userNameColorMode={this.props.userNameColorMode}
                 />
             </blockquote>;
         });

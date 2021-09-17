@@ -89,6 +89,53 @@ limitations under the License.
     float: right;
 }
 
+.mx_SettingsTab_settingsTable {
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 10px 0;
+    margin: 12px -10px 0 -10px;
+
+    .mx_SettingsTab_subheading {
+        margin: 0;
+    }
+
+    tr > th {
+        font-weight: $font-semi-bold;
+    }
+
+    tr > th:first-child, tr > td:first-child {
+        text-align: left;
+    }
+
+    tr > th:nth-child(n + 2) {
+        color: $secondary-content;
+        font-size: $font-12px;
+        vertical-align: middle;
+        width: 66px;
+    }
+
+    tr > td:nth-child(n + 2) {
+        text-align: center;
+    }
+
+    tr > td {
+        padding-top: 8px;
+    }
+
+    // Override StyledRadioButton default styles
+    .mx_RadioButton {
+        justify-content: center;
+
+        .mx_RadioButton_content {
+            display: none;
+        }
+
+        .mx_RadioButton_spacer {
+            display: none;
+        }
+    }
+}
+
 .mx_SettingsTab_linkBtn {
     cursor: pointer;
     color: $accent-color;

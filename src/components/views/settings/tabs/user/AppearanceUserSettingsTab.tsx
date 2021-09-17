@@ -41,6 +41,7 @@ import { compare } from "../../../../../utils/strings";
 import LayoutSwitcher from "../../LayoutSwitcher";
 import StyledRadioButton from '../../../elements/StyledRadioButton';
 import { Theme } from '../../../../../settings/Theme';
+import { UserNameColorMode } from '../../../../../settings/UserNameColorMode';
 
 interface IProps {
 }
@@ -69,6 +70,9 @@ interface IState extends IThemeState {
     showAdvanced: boolean;
     layout: Layout;
     adaptiveSideBubbles: boolean;
+    userNameColorModeDM: UserNameColorMode;
+    userNameColorModeGroup: UserNameColorMode;
+    userNameColorModePublic: UserNameColorMode;
     // User profile data for the message preview
     userId?: string;
     displayName: string;
@@ -98,6 +102,9 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
             showAdvanced: true,
             layout: SettingsStore.getValue("layout"),
             adaptiveSideBubbles: SettingsStore.getValue("adaptiveSideBubbles"),
+            userNameColorModeDM: SettingsStore.getValue("userNameColorModeDM"),
+            userNameColorModeGroup: SettingsStore.getValue("userNameColorModeGroup"),
+            userNameColorModePublic: SettingsStore.getValue("userNameColorModePublic"),
             userId: null,
             displayName: null,
             avatarUrl: null,
@@ -242,6 +249,15 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
             this.setState({ layout: Layout.Group });
             SettingsStore.setValue("layout", null, SettingLevel.DEVICE, Layout.Group);
         }
+    };
+
+    private onUserNameColorModeChange = (setting: string, e: React.ChangeEvent<HTMLInputElement>): void => {
+        const mode = e.target.value as UserNameColorMode;
+        this.setState((prevState) => ({
+            ...prevState,
+            [setting]: mode,
+        }));
+        SettingsStore.setValue(setting, null, SettingLevel.DEVICE, mode);
     };
 
     private renderThemeSection() {
@@ -411,6 +427,45 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
         </div>;
     }
 
+    private renderUserNameColorModeSection() {
+        const makeRadio = (setting: string, mode: UserNameColorMode) => (
+            console.log("asdf"+this.state[setting]),
+            <StyledRadioButton
+                name={setting}
+                value={mode}
+                checked={this.state[setting] === mode}
+                onChange={(e) => this.onUserNameColorModeChange(setting, e)}
+            />
+        );
+
+        const makeRow = (description: string, setting: string) => (<tr>
+            <td>{ description }</td>
+            <td>{ makeRadio(setting, UserNameColorMode.Uniform) }</td>
+            <td>{ makeRadio(setting, UserNameColorMode.PowerLevel) }</td>
+            <td>{ makeRadio(setting, UserNameColorMode.MXID) }</td>
+        </tr>);
+
+        return <>
+            <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_userNameColorModeSection">
+                <table className='mx_SettingsTab_settingsTable'>
+                    <thead>
+                        <tr>
+                            <th><span className="mx_SettingsTab_subheading">{ _t("User name color mode") }</span></th>
+                            <th>{ _t("Uniform") }</th>
+                            <th>{ _t("PowerLevel") }</th>
+                            <th>{ _t("MXID") }</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        { makeRow(_t("In direct chats"), "userNameColorModeDM") }
+                        { makeRow(_t("In group chats"), "userNameColorModeGroup") }
+                        { makeRow(_t("In public rooms"), "userNameColorModePublic") }
+                    </tbody>
+                </table>
+            </div>
+        </>;
+    }
+
     private renderAdvancedSection() {
         if (!SettingsStore.getValue(UIFeature.AdvancedSettings)) return null;
 
@@ -516,6 +571,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                 { this.renderThemeSection() }
                 { layoutSection }
                 { this.renderFontSection() }
+                { this.renderUserNameColorModeSection() }
                 { this.renderAdvancedSection() }
             </div>
         );

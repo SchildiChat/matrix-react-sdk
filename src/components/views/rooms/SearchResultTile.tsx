@@ -25,6 +25,7 @@ import { replaceableComponent } from "../../../utils/replaceableComponent";
 import DateSeparator from "../messages/DateSeparator";
 import EventTile, { haveTileForEvent } from "./EventTile";
 import { Layout } from "../../../settings/Layout";
+import { UserNameColorMode } from "../../../settings/UserNameColorMode";
 
 interface IProps {
     // a matrix-js-sdk SearchResult containing the details of this result
@@ -37,6 +38,7 @@ interface IProps {
     permalinkCreator?: RoomPermalinkCreator;
     layout?: Layout;
     singleSideBubbles?: boolean;
+    userNameColorMode?: UserNameColorMode;
 }
 
 @replaceableComponent("views.rooms.SearchResultTile")
@@ -69,6 +71,7 @@ export default class SearchResultTile extends React.Component<IProps> {
                         mxEvent={ev}
                         layout={this.props.layout}
                         singleSideBubbles={this.props.singleSideBubbles}
+                        userNameColorMode={this.props.userNameColorMode}
                         contextual={contextual}
                         highlights={highlights}
                         permalinkCreator={this.props.permalinkCreator}

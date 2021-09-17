@@ -28,10 +28,12 @@ import PinningUtils from "../../../utils/PinningUtils";
 import { useAsyncMemo } from "../../../hooks/useAsyncMemo";
 import PinnedEventTile from "../rooms/PinnedEventTile";
 import { useRoomState } from "../../../hooks/useRoomState";
+import { UserNameColorMode } from "../../../settings/UserNameColorMode";
 
 interface IProps {
     room: Room;
     onClose(): void;
+    userNameColorMode?: UserNameColorMode;
 }
 
 export const usePinnedEvents = (room: Room): string[] => {
@@ -75,7 +77,7 @@ export const useReadPinnedEvents = (room: Room): Set<string> => {
     return readPinnedEvents;
 };
 
-const PinnedMessagesCard = ({ room, onClose }: IProps) => {
+const PinnedMessagesCard = ({ room, onClose, userNameColorMode }: IProps) => {
     const cli = useContext(MatrixClientContext);
     const canUnpin = useRoomState(room, state => state.mayClientSendStateEvent(EventType.RoomPinnedEvents, cli));
     const pinnedEventIds = usePinnedEvents(room);
@@ -137,7 +139,13 @@ const PinnedMessagesCard = ({ room, onClose }: IProps) => {
 
         // show them in reverse, with latest pinned at the top
         content = pinnedEvents.filter(Boolean).reverse().map(ev => (
-            <PinnedEventTile key={ev.getId()} room={room} event={ev} onUnpinClicked={() => onUnpinClicked(ev)} />
+            <PinnedEventTile
+                key={ev.getId()}
+                room={room}
+                event={ev}
+                onUnpinClicked={() => onUnpinClicked(ev)}
+                userNameColorMode={userNameColorMode}
+            />
         ));
     } else {
         content = <div className="mx_PinnedMessagesCard_empty">

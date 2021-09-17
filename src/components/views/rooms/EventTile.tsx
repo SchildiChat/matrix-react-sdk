@@ -58,6 +58,7 @@ import ReactionsRow from '../messages/ReactionsRow';
 import { getEventDisplayInfo } from '../../../utils/EventUtils';
 import { RightPanelPhases } from "../../../stores/RightPanelStorePhases";
 import SettingsStore from "../../../settings/SettingsStore";
+import { UserNameColorMode } from '../../../settings/UserNameColorMode';
 
 const eventTileTypes = {
     [EventType.RoomMessage]: 'messages.MessageEvent',
@@ -277,6 +278,9 @@ interface IProps {
 
     // whether to use single side bubbles
     singleSideBubbles?: boolean;
+
+    // Specifies which userNameColorMode to use.
+    userNameColorMode?: UserNameColorMode;
 
     // whether or not to show flair at all
     enableFlair?: boolean;
@@ -1067,9 +1071,14 @@ export default class EventTile extends React.Component<IProps, IState> {
                 sender = <SenderProfile onClick={this.onSenderProfileClick}
                     mxEvent={this.props.mxEvent}
                     enableFlair={this.props.enableFlair}
+                    userNameColorMode={this.props.userNameColorMode}
                 />;
             } else {
-                sender = <SenderProfile mxEvent={this.props.mxEvent} enableFlair={this.props.enableFlair} />;
+                sender = <SenderProfile
+                    mxEvent={this.props.mxEvent}
+                    enableFlair={this.props.enableFlair}
+                    userNameColorMode={this.props.userNameColorMode}
+                />;
             }
         }
 
@@ -1245,6 +1254,7 @@ export default class EventTile extends React.Component<IProps, IState> {
                     this.props.permalinkCreator,
                     this.replyThread,
                     this.props.layout,
+                    this.props.userNameColorMode,
                     this.props.alwaysShowTimestamps || this.state.hover,
                 );
 

@@ -48,6 +48,7 @@ import Spinner from "../views/elements/Spinner";
 import TileErrorBoundary from '../views/messages/TileErrorBoundary';
 import { RoomPermalinkCreator } from "../../utils/permalinks/Permalinks";
 import EditorStateTransfer from "../../utils/EditorStateTransfer";
+import { UserNameColorMode } from '../../settings/UserNameColorMode';
 
 const CONTINUATION_MAX_INTERVAL = 5 * 60 * 1000; // 5 minutes
 const continuedTypes = [EventType.Sticker, EventType.RoomMessage];
@@ -152,6 +153,9 @@ interface IProps {
 
     // which layout to use
     layout?: Layout;
+
+    // Specifies which userNameColorMode to use.
+    userNameColorMode?: UserNameColorMode;
 
     // whether to use single side bubbles
     singleSideBubbles?: boolean;
@@ -776,6 +780,7 @@ export default class MessagePanel extends React.Component<IProps, IState> {
                     showReactions={this.props.showReactions}
                     layout={this.props.layout}
                     singleSideBubbles={this.props.singleSideBubbles}
+                    userNameColorMode={this.props.userNameColorMode}
                     enableFlair={this.props.enableFlair}
                     showReadReceipts={this.props.showReadReceipts}
                     callEventGrouper={callEventGrouper}

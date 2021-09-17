@@ -90,6 +90,8 @@ import MessageComposer from '../views/rooms/MessageComposer';
 import JumpToBottomButton from "../views/rooms/JumpToBottomButton";
 import TopUnreadMessagesBar from "../views/rooms/TopUnreadMessagesBar";
 import SpaceStore from "../../stores/SpaceStore";
+import { UserNameColorMode } from '../../settings/UserNameColorMode';
+import DMRoomMap from '../../utils/DMRoomMap';
 
 const DEBUG = false;
 let debuglog = function(msg: string) {};
@@ -167,6 +169,7 @@ export interface IState {
     layout: Layout;
     singleSideBubbles: boolean;
     adaptiveSideBubbles: boolean;
+    userNameColorMode: UserNameColorMode;
     lowBandwidth: boolean;
     alwaysShowTimestamps: boolean;
     showTwelveHourTimestamps: boolean;
@@ -238,6 +241,7 @@ export default class RoomView extends React.Component<IProps, IState> {
             layout: SettingsStore.getValue("layout"),
             singleSideBubbles: SettingsStore.getValue("singleSideBubbles"),
             adaptiveSideBubbles: SettingsStore.getValue("adaptiveSideBubbles"),
+            userNameColorMode: UserNameColorMode.Uniform,
             lowBandwidth: SettingsStore.getValue("lowBandwidth"),
             alwaysShowTimestamps: SettingsStore.getValue("alwaysShowTimestamps"),
             showTwelveHourTimestamps: SettingsStore.getValue("showTwelveHourTimestamps"),
@@ -286,6 +290,15 @@ export default class RoomView extends React.Component<IProps, IState> {
                     adaptiveSideBubbles: value as boolean,
                     singleSideBubbles: SettingsStore.getValue("singleSideBubbles"), // restore default
                 }),
+            ),
+            SettingsStore.watchSetting("userNameColorModeDM", null, (...[,,, value]) =>
+                this.recalculateUserNameColorMode(),
+            ),
+            SettingsStore.watchSetting("userNameColorModeGroup", null, (...[,,, value]) =>
+                this.recalculateUserNameColorMode(),
+            ),
+            SettingsStore.watchSetting("userNameColorModePublic", null, (...[,,, value]) =>
+                this.recalculateUserNameColorMode(),
             ),
             SettingsStore.watchSetting("lowBandwidth", null, (...[,,, value]) =>
                 this.setState({ lowBandwidth: value as boolean }),
@@ -580,6 +593,8 @@ export default class RoomView extends React.Component<IProps, IState> {
             this.props.resizeNotifier.on("middlePanelResized", this.onResize);
         }
         this.onResize();
+
+        this.recalculateUserNameColorMode();
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -619,6 +634,7 @@ export default class RoomView extends React.Component<IProps, IState> {
         }
 
         this.onResize();
+        this.recalculateUserNameColorMode();
     }
 
     componentWillUnmount() {
@@ -900,6 +916,11 @@ export default class RoomView extends React.Component<IProps, IState> {
                 });
             }
         }
+
+        // SC: userNameColorMode can change dependent on if room is public
+        if (ev.getType() === 'm.room.join_rules') {
+            this.recalculateUserNameColorMode();
+        }
     };
 
     private onEventDecrypted = (ev: MatrixEvent) => {
@@ -918,6 +939,34 @@ export default class RoomView extends React.Component<IProps, IState> {
                 dis.dispatch({ action: `effects.${effect.command}` });
             }
         });
+    };
+
+    // SC: This updates the userNameColorMode
+    private recalculateUserNameColorMode = () => {
+        const room = this.state.room;
+        if (!room) return;
+
+        const joinRules = room.currentState.getStateEvents("m.room.join_rules", "");
+        const joinRule = joinRules && joinRules.getContent().join_rule;
+        const isPublic = joinRule === 'public';
+
+        const isDm = !!DMRoomMap.shared().getUserIdForRoomId(room.roomId);
+
+        let newMode: UserNameColorMode;
+        if (isPublic) {
+            console.log("for public");
+            newMode = SettingsStore.getValue("userNameColorModePublic");
+        } else if (isDm) {
+            console.log("for DM");
+            newMode = SettingsStore.getValue("userNameColorModeDM");
+        } else {
+            console.log("for default");
+            newMode = SettingsStore.getValue("userNameColorModeGroup");
+        }
+
+        if (newMode !== this.state.userNameColorMode) {
+            this.setState({ userNameColorMode: newMode });
+        }
     };
 
     private onRoomName = (room: Room) => {
@@ -1069,6 +1118,11 @@ export default class RoomView extends React.Component<IProps, IState> {
         if ((type === "org.matrix.preview_urls" || type === "im.vector.web.settings") && this.state.room) {
             // non-e2ee url previews are stored in legacy event type `org.matrix.room.preview_urls`
             this.updatePreviewUrlVisibility(this.state.room);
+        }
+
+        // SC: userNameColorMode can change dependent on if room is DM
+        if (type === "m.direct") {
+            this.recalculateUserNameColorMode();
         }
     };
 
@@ -1444,6 +1498,7 @@ export default class RoomView extends React.Component<IProps, IState> {
                 onHeightChanged={onHeightChanged}
                 layout={this.state.layout}
                 singleSideBubbles={this.state.singleSideBubbles}
+                userNameColorMode={this.state.userNameColorMode}
             />);
         }
         return ret;
@@ -1985,6 +2040,7 @@ export default class RoomView extends React.Component<IProps, IState> {
                     replyToEvent={this.state.replyToEvent}
                     permalinkCreator={this.getPermalinkCreatorForRoom(this.state.room)}
                     layout={this.state.layout}
+                    userNameColorMode={this.state.userNameColorMode}
                 />;
         }
 
@@ -2072,6 +2128,7 @@ export default class RoomView extends React.Component<IProps, IState> {
                 showReactions={true}
                 layout={this.state.layout}
                 singleSideBubbles={this.state.singleSideBubbles}
+                userNameColorMode={this.state.userNameColorMode}
                 editState={this.state.editState}
             />);
 
@@ -2101,7 +2158,9 @@ export default class RoomView extends React.Component<IProps, IState> {
             ? <RightPanel
                 room={this.state.room}
                 resizeNotifier={this.props.resizeNotifier}
-                permalinkCreator={this.getPermalinkCreatorForRoom(this.state.room)} />
+                permalinkCreator={this.getPermalinkCreatorForRoom(this.state.room)}
+                userNameColorMode={this.state.userNameColorMode}
+            />
             : null;
 
         const timelineClasses = classNames("mx_RoomView_timeline", {
