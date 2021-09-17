@@ -27,12 +27,14 @@ import classNames from 'classnames';
 import AccessibleTooltipButton from '../elements/AccessibleTooltipButton';
 import { formatCallTime } from "../../../DateUtils";
 import Clock from "../audio_messages/Clock";
+import { Layout } from '../../../settings/Layout';
 
 const MAX_NON_NARROW_WIDTH = 450 / 70 * 100;
 
 interface IProps {
     mxEvent: MatrixEvent;
     callEventGrouper: CallEventGrouper;
+    layout?: Layout;
 }
 
 interface IState {
@@ -259,7 +261,7 @@ export default class CallEvent extends React.PureComponent<IProps, IState> {
         const className = classNames("mx_CallEvent", {
             mx_CallEvent_voice: isVoice,
             mx_CallEvent_video: !isVoice,
-            mx_CallEvent_narrow: this.state.narrow,
+            mx_CallEvent_narrow: this.state.narrow && this.props.layout !== Layout.Bubble,
             mx_CallEvent_missed: callState === CustomCallState.Missed,
             mx_CallEvent_noAnswer: callState === CallState.Ended && hangupReason === CallErrorCode.InviteTimeout,
             mx_CallEvent_rejected: callState === CallState.Ended && this.props.callEventGrouper.gotRejected,

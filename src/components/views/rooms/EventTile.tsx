@@ -1346,6 +1346,7 @@ export default class EventTile extends React.Component<IProps, IState> {
                                             showUrlPreview={this.props.showUrlPreview}
                                             onHeightChanged={this.props.onHeightChanged}
                                             callEventGrouper={this.props.callEventGrouper}
+                                            layout={this.props.layout}
                                             scBubble={true}
                                             scBubbleActionBar={mediaBody ? actionBar : null}
                                             scBubbleGroupTimestamp={<>{ placeholderTimestamp }{ groupTimestamp }</>}

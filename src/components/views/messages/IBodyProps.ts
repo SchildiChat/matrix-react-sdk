@@ -19,6 +19,7 @@ import { TileShape } from "../rooms/EventTile";
 import { MediaEventHelper } from "../../../utils/MediaEventHelper";
 import EditorStateTransfer from "../../../utils/EditorStateTransfer";
 import { RoomPermalinkCreator } from "../../../utils/permalinks/Permalinks";
+import { Layout } from "../../../settings/Layout";
 
 export interface IBodyProps {
     mxEvent: MatrixEvent;
@@ -40,6 +41,7 @@ export interface IBodyProps {
     onMessageAllowed: () => void; // TODO: Docs
     permalinkCreator: RoomPermalinkCreator;
     mediaEventHelper: MediaEventHelper;
+    layout: Layout;
     scBubble: boolean;
     scBubbleGroupTimestamp: any;
     scBubbleActionBar: any;
