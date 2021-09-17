@@ -187,6 +187,7 @@ interface IProps {
 interface IState {
     ghostReadMarkers: string[];
     showTypingNotifications: boolean;
+    isDirect: boolean;
 }
 
 interface IReadReceiptForUser {
@@ -250,8 +251,6 @@ export default class MessagePanel extends React.Component<IProps, IState> {
     // A map of <callId, CallEventGrouper>
     private callEventGroupers = new Map<string, CallEventGrouper>();
 
-    private membersCount = 0;
-
     constructor(props, context) {
         super(props, context);
 
@@ -260,6 +259,7 @@ export default class MessagePanel extends React.Component<IProps, IState> {
             // display 'ghost' read markers that are animating away
             ghostReadMarkers: [],
             showTypingNotifications: SettingsStore.getValue("showTypingNotifications"),
+            isDirect: false,
         };
 
         // Cache hidden events setting on mount since Settings is expensive to
@@ -272,8 +272,8 @@ export default class MessagePanel extends React.Component<IProps, IState> {
     }
 
     componentDidMount() {
-        this.calculateRoomMembersCount();
-        this.props.room?.on("RoomState.members", this.calculateRoomMembersCount);
+        this.updateIsDirect();
+        this.props.room?.on("accountData", this.onAccountData);
         if (SettingsStore.getValue("feature_thread")) {
             this.props.room?.getThreads().forEach(thread => thread.fetchReplyChain());
         }
@@ -282,11 +282,12 @@ export default class MessagePanel extends React.Component<IProps, IState> {
 
     componentWillUnmount() {
         this.isMounted = false;
-        this.props.room?.off("RoomState.members", this.calculateRoomMembersCount);
+        this.props.room?.off("accountData", this.onAccountData);
         SettingsStore.unwatchSetting(this.showTypingNotificationsWatcherRef);
     }
 
     componentDidUpdate(prevProps, _prevState) {
+        this.updateIsDirect();
         if (prevProps.readMarkerVisible && this.props.readMarkerEventId !== prevProps.readMarkerEventId) {
             const ghostReadMarkers = this.state.ghostReadMarkers;
             ghostReadMarkers.push(prevProps.readMarkerEventId);
@@ -296,8 +297,18 @@ export default class MessagePanel extends React.Component<IProps, IState> {
         }
     }
 
-    private calculateRoomMembersCount = (): void => {
-        this.membersCount = this.props.room?.getMembers().length || 0;
+    private updateIsDirect = () => {
+        const isDirect = !!DMRoomMap.shared().getUserIdForRoomId(this.props.room?.roomId);
+        if (isDirect !== this.state.isDirect) {
+            this.setState({ isDirect: isDirect });
+        }
+    };
+
+    private onAccountData = (event: MatrixEvent) => {
+        const type = event.getType();
+        if (type === "m.direct") {
+            this.updateIsDirect();
+        }
     };
 
     private onShowTypingNotificationsChange = (): void => {
@@ -784,7 +795,7 @@ export default class MessagePanel extends React.Component<IProps, IState> {
                     enableFlair={this.props.enableFlair}
                     showReadReceipts={this.props.showReadReceipts}
                     callEventGrouper={callEventGrouper}
-                    hideSender={this.membersCount <= 2 && this.props.layout === Layout.Bubble}
+                    hideSender={this.state.isDirect && this.props.layout === Layout.Bubble}
                 />
             </TileErrorBoundary>,
         );
