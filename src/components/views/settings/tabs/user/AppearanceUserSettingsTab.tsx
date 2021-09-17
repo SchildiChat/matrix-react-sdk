@@ -457,7 +457,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                         </tr>
                     </thead>
                     <tbody>
-                        { makeRow(_t("In direct chats"), "userNameColorModeDM") }
+                        { makeRow(_t("For people"), "userNameColorModeDM") }
                         { makeRow(_t("In group chats"), "userNameColorModeGroup") }
                         { makeRow(_t("In public rooms"), "userNameColorModePublic") }
                     </tbody>
