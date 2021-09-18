@@ -27,20 +27,20 @@ limitations under the License.
 
     .mx_DecoratedRoomAvatar_icon {
         position: absolute;
-        bottom: -2px;
-        right: -2px;
-        margin: 4px;
-        width: 8px;
-        height: 8px;
+        bottom: -.2rem;
+        right: -.2rem;
+        margin: .4rem;
+        width: .8rem;
+        height: .8rem;
         border-radius: 50%;
     }
 
     .mx_DecoratedRoomAvatar_icon::before {
         content: '';
-        width: 8px;
-        height: 8px;
+        width: .8rem;
+        height: .8rem;
         position: absolute;
-        border-radius: 4px;
+        border-radius: 50%;
     }
 
     .mx_DecoratedRoomAvatar_icon_globe::before {
@@ -67,7 +67,7 @@ limitations under the License.
         position: absolute;
         top: 0;
         right: 0;
-        height: 18px;
-        width: 18px;
+        height: 1.8rem;
+        width: 1.8rem;
     }
 }

@@ -55,6 +55,7 @@ import { ListNotificationState } from "../../../stores/notifications/ListNotific
 import IconizedContextMenu from "../context_menus/IconizedContextMenu";
 import { getKeyBindingsManager, RoomListAction } from "../../../KeyBindingsManager";
 import { replaceableComponent } from "../../../utils/replaceableComponent";
+import SettingsStore from "../../../settings/SettingsStore";
 
 const SHOW_N_BUTTON_HEIGHT = 28; // As defined by CSS
 const RESIZE_HANDLE_HEIGHT = 4; // As defined by CSS
@@ -103,6 +104,9 @@ interface IState {
     height: number;
     rooms: Room[];
     filteredExtraTiles?: ReactComponentElement<typeof ExtraTile>[];
+
+    // fucking resizeable doesn't like rem
+    baseFontSize: number;
 }
 
 @replaceableComponent("views.rooms.RoomSublist")
@@ -115,6 +119,7 @@ export default class RoomSublist extends React.Component<IProps, IState> {
     private heightAtStart: number;
     private isBeingFiltered: boolean;
     private notificationState: ListNotificationState;
+    private settingWatchers: string[];
 
     constructor(props: IProps) {
         super(props);
@@ -130,9 +135,16 @@ export default class RoomSublist extends React.Component<IProps, IState> {
             isExpanded: this.isBeingFiltered ? this.isBeingFiltered : !this.layout.isCollapsed,
             height: 0, // to be fixed in a moment, we need `rooms` to calculate this.
             rooms: arrayFastClone(RoomListStore.instance.orderedLists[this.props.tagId] || []),
+            baseFontSize: SettingsStore.getValue("baseFontSize"),
         };
         // Why Object.assign() and not this.state.height? Because TypeScript says no.
         this.state = Object.assign(this.state, { height: this.calculateInitialHeight() });
+
+        this.settingWatchers = [
+            SettingsStore.watchSetting("baseFontSize", null, (...[,,, value]) =>
+                this.setState({ baseFontSize: value as number }),
+            ),
+        ];
     }
 
     private calculateInitialHeight() {
@@ -260,6 +272,10 @@ export default class RoomSublist extends React.Component<IProps, IState> {
         defaultDispatcher.unregister(this.dispatcherRef);
         RoomListStore.instance.off(LISTS_UPDATE_EVENT, this.onListsUpdated);
         this.tilesRef.current?.removeEventListener("scroll", this.onScrollPrevent);
+
+        for (const watcher of this.settingWatchers) {
+            SettingsStore.unwatchSetting(watcher);
+        }
     }
 
     private onListsUpdated = () => {
@@ -924,10 +940,11 @@ export default class RoomSublist extends React.Component<IProps, IState> {
 
             content = (
                 <React.Fragment>
+                    { /* fucking resizeable doesn't like rem */ }
                     <Resizable
-                        size={{ height: this.state.height } as any}
-                        minHeight={minTilesPx}
-                        maxHeight={maxTilesPx}
+                        size={{ height: (this.state.height/10)*this.state.baseFontSize } as any}
+                        minHeight={(minTilesPx/10)*this.state.baseFontSize}
+                        maxHeight={(maxTilesPx/10)*this.state.baseFontSize}
                         onResizeStart={this.onResizeStart}
                         onResizeStop={this.onResizeStop}
                         onResize={this.onResize}
