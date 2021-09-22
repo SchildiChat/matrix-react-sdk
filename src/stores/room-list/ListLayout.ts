@@ -14,9 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import { RoomListStyle } from "../../settings/RoomListStyle";
+import SettingsStore from "../../settings/SettingsStore";
 import { TagID } from "./models";
 
-const TILE_HEIGHT_PX = 60;
+const TILE_HEIGHT_PX_COMPACT = 30;
+const TILE_HEIGHT_PX_INTERMEDIATE = 44;
+const TILE_HEIGHT_PX_ROOMY = 60;
 
 interface ISerializedListLayout {
     numTiles: number;
@@ -59,7 +63,10 @@ export class ListLayout {
     }
 
     public get tileHeight(): number {
-        return TILE_HEIGHT_PX;
+        const roomListStyle = SettingsStore.getValue("roomListStyle");
+        if (roomListStyle == RoomListStyle.Compact) return TILE_HEIGHT_PX_COMPACT;
+        if (roomListStyle == RoomListStyle.Intermediate) return TILE_HEIGHT_PX_INTERMEDIATE;
+        return TILE_HEIGHT_PX_ROOMY;
     }
 
     private get key(): string {

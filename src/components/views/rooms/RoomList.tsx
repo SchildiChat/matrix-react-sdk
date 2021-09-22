@@ -49,6 +49,8 @@ import { showAddExistingRooms, showCreateNewRoom, showSpaceInvite } from "../../
 import { replaceableComponent } from "../../../utils/replaceableComponent";
 import RoomAvatar from "../avatars/RoomAvatar";
 import SettingsStore from "../../../settings/SettingsStore";
+import classNames from "classnames";
+import { RoomListStyle } from "../../../settings/RoomListStyle";
 
 interface IProps {
     onKeyDown: (ev: React.KeyboardEvent) => void;
@@ -611,6 +613,13 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
             }
         }
 
+        const roomListStyle = SettingsStore.getValue("roomListStyle");
+        const roomListClassNames = classNames({
+            "mx_RoomList": true,
+            "mx_RoomList_Compact": roomListStyle === RoomListStyle.Compact,
+            "mx_RoomList_Intermediate": roomListStyle === RoomListStyle.Intermediate,
+            "mx_RoomList_Roomy": roomListStyle === RoomListStyle.Roomy,
+        });
         const sublists = this.renderSublists();
         return (
             <RovingTabIndexProvider handleHomeEnd={true} onKeyDown={this.props.onKeyDown}>
@@ -619,7 +628,7 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
                         onFocus={this.props.onFocus}
                         onBlur={this.props.onBlur}
                         onKeyDown={onKeyDownHandler}
-                        className="mx_RoomList"
+                        className={roomListClassNames}
                         role="tree"
                         aria-label={_t("Rooms")}
                     >

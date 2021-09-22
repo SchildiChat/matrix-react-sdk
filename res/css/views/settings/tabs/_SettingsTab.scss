@@ -136,6 +136,16 @@ limitations under the License.
     }
 }
 
+.mx_SettingsTab_inlineRadioSelectors {
+    display: flex;
+    flex-direction: row;
+}
+
+.mx_SettingsTab_multilineRadioSelectors {
+    display: flex;
+    flex-direction: column;
+}
+
 .mx_SettingsTab_linkBtn {
     cursor: pointer;
     color: $accent-color;

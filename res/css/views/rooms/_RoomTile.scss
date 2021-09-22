@@ -21,7 +21,6 @@ limitations under the License.
     position: relative;
 
     contain: content; // Not strict as it will break when resizing a sublist vertically
-    height: 5.6rem;
     box-sizing: border-box;
 
     // The tile is also a flexbox row itself
@@ -60,8 +59,6 @@ limitations under the License.
         flex-direction: column;
         justify-content: center;
 
-        max-height: 4.8rem; // same as avatar
-
         .mx_RoomTile_name,
         .mx_RoomTile_messagePreview {
             margin: 0 .2rem;
@@ -87,18 +84,7 @@ limitations under the License.
 
         .mx_RoomTile_messagePreview {
             font-size: 1.3rem;
-            line-height: 1.6rem;
-            max-height: 2 * 1.6rem;
             color: $roomtile-preview-color;
-            white-space: unset;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            margin-bottom: -.3rem; // shift the preview down a bit more
-        }
-
-        .mx_RoomTile_nameWithPreview {
-            margin-top: -.4rem; // shift the name up a bit more
         }
     }
 
@@ -191,6 +177,135 @@ limitations under the License.
         .mx_DecoratedRoomAvatar, .mx_RoomTile_avatarContainer {
             margin-right: 0;
         }
+    }
+}
+
+.mx_RoomList_Roomy .mx_RoomTile {
+    height: 5.6rem;
+
+    .mx_DecoratedRoomAvatar, .mx_RoomTile_avatarContainer {
+        .mx_BaseAvatar_initial {
+            width: 4.8rem !important;
+            line-height: 4.8rem !important;
+            font-size: 3.12rem !important;
+        }
+
+        .mx_BaseAvatar_image {
+            width: 4.8rem !important;
+            height: 4.8rem !important;
+        }
+    }
+
+    .mx_RoomTile_nameContainer {
+        max-height: 4.8rem; // same as avatar
+
+        .mx_RoomTile_messagePreview {
+            font-size: 1.3rem;
+            line-height: 1.6rem;
+            max-height: 2 * 1.6rem;
+            white-space: unset;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            margin-bottom: -.3rem; // shift the preview down a bit more
+        }
+
+        .mx_RoomTile_nameWithPreview {
+            margin-top: -.4rem; // shift the name up a bit more
+        }
+    }
+}
+
+.mx_RoomList_Intermediate .mx_RoomTile {
+    height: 4rem;
+
+    .mx_DecoratedRoomAvatar, .mx_RoomTile_avatarContainer {
+        .mx_BaseAvatar_initial {
+            width: 3.2rem !important;
+            line-height: 3.2rem !important;
+            font-size: 2.08rem !important;
+        }
+
+        .mx_BaseAvatar_image {
+            width: 3.2rem !important;
+            height: 3.2rem !important;
+        }
+    }
+
+    .mx_RoomTile_nameContainer {
+        max-height: 3.2rem; // same as avatar
+
+        .mx_RoomTile_messagePreview {
+            font-size: 1.3rem;
+            line-height: 1.8rem;
+            max-height: 1.8rem;
+            margin-bottom: -.4rem; // shift the preview down a bit more
+        }
+
+        .mx_RoomTile_nameWithPreview {
+            margin-top: -.4rem; // shift the name up a bit more
+        }
+    }
+}
+
+.mx_RoomList_Compact .mx_RoomTile {
+    height: 2.6rem;
+    padding-top: .2rem;
+    padding-bottom: .2rem;
+
+    .mx_DecoratedRoomAvatar, .mx_RoomTile_avatarContainer {
+        margin-right: .4rem;
+        
+        .mx_BaseAvatar_initial {
+            width: 2.2rem !important;
+            line-height: 2.2rem !important;
+            font-size: 1.43rem !important;
+        }
+
+        .mx_BaseAvatar_image {
+            width: 2.2rem !important;
+            height: 2.2rem !important;
+        }
+    }
+
+    .mx_RoomTile_nameContainer {
+        display: inline;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: .4rem; // spacing to buttons/badges
+
+        .mx_RoomTile_name,
+        .mx_RoomTile_messagePreview {
+            display: inline;
+            text-overflow: unset;
+        }
+
+        .mx_RoomTile_name {
+            font-size: 1.4rem;
+            line-height: 2.2rem;
+        }
+
+        .mx_RoomTile_name.mx_RoomTile_nameHasUnreadEvents {
+            font-weight: 600;
+        }
+
+        .mx_RoomTile_messagePreview {
+            font-size: 1.3rem;
+            line-height: 2.2rem;
+        }
+    }
+
+    mx_RoomTile_badgeContainer {
+        width: 2rem;
+        min-width: 2rem; // yay flex
+        height: 2rem;
+        margin-top: auto;
+        margin-bottom: auto;
+        position: absolute;
+        display: none;
+        top: calc(50% - 1rem);
+        right: .4rem;
     }
 }
 

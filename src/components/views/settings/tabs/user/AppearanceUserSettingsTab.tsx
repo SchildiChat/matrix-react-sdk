@@ -42,6 +42,7 @@ import LayoutSwitcher from "../../LayoutSwitcher";
 import StyledRadioButton from '../../../elements/StyledRadioButton';
 import { Theme } from '../../../../../settings/Theme';
 import { UserNameColorMode } from '../../../../../settings/UserNameColorMode';
+import { RoomListStyle } from '../../../../../settings/RoomListStyle';
 
 interface IProps {
 }
@@ -62,6 +63,7 @@ interface IState extends IThemeState {
     // Needs to be string for things like '17.' without
     // trailing 0s.
     fontSize: string;
+    roomListStyle: RoomListStyle;
     customThemeUrl: string;
     customThemeMessage: CustomThemeMessage;
     useCustomFontSize: boolean;
@@ -94,6 +96,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
             lightTheme: SettingsStore.getValue("light_theme"),
             darkTheme: SettingsStore.getValue("dark_theme"),
             themeInUse: SettingsStore.getValue("theme_in_use"),
+            roomListStyle: SettingsStore.getValue("roomListStyle"),
             customThemeUrl: "",
             customThemeMessage: { isError: false, text: "" },
             useCustomFontSize: SettingsStore.getValue("useCustomFontSize"),
@@ -168,6 +171,12 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
         this.setState({ themeInUse: themeInUse });
         SettingsStore.setValue("theme_in_use", null, SettingLevel.DEVICE, themeInUse);
         dis.dispatch<RecheckThemePayload>({ action: Action.RecheckTheme });
+    };
+
+    private onRoomListStyleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        const roomListStyle = e.target.value as RoomListStyle;
+        this.setState({ roomListStyle: roomListStyle });
+        SettingsStore.setValue("roomListStyle", null, SettingLevel.DEVICE, roomListStyle);
     };
 
     private onFontSizeChanged = (size: number): void => {
@@ -262,7 +271,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
 
     private renderThemeSection() {
         const themeWatcher = new ThemeWatcher();
-        const themeInUseSection = <div className="mx_ThemeInUseSelectors">
+        const themeInUseSection = <div className="mx_SettingsTab_inlineRadioSelectors">
             <label>
                 <StyledRadioButton
                     name="theme_in_use"
@@ -378,6 +387,48 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                 </div>
             </div>
             { customThemeForm }
+        </>;
+    }
+
+    private renderRoomListSection() {
+        const roomListStyleSection = <div className="mx_SettingsTab_multilineRadioSelectors">
+            <label>
+                <StyledRadioButton
+                    name="room_list_style"
+                    value={RoomListStyle.Compact}
+                    checked={this.state.roomListStyle === RoomListStyle.Compact}
+                    onChange={this.onRoomListStyleChange}
+                >
+                    { _t("Compact: tiny avatar together with name and preview in one line") }
+                </StyledRadioButton>
+            </label>
+            <label>
+                <StyledRadioButton
+                    name="room_list_style"
+                    value={RoomListStyle.Intermediate}
+                    checked={this.state.roomListStyle === RoomListStyle.Intermediate}
+                    onChange={this.onRoomListStyleChange}
+                >
+                    { _t("Intermediate: medium sized avatar with single-line preview") }
+                </StyledRadioButton>
+            </label>
+            <label>
+                <StyledRadioButton
+                    name="room_list_style"
+                    value={RoomListStyle.Roomy}
+                    checked={this.state.roomListStyle === RoomListStyle.Roomy}
+                    onChange={this.onRoomListStyleChange}
+                >
+                    { _t("Roomy: big avatar with two-line preview") }
+                </StyledRadioButton>
+            </label>
+        </div>;
+
+        return <>
+            <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_RoomListStyleSection">
+                <span className="mx_SettingsTab_subheading">{ _t("Room list style") }</span>
+                { roomListStyleSection }
+            </div>
         </>;
     }
 
@@ -569,6 +620,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                     { _t("Appearance Settings only affect this %(brand)s session.", { brand }) }
                 </div>
                 { this.renderThemeSection() }
+                { this.renderRoomListSection() }
                 { layoutSection }
                 { this.renderFontSection() }
                 { this.renderUserNameColorModeSection() }

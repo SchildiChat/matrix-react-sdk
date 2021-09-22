@@ -44,6 +44,7 @@ import SdkConfig from "../SdkConfig";
 import PseudonymousAnalyticsController from './controllers/PseudonymousAnalyticsController';
 import { Theme } from './Theme';
 import { UserNameColorMode } from './UserNameColorMode';
+import { RoomListStyle } from './RoomListStyle';
 
 // These are just a bunch of helper arrays to avoid copy/pasting a bunch of times
 const LEVELS_ROOM_SETTINGS = [
@@ -682,6 +683,12 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
         displayName: _td("Show people and rooms in a combined list"),
         default: true,
+        controller: new ReloadOnChangeController(),
+    },
+    "roomListStyle": {
+        supportedLevels: LEVELS_ACCOUNT_SETTINGS,
+        displayName: _td("Density of the room list"),
+        default: RoomListStyle.Roomy,
         controller: new ReloadOnChangeController(),
     },
     "breadcrumbs": {

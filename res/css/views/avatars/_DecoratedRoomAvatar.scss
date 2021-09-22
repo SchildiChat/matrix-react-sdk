@@ -27,18 +27,18 @@ limitations under the License.
 
     .mx_DecoratedRoomAvatar_icon {
         position: absolute;
-        bottom: -.2rem;
-        right: -.2rem;
-        margin: .4rem;
-        width: .8rem;
-        height: .8rem;
+        bottom: -6.25%;
+        right: -6.25%;
+        margin: 12.5%;
+        width: 25%;
+        height: 25%;
         border-radius: 50%;
     }
 
     .mx_DecoratedRoomAvatar_icon::before {
         content: '';
-        width: .8rem;
-        height: .8rem;
+        width: 100%;
+        height: 100%;
         position: absolute;
         border-radius: 50%;
     }
@@ -69,5 +69,19 @@ limitations under the License.
         right: 0;
         height: 1.8rem;
         width: 1.8rem;
+    }
+}
+
+.mx_RoomList_Roomy .mx_DecoratedRoomAvatar, .mx_ExtraTile {
+    &.mx_DecoratedRoomAvatar_cutout .mx_BaseAvatar {
+        mask-image: url('$(res)/img/element-icons/roomlist/decorated-avatar-mask-big.svg');
+    }
+
+    .mx_DecoratedRoomAvatar_icon {
+        bottom: -4.1666666%;
+        right: -4.1666666%;
+        margin: 8.3333333%;
+        width: 16.6666666%;
+        height: 16.6666666%;
     }
 }
