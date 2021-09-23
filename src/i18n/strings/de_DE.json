@@ -3664,5 +3664,9 @@
     "If disabled, the space overview will be shown when switching to another space.": "Wenn deaktiviert, wird die Space-Übersicht beim Wechsel zu einem anderen Space angezeigt.",
     "User name color mode": "Farbmodus der Benutzernamen",
     "In public rooms": "In öffentlichen Räumen",
-    "For people": "Für Personen"
+    "For people": "Für Personen",
+    "Intermediate: medium sized avatar with single-line preview": "Zwischending: mittelgroßer Avatar mit einer einzeiligen Vorschau",
+    "Roomy: big avatar with two-line preview": "Geräumig: großer Avatar mit einer zweizeiligen Vorschau",
+    "Room list style": "Stil der Raumliste",
+    "Compact: tiny avatar together with name and preview in one line": "Kompakt: winziger Avatar zusammen mit dem Namen und der Vorschau in einer Zeile"
 }
