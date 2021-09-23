@@ -687,7 +687,6 @@ export const SETTINGS: {[setting: string]: ISetting} = {
     },
     "roomListStyle": {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
-        displayName: _td("Density of the room list"),
         default: RoomListStyle.Roomy,
         controller: new ReloadOnChangeController(),
     },
