@@ -51,6 +51,7 @@ $left-gutter: 54px;
         // no reserved space for read receipts required.
         padding-top: 6px;
         position: relative;
+        font-size: $font-14px;
 
         &.mx_EventTile_info {
             padding-top: 0px;
@@ -137,6 +138,7 @@ $left-gutter: 54px;
 
     .mx_SenderProfile {
         text-align: left;
+        font-size: $font-15px;
     }
 
     .mx_EventTile_selected > div > a > .mx_MessageTimestamp {
