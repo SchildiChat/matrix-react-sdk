@@ -54,6 +54,7 @@ import { throttle } from 'lodash';
 import SpaceStore from "../../stores/SpaceStore";
 import { RoomPermalinkCreator } from '../../utils/permalinks/Permalinks';
 import { UserNameColorMode } from '../../settings/UserNameColorMode';
+import { E2EStatus } from '../../utils/ShieldUtils';
 
 interface IProps {
     room?: Room; // if showing panels for a given room, this is set
@@ -62,6 +63,7 @@ interface IProps {
     resizeNotifier: ResizeNotifier;
     permalinkCreator?: RoomPermalinkCreator;
     userNameColorMode?: UserNameColorMode;
+    e2eStatus?: E2EStatus;
 }
 
 interface IState {
@@ -271,7 +273,7 @@ export default class RightPanel extends React.Component<IProps, IState> {
             case RightPanelPhases.EncryptionPanel:
                 panel = <UserInfo
                     user={this.state.member}
-                    room={this.state.phase === RightPanelPhases.SpaceMemberInfo ? this.state.space : this.props.room}
+                    room={this.context.getRoom(this.state.member.roomId) ?? this.props.room}
                     key={roomId || this.state.member.userId}
                     onClose={this.onClose}
                     phase={this.state.phase}
@@ -330,7 +332,8 @@ export default class RightPanel extends React.Component<IProps, IState> {
                     resizeNotifier={this.props.resizeNotifier}
                     onClose={this.onClose}
                     mxEvent={this.state.event}
-                    permalinkCreator={this.props.permalinkCreator} />;
+                    permalinkCreator={this.props.permalinkCreator}
+                    e2eStatus={this.props.e2eStatus} />;
                 break;
 
             case RightPanelPhases.ThreadPanel:
