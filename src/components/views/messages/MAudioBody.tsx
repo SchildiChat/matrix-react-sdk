@@ -103,6 +103,7 @@ export default class MAudioBody extends React.PureComponent<IBodyProps, IState> 
             <span className="mx_MAudioBody">
                 <AudioPlayer playback={this.state.playback} mediaName={this.props.mxEvent.getContent().body} />
                 { this.props.tileShape && <MFileBody {...this.props} showGenericPlaceholder={false} /> }
+                { this.props.scBubbleGroupTimestamp }
             </span>
         );
     }

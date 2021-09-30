@@ -48,6 +48,7 @@ export default class MVoiceMessageBody extends MAudioBody {
             <span className="mx_MVoiceMessageBody">
                 <RecordingPlayback playback={this.state.playback} tileShape={this.props.tileShape} />
                 { this.props.tileShape && <MFileBody {...this.props} showGenericPlaceholder={false} /> }
+                { this.props.scBubbleGroupTimestamp }
             </span>
         );
     }

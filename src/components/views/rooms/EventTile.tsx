@@ -1354,7 +1354,7 @@ export default class EventTile extends React.Component<IProps, IState> {
                                             layout={this.props.layout}
                                             scBubble={true}
                                             scBubbleActionBar={mediaBody ? actionBar : null}
-                                            scBubbleGroupTimestamp={<>{ placeholderTimestamp }{ groupTimestamp }</>}
+                                            scBubbleGroupTimestamp={<>{ placeholderTimestamp }{ linkedTimestamp }</>}
                                         />
                                         { !mediaBody ? actionBar : null }
                                     </div>

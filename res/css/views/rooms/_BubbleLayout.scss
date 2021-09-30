@@ -292,8 +292,13 @@ $left-gutter: 54px;
         top: -36px;
     }
 
-    .mx_MFileBody_info {
+    // ToDo: These break on small width
+    .mx_MFileBody_info, .mx_MediaBody.mx_AudioPlayer_container {
         display: inline-block;
+    }
+    .mx_MediaBody.mx_VoiceMessagePrimaryContainer {
+        display: inline-flex;
+        contain: paint;
     }
 
     .sc_LinkedTimestamp {
