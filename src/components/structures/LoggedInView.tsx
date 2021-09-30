@@ -71,6 +71,7 @@ import CustomRoomTagPanel from './CustomRoomTagPanel';
 import { mediaFromMxc } from "../../customisations/Media";
 import { RecheckThemePayload } from '../../dispatcher/payloads/RecheckThemePayload';
 import LegacyCommunityPreview from "./LegacyCommunityPreview";
+import { Layout } from '../../settings/Layout';
 
 // We need to fetch each pinned message individually (if we don't already have it)
 // so each pinned message may trigger a request. Limit the number per room for sanity.
@@ -132,6 +133,7 @@ interface IState {
     usageLimitDismissed: boolean;
     usageLimitEventContent?: IUsageLimit;
     usageLimitEventTs?: number;
+    layout: Layout;
     useCompactLayout: boolean;
     activeCalls: Array<MatrixCall>;
     backgroundImage?: string;
@@ -155,6 +157,7 @@ class LoggedInView extends React.Component<IProps, IState> {
     protected readonly _roomView: React.RefObject<any>;
     protected readonly _resizeContainer: React.RefObject<HTMLDivElement>;
     protected readonly resizeHandler: React.RefObject<HTMLDivElement>;
+    protected layoutWatcherRef: string;
     protected compactLayoutWatcherRef: string;
     protected backgroundImageWatcherRef: string;
     protected resizer: Resizer;
@@ -164,6 +167,7 @@ class LoggedInView extends React.Component<IProps, IState> {
 
         this.state = {
             syncErrorData: undefined,
+            layout: SettingsStore.getValue('layout'),
             // use compact timeline view
             useCompactLayout: SettingsStore.getValue('useCompactLayout'),
             usageLimitDismissed: false,
@@ -200,6 +204,9 @@ class LoggedInView extends React.Component<IProps, IState> {
         );
         this._matrixClient.on("RoomState.events", this.onRoomStateEvents);
 
+        this.layoutWatcherRef = SettingsStore.watchSetting(
+            "layout", null, this.onLayoutChanged,
+        );
         this.compactLayoutWatcherRef = SettingsStore.watchSetting(
             "useCompactLayout", null, this.onCompactLayoutChanged,
         );
@@ -222,6 +229,7 @@ class LoggedInView extends React.Component<IProps, IState> {
         this._matrixClient.removeListener("sync", this.onSync);
         this._matrixClient.removeListener("RoomState.events", this.onRoomStateEvents);
         OwnProfileStore.instance.off(UPDATE_EVENT, this.refreshBackgroundImage);
+        SettingsStore.unwatchSetting(this.layoutWatcherRef);
         SettingsStore.unwatchSetting(this.compactLayoutWatcherRef);
         SettingsStore.unwatchSetting(this.backgroundImageWatcherRef);
         this.resizer.detach();
@@ -309,6 +317,12 @@ class LoggedInView extends React.Component<IProps, IState> {
         if (event.getType() === "m.ignored_user_list") {
             dis.dispatch({ action: "ignore_state_changed" });
         }
+    };
+
+    onLayoutChanged = (setting, roomId, level, valueAtLevel, newValue) => {
+        this.setState({
+            layout: valueAtLevel,
+        });
     };
 
     onCompactLayoutChanged = (setting, roomId, level, valueAtLevel, newValue) => {
@@ -647,7 +661,7 @@ class LoggedInView extends React.Component<IProps, IState> {
 
         const wrapperClasses = classNames({
             'mx_MatrixChat_wrapper': true,
-            'mx_MatrixChat_useCompactLayout': this.state.useCompactLayout,
+            'mx_MatrixChat_useCompactLayout': this.state.layout === Layout.Group && this.state.useCompactLayout,
         });
         const bodyClasses = classNames({
             'mx_MatrixChat': true,
