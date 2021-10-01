@@ -777,6 +777,7 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         description: _td("All rooms you're in will appear in Home."),
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
         default: true,
+        controller: new IncompatibleController("showCommunitiesInsteadOfSpaces", null),
     },
     "Spaces.showSpaceMemberDMs": {
         displayName: _td("Show people in spaces"),
@@ -784,11 +785,13 @@ export const SETTINGS: {[setting: string]: ISetting} = {
             "If enabled, you'll automatically see everyone who is a member of the Space."),
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
         default: false,
+        controller: new IncompatibleController("showCommunitiesInsteadOfSpaces", null),
     },
     "Spaces.showSpaceDMBadges": {
         displayName: _td("Show notification badges for People in Spaces"),
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
         default: true,
+        controller: new IncompatibleController("showCommunitiesInsteadOfSpaces", null),
     },
     "Spaces.returnToPreviouslyOpenedRoom": {
         displayName: _td("Return to the room previously opened in a space"),
