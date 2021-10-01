@@ -1345,9 +1345,9 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
                 this.screenAfterLogin.params,
             );
             this.screenAfterLogin = null;
-        } else if (localStorage && localStorage.getItem('mx_last_room_id')) {
-            // Before defaulting to directory, show the last viewed room
-            this.viewLastRoom();
+        // } else if (localStorage && localStorage.getItem('mx_last_room_id')) {
+        //     // Before defaulting to directory, show the last viewed room
+        //     this.viewLastRoom();
         } else {
             if (MatrixClientPeg.get().isGuest()) {
                 dis.dispatch({ action: 'view_welcome_page' });
