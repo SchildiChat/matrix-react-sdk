@@ -144,6 +144,10 @@ limitations under the License.
 .mx_SettingsTab_multilineRadioSelectors {
     display: flex;
     flex-direction: column;
+
+    .mx_RadioButton {
+        margin-bottom: 8px;
+    }
 }
 
 .mx_SettingsTab_linkBtn {

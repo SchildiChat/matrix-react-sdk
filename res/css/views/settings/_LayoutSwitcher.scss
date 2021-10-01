@@ -19,9 +19,10 @@ limitations under the License.
     .mx_LayoutSwitcher_RadioButtons {
         display: flex;
         flex-direction: row;
-        gap: 24px;
+        gap: 12px;
 
         color: $primary-content;
+        margin-top: 16px;
 
         > .mx_LayoutSwitcher_RadioButton {
             flex-grow: 0;
@@ -86,6 +87,15 @@ limitations under the License.
             .mx_EventTile_line {
                 max-width: 90%;
             }
+        }
+    }
+
+    .mx_LayoutSwitcher_Checkboxes {
+        color: $primary-content;
+        margin-top: 16px;
+
+        .mx_Checkbox {
+            margin-bottom: 8px;
         }
     }
 }

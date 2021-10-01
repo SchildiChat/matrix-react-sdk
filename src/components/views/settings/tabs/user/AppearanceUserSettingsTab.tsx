@@ -31,10 +31,8 @@ import { Action } from '../../../../../dispatcher/actions';
 import { IValidationResult, IFieldState } from '../../../elements/Validation';
 import SettingsFlag from '../../../elements/SettingsFlag';
 import Field from '../../../elements/Field';
-import EventTilePreview from '../../../elements/EventTilePreview';
 import StyledRadioGroup from "../../../elements/StyledRadioGroup";
 import { SettingLevel } from "../../../../../settings/SettingLevel";
-import { UIFeature } from "../../../../../settings/UIFeature";
 import { Layout } from "../../../../../settings/Layout";
 import { replaceableComponent } from "../../../../../utils/replaceableComponent";
 import { compare } from "../../../../../utils/strings";
@@ -70,8 +68,8 @@ interface IState extends IThemeState {
     useSystemFont: boolean;
     systemFont: string;
     showAdvanced: boolean;
+    showAdvancedThemeSettings: boolean;
     layout: Layout;
-    adaptiveSideBubbles: boolean;
     userNameColorModeDM: UserNameColorMode;
     userNameColorModeGroup: UserNameColorMode;
     userNameColorModePublic: UserNameColorMode;
@@ -102,9 +100,9 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
             useCustomFontSize: SettingsStore.getValue("useCustomFontSize"),
             useSystemFont: SettingsStore.getValue("useSystemFont"),
             systemFont: SettingsStore.getValue("systemFont"),
+            showAdvancedThemeSettings: false,
             showAdvanced: true,
             layout: SettingsStore.getValue("layout"),
-            adaptiveSideBubbles: SettingsStore.getValue("adaptiveSideBubbles"),
             userNameColorModeDM: SettingsStore.getValue("userNameColorModeDM"),
             userNameColorModeGroup: SettingsStore.getValue("userNameColorModeGroup"),
             userNameColorModePublic: SettingsStore.getValue("userNameColorModePublic"),
@@ -342,51 +340,73 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
             );
         }
 
-        // XXX: replace any type here
-        const themes = Object.entries<any>(enumerateThemes())
-            .map(p => ({ id: p[0], name: p[1] })); // convert pairs to objects for code readability
-        const builtInThemes = themes.filter(p => !p.id.startsWith("custom-"));
-        const customThemes = themes.filter(p => !builtInThemes.includes(p))
-            .sort((a, b) => compare(a.name, b.name));
-        const orderedThemes = [...builtInThemes, ...customThemes];
+        const toggle = <div
+            className="mx_AppearanceUserSettingsTab_AdvancedToggle"
+            onClick={() => this.setState({ showAdvancedThemeSettings: !this.state.showAdvancedThemeSettings })}
+        >
+            { this.state.showAdvancedThemeSettings ?
+                _t("Hide advanced theme settings") : _t("Show advanced theme settings") }
+        </div>;
+
+        let advanced: React.ReactNode;
+
+        if (this.state.showAdvancedThemeSettings) {
+            // XXX: replace any type here
+            const themes = Object.entries<any>(enumerateThemes())
+                .map(p => ({ id: p[0], name: p[1] })); // convert pairs to objects for code readability
+            const builtInThemes = themes.filter(p => !p.id.startsWith("custom-"));
+            const customThemes = themes.filter(p => !builtInThemes.includes(p))
+                .sort((a, b) => compare(a.name, b.name));
+            const orderedThemes = [...builtInThemes, ...customThemes];
+
+            advanced = <>
+                <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_themeSection">
+                    <span className="mx_SettingsTab_subheading">{ _t("Light theme") }</span>
+                    <div className="mx_ThemeSelectors">
+                        <StyledRadioGroup
+                            name="light_theme"
+                            definitions={orderedThemes.map(t => ({
+                                value: t.id,
+                                label: t.name,
+                                className: "mx_ThemeSelector_" + t.id,
+                            }))}
+                            onChange={this.onLightThemeChange}
+                            value={this.state.lightTheme}
+                            outlined
+                        />
+                    </div>
+                </div>
+                <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_themeSection">
+                    <span className="mx_SettingsTab_subheading">{ _t("Dark theme") }</span>
+                    <div className="mx_ThemeSelectors">
+                        <StyledRadioGroup
+                            name="dark_theme"
+                            definitions={orderedThemes.map(t => ({
+                                value: t.id,
+                                label: t.name,
+                                className: "mx_ThemeSelector_" + t.id,
+                            }))}
+                            onChange={this.onDarkThemeChange}
+                            value={this.state.darkTheme}
+                            outlined
+                        />
+                    </div>
+                </div>
+                { customThemeForm }
+                { this.renderUserNameColorModeSection() }
+            </>;
+        }
+
         return <>
+            <div className="mx_SettingsTab_heading">{ _t("Theme") }</div>
             <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_themeInUseSection">
                 <span className="mx_SettingsTab_subheading">{ _t("Theme in use") }</span>
                 { themeInUseSection }
             </div>
-            <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_themeSection">
-                <span className="mx_SettingsTab_subheading">{ _t("Light theme") }</span>
-                <div className="mx_ThemeSelectors">
-                    <StyledRadioGroup
-                        name="light_theme"
-                        definitions={orderedThemes.map(t => ({
-                            value: t.id,
-                            label: t.name,
-                            className: "mx_ThemeSelector_" + t.id,
-                        }))}
-                        onChange={this.onLightThemeChange}
-                        value={this.state.lightTheme}
-                        outlined
-                    />
-                </div>
+            <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_Advanced">
+                { toggle }
+                { advanced }
             </div>
-            <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_themeSection">
-                <span className="mx_SettingsTab_subheading">{ _t("Dark theme") }</span>
-                <div className="mx_ThemeSelectors">
-                    <StyledRadioGroup
-                        name="dark_theme"
-                        definitions={orderedThemes.map(t => ({
-                            value: t.id,
-                            label: t.name,
-                            className: "mx_ThemeSelector_" + t.id,
-                        }))}
-                        onChange={this.onDarkThemeChange}
-                        value={this.state.darkTheme}
-                        outlined
-                    />
-                </div>
-            </div>
-            { customThemeForm }
         </>;
     }
 
@@ -425,6 +445,14 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
         </div>;
 
         return <>
+            <div className="mx_SettingsTab_heading">{ _t("Room list") }</div>
+            <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_fontScaling">
+                <SettingsFlag
+                    name="unifiedRoomList"
+                    level={SettingLevel.DEVICE}
+                    useCheckbox={true}
+                />
+            </div>
             <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_RoomListStyleSection">
                 <span className="mx_SettingsTab_subheading">{ _t("Room list style") }</span>
                 { roomListStyleSection }
@@ -433,49 +461,82 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
     }
 
     private renderFontSection() {
-        return <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_fontScaling">
+        const brand = SdkConfig.get().brand;
+        const systemFontTooltipContent = _t(
+            "Set the name of a font installed on your system & %(brand)s will attempt to use it.",
+            { brand },
+        );
 
-            <span className="mx_SettingsTab_subheading">{ _t("Font size") }</span>
-            <EventTilePreview
-                className="mx_AppearanceUserSettingsTab_fontSlider_preview"
-                message={this.MESSAGE_PREVIEW_TEXT}
-                layout={this.state.layout}
-                userId={this.state.userId}
-                displayName={this.state.displayName}
-                avatarUrl={this.state.avatarUrl}
-            />
-            <div className="mx_AppearanceUserSettingsTab_fontSlider">
-                <div className="mx_AppearanceUserSettingsTab_fontSlider_smallText">Aa</div>
-                <Slider
-                    values={[13, 14, 15, 16, 18]}
-                    value={parseInt(this.state.fontSize, 10)}
-                    onSelectionChange={this.onFontSizeChanged}
-                    displayFunc={_ => ""}
-                    disabled={this.state.useCustomFontSize}
-                />
-                <div className="mx_AppearanceUserSettingsTab_fontSlider_largeText">Aa</div>
+        return <>
+            <div className="mx_SettingsTab_heading">{ _t("Font size and typeface") }</div>
+            <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_fontScaling">
+                { /* <EventTilePreview
+                    className="mx_AppearanceUserSettingsTab_fontSlider_preview"
+                    message={this.MESSAGE_PREVIEW_TEXT}
+                    layout={this.state.layout}
+                    userId={this.state.userId}
+                    displayName={this.state.displayName}
+                    avatarUrl={this.state.avatarUrl}
+                /> */ }
+                <div className="mx_AppearanceUserSettingsTab_fontSlider">
+                    <div className="mx_AppearanceUserSettingsTab_fontSlider_smallText">Aa</div>
+                    <Slider
+                        values={[13, 14, 15, 16, 18]}
+                        value={parseInt(this.state.fontSize, 10)}
+                        onSelectionChange={this.onFontSizeChanged}
+                        displayFunc={_ => ""}
+                        disabled={this.state.useCustomFontSize}
+                    />
+                    <div className="mx_AppearanceUserSettingsTab_fontSlider_largeText">Aa</div>
+                </div>
+
+                <div className="mx_AppearanceUserSettingsTab_inlineCustomValues">
+                    <div>
+                        <SettingsFlag
+                            name="useCustomFontSize"
+                            level={SettingLevel.ACCOUNT}
+                            onChange={(checked) => this.setState({ useCustomFontSize: checked })}
+                            useCheckbox={true}
+                        />
+                        <Field
+                            type="number"
+                            label={_t("Font size")}
+                            autoComplete="off"
+                            placeholder={this.state.fontSize.toString()}
+                            value={this.state.fontSize.toString()}
+                            id="font_size_field"
+                            onValidate={this.onValidateFontSize}
+                            onChange={(value) => this.setState({ fontSize: value.target.value })}
+                            disabled={!this.state.useCustomFontSize}
+                            className="mx_SettingsTab_customFontSizeField"
+                        />
+                    </div>
+                    <div>
+                        <SettingsFlag
+                            name="useSystemFont"
+                            level={SettingLevel.DEVICE}
+                            useCheckbox={true}
+                            onChange={(checked) => this.setState({ useSystemFont: checked })}
+                        />
+                        <Field
+                            className="mx_AppearanceUserSettingsTab_systemFont"
+                            label={SettingsStore.getDisplayName("systemFont")}
+                            onChange={(value) => {
+                                this.setState({
+                                    systemFont: value.target.value,
+                                });
+
+                                SettingsStore.setValue("systemFont", null, SettingLevel.DEVICE, value.target.value);
+                            }}
+                            tooltipContent={systemFontTooltipContent}
+                            forceTooltipVisible={true}
+                            disabled={!this.state.useSystemFont}
+                            value={this.state.systemFont}
+                        />
+                    </div>
+                </div>
             </div>
-
-            <SettingsFlag
-                name="useCustomFontSize"
-                level={SettingLevel.ACCOUNT}
-                onChange={(checked) => this.setState({ useCustomFontSize: checked })}
-                useCheckbox={true}
-            />
-
-            <Field
-                type="number"
-                label={_t("Font size")}
-                autoComplete="off"
-                placeholder={this.state.fontSize.toString()}
-                value={this.state.fontSize.toString()}
-                id="font_size_field"
-                onValidate={this.onValidateFontSize}
-                onChange={(value) => this.setState({ fontSize: value.target.value })}
-                disabled={!this.state.useCustomFontSize}
-                className="mx_SettingsTab_customFontSizeField"
-            />
-        </div>;
+        </>;
     }
 
     private renderUserNameColorModeSection() {
@@ -517,89 +578,6 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
         </>;
     }
 
-    private renderAdvancedSection() {
-        if (!SettingsStore.getValue(UIFeature.AdvancedSettings)) return null;
-
-        const brand = SdkConfig.get().brand;
-        // const toggle = <div
-        //     className="mx_AppearanceUserSettingsTab_AdvancedToggle"
-        //     onClick={() => this.setState({ showAdvanced: !this.state.showAdvanced })}
-        // >
-        //     { this.state.showAdvanced ? _t("Hide advanced") : _t("Show advanced") }
-        // </div>;
-        const toggle = <span className="mx_SettingsTab_subheading">{_t("Advanced")}</span>;
-
-        let advanced: React.ReactNode;
-
-        if (this.state.showAdvanced) {
-            const tooltipContent = _t(
-                "Set the name of a font installed on your system & %(brand)s will attempt to use it.",
-                { brand },
-            );
-            /*
-            advanced = <>
-                <StyledCheckbox
-                    checked={this.state.layout == Layout.IRC}
-                    onChange={(ev) => this.onIRCLayoutChange(ev.target.checked)}
-                >
-                    {_t("Enable experimental, compact IRC style layout")}
-                </StyledCheckbox>
-                */
-            advanced = <>
-                <SettingsFlag
-                    name="unifiedRoomList"
-                    level={SettingLevel.DEVICE}
-                    useCheckbox={true}
-                />
-                <SettingsFlag
-                    name="useCompactLayout"
-                    level={SettingLevel.DEVICE}
-                    useCheckbox={true}
-                    disabled={this.state.layout !== Layout.Group}
-                />
-                <SettingsFlag
-                    name="singleSideBubbles"
-                    level={SettingLevel.DEVICE}
-                    useCheckbox={true}
-                    disabled={this.state.layout !== Layout.Bubble || this.state.adaptiveSideBubbles}
-                />
-                <SettingsFlag
-                    name="adaptiveSideBubbles"
-                    level={SettingLevel.DEVICE}
-                    useCheckbox={true}
-                    onChange={(checked) => this.setState({ adaptiveSideBubbles: checked })}
-                    disabled={this.state.layout !== Layout.Bubble}
-                />
-
-                <SettingsFlag
-                    name="useSystemFont"
-                    level={SettingLevel.DEVICE}
-                    useCheckbox={true}
-                    onChange={(checked) => this.setState({ useSystemFont: checked })}
-                />
-                <Field
-                    className="mx_AppearanceUserSettingsTab_systemFont"
-                    label={SettingsStore.getDisplayName("systemFont")}
-                    onChange={(value) => {
-                        this.setState({
-                            systemFont: value.target.value,
-                        });
-
-                        SettingsStore.setValue("systemFont", null, SettingLevel.DEVICE, value.target.value);
-                    }}
-                    tooltipContent={tooltipContent}
-                    forceTooltipVisible={true}
-                    disabled={!this.state.useSystemFont}
-                    value={this.state.systemFont}
-                />
-            </>;
-        }
-        return <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_Advanced">
-            { toggle }
-            { advanced }
-        </div>;
-    }
-
     render() {
         const brand = SdkConfig.get().brand;
 
@@ -623,8 +601,6 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                 { this.renderRoomListSection() }
                 { layoutSection }
                 { this.renderFontSection() }
-                { this.renderUserNameColorModeSection() }
-                { this.renderAdvancedSection() }
             </div>
         );
     }

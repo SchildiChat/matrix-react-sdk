@@ -24,6 +24,7 @@ import StyledRadioButton from "../elements/StyledRadioButton";
 import { _t } from "../../../languageHandler";
 import { Layout } from "../../../settings/Layout";
 import { SettingLevel } from "../../../settings/SettingLevel";
+import SettingsFlag from "../elements/SettingsFlag";
 
 interface IProps {
     userId?: string;
@@ -35,6 +36,7 @@ interface IProps {
 
 interface IState {
     layout: Layout;
+    adaptiveSideBubbles: boolean;
 }
 
 export default class LayoutSwitcher extends React.Component<IProps, IState> {
@@ -43,6 +45,7 @@ export default class LayoutSwitcher extends React.Component<IProps, IState> {
 
         this.state = {
             layout: SettingsStore.getValue("layout"),
+            adaptiveSideBubbles: SettingsStore.getValue("adaptiveSideBubbles"),
         };
     }
 
@@ -65,12 +68,9 @@ export default class LayoutSwitcher extends React.Component<IProps, IState> {
             mx_LayoutSwitcher_RadioButton_selected: this.state.layout === Layout.Bubble,
         });
 
-        return (
+        return <>
+            <div className="mx_SettingsTab_heading">{ _t("Message layout") }</div>
             <div className="mx_SettingsTab_section mx_LayoutSwitcher">
-                <span className="mx_SettingsTab_subheading">
-                    { _t("Message layout") }
-                </span>
-
                 <div className="mx_LayoutSwitcher_RadioButtons">
                     <label className={ircClasses}>
                         <EventTilePreview
@@ -127,7 +127,33 @@ export default class LayoutSwitcher extends React.Component<IProps, IState> {
                         </StyledRadioButton>
                     </label>
                 </div>
+
+                <div className="mx_LayoutSwitcher_Checkboxes">
+                    { this.state.layout === Layout.Group ?
+                        <SettingsFlag
+                            name="useCompactLayout"
+                            level={SettingLevel.DEVICE}
+                            useCheckbox={true}
+                        /> : null
+                    }
+                    { this.state.layout === Layout.Bubble ?
+                        <SettingsFlag
+                            name="singleSideBubbles"
+                            level={SettingLevel.DEVICE}
+                            useCheckbox={true}
+                            disabled={this.state.adaptiveSideBubbles}
+                        /> : null
+                    }
+                    { this.state.layout === Layout.Bubble ?
+                        <SettingsFlag
+                            name="adaptiveSideBubbles"
+                            level={SettingLevel.DEVICE}
+                            useCheckbox={true}
+                            onChange={(checked) => this.setState({ adaptiveSideBubbles: checked })}
+                        /> : null
+                    }
+                </div>
             </div>
-        );
+        </>;
     }
 }
