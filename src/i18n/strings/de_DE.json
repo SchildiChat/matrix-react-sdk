@@ -3682,7 +3682,7 @@
     "Normal priority": "Normale Priorität",
     "Enable layout with message bubbles": "Layout mit Sprechblasen aktivieren",
     "Show message bubbles on one side only": "Sprechblasen nur auf einer Seite anzeigen",
-    "Show message bubbles depending on the width either on both sides or only on one side": "Sprechblasen abhänging von der Breite auf beiden Seiten oder nur einer Seite anzeigen",
+    "Show message bubbles depending on the width either on both sides or only on one side": "Sprechblasen abhängig von der Breite auf beiden Seiten oder nur einer Seite anzeigen",
     "Show people and rooms in a combined list": "Personen und Räume in einer gemeinsamen Liste anzeigen",
     "Update notifications": "Updatebenachrichtigungen",
     "Do you want to join a room notifying you about new releases? This is especially useful if your platform doesn't support automatic updates for SchildiChat (e.g. Windows and macOS).": "Möchtest du einem Raum beitreten, der dich über neue Updates informiert? Das ist besonders nützlich, wenn deine Plattform keine automatischen Updates für SchildiChat unterstützt (z. B. Windows und macOS).",
@@ -3704,5 +3704,8 @@
     "Intermediate: medium sized avatar with single-line preview": "Zwischending: mittelgroßer Avatar mit einer einzeiligen Vorschau",
     "Roomy: big avatar with two-line preview": "Geräumig: großer Avatar mit einer zweizeiligen Vorschau",
     "Room list style": "Stil der Raumliste",
-    "Compact: tiny avatar together with name and preview in one line": "Kompakt: winziger Avatar zusammen mit dem Namen und der Vorschau in einer Zeile"
+    "Compact: tiny avatar together with name and preview in one line": "Kompakt: winziger Avatar zusammen mit dem Namen und der Vorschau in einer Zeile",
+    "Hide advanced theme settings": "Erweiterte Designeinstellungen ausblenden",
+    "Font size and typeface": "Schriftgröße und Schriftart",
+    "Show advanced theme settings": "Erweiterte Designeinstellungen anzeigen"
 }
