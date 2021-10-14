@@ -34,6 +34,11 @@ interface IProps {
     room: Room;
     userId: string;
     showApps: boolean; // Render apps
+
+    // a callback which is called when the content of the aux panel changes
+    // content in a way that is likely to make it change size.
+    onResize: () => void;
+
     resizeNotifier: ResizeNotifier;
 }
 
@@ -79,6 +84,13 @@ export default class AuxPanel extends React.Component<IProps, IState> {
 
     shouldComponentUpdate(nextProps, nextState) {
         return objectHasDiff(this.props, nextProps) || objectHasDiff(this.state, nextState);
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        // most changes are likely to cause a resize
+        if (this.props.onResize) {
+            this.props.onResize();
+        }
     }
 
     private rateLimitedUpdate = throttle(() => {

@@ -595,7 +595,11 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
 
         window.addEventListener('beforeunload', this.onPageUnload);
 
+        if (this.props.resizeNotifier) {
+            this.props.resizeNotifier.on("middlePanelResized", this.onResize);
+        }
         this.onResize();
+
         this.recalculateUserNameColorMode();
     }
 
@@ -687,6 +691,9 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         }
 
         window.removeEventListener('beforeunload', this.onPageUnload);
+        if (this.props.resizeNotifier) {
+            this.props.resizeNotifier.removeListener("middlePanelResized", this.onResize);
+        }
 
         // Remove RoomStore listener
         if (this.roomStoreToken) {
@@ -2015,6 +2022,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
                 room={this.state.room}
                 userId={this.context.credentials.userId}
                 showApps={this.state.showApps}
+                onResize={this.onResize}
                 resizeNotifier={this.props.resizeNotifier}
             >
                 { aux }
