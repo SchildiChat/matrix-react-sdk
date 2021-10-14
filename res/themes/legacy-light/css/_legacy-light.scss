@@ -336,17 +336,7 @@ $kbd-border-color: $reaction-row-button-border-color;
 $tooltip-timeline-bg-color: $groupFilterPanel-bg-color;
 $tooltip-timeline-fg-color: #ffffff;
 
-$interactive-tooltip-bg-color: #212121;
-$interactive-tooltip-fg-color: #ffffff;
-
-$breadcrumb-placeholder-bg-color: #e0e0e0;
-
-$user-tile-hover-bg-color: $header-panel-bg-color;
-
-$message-body-panel-fg-color: $secondary-fg-color;
-$message-body-panel-bg-color: #e0e0e0;
-$message-body-panel-icon-fg-color: $secondary-fg-color;
-$message-body-panel-icon-bg-color: $system;
+$breadcrumb-placeholder-bg-color: #e8eef5;
 
 // See non-legacy _light for variable information
 $voice-record-stop-symbol-color: #ff4b55;
@@ -354,8 +344,8 @@ $voice-record-live-circle-color: #ff4b55;
 $voice-record-stop-border-color: #e0e0e0;
 $voice-record-waveform-incomplete-fg-color: #bdbdbd;
 $voice-record-icon-color: $tertiary-fg-color;
-$voice-playback-button-bg-color: $message-body-panel-icon-bg-color;
-$voice-playback-button-fg-color: $message-body-panel-icon-fg-color;
+$voice-playback-button-bg-color: $system;
+$voice-playback-button-fg-color: $secondary-content;
 
 // FontSlider colors
 $appearance-tab-border-color: $input-darker-bg-color;

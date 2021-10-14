@@ -59,6 +59,8 @@ import { replaceableComponent } from "../../utils/replaceableComponent";
 import InlineSpinner from "../views/elements/InlineSpinner";
 import TooltipButton from "../views/elements/TooltipButton";
 import { Theme } from "../../settings/Theme";
+import { logger } from "matrix-js-sdk/src/logger";
+
 interface IProps {
     isMinimized: boolean;
 }
@@ -224,7 +226,7 @@ export default class UserMenu extends React.Component<IProps, IState> {
 
         // TODO: Archived room view: https://github.com/vector-im/element-web/issues/14038
         // Note: You'll need to uncomment the button too.
-        console.log("TODO: Show archived rooms");
+        logger.log("TODO: Show archived rooms");
     };
 
     private onProvideFeedback = (ev: ButtonEvent) => {
