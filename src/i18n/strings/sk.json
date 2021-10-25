@@ -1767,10 +1767,5 @@
     "Identity server (%(server)s)": "Server totožností (%(server)s)",
     "Could not connect to identity server": "Nie je možné sa pripojiť k serveru totožností",
     "Not a valid identity server (status code %(code)s)": "Toto nie je funkčný server totožností (kód stavu %(code)s)",
-    "Identity server URL must be HTTPS": "URL adresa servera totožností musí začínať HTTPS",
-    "Enable layout with message bubbles": "Povolenie rozloženia s bublinami správ",
-    "Show message bubbles on one side only": "Zobrazenie bublín správ len na jednej strane",
-    "Show message bubbles depending on the width either on both sides or only on one side": "Zobrazenie bublín správ v závislosti od šírky buď na oboch stranách, alebo len na jednej strane",
-    "Message bubbles": "Bubliny správ",
-    "Normal priority": "Normálna priorita"
+    "Identity server URL must be HTTPS": "URL adresa servera totožností musí začínať HTTPS"
 }
