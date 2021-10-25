@@ -52,6 +52,7 @@ import {
     showAddExistingRooms,
     showCreateNewRoom,
     showCreateNewSubspace,
+    showSpaceInvite,
     showSpaceSettings,
 } from "../../utils/space";
 import SpaceHierarchy, { showRoom } from "./SpaceHierarchy";
@@ -79,8 +80,11 @@ import { useAsyncMemo } from "../../hooks/useAsyncMemo";
 import Spinner from "../views/elements/Spinner";
 import GroupAvatar from "../views/avatars/GroupAvatar";
 import { useDispatcher } from "../../hooks/useDispatcher";
+import { useRoomState } from "../../hooks/useRoomState";
 
 import { logger } from "matrix-js-sdk/src/logger";
+import { shouldShowComponent } from "../../customisations/helpers/UIComponents";
+import { UIComponent } from "../../settings/UIFeature";
 
 interface IProps {
     space: Room;
@@ -124,7 +128,7 @@ const useMyRoomMembership = (room: Room) => {
 };
 
 const SpaceInfo = ({ space }) => {
-    const joinRule = space.getJoinRule();
+    const joinRule = useRoomState(space, state => state.getJoinRule());
 
     let visibilitySection;
     if (joinRule === "public") {
@@ -204,8 +208,9 @@ const SpacePreview = ({ space, onJoinButtonClicked, onRejectButtonClicked }: ISp
 
     const spacesEnabled = SpaceStore.spacesEnabled;
 
+    const joinRule = useRoomState(space, state => state.getJoinRule());
     const cannotJoin = getEffectiveMembership(myMembership) === EffectiveMembership.Leave
-        && space.getJoinRule() !== JoinRule.Public;
+        && joinRule !== JoinRule.Public;
 
     let inviterSection;
     let joinButtons;
@@ -270,8 +275,11 @@ const SpacePreview = ({ space, onJoinButtonClicked, onRejectButtonClicked }: ISp
             <AccessibleButton
                 kind="primary"
                 onClick={() => {
-                    setBusy(true);
                     onJoinButtonClicked();
+                    if (!cli.isGuest()) {
+                        // user will be shown a modal that won't fire a room join error
+                        setBusy(true);
+                    }
                 }}
                 disabled={!spacesEnabled || cannotJoin}
             >
@@ -405,19 +413,21 @@ const SpaceLandingAddButton = ({ space }) => {
     </>;
 };
 
-const SpaceLanding = ({ space }) => {
+const SpaceLanding = ({ space }: { space: Room }) => {
     const cli = useContext(MatrixClientContext);
     const myMembership = useMyRoomMembership(space);
     const userId = cli.getUserId();
 
     let inviteButton;
-    if (myMembership === "join" && space.canInvite(userId)) {
+    if (((myMembership === "join" && space.canInvite(userId)) || space.getJoinRule() === JoinRule.Public) &&
+        shouldShowComponent(UIComponent.InviteUsers)
+    ) {
         inviteButton = (
             <AccessibleButton
                 kind="primary"
                 className="mx_SpaceRoomView_landing_inviteButton"
                 onClick={() => {
-                    showRoomInviteDialog(space.roomId);
+                    showSpaceInvite(space);
                 }}
             >
                 { _t("Invite") }
@@ -529,7 +539,7 @@ const SpaceSetupFirstRooms = ({ space, title, description, onFinished }) => {
             }));
             onFinished(roomIds[0]);
         } catch (e) {
-            console.error("Failed to create initial space rooms", e);
+            logger.error("Failed to create initial space rooms", e);
             setError(_t("Failed to create initial space rooms"));
         }
         setBusy(false);
@@ -706,7 +716,7 @@ const SpaceSetupPrivateInvite = ({ space, onFinished }) => {
                 onFinished();
             }
         } catch (err) {
-            console.error("Failed to invite users to space: ", err);
+            logger.error("Failed to invite users to space: ", err);
             setError(_t("We couldn't invite those users. Please check the users you want to invite and try again."));
         }
         setBusy(false);
@@ -729,7 +739,6 @@ const SpaceSetupPrivateInvite = ({ space, onFinished }) => {
         </div>
 
         <div className="mx_SpaceRoomView_inviteTeammates_betaDisclaimer">
-            <BetaPill />
             { _t("<b>This is an experimental feature.</b> For now, " +
                 "new users receiving an invite will have to open the invite on <link/> to actually join.", {}, {
                 b: sub => <b>{ sub }</b>,
@@ -900,21 +909,21 @@ export default class SpaceRoomView extends React.PureComponent<IProps, IState> {
                     space={this.props.space}
                     justCreatedOpts={this.props.justCreatedOpts}
                     onFinished={(invite: boolean) => {
-                        this.setState({ phase: invite ? Phase.PrivateInvite : Phase.PrivateExistingRooms });
+                        this.setState({ phase: invite ? Phase.PrivateCreateRooms : Phase.PrivateExistingRooms });
                     }}
                 />;
             case Phase.PrivateInvite:
                 return <SpaceSetupPrivateInvite
                     space={this.props.space}
-                    onFinished={() => this.setState({ phase: Phase.PrivateCreateRooms })}
+                    onFinished={() => this.setState({ phase: Phase.Landing })}
                 />;
             case Phase.PrivateCreateRooms:
                 return <SpaceSetupFirstRooms
                     space={this.props.space}
-                    title={_t("What projects are you working on?")}
+                    title={_t("What projects are your team working on?")}
                     description={_t("We'll create rooms for each of them. " +
                         "You can add more later too, including already existing ones.")}
-                    onFinished={(firstRoomId: string) => this.setState({ phase: Phase.Landing, firstRoomId })}
+                    onFinished={(firstRoomId: string) => this.setState({ phase: Phase.PrivateInvite, firstRoomId })}
                 />;
             case Phase.PrivateExistingRooms:
                 return <SpaceAddExistingRooms

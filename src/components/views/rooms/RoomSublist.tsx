@@ -56,6 +56,8 @@ import IconizedContextMenu from "../context_menus/IconizedContextMenu";
 import { getKeyBindingsManager, RoomListAction } from "../../../KeyBindingsManager";
 import { replaceableComponent } from "../../../utils/replaceableComponent";
 import SettingsStore from "../../../settings/SettingsStore";
+import { shouldShowComponent } from "../../../customisations/helpers/UIComponents";
+import { UIComponent } from "../../../settings/UIFeature";
 
 const SHOW_N_BUTTON_HEIGHT = 28; // As defined by CSS
 const RESIZE_HANDLE_HEIGHT = 4; // As defined by CSS
@@ -705,7 +707,7 @@ export default class RoomSublist extends React.Component<IProps, IState> {
                     );
 
                     let addRoomButton = null;
-                    if (!!this.props.onAddRoom) {
+                    if (!!this.props.onAddRoom && shouldShowComponent(UIComponent.CreateRooms)) {
                         addRoomButton = (
                             <AccessibleTooltipButton
                                 tabIndex={tabIndex}
@@ -717,6 +719,7 @@ export default class RoomSublist extends React.Component<IProps, IState> {
                             />
                         );
                     } else if (this.props.addRoomContextMenu) {
+                        // We assume that shouldShowComponent() is checked by the context menu itself.
                         addRoomButton = (
                             <ContextMenuTooltipButton
                                 tabIndex={tabIndex}

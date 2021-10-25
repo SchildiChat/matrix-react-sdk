@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-.mx_ReplyThread {
+.mx_ReplyChain {
     margin-top: 0;
     margin-left: 0;
     margin-right: 0;
@@ -22,74 +22,74 @@ limitations under the License.
     padding: 0 10px;
     border-left: 2px solid $button-bg-color;
 
-    .mx_ReplyThread_show {
+    .mx_ReplyChain_show {
         cursor: pointer;
     }
 
-    &.mx_ReplyThread_color1 {
+    &.mx_ReplyChain_color1 {
         border-left-color: $username-variant1-color;
     }
 
-    &.mx_ReplyThread_color2 {
+    &.mx_ReplyChain_color2 {
         border-left-color: $username-variant2-color;
     }
 
-    &.mx_ReplyThread_color3 {
+    &.mx_ReplyChain_color3 {
         border-left-color: $username-variant3-color;
     }
 
-    &.mx_ReplyThread_color4 {
+    &.mx_ReplyChain_color4 {
         border-left-color: $username-variant4-color;
     }
 
-    &.mx_ReplyThread_color5 {
+    &.mx_ReplyChain_color5 {
         border-left-color: $username-variant5-color;
     }
 
-    &.mx_ReplyThread_color6 {
+    &.mx_ReplyChain_color6 {
         border-left-color: $username-variant6-color;
     }
 
-    &.mx_ReplyThread_color7 {
+    &.mx_ReplyChain_color7 {
         border-left-color: $username-variant7-color;
     }
 
-    &.mx_ReplyThread_color8 {
+    &.mx_ReplyChain_color8 {
         border-left-color: $username-variant8-color;
     }
 
     // per power level
-    &.mx_ReplyThread_color_pl100 {
+    &.mx_ReplyChain_color_pl100 {
         border-left-color: $username-pl100-color;
     }
     
-    &.mx_ReplyThread_color_pl95 {
+    &.mx_ReplyChain_color_pl95 {
         border-left-color: $username-pl95-color;
     }
     
-    &.mx_ReplyThread_color_pl51 {
+    &.mx_ReplyChain_color_pl51 {
         border-left-color: $username-pl51-color;
     }
     
-    &.mx_ReplyThread_color_pl50 {
+    &.mx_ReplyChain_color_pl50 {
         border-left-color: $username-pl50-color;
     }
     
-    &.mx_ReplyThread_color_pl1 {
+    &.mx_ReplyChain_color_pl1 {
         border-left-color: $username-pl1-color;
     }
     
-    &.mx_ReplyThread_color_pl0 {
+    &.mx_ReplyChain_color_pl0 {
         border-left-color: $username-pl0-color;
     }
     
     // uniform
-    &.mx_ReplyThread_color_accent {
+    &.mx_ReplyChain_color_accent {
         border-left-color: $accent-color;
     }
 }
 
-.mx_ReplyThread--expanded {
+.mx_ReplyChain--expanded {
     .mx_EventTile_body {
         display: block;
         overflow-y: scroll !important;

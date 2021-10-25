@@ -41,6 +41,8 @@ import { reorderLexicographically } from "../utils/stringOrderField";
 import { TAG_ORDER } from "../components/views/rooms/RoomList";
 import { SettingUpdatedPayload } from "../dispatcher/payloads/SettingUpdatedPayload";
 
+import { logger } from "matrix-js-sdk/src/logger";
+
 type SpaceKey = string | symbol;
 
 interface IState {}
@@ -274,7 +276,7 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
                 viaServers: Array.from(viaMap.get(roomInfo.room_id) || []),
             }));
         } catch (e) {
-            console.error(e);
+            logger.error(e);
         }
         return [];
     };
@@ -296,7 +298,8 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
             const createTs = childRoom?.currentState.getStateEvents(EventType.RoomCreate, "")?.getTs();
             return getChildOrder(ev.getContent().order, createTs, roomId);
         }).map(ev => {
-            return this.matrixClient.getRoom(ev.getStateKey());
+            const history = this.matrixClient.getRoomUpgradeHistory(ev.getStateKey(), true);
+            return history[history.length - 1];
         }).filter(room => {
             return room?.getMyMembership() === "join" || room?.getMyMembership() === "invite";
         }) || [];
@@ -526,8 +529,13 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
                 hiddenChildren.get(spaceId)?.forEach(roomId => {
                     roomIds.add(roomId);
                 });
-                this.spaceFilteredRooms.set(spaceId, roomIds);
-                return roomIds;
+
+                // Expand room IDs to all known versions of the given rooms
+                const expandedRoomIds = new Set(Array.from(roomIds).flatMap(roomId => {
+                    return this.matrixClient.getRoomUpgradeHistory(roomId, true).map(r => r.roomId);
+                }));
+                this.spaceFilteredRooms.set(spaceId, expandedRoomIds);
+                return expandedRoomIds;
             };
 
             fn(s.roomId, new Set());
@@ -808,7 +816,7 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
                 // 1 is Home, 2-9 are the spaces after Home
                 if (payload.num === 1) {
                     this.setActiveSpace(null);
-                } else if (this.spacePanelSpaces.length >= payload.num) {
+                } else if (payload.num > 0 && this.spacePanelSpaces.length > payload.num - 2) {
                     this.setActiveSpace(this.spacePanelSpaces[payload.num - 2]);
                 }
                 break;
@@ -886,7 +894,7 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
         try {
             await this.matrixClient.setRoomAccountData(space.roomId, EventType.SpaceOrder, { order });
         } catch (e) {
-            console.warn("Failed to set root space order", e);
+            logger.warn("Failed to set root space order", e);
             if (this.spaceOrderLocalEchoMap.get(space.roomId) === order) {
                 this.spaceOrderLocalEchoMap.delete(space.roomId);
             }

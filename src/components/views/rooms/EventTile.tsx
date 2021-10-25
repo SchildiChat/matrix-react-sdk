@@ -23,7 +23,7 @@ import { Relations } from "matrix-js-sdk/src/models/relations";
 import { RoomMember } from "matrix-js-sdk/src/models/room-member";
 import { Thread, ThreadEvent } from 'matrix-js-sdk/src/models/thread';
 
-import ReplyThread from "../elements/ReplyThread";
+import ReplyChain from "../elements/ReplyChain";
 import { _t } from '../../../languageHandler';
 import { hasText } from "../../../TextForEvent";
 import * as sdk from "../../../index";
@@ -56,10 +56,13 @@ import ReadReceiptMarker from "./ReadReceiptMarker";
 import MessageActionBar from "../messages/MessageActionBar";
 import ReactionsRow from '../messages/ReactionsRow';
 import { getEventDisplayInfo } from '../../../utils/EventUtils';
-import { RightPanelPhases } from "../../../stores/RightPanelStorePhases";
 import SettingsStore from "../../../settings/SettingsStore";
 import { UserNameColorMode } from '../../../settings/UserNameColorMode';
 import MKeyVerificationConclusion from "../messages/MKeyVerificationConclusion";
+import { dispatchShowThreadEvent } from '../../../dispatcher/dispatch-actions/threads';
+import { MessagePreviewStore } from '../../../stores/room-list/MessagePreviewStore';
+
+import { logger } from "matrix-js-sdk/src/logger";
 
 const eventTileTypes = {
     [EventType.RoomMessage]: 'messages.MessageEvent',
@@ -194,6 +197,7 @@ export enum TileShape {
     FileGrid = "file_grid",
     Pinned = "pinned",
     Thread = "thread",
+    ThreadPanel = "thread_list"
 }
 
 interface IProps {
@@ -342,7 +346,7 @@ export default class EventTile extends React.Component<IProps, IState> {
     private isListeningForReceipts: boolean;
     // TODO: Types
     private tile = React.createRef<unknown>();
-    private replyThread = React.createRef<ReplyThread>();
+    private replyThread = React.createRef<ReplyChain>();
 
     public readonly ref = createRef<HTMLElement>();
 
@@ -481,6 +485,9 @@ export default class EventTile extends React.Component<IProps, IState> {
             this.props.mxEvent.once(ThreadEvent.Ready, this.updateThread);
             this.props.mxEvent.on(ThreadEvent.Update, this.updateThread);
         }
+
+        const room = this.context.getRoom(this.props.mxEvent.getRoomId());
+        room?.on(ThreadEvent.New, this.onNewThread);
     }
 
     private updateThread = (thread) => {
@@ -518,6 +525,13 @@ export default class EventTile extends React.Component<IProps, IState> {
         if (this.props.showReactions) {
             this.props.mxEvent.removeListener("Event.relationsCreated", this.onReactionsCreated);
         }
+        if (SettingsStore.getValue("feature_thread")) {
+            this.props.mxEvent.off(ThreadEvent.Ready, this.updateThread);
+            this.props.mxEvent.off(ThreadEvent.Update, this.updateThread);
+        }
+
+        const room = this.context.getRoom(this.props.mxEvent.getRoomId());
+        room?.off(ThreadEvent.New, this.onNewThread);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -528,39 +542,59 @@ export default class EventTile extends React.Component<IProps, IState> {
         }
     }
 
+    private onNewThread = (thread: Thread) => {
+        if (thread.id === this.props.mxEvent.getId()) {
+            this.updateThread(thread);
+            const room = this.context.getRoom(this.props.mxEvent.getRoomId());
+            room.off(ThreadEvent.New, this.onNewThread);
+        }
+    };
+
     private renderThreadInfo(): React.ReactNode {
         if (!SettingsStore.getValue("feature_thread")) {
             return null;
         }
 
-        const thread = this.state.thread;
+        /**
+         * Accessing the threads value through the room due to a race condition
+         * that will be solved when there are proper backend support for threads
+         * We currently have no reliable way to discover than an event is a thread
+         * when we are at the sync stage
+         */
         const room = MatrixClientPeg.get().getRoom(this.props.mxEvent.getRoomId());
+        const thread = room?.threads.get(this.props.mxEvent.getId());
+
+        if (thread && !thread.ready) {
+            thread.addEvent(this.props.mxEvent, true);
+        }
+
         if (!thread || this.props.showThreadInfo === false || thread.length <= 1) {
             return null;
         }
 
-        const avatars = Array.from(thread.participants).map((mxId: string) => {
-            const member = room.getMember(mxId);
-            return <MemberAvatar key={member.userId} member={member} width={14} height={14} />;
-        });
+        const threadMessagePreview = MessagePreviewStore.instance.generateThreadPreview(this.state.thread);
+
+        if (!threadMessagePreview) return null;
 
         return (
             <div
                 className="mx_ThreadInfo"
                 onClick={() => {
-                    dis.dispatch({
-                        action: Action.SetRightPanelPhase,
-                        phase: RightPanelPhases.ThreadView,
-                        refireParams: {
-                            event: this.props.mxEvent,
-                        },
-                    });
+                    dispatchShowThreadEvent(this.props.mxEvent);
                 }}
             >
-                <span className="mx_EventListSummary_avatars">
-                    { avatars }
+                <span className="mx_ThreadInfo_thread-icon" />
+                <span className="mx_ThreadInfo_threads-amount">
+                    { _t("%(count)s reply", {
+                        count: thread.length - 1,
+                    }) }
                 </span>
-                { thread.length - 1 } { thread.length === 2 ? 'reply' : 'replies' }
+                <MemberAvatar member={thread.replyToEvent.sender} width={24} height={24} />
+                <div className="mx_ThreadInfo_content">
+                    <span className="mx_ThreadInfo_message-preview">
+                        { threadMessagePreview }
+                    </span>
+                </div>
             </div>
         );
     }
@@ -916,7 +950,7 @@ export default class EventTile extends React.Component<IProps, IState> {
     // TODO: Types
     getTile: () => any | null = () => this.tile.current;
 
-    getReplyThread = () => this.replyThread.current;
+    getReplyChain = () => this.replyThread.current;
 
     getReactions = () => {
         if (
@@ -959,7 +993,7 @@ export default class EventTile extends React.Component<IProps, IState> {
         // before trying to instantiate us
         if (!tileHandler) {
             const { mxEvent } = this.props;
-            console.warn(`Event type not supported: type:${eventType} isState:${mxEvent.isState()}`);
+            logger.warn(`Event type not supported: type:${eventType} isState:${mxEvent.isState()}`);
             return <div className="mx_EventTile mx_EventTile_info mx_MNoticeBody">
                 <div className="mx_EventTile_line">
                     { _t('This event could not be displayed') }
@@ -1103,7 +1137,7 @@ export default class EventTile extends React.Component<IProps, IState> {
             reactions={this.state.reactions}
             permalinkCreator={this.props.permalinkCreator}
             getTile={this.getTile}
-            getReplyThread={this.getReplyThread}
+            getReplyChain={this.getReplyChain}
             onFocusChange={this.onActionBarFocusChange}
             isQuoteExpanded={isQuoteExpanded}
             toggleThreadExpanded={() => this.setQuoteExpanded(!isQuoteExpanded)}
@@ -1305,8 +1339,8 @@ export default class EventTile extends React.Component<IProps, IState> {
 
             default: {
                 const thread = haveTileForEvent(this.props.mxEvent) &&
-                    ReplyThread.hasThreadReply(this.props.mxEvent) ? (
-                        <ReplyThread
+                    ReplyChain.hasReply(this.props.mxEvent) ? (
+                        <ReplyChain
                             parentEv={this.props.mxEvent}
                             onHeightChanged={this.props.onHeightChanged}
                             ref={this.replyThread}
@@ -1416,8 +1450,8 @@ export default class EventTile extends React.Component<IProps, IState> {
                                     </div>
                                     { keyRequestInfo }
                                     { reactionsRow }
-                                    { this.renderThreadInfo() }
                                 </div>
+                                { this.renderThreadInfo() }
                             </div>
                             { !infoBubble ? avatar : null }
                             { msgOption }
@@ -1462,8 +1496,8 @@ export default class EventTile extends React.Component<IProps, IState> {
                                 { keyRequestInfo }
                                 { actionBar }
                                 { this.props.layout === Layout.IRC && (reactionsRow) }
-                                { this.renderThreadInfo() }
                             </div>
+                            { this.renderThreadInfo() }
                             { this.props.layout !== Layout.IRC && (reactionsRow) }
                             { msgOption }
                         </>)

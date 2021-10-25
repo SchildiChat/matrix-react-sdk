@@ -256,11 +256,11 @@ $left-gutter: 54px;
         max-width: 100%;
     }
 
-    // blockquote.mx_ReplyThread {
+    // blockquote.mx_ReplyChain {
     //     margin-bottom: 10px;
     // }
 
-    .mx_ReplyThread, .mx_ReplyPreview {
+    .mx_ReplyChain, .mx_ReplyPreview {
         // padding-top: 2px;
 
         .mx_EventTile_avatar {
@@ -522,11 +522,11 @@ $left-gutter: 54px;
             display: block;
         }
 
-        .mx_ReplyThread_wrapper {
+        .mx_ReplyChain_wrapper {
             margin-top: 3px;
         }
 
-        > *:not(.mx_ReplyThread_wrapper) {
+        > *:not(.mx_ReplyChain_wrapper) {
             .markdown-body > blockquote {
                 margin-top: 3px !important;
             }
