@@ -567,6 +567,8 @@ $left-gutter: 54px;
                 &:dir(rtl) {
                     display: block;
                     margin-inline-start: unset;
+                    height: unset;
+                    opacity: 0;
                 }
             }
 
