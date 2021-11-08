@@ -41,6 +41,7 @@ replace_colors() {
     sed -i 's|#238cf5|#303030|gi' "$f"
     sed -i 's|#25271F|#303030|gi' "$f"
     sed -i 's|#272c35|#303030|gi' "$f"
+    sed -i 's|#2a3039|#303030|gi' "$f"
     sed -i 's|#343a46|#424242|gi' "$f"
     sed -i 's|#3c4556|#424242|gi' "$f"
     sed -i 's|#3d3b39|#424242|gi' "$f"

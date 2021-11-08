@@ -310,9 +310,6 @@ $authpage-primary-color: #212121;
 $authpage-secondary-color: #616161;
 
 $dark-panel-bg-color: $roomlist-bg-color;
-$message-bubble-background: #eeeeee;
-$message-bubble-background-self: #F1F8E9;
-$message-bubble-background-selected: #DBEDC6;
 $panel-gradient: rgba(242, 245, 248, 0), rgba(242, 245, 248, 1);
 
 $message-action-bar-bg-color: $primary-bg-color;
@@ -345,7 +342,12 @@ $appearance-tab-border-color: $input-darker-bg-color;
 $composer-shadow-color: tranparent;
 
 // Background for code in event tile
-$eventtile-code-bg-color: #00000010;
+$codeblock-background-color: #00000010;
+
+// Message bubbles
+$message-bubble-background: #eeeeee;
+$message-bubble-background-self: #F1F8E9;
+$message-bubble-background-selected: #DBEDC6;
 
 // pinned events indicator
 $pinned-unread-color: $notice-primary-color;

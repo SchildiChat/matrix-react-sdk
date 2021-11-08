@@ -27,6 +27,7 @@ export enum Formatting {
     Strikethrough = "strikethrough",
     Code = "code",
     Quote = "quote",
+    InsertLink = "insert_link",
 }
 
 interface IProps {
@@ -57,6 +58,7 @@ export default class MessageComposerFormatBar extends React.PureComponent<IProps
             <FormatButton label={_t("Strikethrough")} onClick={() => this.props.onAction(Formatting.Strikethrough)} icon="Strikethrough" visible={this.state.visible} />
             <FormatButton label={_t("Code block")} onClick={() => this.props.onAction(Formatting.Code)} icon="Code" visible={this.state.visible} />
             <FormatButton label={_t("Quote")} onClick={() => this.props.onAction(Formatting.Quote)} icon="Quote" shortcut={this.props.shortcuts.quote} visible={this.state.visible} />
+            <FormatButton label={_t("Insert link")} onClick={() => this.props.onAction(Formatting.InsertLink)} icon="InsertLink" visible={this.state.visible} />
         </div>);
     }
 
@@ -78,8 +80,8 @@ export default class MessageComposerFormatBar extends React.PureComponent<IProps
         }
         this.formatBarRef.current.style.left = `${left}px`;
 
-        // 12 is half the height of the bar (e.g. to center it) and 16 is an offset that felt ok.
-        this.formatBarRef.current.style.top = `${selectionRect.top - parentRect.top - 16 - 12}px`;
+        // 16 is half the height of the bar (e.g. to center it) and 16 is an offset that felt ok.
+        this.formatBarRef.current.style.top = `${selectionRect.top - parentRect.top - 16 - 16}px`;
     }
 
     public hide(): void {
@@ -115,8 +117,6 @@ class FormatButton extends React.PureComponent<IFormatButtonProps> {
 
         return (
             <AccessibleTooltipButton
-                element="button"
-                type="button"
                 onClick={this.props.onClick}
                 title={this.props.label}
                 tooltip={tooltip}

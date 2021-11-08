@@ -19,7 +19,7 @@ import SettingsStore from '../SettingsStore';
 import dis from '../../dispatcher/dispatcher';
 import { Action } from '../../dispatcher/actions';
 import ThemeController from "../controllers/ThemeController";
-import { setTheme, getCustomTheme } from "../../theme";
+import { setTheme, getCustomTheme, findHighContrastTheme } from "../../theme";
 import { ActionPayload } from '../../dispatcher/payloads';
 import { Theme } from '../Theme';
 
@@ -31,6 +31,7 @@ export default class ThemeWatcher {
 
     private preferDark: MediaQueryList;
     private preferLight: MediaQueryList;
+    private preferHighContrast: MediaQueryList;
 
     private static currentTheme: string;
 
@@ -44,6 +45,7 @@ export default class ThemeWatcher {
         // we can get the tristate of dark/light/unsupported
         this.preferDark = (<any>global).matchMedia("(prefers-color-scheme: dark)");
         this.preferLight = (<any>global).matchMedia("(prefers-color-scheme: light)");
+        this.preferHighContrast = (<any>global).matchMedia("(prefers-contrast: more)");
 
         ThemeWatcher.currentTheme = this.getEffectiveTheme();
     }
@@ -55,6 +57,7 @@ export default class ThemeWatcher {
         if (this.preferDark.addEventListener) {
             this.preferDark.addEventListener('change', this.onChange);
             this.preferLight.addEventListener('change', this.onChange);
+            this.preferHighContrast.addEventListener('change', this.onChange);
         }
         this.dispatcherRef = dis.register(this.onAction);
     }
@@ -63,6 +66,7 @@ export default class ThemeWatcher {
         if (this.preferDark.addEventListener) {
             this.preferDark.removeEventListener('change', this.onChange);
             this.preferLight.removeEventListener('change', this.onChange);
+            this.preferHighContrast.removeEventListener('change', this.onChange);
         }
         SettingsStore.unwatchSetting(this.themeInUseWatchRef);
         SettingsStore.unwatchSetting(this.darkThemeWatchRef);
@@ -108,6 +112,22 @@ export default class ThemeWatcher {
         } else {
             return SettingsStore.getValue('light_theme');
         }
+    }
+
+    private themeBasedOnSystem() {
+        let newTheme: string;
+        if (this.preferDark.matches) {
+            newTheme = 'dark';
+        } else if (this.preferLight.matches) {
+            newTheme = 'light';
+        }
+        if (this.preferHighContrast.matches) {
+            const hcTheme = findHighContrastTheme(newTheme);
+            if (hcTheme) {
+                newTheme = hcTheme;
+            }
+        }
+        return newTheme;
     }
 
     public isSystemThemeSupported() {

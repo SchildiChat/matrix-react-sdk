@@ -197,9 +197,6 @@ $visual-bell-bg-color: #800;
 $room-warning-bg-color: $header-panel-bg-color;
 
 $dark-panel-bg-color: $header-panel-bg-color;
-$message-bubble-background: #424242;
-$message-bubble-background-self: #303030;
-$message-bubble-background-selected: #3F4931;
 $panel-gradient: rgba(48, 48, 48, 0), rgba(48, 48, 48, 1);
 
 $message-action-bar-bg-color: $header-panel-bg-color;
@@ -230,7 +227,12 @@ $appearance-tab-border-color: $room-highlight-color;
 $composer-shadow-color: tranparent;
 
 // Background for code in event tile
-$eventtile-code-bg-color: #121212;
+$codeblock-background-color: #121212;
+
+// Message bubbles
+$message-bubble-background: #424242;
+$message-bubble-background-self: #303030;
+$message-bubble-background-selected: #3F4931;
 
 // ***** Mixins! *****
 

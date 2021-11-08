@@ -117,7 +117,10 @@ limitations under the License.
     border-right: 8px solid transparent;
 }
 
-.mx_ContextualMenu_spinner {
-    display: block;
-    margin: 0 auto;
+.mx_ContextualMenu_rightAligned {
+    transform: translateX(-100%);
+}
+
+.mx_ContextualMenu_bottomAligned {
+    transform: translateY(-100%);
 }

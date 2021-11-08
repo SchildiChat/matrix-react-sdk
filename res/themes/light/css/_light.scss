@@ -34,8 +34,8 @@ $space-nav: rgba($tertiary-content, 0.15);
 // unified palette
 // try to use these colors when possible
 $accent-color: $accent;
-$accent-bg-color: rgba(139, 195, 74, 0.16);
-$notice-primary-color: #ff4b55;
+$accent-bg-color: rgba(3, 179, 129, 0.16);
+$notice-primary-color: $alert;
 $notice-primary-bg-color: rgba(255, 75, 85, 0.16);
 $header-panel-bg-color: #fafafa;
 
@@ -304,9 +304,6 @@ $authpage-primary-color: #212121;
 $authpage-secondary-color: #616161;
 
 $dark-panel-bg-color: $roomlist-bg-color;
-$message-bubble-background: #eeeeee;
-$message-bubble-background-self: #F1F8E9;
-$message-bubble-background-selected: #DBEDC6;
 $panel-gradient: rgba(242, 245, 248, 0), rgba(242, 245, 248, 1);
 
 $message-action-bar-bg-color: $background;
@@ -330,8 +327,8 @@ $breadcrumb-placeholder-bg-color: #e0e0e0;
 
 // These two don't change between themes. They are the $warning-color, but we don't
 // want custom themes to affect them by accident.
-$voice-record-stop-symbol-color: #ff4b55;
-$voice-record-live-circle-color: #ff4b55;
+$voice-record-stop-symbol-color: #ff5b55;
+$voice-record-live-circle-color: #ff5b55;
 
 $voice-record-stop-border-color: $quinary-content;
 $voice-record-icon-color: $tertiary-content;
@@ -346,7 +343,12 @@ $appearance-tab-border-color: $input-darker-bg-color;
 $composer-shadow-color: rgba(0, 0, 0, 0.04);
 
 // Background for code in event tile
-$eventtile-code-bg-color: #00000010;
+$codeblock-background-color: #00000010;
+
+// Message bubbles
+$message-bubble-background: #eeeeee;
+$message-bubble-background-self: #F1F8E9;
+$message-bubble-background-selected: #DBEDC6;
 
 // ***** Mixins! *****
 
