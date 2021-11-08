@@ -192,51 +192,5 @@ export default class FontScalingPanel extends React.Component<IProps, IState> {
                 </div>
             </div>
         </>;
-        return <div className="mx_SettingsTab_section mx_FontScalingPanel">
-
-            <span className="mx_SettingsTab_subheading">{ _t("Font size") }</span>
-            <EventTilePreview
-                className="mx_FontScalingPanel_fontSlider_preview"
-                message={this.MESSAGE_PREVIEW_TEXT}
-                layout={this.state.layout}
-                userId={this.state.userId}
-                displayName={this.state.displayName}
-                avatarUrl={this.state.avatarUrl}
-            />
-            <div className="mx_FontScalingPanel_fontSlider">
-                <div className="mx_FontScalingPanel_fontSlider_smallText">Aa</div>
-                <Slider
-                    values={[13, 14, 15, 16, 18]}
-                    value={parseInt(this.state.fontSize, 10)}
-                    onSelectionChange={this.onFontSizeChanged}
-                    displayFunc={_ => ""}
-                    disabled={this.state.useCustomFontSize}
-                />
-                <div className="mx_FontScalingPanel_fontSlider_largeText">Aa</div>
-            </div>
-
-            <SettingsFlag
-                name="useCustomFontSize"
-                level={SettingLevel.ACCOUNT}
-                onChange={(checked) => this.setState({ useCustomFontSize: checked })}
-                useCheckbox={true}
-            />
-
-            <Field
-                type="number"
-                label={_t("Font size")}
-                autoComplete="off"
-                placeholder={this.state.fontSize.toString()}
-                value={this.state.fontSize.toString()}
-                id="font_size_field"
-                onValidate={this.onValidateFontSize}
-                onChange={
-                    (value: ChangeEvent<HTMLInputElement>) =>
-                        this.setState({ fontSize: value.target.value })
-                }
-                disabled={!this.state.useCustomFontSize}
-                className="mx_FontScalingPanel_customFontSizeField"
-            />
-        </div>;
     }
 }
