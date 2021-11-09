@@ -16,11 +16,12 @@ limitations under the License.
 
 .mx_InlineSpinner {
     display: inline;
+    vertical-align: middle;
 }
 
 .mx_InlineSpinner img, .mx_InlineSpinner_icon {
-    margin: 0px 6px;
-    vertical-align: -3px;
+    margin: -6px 6px;
+    vertical-align: middle;
 }
 
 .mx_InlineSpinner_icon {
