@@ -162,7 +162,7 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         isFeature: true,
         displayName: _td("Mark rooms as unread"),
         supportedLevels: LEVELS_FEATURE,
-        default: false,
+        default: true,
     },
     "feature_communities_v2_prototypes": {
         isFeature: true,
