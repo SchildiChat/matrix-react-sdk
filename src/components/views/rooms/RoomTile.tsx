@@ -52,7 +52,7 @@ import { replaceableComponent } from "../../../utils/replaceableComponent";
 
 import { logger } from "matrix-js-sdk/src/logger";
 
-import { setRoomMarkedAsUnread } from "../../../Rooms";
+import { isRoomMarkedAsUnread, setRoomMarkedAsUnread } from "../../../Rooms";
 import SettingsStore from "../../../settings/SettingsStore";
 
 interface IProps {
@@ -498,6 +498,7 @@ export default class RoomTile extends React.PureComponent<IProps, IState> {
             const userId = MatrixClientPeg.get().getUserId();
             const canInvite = this.props.room.canInvite(userId);
             const markUnreadEnabled = SettingsStore.getValue("feature_mark_unread");
+            const isUnread = this.notificationState.isUnread || (markUnreadEnabled && isRoomMarkedAsUnread(this.props.room));
 
             contextMenu = <IconizedContextMenu
                 {...contextMenuBelow(this.state.generalMenuPosition)}
@@ -506,7 +507,7 @@ export default class RoomTile extends React.PureComponent<IProps, IState> {
                 compact
             >
                 <IconizedContextMenuOptionList>
-                    {markUnreadEnabled ? (<IconizedContextMenuOption
+                    {(markUnreadEnabled && !isUnread) ? (<IconizedContextMenuOption
                         onClick={this.onMarkUnreadClick}
                         label={_t("Mark as unread")}
                         iconClassName="mx_RoomTile_iconStar"
