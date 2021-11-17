@@ -157,7 +157,7 @@ function guessDMRoomTargetId(room: Room, myUserId: string): string {
 export const UNSTABLE_MSC2867_MARKED_UNREAD_TYPE = 'com.famedly.marked_unread';
 
 export function isRoomMarkedAsUnread(room: Room): boolean {
-    return !!room.getAccountData(UNSTABLE_MSC2867_MARKED_UNREAD_TYPE)?.getContent()?.unread;
+    return room?.getAccountData(UNSTABLE_MSC2867_MARKED_UNREAD_TYPE)?.getContent()?.unread;
 }
 
 export async function setRoomMarkedAsUnread(room: Room, value = true): Promise<void> {
