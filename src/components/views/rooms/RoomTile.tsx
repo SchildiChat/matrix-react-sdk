@@ -467,7 +467,9 @@ export default class RoomTile extends React.PureComponent<IProps, IState> {
 
             // Only show the icon by default if the room is overridden to muted.
             // TODO: [FTUE Notifications] Probably need to detect global mute state
-            mx_RoomTile_notificationsButton_show: state === RoomNotifState.Mute,
+            //mx_RoomTile_notificationsButton_show: state === RoomNotifState.Mute,
+            // SchildiChat: never show the icon by default. This gets in the way of the "marked as unread" icon.
+            mx_RoomTile_notificationsButton_show: false,
         });
 
         return (
