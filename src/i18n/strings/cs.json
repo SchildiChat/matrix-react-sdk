@@ -3347,5 +3347,8 @@
     "Compact: tiny avatar together with name and preview in one line": "Kompaktní: malý avatar spolu se jménem a náhledem v jednom řádku",
     "Show advanced theme settings": "Zobrazit pokročilá nastavení motivu",
     "Font size and typeface": "Velikost a typ písma",
-    "Hide advanced theme settings": "Skrýt pokročilá nastavení motivu"
+    "Hide advanced theme settings": "Skrýt pokročilá nastavení motivu",
+    "Mark rooms as unread": "Povolit označování chatů jako nepřečtených",
+    "Mark as unread": "Označit jako nepřečtené",
+    "Mark as read": "Označit jako přečtené"
 }
