@@ -52,6 +52,9 @@ import { replaceableComponent } from "../../../utils/replaceableComponent";
 
 import { logger } from "matrix-js-sdk/src/logger";
 
+import { isRoomMarkedAsUnread, setRoomMarkedAsUnread } from "../../../Rooms";
+import SettingsStore from "../../../settings/SettingsStore";
+
 interface IProps {
     room: Room;
     showMessagePreview: boolean;
@@ -148,6 +151,13 @@ export default class RoomTile extends React.PureComponent<IProps, IState> {
             );
             prevProps.room?.off("Room.name", this.onRoomNameUpdate);
             this.props.room?.on("Room.name", this.onRoomNameUpdate);
+        }
+
+        // SC: Remove focus from room tile after hiding menu
+        if ((!!prevState.generalMenuPosition && !this.state.generalMenuPosition) ||
+            (!!prevState.notificationsMenuPosition && this.state.notificationsMenuPosition)) {
+            this.roomTileRef?.current?.focus();
+            this.roomTileRef?.current?.blur();
         }
     }
 
@@ -281,6 +291,36 @@ export default class RoomTile extends React.PureComponent<IProps, IState> {
 
     private onCloseGeneralMenu = () => {
         this.setState({ generalMenuPosition: null });
+    };
+
+    private onMarkUnreadClick = (ev: ButtonEvent) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        // Show home if current room is marked unread
+        if (this.state.selected) {
+            dis.dispatch({ action: 'view_home_page' });
+        }
+
+        setRoomMarkedAsUnread(this.props.room);
+        this.setState({ generalMenuPosition: null }); // hide the menu
+    };
+
+    private onMarkReadClick = (ev: ButtonEvent) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        // Clear manually marked as unread
+        const markUnreadEnabled = SettingsStore.getValue("feature_mark_unread");
+        if (markUnreadEnabled) {
+            setRoomMarkedAsUnread(this.props.room, false);
+        }
+        // Update read receipt
+        const events = this.props.room.getLiveTimeline().getEvents();
+        if (events.length) {
+            // noinspection JSIgnoredPromiseFromCall
+            MatrixClientPeg.get().sendReadReceipt(events[events.length - 1]);
+        }
+        this.setState({ generalMenuPosition: null }); // hide the menu
     };
 
     private onTagRoom = (ev: ButtonEvent, tagId: TagID) => {
@@ -440,7 +480,9 @@ export default class RoomTile extends React.PureComponent<IProps, IState> {
 
             // Only show the icon by default if the room is overridden to muted.
             // TODO: [FTUE Notifications] Probably need to detect global mute state
-            mx_RoomTile_notificationsButton_show: state === RoomNotifState.Mute,
+            //mx_RoomTile_notificationsButton_show: state === RoomNotifState.Mute,
+            // SchildiChat: never show the icon by default. This gets in the way of the "marked as unread" icon.
+            mx_RoomTile_notificationsButton_show: false,
         });
 
         return (
@@ -487,6 +529,10 @@ export default class RoomTile extends React.PureComponent<IProps, IState> {
 
             const userId = MatrixClientPeg.get().getUserId();
             const canInvite = this.props.room.canInvite(userId);
+            const markUnreadEnabled = SettingsStore.getValue("feature_mark_unread");
+            const isUnread = this.notificationState.isUnread ||
+                (markUnreadEnabled && isRoomMarkedAsUnread(this.props.room));
+
             contextMenu = <IconizedContextMenu
                 {...contextMenuBelow(this.state.generalMenuPosition)}
                 onFinished={this.onCloseGeneralMenu}
@@ -494,6 +540,16 @@ export default class RoomTile extends React.PureComponent<IProps, IState> {
                 compact
             >
                 <IconizedContextMenuOptionList>
+                    { (markUnreadEnabled && !isUnread) ? (<IconizedContextMenuOption
+                        onClick={this.onMarkUnreadClick}
+                        label={_t("Mark as unread")}
+                        iconClassName="mx_RoomTile_markAsUnread"
+                    />) : null }
+                    { (markUnreadEnabled && isUnread) ? (<IconizedContextMenuOption
+                        onClick={this.onMarkReadClick}
+                        label={_t("Mark as read")}
+                        iconClassName="mx_RoomTile_markAsRead"
+                    />) : null }
                     <IconizedContextMenuCheckbox
                         onClick={(e) => this.onTagRoom(e, DefaultTagID.Favourite)}
                         active={isFavorite}

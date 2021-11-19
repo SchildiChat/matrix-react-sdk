@@ -26,7 +26,11 @@ import * as Unread from '../../Unread';
 import { NotificationState } from "./NotificationState";
 import { getUnsentMessages } from "../../components/structures/RoomStatusBar";
 
+import { isRoomMarkedAsUnread, MARKED_UNREAD_TYPE } from "../../Rooms";
+import SettingsStore from "../../settings/SettingsStore";
+
 export class RoomNotificationState extends NotificationState implements IDestroyable {
+    private featureMarkedUnreadWatcherRef = null;
     constructor(public readonly room: Room) {
         super();
         this.room.on("Room.receipt", this.handleReadReceipt);
@@ -34,8 +38,14 @@ export class RoomNotificationState extends NotificationState implements IDestroy
         this.room.on("Room.redaction", this.handleRoomEventUpdate);
         this.room.on("Room.myMembership", this.handleMembershipUpdate);
         this.room.on("Room.localEchoUpdated", this.handleLocalEchoUpdated);
+        this.room.on("Room.accountData", this.handleRoomAccountDataUpdate);
         MatrixClientPeg.get().on("Event.decrypted", this.handleRoomEventUpdate);
         MatrixClientPeg.get().on("accountData", this.handleAccountDataUpdate);
+
+        this.featureMarkedUnreadWatcherRef = SettingsStore.watchSetting("feature_mark_unread", null, () => {
+            this.updateNotificationState();
+        });
+
         this.updateNotificationState();
     }
 
@@ -50,10 +60,12 @@ export class RoomNotificationState extends NotificationState implements IDestroy
         this.room.removeListener("Room.redaction", this.handleRoomEventUpdate);
         this.room.removeListener("Room.myMembership", this.handleMembershipUpdate);
         this.room.removeListener("Room.localEchoUpdated", this.handleLocalEchoUpdated);
+        this.room.removeListener("Room.accountData", this.handleRoomAccountDataUpdate);
         if (MatrixClientPeg.get()) {
             MatrixClientPeg.get().removeListener("Event.decrypted", this.handleRoomEventUpdate);
             MatrixClientPeg.get().removeListener("accountData", this.handleAccountDataUpdate);
         }
+        SettingsStore.unwatchSetting(this.featureMarkedUnreadWatcherRef);
     }
 
     private handleLocalEchoUpdated = () => {
@@ -83,15 +95,25 @@ export class RoomNotificationState extends NotificationState implements IDestroy
         }
     };
 
+    private handleRoomAccountDataUpdate = (ev: MatrixEvent) => {
+        if (ev.getType() === MARKED_UNREAD_TYPE.name) {
+            this.updateNotificationState();
+        }
+    };
+
     private updateNotificationState() {
         const snapshot = this.snapshot();
+
+        const markUnreadEnabled = SettingsStore.getValue("feature_mark_unread");
+        const markedUnread = markUnreadEnabled && isRoomMarkedAsUnread(this.room);
 
         if (getUnsentMessages(this.room).length > 0) {
             // When there are unsent messages we show a red `!`
             this._color = NotificationColor.Unsent;
             this._symbol = "!";
             this._count = 1; // not used, technically
-        } else if (RoomNotifs.getRoomNotifsState(this.room.roomId) === RoomNotifs.RoomNotifState.Mute) {
+        } else if (RoomNotifs.getRoomNotifsState(this.room.roomId) === RoomNotifs.RoomNotifState.Mute &&
+            !markedUnread) {
             // When muted we suppress all notification states, even if we have context on them.
             this._color = NotificationColor.None;
             this._symbol = null;
@@ -121,10 +143,15 @@ export class RoomNotificationState extends NotificationState implements IDestroy
                 this._color = NotificationColor.Grey;
                 this._count = trueCount;
                 this._symbol = null; // symbol calculated by component
+            } else if (markedUnread) {
+                this._color = NotificationColor.Grey;
+                this._symbol = "!";
+                this._count = 1; // not used, technically
             } else {
                 // We don't have any notified messages, but we might have unread messages. Let's
                 // find out.
                 const hasUnread = Unread.doesRoomHaveUnreadMessages(this.room);
+
                 if (hasUnread) {
                     this._color = NotificationColor.Bold;
                 } else {
