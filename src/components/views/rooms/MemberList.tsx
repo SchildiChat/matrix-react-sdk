@@ -397,7 +397,13 @@ export default class MemberList extends React.Component<IProps, IState> {
         if (userA && !userB) return -1;
         if (!userA && userB) return 1;
 
-        // First by presence
+        // First by power level
+        if (memberA.powerLevel !== memberB.powerLevel) {
+            // console.log("Comparing on power level - returning");
+            return memberB.powerLevel - memberA.powerLevel;
+        }
+
+        // Second by presence
         if (this.showPresence) {
             const convertPresence = (p) => p === 'unavailable' ? 'online' : p;
             const presenceIndex = p => {
@@ -413,12 +419,6 @@ export default class MemberList extends React.Component<IProps, IState> {
                 // console.log("Comparing on presence group - returning");
                 return idxA - idxB;
             }
-        }
-
-        // Second by power level
-        if (memberA.powerLevel !== memberB.powerLevel) {
-            // console.log("Comparing on power level - returning");
-            return memberB.powerLevel - memberA.powerLevel;
         }
 
         // Third by last active
