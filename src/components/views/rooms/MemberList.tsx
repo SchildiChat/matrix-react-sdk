@@ -398,9 +398,30 @@ export default class MemberList extends React.Component<IProps, IState> {
         if (!userA && userB) return 1;
 
         // First by power level
-        if (memberA.powerLevel !== memberB.powerLevel) {
+        // if (memberA.powerLevel !== memberB.powerLevel) {
+        //     // console.log("Comparing on power level - returning");
+        //     return memberB.powerLevel - memberA.powerLevel;
+        // }
+
+        // First sort by relevant power levels
+        const relevantPowerLevels = [100, 50, 0];
+        let powerLevelA = memberA.powerLevel;
+        let powerLevelB = memberB.powerLevel;
+        for (const pl of relevantPowerLevels) {
+            if (powerLevelA >= pl) {
+                powerLevelA = pl;
+                break;
+            }
+        }
+        for (const pl of relevantPowerLevels) {
+            if (powerLevelB >= pl) {
+                powerLevelB = pl;
+                break;
+            }
+        }
+        if (powerLevelA !== powerLevelB) {
             // console.log("Comparing on power level - returning");
-            return memberB.powerLevel - memberA.powerLevel;
+            return powerLevelB - powerLevelA;
         }
 
         // Second by presence
