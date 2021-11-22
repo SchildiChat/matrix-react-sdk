@@ -50,6 +50,7 @@ replace_colors() {
     sed -i 's|#2e3649|#424242|gi' "$f"
     sed -i 's|#4e5054|#424242|gi' "$f"
     sed -i 's|#394049|#424242|gi' "$f"
+    sed -i 's|#3e444c|#424242|gi' "$f"
     sed -i 's|#61708b|#616161|gi' "$f"
     sed -i 's|#616b7f|#616161|gi' "$f"
     sed -i 's|#5c6470|#616161|gi' "$f"
@@ -84,6 +85,7 @@ replace_colors() {
     sed -i 's|rgba(46, 48, 51,|rgba(48, 48, 48,|gi' "$f"
     sed -i 's|rgba(92, 100, 112,|rgba(97, 97, 97,|gi' "$f"
     sed -i 's|rgba(141, 151, 165,|rgba(144, 144, 144,|gi' "$f"
+    sed -i 's|rgba(242, 245, 248,|rgba(248, 248, 248,|gi' "$f"
 
     sed -i "s|\\(\$event-highlight-bg-color: \\).*;|\\1transparent;|gi" "$f"
 
@@ -99,9 +101,10 @@ replace_colors() {
     sed -i "s|#76CFA6|$M_ACCENT|gi" "$f"
     sed -i "s|#03b381|$M_ACCENT|gi" "$f"
     sed -i "s|rgba(3, 179, 129,|rgba($M_ACCENT_DEC,|gi" "$f"
-    sed -i "s|\\(\$accent-color-alt: \\).*;|\\1$M_LINK;|gi" "$f"
-    sed -i "s|\\(\$accent-color-darker: \\).*;|\\1$M_ACCENT_DARK;|gi" "$f"
-    sed -i "s|\\(\$roomtile-default-badge-bg-color: \\).*;|\\1\$accent-color;|gi" "$f"
+    sed -i "s|\\(\$accent-alt: \\).*;|\\1$M_LINK;|gi" "$f"
+    #sed -i "s|\\(\$accent-darker: \\).*;|\\1$M_ACCENT_DARK;|gi" "$f"
+    sed -i "s|\\(\$roomtile-default-badge-bg-color: \\).*;|\\1\$accent;|gi" "$f"
+    sed -i "s|\\(\$input-focused-border-color: \\).*;|\\1\$accent;|gi" "$f"
     sed -i "s|\\(\$reaction-row-button-selected-bg-color: \\).*;|\\1$BG_ACCENT;|gi" "$f"
 }
 

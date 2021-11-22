@@ -32,7 +32,7 @@ limitations under the License.
     width: 5px;
     height: 5px;
     border-radius: 16px;
-    background-color: $button-fg-color;
+    background-color: $secondary-accent-color;
     border: none;
     pointer-events: none;
 }
@@ -41,7 +41,7 @@ limitations under the License.
     height: 38px;
     border-radius: 19px;
     box-sizing: border-box;
-    background: $button-bg-color;
+    background: $accent;
     border: 1.3px solid #09090900;
     cursor: pointer;
     box-shadow: 0px 1px 3px 1px #00000021;

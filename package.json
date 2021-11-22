@@ -1,6 +1,6 @@
 {
   "name": "matrix-react-sdk",
-  "version": "3.34.0",
+  "version": "3.35.1",
   "description": "SDK for matrix.org using React",
   "author": "matrix.org",
   "repository": {
@@ -83,7 +83,7 @@
     "katex": "^0.12.0",
     "linkifyjs": "^2.1.9",
     "lodash": "^4.17.20",
-    "matrix-js-sdk": "15.1.0",
+    "matrix-js-sdk": "15.1.1",
     "matrix-widget-api": "^0.1.0-beta.17",
     "minimist": "^1.2.5",
     "opus-recorder": "^8.0.3",
@@ -195,6 +195,7 @@
     "testMatch": [
       "<rootDir>/test/**/*-test.[jt]s?(x)"
     ],
+    "globalSetup": "<rootDir>/test/globalSetup.js",
     "setupFiles": [
       "jest-canvas-mock"
     ],

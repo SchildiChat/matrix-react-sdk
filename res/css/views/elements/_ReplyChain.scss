@@ -20,7 +20,7 @@ limitations under the License.
     margin-right: 0;
     margin-bottom: 8px;
     padding: 0 10px;
-    border-left: 2px solid $button-bg-color;
+    border-left: 2px solid $accent;
 
     .mx_ReplyChain_show {
         cursor: pointer;
@@ -85,7 +85,7 @@ limitations under the License.
     
     // uniform
     &.mx_ReplyChain_color_accent {
-        border-left-color: $accent-color;
+        border-left-color: $accent;
     }
 }
 

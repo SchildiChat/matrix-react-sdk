@@ -28,7 +28,7 @@ limitations under the License.
         flex-wrap: wrap;
         margin-top: -10px;
 
-        > .mx_RadioButton {
+        > .mx_StyledRadioButton {
             padding: $font-5px $font-10px;
             box-sizing: border-box;
             border-radius: $border-radius-10px;
@@ -63,7 +63,7 @@ limitations under the License.
             }
         }
 
-        > .mx_RadioButton_enabled {
+        > .mx_StyledRadioButton_enabled {
             opacity: 1;
 
             // These colors need to be hardcoded because they don't change with the theme
@@ -124,7 +124,7 @@ limitations under the License.
     color: $primary-content;
 
     .mx_ThemeChoicePanel_AdvancedToggle {
-        color: $accent-color;
+        color: $accent;
         cursor: pointer;
         margin-bottom: 20px;
         font-size: $font-15px;

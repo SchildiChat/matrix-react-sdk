@@ -21,8 +21,8 @@ progress.mx_ProgressBar {
     appearance: none;
     border: none;
 
-    @mixin ProgressBarBorderRadius $border-radius-10px;
-    @mixin ProgressBarColour $progressbar-fg-color;
+    @mixin ProgressBarBorderRadius $border-radius-6px;
+    @mixin ProgressBarColour $accent;
     @mixin ProgressBarBgColour $progressbar-bg-color;
     ::-webkit-progress-value {
         transition: width 1s;

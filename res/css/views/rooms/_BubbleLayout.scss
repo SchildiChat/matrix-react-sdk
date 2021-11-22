@@ -831,7 +831,7 @@ $left-gutter: 54px;
 
         .sc_EventTile_bubble_media {
             > .mx_MImageBody {
-                background: $accent-color;
+                background: $accent;
                 
                 .mx_MImageBody_thumbnail {
                     opacity: 0.7;
@@ -840,7 +840,7 @@ $left-gutter: 54px;
 
             > span.mx_MVideoBody {
                 .sc_MVideoBody_video_container {
-                    background: $accent-color;
+                    background: $accent;
                     border-radius: $border-radius-4px;
                     display: block;
                 }
