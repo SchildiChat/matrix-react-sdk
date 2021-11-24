@@ -33,6 +33,8 @@ $focus-bg-color: #dddddd;
 $accent-fg-color: #ffffff;
 $accent-alt: #368bd6;
 
+$accent: #8BC34A;
+
 $selection-fg-color: $primary-bg-color;
 
 $focus-brightness: 105%;
@@ -149,7 +151,6 @@ $presence-away: #d9b072;
 $presence-offline: #e0e0e0;
 
 // Legacy theme backports
-$accent: #8BC34A;
 $alert: #FF5B55;
 $links: #0086e6;
 $primary-content: $primary-fg-color;
