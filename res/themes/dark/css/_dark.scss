@@ -162,10 +162,6 @@ $tooltip-timeline-fg-color: $primary-content;
 // ********************
 $voice-record-stop-border-color: $quaternary-content;
 $voice-record-icon-color: $quaternary-content;
-// ********************
-
-// Background for code in event tile
-$codeblock-background-color: #121212;
 
 // Message bubbles
 $message-bubble-background: #424242;
@@ -189,7 +185,7 @@ $kbd-border-color: #000000;
 $visual-bell-bg-color: #800;
 $avatar-initial-color: #ffffff;
 $theme-button-bg-color: #e0e0e0;
-$codeblock-background-color: #303030;
+$codeblock-background-color: #121212;
 $resend-button-divider-color: #b3b3b34a; // muted-text with a 4A opacity.
 $breadcrumb-placeholder-bg-color: #303030;
 $composer-shadow-color: rgba(0, 0, 0, 0.28);

@@ -244,9 +244,6 @@ $voice-record-stop-border-color: $quinary-content;
 $voice-record-icon-color: $tertiary-content;
 // ********************
 
-// Background for code in event tile
-$codeblock-background-color: #00000010;
-
 // Message bubbles
 $message-bubble-background: #eeeeee;
 $message-bubble-background-self: #F1F8E9;
@@ -288,7 +285,7 @@ $pinned-color: $tertiary-content;
 $avatar-initial-color: $background;
 $theme-button-bg-color: $quinary-content;
 $selected-color: $secondary-accent-color;
-$codeblock-background-color: $header-panel-bg-color;
+$codeblock-background-color: #00000010;
 $kbd-border-color: $reaction-row-button-border-color;
 // ********************
 
