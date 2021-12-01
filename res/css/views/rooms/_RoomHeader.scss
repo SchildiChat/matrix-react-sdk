@@ -37,9 +37,8 @@ limitations under the License.
     display: flex;
     align-items: center;
     min-width: 0;
-    margin: 0 20px 0 16px;
-    padding-top: 8px;
-    border-bottom: 1px solid $system;
+    padding: 8px 20px 8px 19px;
+    // border-bottom: 1px solid $system;
 
     .mx_InviteOnlyIcon_large {
         margin: 0;
@@ -113,7 +112,7 @@ limitations under the License.
     font-size: $font-18px;
     border-radius: 6px;
     margin: 0 7px;
-    padding: 1px 4px;
+    padding: 1px 0;
     display: flex;
     user-select: none;
 
@@ -167,7 +166,7 @@ limitations under the License.
     font-weight: 400;
     font-size: $font-13px;
     // to align baseline of topic with room name
-    margin: 4px 7px 0;
+    margin: 0px 7px;
     overflow: hidden;
     text-overflow: ellipsis;
     border-bottom: 1px solid transparent;
@@ -183,6 +182,8 @@ limitations under the License.
 
 .mx_RoomHeader_avatar .mx_BaseAvatar_image {
     object-fit: cover;
+    width: 3rem !important;
+    height: 3rem !important;
 }
 
 .mx_RoomHeader_button {
