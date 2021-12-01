@@ -14,9 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-$topLevelHeight: 32px;
-$nestedHeight: 24px;
-$gutterSize: 16px;
+$topLevelHeight: 3.2rem;
+$nestedHeight: 2.4rem;
+$gutterSize: 1.6rem;
 $activeBorderTransparentGap: 1px;
 
 $activeBackgroundColor: $panel-actions;
@@ -82,6 +82,18 @@ $activeBorderColor: $secondary-content;
         flex-direction: column;
         max-width: 250px;
         flex-grow: 1;
+
+        // SC: doubled .mx_SpaceTreeLevel: Size down only space avatars of second hierarchy and down
+        .mx_SpaceTreeLevel {
+            .mx_SpaceButton {
+                .mx_BaseAvatar_image, .mx_BaseAvatar_initial {
+                    border-radius: 8px;
+                    width: $nestedHeight !important;
+                    height: $nestedHeight !important;
+                    line-height: $nestedHeight !important;
+                }
+            }
+        }
     }
 
     .mx_SpaceItem {
@@ -232,8 +244,11 @@ $activeBorderColor: $secondary-content;
             transform: rotate(45deg);
         }
 
-        .mx_BaseAvatar_image {
+        .mx_BaseAvatar_image, .mx_BaseAvatar_initial {
             border-radius: 8px;
+            width: $topLevelHeight !important;
+            height: $topLevelHeight !important;
+            line-height: $topLevelHeight !important;
         }
 
         .mx_SpaceButton_menuButton {
