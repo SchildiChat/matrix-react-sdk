@@ -180,10 +180,14 @@ limitations under the License.
     position: relative;
 }
 
-.mx_RoomHeader_avatar .mx_BaseAvatar_image {
+.mx_RoomHeader_avatar {
     object-fit: cover;
-    width: 3rem !important;
-    height: 3rem !important;
+
+    .mx_BaseAvatar_image, .mx_BaseAvatar_initial {
+        width: 3rem !important;
+        height: 3rem !important;
+        line-height: 3rem !important;
+    }
 }
 
 .mx_RoomHeader_button {

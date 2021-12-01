@@ -77,9 +77,10 @@ $left-gutter: 5.4rem;
         > .mx_EventTile_avatar {
             position: absolute;
 
-            .mx_BaseAvatar_image {
+            .mx_BaseAvatar_image, .mx_BaseAvatar_initial {
                 width: 3rem !important;
                 height: 3rem !important;
+                line-height: 3rem !important;
             }
         }
 
