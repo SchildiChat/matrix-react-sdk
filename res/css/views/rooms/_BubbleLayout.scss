@@ -292,27 +292,6 @@ $left-gutter: 54px;
         top: -36px;
     }
 
-    // ToDo: These break on small width
-    .mx_MFileBody_info, .mx_MediaBody.mx_AudioPlayer_container {
-        display: inline-block;
-        padding: 0;
-        padding-top: 6px;
-        background: transparent;
-        max-width: 100%;
-    }
-    .mx_MFileBody_info {
-        padding-bottom: 6px;
-        color: $primary-content;
-    }
-    .mx_MediaBody.mx_VoiceMessagePrimaryContainer {
-        display: inline-flex;
-        contain: paint;
-        padding-left: 0;
-        padding-right: 0;
-        background: transparent;
-        max-width: 100%;
-    }
-
     .sc_LinkedTimestamp {
         // Get rid of underline with custom themes
         text-decoration: none;
@@ -603,6 +582,27 @@ $left-gutter: 54px;
                     inset-inline-end: unset;
                     right: 10px;
                 }
+            }
+
+            // ToDo: These break on small width
+            .mx_MFileBody_info, .mx_MediaBody.mx_AudioPlayer_container {
+                display: inline-block;
+                padding: 0;
+                padding-top: 6px;
+                background: transparent;
+                max-width: 100%;
+            }
+            .mx_MFileBody_info {
+                padding-bottom: 6px;
+                color: $primary-content;
+            }
+            .mx_MediaBody.mx_VoiceMessagePrimaryContainer {
+                display: inline-flex;
+                contain: paint;
+                padding-left: 0;
+                padding-right: 0;
+                background: transparent;
+                max-width: 100%;
             }
         }
     }
