@@ -3362,5 +3362,8 @@
     "Compact: tiny avatar together with name and preview in one line": "Kompakt: winziger Avatar zusammen mit dem Namen und der Vorschau in einer Zeile",
     "Hide advanced theme settings": "Erweiterte Designeinstellungen ausblenden",
     "Font size and typeface": "Schriftgröße und Schriftart",
-    "Show advanced theme settings": "Erweiterte Designeinstellungen anzeigen"
+    "Show advanced theme settings": "Erweiterte Designeinstellungen anzeigen",
+    "Mark rooms as unread": "Erlaube Chats als ungelesen zu markieren",
+    "Mark as read": "Als gelesen markieren",
+    "Mark as unread": "Als ungelesen markieren"
 }
