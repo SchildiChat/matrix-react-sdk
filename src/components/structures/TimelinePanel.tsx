@@ -49,7 +49,7 @@ import Spinner from "../views/elements/Spinner";
 import EditorStateTransfer from '../../utils/EditorStateTransfer';
 import ErrorDialog from '../views/dialogs/ErrorDialog';
 import { debounce } from 'lodash';
-import { UserNameColorMode } from '../../settings/UserNameColorMode';
+import { UserNameColorMode } from '../../settings/enums/UserNameColorMode';
 
 import { logger } from "matrix-js-sdk/src/logger";
 

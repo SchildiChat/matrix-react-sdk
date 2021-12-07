@@ -21,7 +21,7 @@ import { Action } from '../../dispatcher/actions';
 import ThemeController from "../controllers/ThemeController";
 import { setTheme, getCustomTheme, findHighContrastTheme } from "../../theme";
 import { ActionPayload } from '../../dispatcher/payloads';
-import { Theme } from '../Theme';
+import { Theme } from '../enums/Theme';
 
 export default class ThemeWatcher {
     private lightThemeWatchRef: string;

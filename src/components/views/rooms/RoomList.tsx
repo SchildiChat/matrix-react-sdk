@@ -51,7 +51,7 @@ import { replaceableComponent } from "../../../utils/replaceableComponent";
 import RoomAvatar from "../avatars/RoomAvatar";
 import SettingsStore from "../../../settings/SettingsStore";
 import classNames from "classnames";
-import { RoomListStyle } from "../../../settings/RoomListStyle";
+import { RoomListStyle } from "../../../settings/enums/RoomListStyle";
 import AccessibleTooltipButton from "../elements/AccessibleTooltipButton";
 import { shouldShowComponent } from "../../../customisations/helpers/UIComponents";
 import { UIComponent } from "../../../settings/UIFeature";

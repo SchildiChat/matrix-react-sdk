@@ -89,7 +89,7 @@ import MessageComposer from '../views/rooms/MessageComposer';
 import JumpToBottomButton from "../views/rooms/JumpToBottomButton";
 import TopUnreadMessagesBar from "../views/rooms/TopUnreadMessagesBar";
 import SpaceStore from "../../stores/spaces/SpaceStore";
-import { UserNameColorMode } from '../../settings/UserNameColorMode';
+import { UserNameColorMode } from '../../settings/enums/UserNameColorMode';
 import DMRoomMap from '../../utils/DMRoomMap';
 
 import { logger } from "matrix-js-sdk/src/logger";

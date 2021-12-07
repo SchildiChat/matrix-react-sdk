@@ -31,7 +31,7 @@ import MatrixClientContext from "../../../contexts/MatrixClientContext";
 import { getUserNameColorClass } from "../../../utils/FormattingUtils";
 import AccessibleTooltipButton from "../elements/AccessibleTooltipButton";
 import { TileShape } from "./EventTile";
-import { UserNameColorMode } from "../../../settings/UserNameColorMode";
+import { UserNameColorMode } from "../../../settings/enums/UserNameColorMode";
 
 interface IProps {
     room: Room;

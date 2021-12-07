@@ -52,7 +52,7 @@ import PinnedMessagesCard from "../views/right_panel/PinnedMessagesCard";
 import { throttle } from 'lodash';
 import SpaceStore from "../../stores/spaces/SpaceStore";
 import { RoomPermalinkCreator } from '../../utils/permalinks/Permalinks';
-import { UserNameColorMode } from '../../settings/UserNameColorMode';
+import { UserNameColorMode } from '../../settings/enums/UserNameColorMode';
 import { E2EStatus } from '../../utils/ShieldUtils';
 import { dispatchShowThreadsPanelEvent } from '../../dispatcher/dispatch-actions/threads';
 import TimelineCard from '../views/right_panel/TimelineCard';

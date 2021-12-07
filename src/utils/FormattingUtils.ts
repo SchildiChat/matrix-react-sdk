@@ -17,7 +17,7 @@ limitations under the License.
 
 import { Room } from 'matrix-js-sdk/src';
 import { _t } from '../languageHandler';
-import { UserNameColorMode } from '../settings/UserNameColorMode';
+import { UserNameColorMode } from '../settings/enums/UserNameColorMode';
 import DMRoomMap from './DMRoomMap';
 import { jsxJoin } from './ReactUtils';
 

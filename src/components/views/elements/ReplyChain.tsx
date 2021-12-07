@@ -35,7 +35,7 @@ import Spinner from './Spinner';
 import ReplyTile from "../rooms/ReplyTile";
 import Pill from './Pill';
 import { Room } from 'matrix-js-sdk/src/models/room';
-import { UserNameColorMode } from '../../../settings/UserNameColorMode';
+import { UserNameColorMode } from '../../../settings/enums/UserNameColorMode';
 import { RelationType } from 'matrix-js-sdk/src/@types/event';
 
 /**

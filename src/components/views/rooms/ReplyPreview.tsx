@@ -21,7 +21,7 @@ import { RoomPermalinkCreator } from "../../../utils/permalinks/Permalinks";
 import { replaceableComponent } from "../../../utils/replaceableComponent";
 import ReplyTile from './ReplyTile';
 import { MatrixEvent } from 'matrix-js-sdk/src/models/event';
-import { UserNameColorMode } from '../../../settings/UserNameColorMode';
+import { UserNameColorMode } from '../../../settings/enums/UserNameColorMode';
 import RoomContext, { TimelineRenderingType } from '../../../contexts/RoomContext';
 
 function cancelQuoting(context: TimelineRenderingType) {

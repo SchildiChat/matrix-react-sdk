@@ -59,7 +59,7 @@ import RoomName from "../views/elements/RoomName";
 import { replaceableComponent } from "../../utils/replaceableComponent";
 import InlineSpinner from "../views/elements/InlineSpinner";
 import TooltipButton from "../views/elements/TooltipButton";
-import { Theme } from "../../settings/Theme";
+import { Theme } from "../../settings/enums/Theme";
 import { logger } from "matrix-js-sdk/src/logger";
 
 interface IProps {

@@ -23,7 +23,7 @@ import FlairStore from '../../../stores/FlairStore';
 import { getUserNameColorClass } from '../../../utils/FormattingUtils';
 import MatrixClientContext from "../../../contexts/MatrixClientContext";
 import { replaceableComponent } from "../../../utils/replaceableComponent";
-import { UserNameColorMode } from '../../../settings/UserNameColorMode';
+import { UserNameColorMode } from '../../../settings/enums/UserNameColorMode';
 
 interface IProps {
     mxEvent: MatrixEvent;

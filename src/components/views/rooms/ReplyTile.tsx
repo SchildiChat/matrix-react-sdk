@@ -29,7 +29,7 @@ import { replaceableComponent } from '../../../utils/replaceableComponent';
 import { getEventDisplayInfo, isVoiceMessage } from '../../../utils/EventUtils';
 import MFileBody from "../messages/MFileBody";
 import MVoiceMessageBody from "../messages/MVoiceMessageBody";
-import { UserNameColorMode } from '../../../settings/UserNameColorMode';
+import { UserNameColorMode } from '../../../settings/enums/UserNameColorMode';
 
 import { logger } from "matrix-js-sdk/src/logger";
 
