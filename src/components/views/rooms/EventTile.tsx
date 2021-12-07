@@ -17,7 +17,7 @@ limitations under the License.
 
 import React, { createRef } from 'react';
 import classNames from "classnames";
-import { EventType } from "matrix-js-sdk/src/@types/event";
+import { EventType, MsgType } from "matrix-js-sdk/src/@types/event";
 import { EventStatus, MatrixEvent } from "matrix-js-sdk/src/models/event";
 import { Relations } from "matrix-js-sdk/src/models/relations";
 import { RoomMember } from "matrix-js-sdk/src/models/room-member";
@@ -28,7 +28,7 @@ import { _t } from '../../../languageHandler';
 import { hasText } from "../../../TextForEvent";
 import * as sdk from "../../../index";
 import dis from '../../../dispatcher/dispatcher';
-import { Layout } from "../../../settings/Layout";
+import { Layout } from "../../../settings/enums/Layout";
 import { formatTime } from "../../../DateUtils";
 import { MatrixClientPeg } from '../../../MatrixClientPeg';
 import { ALL_RULE_TYPES } from "../../../mjolnir/BanList";
@@ -57,7 +57,7 @@ import MessageActionBar from "../messages/MessageActionBar";
 import ReactionsRow from '../messages/ReactionsRow';
 import { getEventDisplayInfo } from '../../../utils/EventUtils';
 import SettingsStore from "../../../settings/SettingsStore";
-import { UserNameColorMode } from '../../../settings/UserNameColorMode';
+import { UserNameColorMode } from '../../../settings/enums/UserNameColorMode';
 import MKeyVerificationConclusion from "../messages/MKeyVerificationConclusion";
 import { dispatchShowThreadEvent } from '../../../dispatcher/dispatch-actions/threads';
 import { MessagePreviewStore } from '../../../stores/room-list/MessagePreviewStore';
@@ -131,7 +131,7 @@ export function getHandlerTile(ev) {
     // not even when showing hidden events
     if (type === "m.room.message") {
         const content = ev.getContent();
-        if (content && content.msgtype === "m.key.verification.request") {
+        if (content && content.msgtype === MsgType.KeyVerificationRequest) {
             const client = MatrixClientPeg.get();
             const me = client && client.getUserId();
             if (ev.getSender() !== me && content.to !== me) {
@@ -936,7 +936,7 @@ export default class EventTile extends React.Component<IProps, IState> {
         // matrix.to, but also for it to enable routing within Element when clicked.
         e.preventDefault();
         dis.dispatch({
-            action: 'view_room',
+            action: Action.ViewRoom,
             event_id: this.props.mxEvent.getId(),
             highlighted: true,
             room_id: this.props.mxEvent.getRoomId(),
@@ -1007,7 +1007,7 @@ export default class EventTile extends React.Component<IProps, IState> {
         return this.props.getRelationsForEvent(eventId, "m.annotation", "m.reaction");
     };
 
-    private onReactionsCreated = (relationType, eventType) => {
+    private onReactionsCreated = (relationType: string, eventType: string) => {
         if (relationType !== "m.annotation" || eventType !== "m.reaction") {
             return;
         }
@@ -1343,6 +1343,7 @@ export default class EventTile extends React.Component<IProps, IState> {
                             onHeightChanged={this.props.onHeightChanged}
                             tileShape={this.props.tileShape}
                             editState={this.props.editState}
+                            getRelationsForEvent={this.props.getRelationsForEvent}
                         />
                     </div>,
                 ]);
@@ -1381,6 +1382,7 @@ export default class EventTile extends React.Component<IProps, IState> {
                             tileShape={this.props.tileShape}
                             editState={this.props.editState}
                             replacingEventId={this.props.replacingEventId}
+                            getRelationsForEvent={this.props.getRelationsForEvent}
                         />
                         { actionBar }
                         { timestamp }
@@ -1417,21 +1419,9 @@ export default class EventTile extends React.Component<IProps, IState> {
                         >
                             { linkedTimestamp }
                             { this.renderE2EPadlock() }
-                            { replyChain }
-                            <EventTileType ref={this.tile}
-                                mxEvent={this.props.mxEvent}
-                                forExport={this.props.forExport}
-                                replacingEventId={this.props.replacingEventId}
-                                editState={this.props.editState}
-                                highlights={this.props.highlights}
-                                highlightLink={this.props.highlightLink}
-                                showUrlPreview={this.props.showUrlPreview}
-                                permalinkCreator={this.props.permalinkCreator}
-                                onHeightChanged={this.props.onHeightChanged}
-                                callEventGrouper={this.props.callEventGrouper}
-                                tileShape={this.props.tileShape}
-                            />
-                            { keyRequestInfo }
+                            <div className="mx_EventTile_body">
+                                { MessagePreviewStore.instance.generatePreviewForEvent(this.props.mxEvent) }
+                            </div>
                             { this.renderThreadPanelSummary() }
                         </div>
                         <Toolbar className="mx_MessageActionBar" aria-label={_t("Message Actions")} aria-live="off">
@@ -1467,6 +1457,7 @@ export default class EventTile extends React.Component<IProps, IState> {
                             tileShape={this.props.tileShape}
                             onHeightChanged={this.props.onHeightChanged}
                             editState={this.props.editState}
+                            getRelationsForEvent={this.props.getRelationsForEvent}
                         />
                     </div>,
                     <a
@@ -1572,6 +1563,7 @@ export default class EventTile extends React.Component<IProps, IState> {
                                             showUrlPreview={this.props.showUrlPreview}
                                             onHeightChanged={this.props.onHeightChanged}
                                             callEventGrouper={this.props.callEventGrouper}
+                                            getRelationsForEvent={this.props.getRelationsForEvent}
                                             layout={this.props.layout}
                                             scBubble={true}
                                             scBubbleActionBar={mediaBody ? actionBar : null}
@@ -1623,6 +1615,7 @@ export default class EventTile extends React.Component<IProps, IState> {
                                     permalinkCreator={this.props.permalinkCreator}
                                     onHeightChanged={this.props.onHeightChanged}
                                     callEventGrouper={this.props.callEventGrouper}
+                                    getRelationsForEvent={this.props.getRelationsForEvent}
                                 />
                                 { keyRequestInfo }
                                 { actionBar }
@@ -1631,10 +1624,6 @@ export default class EventTile extends React.Component<IProps, IState> {
                                     { this.renderThreadInfo() }
                                 </> }
                             </div>
-                            { this.props.layout !== Layout.IRC && <>
-                                { reactionsRow }
-                                { this.renderThreadInfo() }
-                            </> }
                             { msgOption }
                         </>)
                     );

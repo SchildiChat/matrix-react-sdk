@@ -23,8 +23,10 @@ replace_colors() {
     local f="$1"
     if [[ "$f" =~ "dark" ]]; then
         BG_ACCENT="$M_ACCENT_DARK"
+        CODEBLOCK_BACKGROUND_COLOR="#121212"
     else
         BG_ACCENT="$M_ACCENT_LIGHT"
+        CODEBLOCK_BACKGROUND_COLOR="#00000010"
     fi
     # Neutral colors
     sed -i 's|#15171b|#212121|gi' "$f"
@@ -62,6 +64,7 @@ replace_colors() {
     sed -i 's|#8D97A5|#808080|gi' "$f"
     sed -i 's|#a2a2a2|#9e9e9e|gi' "$f"
     sed -i 's|#9fa9ba|#aaaaaa|gi' "$f" # maybe use #9e9e9e instead
+    sed -i 's|#acacac|#aaaaaa|gi' "$f" # maybe use #9e9e9e instead
     sed -i 's|#B9BEC6|#b3b3b3|gi' "$f" # maybe use #bdbdbd instead
     sed -i 's|#a1b2d1|#b3b3b3|gi' "$f"
     sed -i 's|#A9B2BC|#b3b3b3|gi' "$f"
@@ -76,8 +79,9 @@ replace_colors() {
     sed -i 's|#e8eef5|#e0e0e0|gi' "$f"
     sed -i 's|#edf3ff|#eeeeee|gi' "$f"
     sed -i 's|#f4f6fa|#f5f5f5|gi' "$f"
+    sed -i 's|#f6f7f8|#f5f5f5|gi' "$f"
+    sed -i 's|#f2f5f8|#f5f5f5|gi' "$f"
     sed -i 's|#f3f8fd|#fafafa|gi' "$f"
-    sed -i 's|#f2f5f8|#ffffff|gi' "$f"
     sed -i 's|rgba(33, 38, 34,|rgba(48, 48, 48,|gi' "$f"
     sed -i 's|rgba(33, 38, 44,|rgba(48, 48, 48,|gi' "$f"
     sed -i 's|rgba(34, 38, 46,|rgba(48, 48, 48,|gi' "$f"
@@ -88,6 +92,10 @@ replace_colors() {
     sed -i 's|rgba(242, 245, 248,|rgba(248, 248, 248,|gi' "$f"
 
     sed -i "s|\\(\$event-highlight-bg-color: \\).*;|\\1transparent;|gi" "$f"
+    sed -i "s|\\(\$preview-widget-bar-color: \\).*;|\\1#bdbdbd;|gi" "$f"
+    sed -i "s|\\(\$blockquote-bar-color: \\).*;|\\1#bdbdbd;|gi" "$f"
+
+    sed -i "s|\\(\$codeblock-background-color: \\).*;|\\1$CODEBLOCK_BACKGROUND_COLOR;|gi" "$f"
 
     # Accent colors
     sed -i "s|#368bd6|$M_ACCENT|gi" "$f"
@@ -104,7 +112,8 @@ replace_colors() {
     sed -i "s|\\(\$accent-alt: \\).*;|\\1$M_LINK;|gi" "$f"
     #sed -i "s|\\(\$accent-darker: \\).*;|\\1$M_ACCENT_DARK;|gi" "$f"
     sed -i "s|\\(\$roomtile-default-badge-bg-color: \\).*;|\\1\$accent;|gi" "$f"
-    sed -i "s|\\(\$input-focused-border-color: \\).*;|\\1\$accent;|gi" "$f"
+    #sed -i "s|\\(\$input-focused-border-color: \\).*;|\\1\$accent;|gi" "$f" # not existing anymore, need replacement?
+    sed -i "s|\\(\$reaction-row-button-selected-bg-color: \\).*;|\\1$BG_ACCENT;|gi" "$f"
     sed -i "s|\\(\$reaction-row-button-selected-bg-color: \\).*;|\\1$BG_ACCENT;|gi" "$f"
 }
 

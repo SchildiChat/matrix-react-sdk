@@ -17,7 +17,7 @@ limitations under the License.
 import React from 'react';
 import { _t } from "../../../languageHandler";
 import SettingsStore from "../../../settings/SettingsStore";
-import { enumerateThemes, findHighContrastTheme, findNonHighContrastTheme, isHighContrastTheme } from "../../../theme";
+import { getOrderedThemes } from "../../../theme";
 import ThemeWatcher from "../../../settings/watchers/ThemeWatcher";
 import AccessibleButton from "../elements/AccessibleButton";
 import dis from "../../../dispatcher/dispatcher";
@@ -28,12 +28,11 @@ import Field from '../elements/Field';
 import StyledRadioGroup from "../elements/StyledRadioGroup";
 import { SettingLevel } from "../../../settings/SettingLevel";
 import { replaceableComponent } from "../../../utils/replaceableComponent";
-import { compare } from "../../../utils/strings";
 
 import { logger } from "matrix-js-sdk/src/logger";
 import StyledRadioButton from '../elements/StyledRadioButton';
-import { Theme } from '../../../settings/Theme';
-import { UserNameColorMode } from '../../../settings/UserNameColorMode';
+import { Theme } from '../../../settings/enums/Theme';
+import { UserNameColorMode } from '../../../settings/enums/UserNameColorMode';
 
 interface IProps {
 }
@@ -317,14 +316,7 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
         let advanced: React.ReactNode;
 
         if (this.state.showAdvancedThemeSettings) {
-            // XXX: replace any type here
-            const themes = Object.entries<any>(enumerateThemes())
-                .map(p => ({ id: p[0], name: p[1] })) // convert pairs to objects for code readability
-                .filter(p => !isHighContrastTheme(p.id));
-            const builtInThemes = themes.filter(p => !p.id.startsWith("custom-"));
-            const customThemes = themes.filter(p => !builtInThemes.includes(p))
-                .sort((a, b) => compare(a.name, b.name));
-            const orderedThemes = [...builtInThemes, ...customThemes];
+            const orderedThemes = getOrderedThemes();
 
             advanced = <>
                 <div className="mx_SettingsTab_section mx_ThemeChoicePanel">

@@ -33,6 +33,7 @@ $slider-selection-dot-size: 2.4em;
 
 $container-border-width: 8px;
 
+$timeline-image-border-radius: $border-radius-8px;
 :root {
     font-size: 10px;
 
@@ -246,10 +247,6 @@ input[type=text]:focus, input[type=password]:focus, textarea:focus {
 
 #mx_theme_secondaryAccentColor {
     color: $secondary-accent-color;
-}
-
-#mx_theme_tertiaryAccentColor {
-    color: $tertiary-accent-color;
 }
 
 /* Expected z-indexes for dialogs:

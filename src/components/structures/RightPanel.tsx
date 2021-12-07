@@ -55,6 +55,7 @@ import { RoomPermalinkCreator } from '../../utils/permalinks/Permalinks';
 import { UserNameColorMode } from '../../settings/UserNameColorMode';
 import { E2EStatus } from '../../utils/ShieldUtils';
 import { dispatchShowThreadsPanelEvent } from '../../dispatcher/dispatch-actions/threads';
+import TimelineCard from '../views/right_panel/TimelineCard';
 
 interface IProps {
     room?: Room; // if showing panels for a given room, this is set
@@ -202,7 +203,7 @@ export default class RightPanel extends React.Component<IProps, IState> {
     };
 
     private onAction = (payload: ActionPayload) => {
-        const isChangingRoom = payload.action === 'view_room' && payload.room_id !== this.props.room.roomId;
+        const isChangingRoom = payload.action === Action.ViewRoom && payload.room_id !== this.props.room.roomId;
         const isViewingThread = this.state.phase === RightPanelPhases.ThreadView;
         if (isChangingRoom && isViewingThread) {
             dispatchShowThreadsPanelEvent();
@@ -340,7 +341,13 @@ export default class RightPanel extends React.Component<IProps, IState> {
                     />;
                 }
                 break;
-
+            case RightPanelPhases.Timeline:
+                if (!SettingsStore.getValue("feature_maximised_widgets")) break;
+                panel = <TimelineCard
+                    room={this.props.room}
+                    resizeNotifier={this.props.resizeNotifier}
+                    onClose={this.onClose} />;
+                break;
             case RightPanelPhases.FilePanel:
                 panel = <FilePanel
                     roomId={roomId}

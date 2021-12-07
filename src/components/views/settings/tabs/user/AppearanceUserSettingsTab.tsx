@@ -22,15 +22,16 @@ import { MatrixClientPeg } from '../../../../../MatrixClientPeg';
 import SettingsStore from "../../../../../settings/SettingsStore";
 import SettingsFlag from '../../../elements/SettingsFlag';
 import { SettingLevel } from "../../../../../settings/SettingLevel";
-import { Layout } from "../../../../../settings/Layout";
+import { Layout } from "../../../../../settings/enums/Layout";
 import { replaceableComponent } from "../../../../../utils/replaceableComponent";
 import LayoutSwitcher from "../../LayoutSwitcher";
 import StyledRadioButton from '../../../elements/StyledRadioButton';
-import { Theme } from '../../../../../settings/Theme';
-import { RoomListStyle } from '../../../../../settings/RoomListStyle';
+import { Theme } from '../../../../../settings/enums/Theme';
+import { RoomListStyle } from '../../../../../settings/enums/RoomListStyle';
 
 import FontScalingPanel from '../../FontScalingPanel';
 import ThemeChoicePanel from '../../ThemeChoicePanel';
+import ImageSizePanel from "../../ImageSizePanel";
 
 interface IProps {
 }
@@ -177,6 +178,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                 { this.renderRoomListSection() }
                 { layoutSection }
                 <FontScalingPanel />
+                <ImageSizePanel />
             </div>
         );
     }

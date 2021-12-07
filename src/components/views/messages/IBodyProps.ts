@@ -14,12 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { MatrixEvent } from "matrix-js-sdk/src";
+import { MatrixEvent } from "matrix-js-sdk/src/models/event";
 import { TileShape } from "../rooms/EventTile";
 import { MediaEventHelper } from "../../../utils/MediaEventHelper";
 import EditorStateTransfer from "../../../utils/EditorStateTransfer";
 import { RoomPermalinkCreator } from "../../../utils/permalinks/Permalinks";
-import { Layout } from "../../../settings/Layout";
+import { Layout } from "../../../settings/enums/Layout";
+import { Relations } from "matrix-js-sdk/src/models/relations";
 
 export interface IBodyProps {
     mxEvent: MatrixEvent;
@@ -46,4 +47,7 @@ export interface IBodyProps {
     scBubble: boolean;
     scBubbleGroupTimestamp: any;
     scBubbleActionBar: any;
+
+    // helper function to access relations for this event
+    getRelationsForEvent?: (eventId: string, relationType: string, eventType: string) => Relations;
 }

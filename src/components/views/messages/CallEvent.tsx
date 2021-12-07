@@ -27,7 +27,7 @@ import classNames from 'classnames';
 import AccessibleTooltipButton from '../elements/AccessibleTooltipButton';
 import { formatCallTime } from "../../../DateUtils";
 import Clock from "../audio_messages/Clock";
-import { Layout } from '../../../settings/Layout';
+import { Layout } from '../../../settings/enums/Layout';
 
 const MAX_NON_NARROW_WIDTH = 450 / 70 * 100;
 

@@ -20,8 +20,8 @@ import SettingsHandler from "./SettingsHandler";
 import { MatrixClientPeg } from "../../MatrixClientPeg";
 import { SettingLevel } from "../SettingLevel";
 import { CallbackFn, WatchManager } from "../WatchManager";
-import { Layout } from "../Layout";
-import { Theme } from "../Theme";
+import { Layout } from "../enums/Layout";
+import { Theme } from "../enums/Theme";
 
 /**
  * Gets and sets settings at the "device" level for the current device.

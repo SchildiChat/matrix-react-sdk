@@ -28,12 +28,16 @@ import { ReactAnyComponent } from "../../../@types/common";
 import { EventType, MsgType } from "matrix-js-sdk/src/@types/event";
 import { IBodyProps } from "./IBodyProps";
 import { POLL_START_EVENT_TYPE } from '../../../polls/consts';
+import { Relations } from 'matrix-js-sdk/src/models/relations';
 
 // onMessageAllowed is handled internally
 interface IProps extends Omit<IBodyProps, "onMessageAllowed"> {
     /* overrides for the msgtype-specific components, used by ReplyTile to override file rendering */
     overrideBodyTypes?: Record<string, React.Component>;
     overrideEventTypes?: Record<string, React.Component>;
+
+    // helper function to access relations for this event
+    getRelationsForEvent?: (eventId: string, relationType: string, eventType: string) => Relations;
 }
 
 @replaceableComponent("views.messages.MessageEvent")
@@ -157,6 +161,7 @@ export default class MessageEvent extends React.Component<IProps> implements IMe
             scBubble={this.props.scBubble}
             scBubbleGroupTimestamp={this.props.scBubbleGroupTimestamp}
             scBubbleActionBar={this.props.scBubbleActionBar}
+            getRelationsForEvent={this.props.getRelationsForEvent}
         /> : null;
     }
 }

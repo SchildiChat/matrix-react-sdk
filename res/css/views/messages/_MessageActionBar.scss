@@ -55,8 +55,8 @@ limitations under the License.
         margin: 2px;
 
         &:hover {
-            background: $roomlist-button-bg-color;
-            border-radius: $border-radius-4px;
+            background: $panel-actions;
+            border-radius: $border-radius-6px;
             z-index: 1;
         }
     }

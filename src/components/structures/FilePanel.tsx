@@ -36,8 +36,8 @@ import ResizeNotifier from '../../utils/ResizeNotifier';
 import TimelinePanel from "./TimelinePanel";
 import Spinner from "../views/elements/Spinner";
 import { TileShape } from '../views/rooms/EventTile';
-import { Layout } from "../../settings/Layout";
-import { UserNameColorMode } from '../../settings/UserNameColorMode';
+import { Layout } from "../../settings/enums/Layout";
+import { UserNameColorMode } from '../../settings/enums/UserNameColorMode';
 import RoomContext, { TimelineRenderingType } from '../../contexts/RoomContext';
 
 import { logger } from "matrix-js-sdk/src/logger";

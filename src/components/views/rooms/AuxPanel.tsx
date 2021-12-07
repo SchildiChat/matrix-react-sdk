@@ -133,6 +133,7 @@ export default class AuxPanel extends React.Component<IProps, IState> {
             <CallViewForRoom
                 roomId={this.props.room.roomId}
                 resizeNotifier={this.props.resizeNotifier}
+                showApps={this.props.showApps}
             />
         );
 

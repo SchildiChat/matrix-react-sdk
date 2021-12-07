@@ -1,6 +1,6 @@
 {
   "name": "matrix-react-sdk",
-  "version": "3.35.1",
+  "version": "3.36.0",
   "description": "SDK for matrix.org using React",
   "author": "matrix.org",
   "repository": {
@@ -83,7 +83,7 @@
     "katex": "^0.12.0",
     "linkifyjs": "^2.1.9",
     "lodash": "^4.17.20",
-    "matrix-js-sdk": "15.1.1",
+    "matrix-js-sdk": "15.2.0",
     "matrix-widget-api": "^0.1.0-beta.17",
     "minimist": "^1.2.5",
     "opus-recorder": "^8.0.3",
@@ -154,7 +154,7 @@
     "@typescript-eslint/eslint-plugin": "^4.17.0",
     "@typescript-eslint/parser": "^4.17.0",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.1",
-    "allchange": "^1.0.5",
+    "allchange": "^1.0.6",
     "babel-jest": "^26.6.3",
     "chokidar": "^3.5.1",
     "concurrently": "^5.3.0",

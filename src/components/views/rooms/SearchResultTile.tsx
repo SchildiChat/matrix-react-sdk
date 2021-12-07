@@ -24,8 +24,8 @@ import { RoomPermalinkCreator } from '../../../utils/permalinks/Permalinks';
 import { replaceableComponent } from "../../../utils/replaceableComponent";
 import DateSeparator from "../messages/DateSeparator";
 import EventTile, { haveTileForEvent } from "./EventTile";
-import { Layout } from "../../../settings/Layout";
-import { UserNameColorMode } from "../../../settings/UserNameColorMode";
+import { Layout } from "../../../settings/enums/Layout";
+import { UserNameColorMode } from "../../../settings/enums/UserNameColorMode";
 
 interface IProps {
     // a matrix-js-sdk SearchResult containing the details of this result

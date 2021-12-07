@@ -28,7 +28,7 @@ import PinningUtils from "../../../utils/PinningUtils";
 import { useAsyncMemo } from "../../../hooks/useAsyncMemo";
 import PinnedEventTile from "../rooms/PinnedEventTile";
 import { useRoomState } from "../../../hooks/useRoomState";
-import { UserNameColorMode } from "../../../settings/UserNameColorMode";
+import { UserNameColorMode } from "../../../settings/enums/UserNameColorMode";
 
 import { logger } from "matrix-js-sdk/src/logger";
 
@@ -124,20 +124,17 @@ const PinnedMessagesCard = ({ room, onClose, userNameColorMode }: IProps) => {
     if (!pinnedEvents) {
         content = <Spinner />;
     } else if (pinnedEvents.length > 0) {
-        let onUnpinClicked;
-        if (canUnpin) {
-            onUnpinClicked = async (event: MatrixEvent) => {
-                const pinnedEvents = room.currentState.getStateEvents(EventType.RoomPinnedEvents, "");
-                if (pinnedEvents?.getContent()?.pinned) {
-                    const pinned = pinnedEvents.getContent().pinned;
-                    const index = pinned.indexOf(event.getId());
-                    if (index !== -1) {
-                        pinned.splice(index, 1);
-                        await cli.sendStateEvent(room.roomId, EventType.RoomPinnedEvents, { pinned }, "");
-                    }
+        const onUnpinClicked = async (event: MatrixEvent) => {
+            const pinnedEvents = room.currentState.getStateEvents(EventType.RoomPinnedEvents, "");
+            if (pinnedEvents?.getContent()?.pinned) {
+                const pinned = pinnedEvents.getContent().pinned;
+                const index = pinned.indexOf(event.getId());
+                if (index !== -1) {
+                    pinned.splice(index, 1);
+                    await cli.sendStateEvent(room.roomId, EventType.RoomPinnedEvents, { pinned }, "");
                 }
-            };
-        }
+            }
+        };
 
         // show them in reverse, with latest pinned at the top
         content = pinnedEvents.filter(Boolean).reverse().map(ev => (
@@ -145,7 +142,7 @@ const PinnedMessagesCard = ({ room, onClose, userNameColorMode }: IProps) => {
                 key={ev.getId()}
                 room={room}
                 event={ev}
-                onUnpinClicked={() => onUnpinClicked(ev)}
+                onUnpinClicked={canUnpin ? () => onUnpinClicked(ev) : undefined}
                 userNameColorMode={userNameColorMode}
             />
         ));

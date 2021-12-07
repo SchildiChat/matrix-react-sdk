@@ -44,7 +44,7 @@ import RoomViewStore from '../../stores/RoomViewStore';
 import RoomScrollStateStore, { ScrollState } from '../../stores/RoomScrollStateStore';
 import WidgetEchoStore from '../../stores/WidgetEchoStore';
 import SettingsStore from "../../settings/SettingsStore";
-import { Layout } from "../../settings/Layout";
+import { Layout } from "../../settings/enums/Layout";
 import AccessibleButton from "../views/elements/AccessibleButton";
 import RightPanelStore from "../../stores/RightPanelStore";
 import { haveTileForEvent } from "../views/rooms/EventTile";
@@ -98,6 +98,8 @@ import { dispatchShowThreadEvent } from '../../dispatcher/dispatch-actions/threa
 import { fetchInitialEvent } from "../../utils/EventUtils";
 import { ComposerType } from "../../dispatcher/payloads/ComposerInsertPayload";
 import AppsDrawer from '../views/rooms/AppsDrawer';
+import { SetRightPanelPhasePayload } from '../../dispatcher/payloads/SetRightPanelPhasePayload';
+import { RightPanelPhases } from '../../stores/RightPanelStorePhases';
 
 const DEBUG = false;
 let debuglog = function(msg: string) {};
@@ -353,7 +355,15 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
 
     private onWidgetLayoutChange = () => {
         if (!this.state.room) return;
+        if (WidgetLayoutStore.instance.hasMaximisedWidget(this.state.room)) {
+            // Show chat in right panel when a widget is maximised
+            dis.dispatch<SetRightPanelPhasePayload>({
+                action: Action.SetRightPanelPhase,
+                phase: RightPanelPhases.Timeline,
+            });
+        }
         this.checkWidgets(this.state.room);
+        this.checkRightPanel(this.state.room);
     };
 
     private checkWidgets = (room) => {
@@ -369,6 +379,22 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         return (WidgetLayoutStore.instance.hasMaximisedWidget(room))
             ? MainSplitContentType.MaximisedWidget
             : MainSplitContentType.Timeline;
+    };
+
+    private checkRightPanel = (room) => {
+        // This is a hack to hide the chat. This should not be necessary once the right panel
+        // phase is stored per room. (need to be done after check widget so that mainSplitContentType is updated)
+        if (
+            RightPanelStore.getSharedInstance().roomPanelPhase === RightPanelPhases.Timeline &&
+            this.state.showRightPanel &&
+            !WidgetLayoutStore.instance.hasMaximisedWidget(this.state.room)
+        ) {
+            // Two timelines are shown prevent this by hiding the right panel
+            dis.dispatch({
+                action: Action.ToggleRightPanel,
+                type: "room",
+            });
+        }
     };
 
     private onReadReceiptsChange = () => {
@@ -446,6 +472,14 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             } else {
                 newState.initialEventId = initialEventId;
                 newState.isInitialEventHighlighted = RoomViewStore.isInitialEventHighlighted();
+
+                if (thread && initialEvent?.isThreadRoot) {
+                    dispatchShowThreadEvent(
+                        thread.rootEvent,
+                        initialEvent,
+                        RoomViewStore.isInitialEventHighlighted(),
+                    );
+                }
             }
         }
 
@@ -776,7 +810,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
     private onUserScroll = () => {
         if (this.state.initialEventId && this.state.isInitialEventHighlighted) {
             dis.dispatch({
-                action: 'view_room',
+                action: Action.ViewRoom,
                 room_id: this.state.room.roomId,
                 event_id: this.state.initialEventId,
                 highlighted: false,
@@ -885,7 +919,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
 
                     setImmediate(() => {
                         dis.dispatch({
-                            action: 'view_room',
+                            action: Action.ViewRoom,
                             room_id: roomId,
                             deferred_action: payload,
                         });
@@ -1001,7 +1035,11 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
 
         CHAT_EFFECTS.forEach(effect => {
             if (containsEmoji(ev.getContent(), effect.emojis) || ev.getContent().msgtype === effect.msgType) {
-                dis.dispatch({ action: `effects.${effect.command}` });
+                // For initial threads launch, chat effects are disabled
+                // see #19731
+                if (!SettingsStore.getValue("feature_thread") || !ev.isThreadRelation) {
+                    dis.dispatch({ action: `effects.${effect.command}` });
+                }
             }
         });
     };
@@ -1067,6 +1105,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         this.updateE2EStatus(room);
         this.updatePermissions(room);
         this.checkWidgets(room);
+        this.checkRightPanel(room);
 
         this.setState({
             liveTimeline: room.getLiveTimeline(),
@@ -1301,7 +1340,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             dis.dispatch({
                 action: 'do_after_sync_prepared',
                 deferred_action: {
-                    action: 'view_room',
+                    action: Action.ViewRoom,
                     room_id: this.getRoomId(),
                 },
             });
@@ -1680,7 +1719,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             // an event will take care of both clearing the URL fragment and
             // jumping to the bottom
             dis.dispatch({
-                action: 'view_room',
+                action: Action.ViewRoom,
                 room_id: this.state.room.roomId,
             });
         } else {
@@ -2205,6 +2244,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         }
 
         const showRightPanel = this.state.room && this.state.showRightPanel;
+
         const rightPanel = showRightPanel
             ? <RightPanel
                 room={this.state.room}
@@ -2256,7 +2296,21 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             // TODO-video MainSplitContentType.Video:
             //     break;
         }
-
+        let excludedRightPanelPhaseButtons = [RightPanelPhases.Timeline];
+        let onAppsClick = this.onAppsClick;
+        let onForgetClick = this.onForgetClick;
+        let onSearchClick = this.onSearchClick;
+        if (this.state.mainSplitContentType === MainSplitContentType.MaximisedWidget) {
+            // Disable phase buttons and action button to have a simplified header when a widget is maximised
+            // and enable (not disable) the RightPanelPhases.Timeline button
+            excludedRightPanelPhaseButtons = [
+                RightPanelPhases.ThreadPanel,
+                RightPanelPhases.PinnedMessages,
+            ];
+            onAppsClick = null;
+            onForgetClick = null;
+            onSearchClick = null;
+        }
         return (
             <RoomContext.Provider value={this.state}>
                 <main className={mainClasses} ref={this.roomView} onKeyDown={this.onReactKeyDown}>
@@ -2269,12 +2323,13 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
                             searchInfo={searchInfo}
                             oobData={this.props.oobData}
                             inRoom={myMembership === 'join'}
-                            onSearchClick={this.onSearchClick}
-                            onForgetClick={(myMembership === "leave") ? this.onForgetClick : null}
+                            onSearchClick={onSearchClick}
+                            onForgetClick={(myMembership === "leave") ? onForgetClick : null}
                             e2eStatus={this.state.e2eStatus}
-                            onAppsClick={this.state.hasPinnedWidgets ? this.onAppsClick : null}
+                            onAppsClick={this.state.hasPinnedWidgets ? onAppsClick : null}
                             appsShown={this.state.showApps}
                             onCallPlaced={this.onCallPlaced}
+                            excludedRightPanelPhaseButtons={excludedRightPanelPhaseButtons}
                         />
                         <MainSplit panel={rightPanel} resizeNotifier={this.props.resizeNotifier}>
                             <div className="mx_RoomView_body">
