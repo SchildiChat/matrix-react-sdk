@@ -835,7 +835,7 @@ $left-gutter: 5.4rem;
         }
 
         .sc_EventTile_bubble_media {
-            > .mx_MImageBody {
+            > .sc_MImageBody_container .mx_MImageBody {
                 background: $accent;
                 
                 .mx_MImageBody_thumbnail {
