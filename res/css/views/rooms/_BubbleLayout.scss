@@ -341,9 +341,9 @@ $left-gutter: 5.4rem;
     .mx_MImageBody {
         margin-right: 0;
         position: relative;
-        max-width: 600px;
         overflow: hidden;
         border-radius: $border-radius-4px;
+        display: inline-flex;
 
         .mx_MFileBody_download {
             display: none;
@@ -385,14 +385,12 @@ $left-gutter: 5.4rem;
 
     span.mx_MVideoBody {
         display: block;
-        max-width: 600px;
         position: relative;
         text-align: right;
 
         video.mx_MVideoBody {
             display: block;
             width: auto;
-            max-height: 600px;
             max-width: 100%;
             border-radius: unset;
         }

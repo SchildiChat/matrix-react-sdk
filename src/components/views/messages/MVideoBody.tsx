@@ -274,17 +274,14 @@ export default class MVideoBody extends React.PureComponent<IBodyProps, IState> 
 
         const contentUrl = this.getContentUrl();
         const thumbUrl = this.getThumbUrl();
-        const defaultDims = this.suggestedDimensions(false);
-        let height = defaultDims.h;
-        let width = defaultDims.w;
+        const restrictedDims = this.suggestedDimensions(false);
+        let height = null;
+        let width = null;
         let poster = null;
         let preload = "metadata";
         if (content.info) {
-            const scale = this.thumbScale(content.info.w, content.info.h);
-            if (scale) {
-                width = Math.floor(content.info.w * scale);
-                height = Math.floor(content.info.h * scale);
-            }
+            if (content.info.w) width = Math.floor(content.info.w);
+            if (content.info.h) height = Math.floor(content.info.h);
 
             if (thumbUrl) {
                 poster = thumbUrl;
@@ -294,7 +291,13 @@ export default class MVideoBody extends React.PureComponent<IBodyProps, IState> 
 
         const fileBody = this.getFileBody();
         return (
-            <span className="mx_MVideoBody">
+            <span
+                className="mx_MVideoBody"
+                style={{
+                    // SC: +2 px for eventual border (bubble layout)
+                    maxWidth: `min(100%, ${restrictedDims.w + 2}px)`,
+                }}
+            >
                 <span className="sc_MVideoBody_video_container">
                     <video
                         className="mx_MVideoBody"
@@ -309,6 +312,10 @@ export default class MVideoBody extends React.PureComponent<IBodyProps, IState> 
                         width={width}
                         poster={poster}
                         onPlay={this.videoOnPlay}
+                        style={{
+                            maxHeight: `${restrictedDims.h}px`,
+                            maxWidth: `min(100%, ${restrictedDims.w}px)`,
+                        }}
                     />
                     { fileBody }
                     { this.props.scBubbleActionBar }
