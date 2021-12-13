@@ -151,7 +151,7 @@ limitations under the License.
         top: 10px;
         height: 16px;
         width: 16px;
-        border-radius: 4px;
+        border-radius: $border-radius-4px;
         background-color: $background;
 
         &::before {
@@ -182,7 +182,7 @@ limitations under the License.
     .mx_SpaceHierarchy_roomTile {
         position: relative;
         padding: 8px 16px;
-        border-radius: 8px;
+        border-radius: $border-radius-8px;
         box-sizing: border-box;
 
         display: grid;

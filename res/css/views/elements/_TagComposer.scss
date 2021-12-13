@@ -31,7 +31,7 @@ limitations under the License.
 
         .mx_Field, .mx_Field input, .mx_AccessibleButton {
             // So they look related to each other by feeling the same
-            border-radius: 8px;
+            border-radius: $border-radius-8px;
         }
     }
 
