@@ -1624,6 +1624,10 @@ export default class EventTile extends React.Component<IProps, IState> {
                                     { this.renderThreadInfo() }
                                 </> }
                             </div>
+                            { this.props.layout !== Layout.IRC && <>
+                                { reactionsRow }
+                                { this.renderThreadInfo() }
+                            </> }
                             { msgOption }
                         </>)
                     );
