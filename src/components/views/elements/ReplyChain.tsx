@@ -17,26 +17,27 @@ limitations under the License.
 
 import React from 'react';
 import classNames from 'classnames';
+import { MatrixEvent } from 'matrix-js-sdk/src/models/event';
+import escapeHtml from "escape-html";
+import sanitizeHtml from "sanitize-html";
+import { Room } from 'matrix-js-sdk/src/models/room';
+import { RelationType } from 'matrix-js-sdk/src/@types/event';
+import { Relations } from 'matrix-js-sdk/src/models/relations';
 
 import { _t } from '../../../languageHandler';
 import dis from '../../../dispatcher/dispatcher';
-import { MatrixEvent } from 'matrix-js-sdk/src/models/event';
 import { makeUserPermalink, RoomPermalinkCreator } from "../../../utils/permalinks/Permalinks";
 import SettingsStore from "../../../settings/SettingsStore";
 import { Layout } from "../../../settings/enums/Layout";
-import escapeHtml from "escape-html";
 import MatrixClientContext from "../../../contexts/MatrixClientContext";
 import { getUserNameColorClass } from "../../../utils/FormattingUtils";
 import { Action } from "../../../dispatcher/actions";
-import sanitizeHtml from "sanitize-html";
 import { PERMITTED_URL_SCHEMES } from "../../../HtmlUtils";
 import { replaceableComponent } from "../../../utils/replaceableComponent";
 import Spinner from './Spinner';
 import ReplyTile from "../rooms/ReplyTile";
 import Pill from './Pill';
-import { Room } from 'matrix-js-sdk/src/models/room';
 import { UserNameColorMode } from '../../../settings/enums/UserNameColorMode';
-import { RelationType } from 'matrix-js-sdk/src/@types/event';
 
 /**
  * This number is based on the previous behavior - if we have message of height
@@ -59,6 +60,9 @@ interface IProps {
     forExport?: boolean;
     isQuoteExpanded?: boolean;
     setQuoteExpanded: (isExpanded: boolean) => void;
+    getRelationsForEvent?: (
+        (eventId: string, relationType: string, eventType: string) => Relations
+    );
 }
 
 interface IState {
@@ -426,6 +430,7 @@ export default class ReplyChain extends React.Component<IProps, IState> {
                         permalinkCreator={this.props.permalinkCreator}
                         userNameColorMode={this.props.userNameColorMode}
                         toggleExpandedQuote={() => this.props.setQuoteExpanded(!this.props.isQuoteExpanded)}
+                        getRelationsForEvent={this.props.getRelationsForEvent}
                     />
                 </blockquote>
             );

@@ -22,7 +22,6 @@ import { RelationType } from 'matrix-js-sdk/src/@types/event';
 import BaseCard from "../views/right_panel/BaseCard";
 import { RightPanelPhases } from "../../stores/RightPanelStorePhases";
 import { replaceableComponent } from "../../utils/replaceableComponent";
-
 import ResizeNotifier from '../../utils/ResizeNotifier';
 import { TileShape } from '../views/rooms/EventTile';
 import MessageComposer from '../views/rooms/MessageComposer';
@@ -72,6 +71,7 @@ export default class ThreadView extends React.Component<IProps, IState> {
         super(props);
         this.state = {};
     }
+
     public componentDidMount(): void {
         this.setupThread(this.props.mxEvent);
         this.dispatcherRef = dis.register(this.onAction);
@@ -166,10 +166,11 @@ export default class ThreadView extends React.Component<IProps, IState> {
     };
 
     private updateThread = (thread?: Thread) => {
-        if (thread) {
+        if (thread && this.state.thread !== thread) {
             this.setState({
                 thread,
             });
+            thread.emit(ThreadEvent.ViewThread);
         }
 
         this.timelinePanelRef.current?.refreshTimeline();
@@ -242,10 +243,11 @@ export default class ThreadView extends React.Component<IProps, IState> {
                     { this.state.thread && (
                         <TimelinePanel
                             ref={this.timelinePanelRef}
-                            showReadReceipts={false} // No RR support in thread's MVP
-                            manageReadReceipts={false} // No RR support in thread's MVP
-                            manageReadMarkers={false} // No RM support in thread's MVP
-                            sendReadReceiptOnLoad={false} // No RR support in thread's MVP
+                            showReadReceipts={false} // Hide the read receipts
+                            // until homeservers speak threads language
+                            manageReadReceipts={true}
+                            manageReadMarkers={true}
+                            sendReadReceiptOnLoad={true}
                             timelineSet={this.state?.thread?.timelineSet}
                             showUrlPreview={true}
                             tileShape={TileShape.Thread}

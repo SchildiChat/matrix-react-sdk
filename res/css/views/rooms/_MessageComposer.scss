@@ -20,7 +20,7 @@ limitations under the License.
     margin: auto;
     border-top: 1px solid $primary-hairline-color;
     position: relative;
-    padding-left: 8.2rem;
+    padding-left: 4.2rem;
     padding-right: 6px;
 }
 
@@ -66,6 +66,19 @@ limitations under the License.
 
 .mx_MessageComposer .mx_MessageComposer_avatar .mx_BaseAvatar {
     display: block;
+
+    // SC: Scale avatar well with font size
+    border: 1px solid transparent;
+    border-radius: 100%;
+    width: 3rem !important;
+    height: 3rem !important;
+}
+
+.mx_MessageComposer .mx_MessageComposer_avatar .mx_BaseAvatar_initial {
+    // SC: Scale avatar well with font size
+    width: 3rem !important;
+    height: 3rem !important;
+    line-height: 3rem !important;
 }
 
 .mx_MessageComposer_composecontrols {
@@ -74,7 +87,7 @@ limitations under the License.
 
 .mx_MessageComposer_e2eIcon.mx_E2EIcon {
     position: absolute;
-    left: 60px;
+    left: 20px;
     margin-right: 0; // Counteract the E2EIcon class
     margin-left: 3px; // Counteract the E2EIcon class
     width: 1.2rem;
@@ -254,6 +267,10 @@ limitations under the License.
 
 .mx_MessageComposer_emoji::before {
     mask-image: url('$(res)/img/element-icons/room/composer/emoji.svg');
+}
+
+.mx_MessageComposer_location::before {
+    mask-image: url('$(res)/img/element-icons/room/composer/location.svg');
 }
 
 .mx_MessageComposer_stickers::before {

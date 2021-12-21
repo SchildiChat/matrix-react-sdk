@@ -256,12 +256,11 @@ $message-action-bar-fg-color: $primary-fg-color;
 $message-action-bar-border-color: #e0e0e0;
 $message-action-bar-hover-border-color: $focus-bg-color;
 
-$reaction-row-button-border-color: #e0e0e0;
 $reaction-row-button-hover-border-color: $focus-bg-color;
 $reaction-row-button-selected-bg-color: #DCEDC8;
 $reaction-row-button-selected-bg-color: #DCEDC8;
 
-$kbd-border-color: $reaction-row-button-border-color;
+$kbd-border-color: $message-action-bar-border-color;
 
 $tooltip-timeline-bg-color: $groupFilterPanel-bg-color;
 $tooltip-timeline-fg-color: #ffffff;

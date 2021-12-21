@@ -25,6 +25,7 @@ import { Key } from "../../Keyboard";
 import { Writeable } from "../../@types/common";
 import { replaceableComponent } from "../../utils/replaceableComponent";
 import UIStore from "../../stores/UIStore";
+import { getInputableElement } from "./LoggedInView";
 
 // Shamelessly ripped off Modal.js.  There's probably a better way
 // of doing reusable widgets like dialog boxes & menus where we go and
@@ -247,6 +248,9 @@ export default class ContextMenu extends React.PureComponent<IProps, IState> {
             }
             return;
         }
+
+        // only handle escape when in an input field
+        if (ev.key !== Key.ESCAPE && getInputableElement(ev.target as HTMLElement)) return;
 
         let handled = true;
 
@@ -513,6 +517,7 @@ export const alwaysAboveRightOf = (elementRect: DOMRect, chevronFace = ChevronFa
 };
 
 type ContextMenuTuple<T> = [boolean, RefObject<T>, () => void, () => void, (val: boolean) => void];
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
 export const useContextMenu = <T extends any = HTMLElement>(): ContextMenuTuple<T> => {
     const button = useRef<T>(null);
     const [isOpen, setIsOpen] = useState(false);

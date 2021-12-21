@@ -23,12 +23,14 @@ import { Direction, EventTimeline } from "matrix-js-sdk/src/models/event-timelin
 import { TimelineWindow } from "matrix-js-sdk/src/timeline-window";
 import { EventType, RelationType } from 'matrix-js-sdk/src/@types/event';
 import { SyncState } from 'matrix-js-sdk/src/sync.api';
+import { debounce } from 'lodash';
+import { logger } from "matrix-js-sdk/src/logger";
 
 import SettingsStore from "../../settings/SettingsStore";
 import { Layout } from "../../settings/enums/Layout";
 import { _t } from '../../languageHandler';
 import { MatrixClientPeg } from "../../MatrixClientPeg";
-import RoomContext from "../../contexts/RoomContext";
+import RoomContext, { TimelineRenderingType } from "../../contexts/RoomContext";
 import UserActivity from "../../UserActivity";
 import Modal from "../../Modal";
 import dis from "../../dispatcher/dispatcher";
@@ -48,10 +50,7 @@ import { RoomPermalinkCreator } from "../../utils/permalinks/Permalinks";
 import Spinner from "../views/elements/Spinner";
 import EditorStateTransfer from '../../utils/EditorStateTransfer';
 import ErrorDialog from '../views/dialogs/ErrorDialog';
-import { debounce } from 'lodash';
 import { UserNameColorMode } from '../../settings/enums/UserNameColorMode';
-
-import { logger } from "matrix-js-sdk/src/logger";
 
 import { isRoomMarkedAsUnread, setRoomMarkedAsUnread } from '../../Rooms';
 
@@ -1334,12 +1333,17 @@ class TimelinePanel extends React.Component<IProps, IState> {
     }
 
     private indexForEventId(evId: string): number | null {
-        for (let i = 0; i < this.state.events.length; ++i) {
-            if (evId == this.state.events[i].getId()) {
-                return i;
-            }
+        /* Threads do not have server side support for read receipts and the concept
+        is very tied to the main room timeline, we are forcing the timeline to
+        send read receipts for threaded events */
+        const isThreadTimeline = this.context.timelineRenderingType === TimelineRenderingType.Thread;
+        if (SettingsStore.getValue("feature_thread") && isThreadTimeline) {
+            return 0;
         }
-        return null;
+        const index = this.state.events.findIndex(ev => ev.getId() === evId);
+        return index > -1
+            ? index
+            : null;
     }
 
     private getLastDisplayedEventIndex(opts: IEventIndexOpts = {}): number | null {

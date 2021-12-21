@@ -16,22 +16,23 @@ limitations under the License.
 
 import React, { createRef } from 'react';
 import classNames from 'classnames';
+import { MatrixEvent } from "matrix-js-sdk/src/models/event";
+import { EventType, MsgType } from 'matrix-js-sdk/src/@types/event';
+import { logger } from "matrix-js-sdk/src/logger";
+import { Relations } from 'matrix-js-sdk/src/models/relations';
+
 import { _t } from '../../../languageHandler';
 import dis from '../../../dispatcher/dispatcher';
 import { Action } from '../../../dispatcher/actions';
-import { MatrixEvent } from "matrix-js-sdk/src/models/event";
 import { RoomPermalinkCreator } from '../../../utils/permalinks/Permalinks';
 import SenderProfile from "../messages/SenderProfile";
 import MImageReplyBody from "../messages/MImageReplyBody";
 import * as sdk from '../../../index';
-import { EventType, MsgType } from 'matrix-js-sdk/src/@types/event';
 import { replaceableComponent } from '../../../utils/replaceableComponent';
 import { getEventDisplayInfo, isVoiceMessage } from '../../../utils/EventUtils';
 import MFileBody from "../messages/MFileBody";
 import MVoiceMessageBody from "../messages/MVoiceMessageBody";
 import { UserNameColorMode } from '../../../settings/enums/UserNameColorMode';
-
-import { logger } from "matrix-js-sdk/src/logger";
 
 interface IProps {
     mxEvent: MatrixEvent;
@@ -41,6 +42,9 @@ interface IProps {
     highlightLink?: string;
     onHeightChanged?(): void;
     toggleExpandedQuote?: () => void;
+    getRelationsForEvent?: (
+        (eventId: string, relationType: string, eventType: string) => Relations
+    );
 }
 
 @replaceableComponent("views.rooms.ReplyTile")
@@ -173,7 +177,8 @@ export default class ReplyTile extends React.PureComponent<IProps> {
                         overrideBodyTypes={msgtypeOverrides}
                         overrideEventTypes={evOverrides}
                         replacingEventId={mxEvent.replacingEventId()}
-                        maxImageHeight={96} />
+                        maxImageHeight={96}
+                        getRelationsForEvent={this.props.getRelationsForEvent} />
                 </a>
             </div>
         );
