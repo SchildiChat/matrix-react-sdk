@@ -28,16 +28,16 @@ import { onMetaSpaceChangeFactory } from "../settings/tabs/user/SidebarUserSetti
 import defaultDispatcher from "../../../dispatcher/dispatcher";
 import { Action } from "../../../dispatcher/actions";
 import { UserTab } from "../dialogs/UserSettingsDialog";
-import { findNonHighContrastTheme, getOrderedThemes } from "../../../theme";
-import Dropdown from "../elements/Dropdown";
-import ThemeChoicePanel from "../settings/ThemeChoicePanel";
-import SettingsStore from "../../../settings/SettingsStore";
-import { SettingLevel } from "../../../settings/SettingLevel";
-import dis from "../../../dispatcher/dispatcher";
-import { RecheckThemePayload } from "../../../dispatcher/payloads/RecheckThemePayload";
+import { /*findNonHighContrastTheme,*/ getOrderedThemes } from "../../../theme";
+// import Dropdown from "../elements/Dropdown";
+// import ThemeChoicePanel from "../settings/ThemeChoicePanel";
+// import SettingsStore from "../../../settings/SettingsStore";
+// import { SettingLevel } from "../../../settings/SettingLevel";
+// import dis from "../../../dispatcher/dispatcher";
+// import { RecheckThemePayload } from "../../../dispatcher/payloads/RecheckThemePayload";
 
 const QuickSettingsButton = ({ isPanelCollapsed = false }) => {
-    const orderedThemes = useMemo(getOrderedThemes, []);
+    // const orderedThemes = useMemo(getOrderedThemes, []);
     const [menuDisplayed, handle, openMenu, closeMenu] = useContextMenu<HTMLDivElement>();
 
     const {
@@ -47,9 +47,9 @@ const QuickSettingsButton = ({ isPanelCollapsed = false }) => {
 
     let contextMenu: JSX.Element;
     if (menuDisplayed) {
-        const themeState = ThemeChoicePanel.calculateThemeState();
-        const nonHighContrast = findNonHighContrastTheme(themeState.theme);
-        const theme = nonHighContrast ? nonHighContrast : themeState.theme;
+        // const themeState = ThemeChoicePanel.calculateThemeState();
+        // const nonHighContrast = findNonHighContrastTheme(themeState.theme);
+        // const theme = nonHighContrast ? nonHighContrast : themeState.theme;
 
         contextMenu = <ContextMenu
             {...alwaysAboveRightOf(handle.current.getBoundingClientRect(), ChevronFace.None, 16)}
@@ -102,7 +102,8 @@ const QuickSettingsButton = ({ isPanelCollapsed = false }) => {
                 { _t("More options") }
             </AccessibleButton>
 
-            <div className="mx_QuickSettingsButton_themePicker">
+            { /* // SC: Just get rid of that: It's broken and people shall jst use the settings */ }
+            { /* <div className="mx_QuickSettingsButton_themePicker">
                 <h4>{ _t("Theme") }</h4>
                 <Dropdown
                     id="mx_QuickSettingsButton_themePickerDropdown"
@@ -132,7 +133,7 @@ const QuickSettingsButton = ({ isPanelCollapsed = false }) => {
                         </div>
                     )) }
                 </Dropdown>
-            </div>
+            </div> */ }
         </ContextMenu>;
     }
 

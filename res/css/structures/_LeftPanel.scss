@@ -121,7 +121,7 @@ $roomListCollapsedWidth: 68px;
             }
 
             .mx_RoomSearch_shortcutPrompt {
-                border-radius: 6px;
+                border-radius: $border-radius-6px;
                 background-color: $panel-actions;
                 padding: 2px 4px;
                 user-select: none;

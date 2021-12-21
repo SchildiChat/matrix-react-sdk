@@ -34,7 +34,7 @@ limitations under the License.
     }
 
     .mx_RoomListHeader_contextMenuButton {
-        border-radius: 6px;
+        border-radius: $border-radius-6px;
 
         &:hover {
             background-color: $quinary-content;
@@ -66,7 +66,7 @@ limitations under the License.
     .mx_RoomListHeader_plusButton {
         width: 32px;
         height: 32px;
-        border-radius: 8px;
+        border-radius: $border-radius-8px;
         position: relative;
         padding: 8px;
         margin-left: 8px;
