@@ -20,7 +20,7 @@ limitations under the License.
     margin: auto;
     border-top: 1px solid $primary-hairline-color;
     position: relative;
-    padding-left: 4.2rem;
+    padding-left: 26px; // SC: Don't show e2e icon in message composer (19px + 7px)
     padding-right: 6px;
 }
 
@@ -83,6 +83,11 @@ limitations under the License.
 
 .mx_MessageComposer_composecontrols {
     width: 100%;
+}
+
+// SC: Don't show e2e icon in message composer
+.mx_MessageComposer_e2eIcon {
+    display: none;
 }
 
 .mx_MessageComposer_e2eIcon.mx_E2EIcon {
