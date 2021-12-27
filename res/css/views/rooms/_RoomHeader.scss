@@ -37,8 +37,9 @@ limitations under the License.
     display: flex;
     align-items: center;
     min-width: 0;
-    padding: 8px 20px 8px 19px;
-    // border-bottom: 1px solid $system;
+    margin: 0 20px 0 19px;
+    padding-top: 8px;
+    border-bottom: 1px solid $system;
 
     .mx_InviteOnlyIcon_large {
         margin: 0;
