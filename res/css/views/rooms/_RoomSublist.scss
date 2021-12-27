@@ -48,7 +48,7 @@ limitations under the License.
         // to work correctly.
         padding-bottom: 8px;
         height: 24px;
-        color: $tertiary-content;
+        color: $secondary-content;
 
         .mx_RoomSublist_stickable {
             flex: 1;
@@ -114,7 +114,7 @@ limitations under the License.
                 mask-position: center;
                 mask-size: contain;
                 mask-repeat: no-repeat;
-                background: $muted-fg-color;
+                background: $secondary-content;
             }
         }
 
@@ -179,7 +179,7 @@ limitations under the License.
                     mask-position: center;
                     mask-size: contain;
                     mask-repeat: no-repeat;
-                    background-color: $tertiary-content;
+                    background-color: $secondary-content;
                     mask-image: url('$(res)/img/feather-customised/chevron-down.svg');
                 }
 
@@ -280,7 +280,7 @@ limitations under the License.
             mask-position: center;
             mask-size: contain;
             mask-repeat: no-repeat;
-            background: $tertiary-content;
+            background: $secondary-content;
             left: -1px; // adjust for image position
         }
 
