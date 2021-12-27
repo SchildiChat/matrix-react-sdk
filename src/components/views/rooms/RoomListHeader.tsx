@@ -30,7 +30,7 @@ import IconizedContextMenu, {
 } from "../context_menus/IconizedContextMenu";
 import defaultDispatcher from "../../../dispatcher/dispatcher";
 import dis from "../../../dispatcher/dispatcher";
-import { shouldShowSpaceInvite, showCreateNewRoom, showSpaceInvite } from "../../../utils/space";
+import { shouldShowSpaceInvite, showAddExistingRooms, showCreateNewRoom, showSpaceInvite } from "../../../utils/space";
 import { CommunityPrototypeStore } from "../../../stores/CommunityPrototypeStore";
 import { ButtonEvent } from "../elements/AccessibleButton";
 import Modal from "../../../Modal";
@@ -51,6 +51,8 @@ import {
     UPDATE_HOME_BEHAVIOUR,
     UPDATE_SELECTED_SPACE,
 } from "../../../stores/spaces";
+import { MatrixClientPeg } from "../../../MatrixClientPeg";
+import AccessibleTooltipButton from "../elements/AccessibleTooltipButton";
 
 const contextMenuBelow = (elementRect: DOMRect) => {
     // align the context menu's icons with the icon which opened the context menu
@@ -247,6 +249,20 @@ const RoomListHeader = ({ spacePanelDisabled, onVisibilityChange }: IProps) => {
             />;
         }
 
+        let addExisitingRoomOption: JSX.Element;
+        if (activeSpace?.currentState.maySendStateEvent(EventType.SpaceChild, cli.getUserId())) {
+            addExisitingRoomOption = <IconizedContextMenuOption
+                iconClassName="mx_RoomList_iconAddExistingRoom"
+                label={_t("Add existing room")}
+                onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    showAddExistingRooms(activeSpace);
+                    closePlusMenu();
+                }}
+            />;
+        }
+
         contextMenu = <IconizedContextMenu
             {...contextMenuBelow(plusMenuHandle.current.getBoundingClientRect())}
             onFinished={closePlusMenu}
@@ -265,7 +281,8 @@ const RoomListHeader = ({ spacePanelDisabled, onVisibilityChange }: IProps) => {
                     }}
                 />
                 { createNewRoomOption }
-                <IconizedContextMenuOption
+                { /* SC: Added beneath search all spaces */ }
+                { /* <IconizedContextMenuOption
                     label={_t("Explore rooms")}
                     iconClassName="mx_RoomListHeader_iconExplore"
                     onClick={(e) => {
@@ -274,7 +291,9 @@ const RoomListHeader = ({ spacePanelDisabled, onVisibilityChange }: IProps) => {
                         defaultDispatcher.dispatch({ action: Action.ViewRoomDirectory });
                         closePlusMenu();
                     }}
-                />
+                /> */ }
+
+                { addExisitingRoomOption }
             </IconizedContextMenuOptionList>
         </IconizedContextMenu>;
     } else if (plusMenuDisplayed) {
@@ -304,7 +323,8 @@ const RoomListHeader = ({ spacePanelDisabled, onVisibilityChange }: IProps) => {
                         closePlusMenu();
                     }}
                 />
-                <IconizedContextMenuOption
+                { /* SC: Added beneath search all spaces */ }
+                { /* <IconizedContextMenuOption
                     label={_t("Join public room")}
                     iconClassName="mx_RoomListHeader_iconExplore"
                     onClick={(e) => {
@@ -313,7 +333,7 @@ const RoomListHeader = ({ spacePanelDisabled, onVisibilityChange }: IProps) => {
                         defaultDispatcher.dispatch({ action: Action.ViewRoomDirectory });
                         closePlusMenu();
                     }}
-                />
+                /> */ }
             </IconizedContextMenuOptionList>
         </IconizedContextMenu>;
     }
@@ -352,9 +372,29 @@ const RoomListHeader = ({ spacePanelDisabled, onVisibilityChange }: IProps) => {
         </ContextMenuTooltipButton>;
     }
 
+    let spaceExploreButton;
+    if (activeSpace) {
+        const client = MatrixClientPeg.get();
+        const userId = client.getUserId();
+        const canAddRooms = activeSpace.currentState.maySendStateEvent(EventType.SpaceChild, userId);
+        spaceExploreButton = <AccessibleTooltipButton
+            onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                defaultDispatcher.dispatch({
+                    action: "view_room",
+                    room_id: activeSpace?.roomId,
+                });
+            }}
+            className="mx_RoomListHeader_plusButton sc_RoomListHeader_exploreButton"
+            title={canAddRooms ? _t("Manage & explore rooms") : _t("Explore rooms")}
+        />;
+    }
+
     return <div className="mx_RoomListHeader">
         { contextMenuButton }
         { pendingRoomJoinSpinner }
+        { spaceExploreButton }
         <ContextMenuTooltipButton
             inputRef={plusMenuHandle}
             onClick={openPlusMenu}

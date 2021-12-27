@@ -139,7 +139,9 @@ const DmAuxButton = ({ tabIndex, dispatcher = defaultDispatcher }: IAuxButtonPro
     const showCreateRooms = shouldShowComponent(UIComponent.CreateRooms);
     const showInviteUsers = shouldShowComponent(UIComponent.InviteUsers);
 
-    if (activeSpace && (showCreateRooms || showInviteUsers)) {
+    // SC: Just show the button, no menu; add DM does not add DM automatically to space (yet?)
+    // eslint-disable-next-line no-constant-condition
+    if (activeSpace && (showCreateRooms || showInviteUsers) && false) {
         let contextMenu: JSX.Element;
         if (menuDisplayed) {
             const canInvite = shouldShowSpaceInvite(activeSpace);
@@ -187,11 +189,11 @@ const DmAuxButton = ({ tabIndex, dispatcher = defaultDispatcher }: IAuxButtonPro
 
             { contextMenu }
         </>;
-    } else if (!activeSpace && showCreateRooms) {
+    } else if ((true || !activeSpace) && showCreateRooms) {
         return <AccessibleTooltipButton
             tabIndex={tabIndex}
             onClick={() => dispatcher.dispatch({ action: 'view_create_chat' })}
-            className="mx_RoomSublist_auxButton"
+            className="mx_RoomSublist_auxButton mx_RoomSublist_auxDmButton"
             tooltipClassName="mx_RoomSublist_addRoomTooltip"
             aria-label={_t("Start chat")}
             title={_t("Start chat")}
@@ -208,7 +210,8 @@ const UntaggedAuxButton = ({ tabIndex }: IAuxButtonProps) => {
     const showCreateRoom = shouldShowComponent(UIComponent.CreateRooms);
 
     let contextMenuContent: JSX.Element;
-    if (menuDisplayed && activeSpace) {
+    let scAddRoomButton: JSX.Element;
+    if ((true || menuDisplayed) && activeSpace) {
         const canAddRooms = activeSpace.currentState.maySendStateEvent(EventType.SpaceChild,
             MatrixClientPeg.get().getUserId());
 
@@ -259,7 +262,25 @@ const UntaggedAuxButton = ({ tabIndex }: IAuxButtonProps) => {
                     : null
             }
         </IconizedContextMenuOptionList>;
-    } else if (menuDisplayed) {
+
+        // SC: Just show the button, no menu
+        scAddRoomButton = <AccessibleTooltipButton
+            tabIndex={tabIndex}
+            onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                showCreateNewRoom(activeSpace);
+            }}
+            className="mx_RoomSublist_auxButton mx_RoomSublist_auxGroupButton"
+            tooltipClassName="mx_RoomSublist_addRoomTooltip"
+            disabled={!canAddRooms}
+            aria-label={canAddRooms ? _t("Create new room")
+                : _t("You do not have permissions to add rooms to this space")}
+            title={canAddRooms ? _t("Create new room")
+                : _t("You do not have permissions to add rooms to this space")}
+        />;
+    // eslint-disable-next-line no-constant-condition
+    } else if (true || menuDisplayed) {
         contextMenuContent = <IconizedContextMenuOptionList first>
             { showCreateRoom && <IconizedContextMenuOption
                 label={_t("Create new room")}
@@ -284,7 +305,24 @@ const UntaggedAuxButton = ({ tabIndex }: IAuxButtonProps) => {
                 }}
             />
         </IconizedContextMenuOptionList>;
+
+        // SC: Just show the button, no menu
+        scAddRoomButton = <AccessibleTooltipButton
+            tabIndex={tabIndex}
+            onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                defaultDispatcher.dispatch({ action: "view_create_room" });
+            }}
+            className="mx_RoomSublist_auxButton mx_RoomSublist_auxGroupButton"
+            tooltipClassName="mx_RoomSublist_addRoomTooltip"
+            aria-label={_t("Create new room")}
+            title={_t("Create new room")}
+        />;
     }
+
+    // SC: Just show the button, no menu
+    return scAddRoomButton;
 
     let contextMenu: JSX.Element;
     if (menuDisplayed) {

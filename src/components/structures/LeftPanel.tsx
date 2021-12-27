@@ -366,7 +366,9 @@ export default class LeftPanel extends React.Component<IProps, IState> {
         let rightButton: JSX.Element;
         if (this.state.showBreadcrumbs === BreadcrumbsMode.Labs) {
             rightButton = <RecentlyViewedButton />;
-        } else if (this.state.activeSpace === MetaSpace.Home) {
+        // SC: Always show explore button in any space
+        // eslint-disable-next-line no-constant-condition
+        } else if (true || this.state.activeSpace === MetaSpace.Home) {
             rightButton = <AccessibleTooltipButton
                 className="mx_LeftPanel_exploreButton"
                 onClick={this.onExplore}

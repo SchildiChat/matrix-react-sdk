@@ -95,6 +95,14 @@ limitations under the License.
             }
         }
     }
+
+    .sc_RoomListHeader_exploreButton {
+        margin-right: 0;
+
+        &::before {
+            mask-image: url('$(res)/img/element-icons/roomlist/search.svg');
+        }
+    }
 }
 
 .mx_RoomListHeader_iconInvite::before {

@@ -139,11 +139,13 @@ limitations under the License.
         }
 
         .mx_RoomSublist_auxGroupButton::before {
-            mask-image: url('$(res)/img/feather-customised/group-plus.svg');
+            // mask-image: url('$(res)/img/feather-customised/group-plus.svg');
+            mask-image: url('$(res)/img/element-icons/roomlist/hash-plus.svg');
         }
 
         .mx_RoomSublist_auxDmButton::before {
-            mask-image: url('$(res)/img/feather-customised/dm-plus.svg');
+            // mask-image: url('$(res)/img/feather-customised/dm-plus.svg');
+            mask-image: url('$(res)/img/element-icons/roomlist/member-plus.svg');
         }
 
         .mx_RoomSublist_menuButton::before {
