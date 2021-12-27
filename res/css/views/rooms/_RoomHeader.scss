@@ -110,9 +110,9 @@ limitations under the License.
     color: $primary-content;
     font-weight: $font-semi-bold;
     font-size: $font-18px;
-    border-radius: 6px;
-    margin: 0 7px;
-    padding: 1px 0;
+    border-radius: $border-radius-6px;
+    margin: 0 3px;
+    padding: 1px 4px;
     display: flex;
     user-select: none;
 
