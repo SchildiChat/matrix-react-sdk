@@ -24,31 +24,10 @@ import SettingsStore from "../settings/SettingsStore";
 import { SettingLevel } from "../settings/SettingLevel";
 
 const onAccept = () => {
-    const rs = SdkConfig.get()['sc_update_announcement_room'];
-
-    const dispatch = {
+    dis.dispatch({
         action: 'view_room',
-        auto_join: true,
-    };
-
-    if (rs.room_id_or_alias[0] === '!') {
-        dispatch["room_id"] = rs.room_id_or_alias;
-    } else if (rs.room_id_or_alias[0] === '#') {
-        dispatch["room_alias"] = rs.room_id_or_alias;
-    }
-
-    if (rs.via_servers) {
-        // For the join
-        dispatch["opts"] = {
-            // These are passed down to the js-sdk's /join call
-            viaServers: rs.via_servers,
-        };
-
-        // For if the join fails (rejoin button)
-        dispatch['via_servers'] = rs.via_servers;
-    }
-
-    dis.dispatch(dispatch);
+        room_alias: "#web-announcements:schildi.chat",
+    });
 
     // Now the room should be joined, no need to show it again
     SettingsStore.setValue("scShowUpdateAnnouncementRoomToast", null, SettingLevel.DEVICE, false);
@@ -81,9 +60,9 @@ export const showToast = () => {
                     "This is especially useful if your platform doesn't support " +
                     "automatic updates for SchildiChat (e.g. Windows and macOS).",
                 ),
-                acceptLabel: _t("Join"),
+                acceptLabel: _t("Show preview"),
                 onAccept,
-                rejectLabel: _t("Don't ask again"),
+                rejectLabel: _t("No"),
                 onReject,
             },
             component: GenericToast,
