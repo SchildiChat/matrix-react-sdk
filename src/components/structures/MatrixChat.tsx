@@ -1520,7 +1520,9 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
                 showNotificationsToast(false);
             }
 
-            if (!localStorage.getItem("mx_seen_ia_1.1_changes_toast")) {
+            // SC: No feedback changes toast
+            // eslint-disable-next-line no-constant-condition
+            if (!localStorage.getItem("mx_seen_ia_1.1_changes_toast") && false) {
                 const key = "IA_1.1_TOAST";
                 ToastStore.sharedInstance().addOrReplaceToast({
                     key,
