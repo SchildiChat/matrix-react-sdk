@@ -196,7 +196,7 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
 
     private renderUserNameColorModeSection() {
         const makeRadio = (setting: string, mode: UserNameColorMode) => (
-            console.log("asdf" + this.state[setting]),
+            // console.log("asdf" + this.state[setting]),
             <StyledRadioButton
                 name={setting}
                 value={mode}

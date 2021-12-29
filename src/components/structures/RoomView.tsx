@@ -1061,13 +1061,13 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
 
         let newMode: UserNameColorMode;
         if (isPublic) {
-            console.log("for public");
+            // console.log("for public");
             newMode = SettingsStore.getValue("userNameColorModePublic");
         } else if (isDm) {
-            console.log("for DM");
+            // console.log("for DM");
             newMode = SettingsStore.getValue("userNameColorModeDM");
         } else {
-            console.log("for default");
+            // console.log("for default");
             newMode = SettingsStore.getValue("userNameColorModeGroup");
         }
 
