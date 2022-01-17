@@ -51,6 +51,7 @@ import { RoomPermalinkCreator } from "../../utils/permalinks/Permalinks";
 import EditorStateTransfer from "../../utils/EditorStateTransfer";
 import { UserNameColorMode } from '../../settings/enums/UserNameColorMode';
 import { Action } from '../../dispatcher/actions';
+import { getEventDisplayInfo } from "../../utils/EventUtils";
 
 const CONTINUATION_MAX_INTERVAL = 5 * 60 * 1000; // 5 minutes
 const continuedTypes = [EventType.Sticker, EventType.RoomMessage];
@@ -738,11 +739,14 @@ export default class MessagePanel extends React.Component<IProps, IState> {
             ret.push(dateSeparator);
         }
 
-        let willWantDateSeparator = false;
         let lastInSection = true;
         if (nextEventWithTile) {
-            willWantDateSeparator = this.wantsDateSeparator(mxEv, nextEventWithTile.getDate() || new Date());
-            lastInSection = willWantDateSeparator || mxEv.getSender() !== nextEventWithTile.getSender();
+            const nextEv = nextEventWithTile;
+            const willWantDateSeparator = this.wantsDateSeparator(mxEv, nextEv.getDate() || new Date());
+            lastInSection = willWantDateSeparator ||
+                mxEv.getSender() !== nextEv.getSender() ||
+                getEventDisplayInfo(nextEv).isInfoMessage ||
+                !shouldFormContinuation(mxEv, nextEv, this.showHiddenEvents, this.context.timelineRenderingType);
         }
 
         // is this a continuation of the previous message?

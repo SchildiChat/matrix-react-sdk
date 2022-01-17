@@ -23,7 +23,12 @@ limitations under the License.
     border-left: 2px solid $accent;
 
     .mx_ReplyChain_show {
-        cursor: pointer;
+        @mixin ButtonResetDefault;
+        color: inherit;
+
+        &:hover {
+            color: $links;
+        }
     }
 
     &.mx_ReplyChain_color1 {

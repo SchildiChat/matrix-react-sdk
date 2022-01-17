@@ -578,13 +578,13 @@ export default class RoomTile extends React.PureComponent<IProps, IState> {
                     { canInvite ? (
                         <IconizedContextMenuOption
                             onClick={this.onInviteClick}
-                            label={_t("Invite People")}
+                            label={_t("Invite")}
                             iconClassName="mx_RoomTile_iconInvite"
                         />
                     ) : null }
                     { !isDm ? <IconizedContextMenuOption
                         onClick={this.onCopyRoomClick}
-                        label={_t("Copy Room Link")}
+                        label={_t("Copy room link")}
                         iconClassName="mx_RoomTile_iconCopyLink"
                     /> : null }
                     <IconizedContextMenuOption
@@ -596,7 +596,7 @@ export default class RoomTile extends React.PureComponent<IProps, IState> {
                 <IconizedContextMenuOptionList red>
                     <IconizedContextMenuOption
                         onClick={this.onLeaveRoomClick}
-                        label={_t("Leave Room")}
+                        label={_t("Leave")}
                         iconClassName="mx_RoomTile_iconSignOut"
                     />
                 </IconizedContextMenuOptionList>

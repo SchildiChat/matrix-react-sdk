@@ -32,7 +32,7 @@ import SettingsStore from "../settings/SettingsStore";
 import { ActiveRoomObserver } from "../ActiveRoomObserver";
 import { Notifier } from "../Notifier";
 import type { Renderer } from "react-dom";
-import RightPanelStore from "../stores/RightPanelStore";
+import RightPanelStore from "../stores/right-panel/RightPanelStore";
 import WidgetStore from "../stores/WidgetStore";
 import CallHandler from "../CallHandler";
 import { Analytics } from "../Analytics";
@@ -163,6 +163,16 @@ declare global {
 
     interface HTMLAudioElement {
         type?: string;
+        // sinkId & setSinkId are experimental and typescript doesn't know about them
+        sinkId: string;
+        setSinkId(outputId: string): void;
+    }
+
+    interface HTMLVideoElement {
+        type?: string;
+        // sinkId & setSinkId are experimental and typescript doesn't know about them
+        sinkId: string;
+        setSinkId(outputId: string): void;
     }
 
     interface HTMLStyleElement {

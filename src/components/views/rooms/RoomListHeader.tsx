@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import React, { useContext, useEffect, useState } from "react";
+import React, { ComponentProps, useContext, useEffect, useState } from "react";
 import { Room } from "matrix-js-sdk/src/models/room";
 import { EventType } from "matrix-js-sdk/src/@types/event";
 
@@ -36,12 +36,11 @@ import { ButtonEvent } from "../elements/AccessibleButton";
 import Modal from "../../../Modal";
 import EditCommunityPrototypeDialog from "../dialogs/EditCommunityPrototypeDialog";
 import { Action } from "../../../dispatcher/actions";
-import { RightPanelPhases } from "../../../stores/RightPanelStorePhases";
+import { RightPanelPhases } from "../../../stores/right-panel/RightPanelStorePhases";
 import ErrorDialog from "../dialogs/ErrorDialog";
 import { showCommunityInviteDialog } from "../../../RoomInvite";
 import { useDispatcher } from "../../../hooks/useDispatcher";
 import InlineSpinner from "../elements/InlineSpinner";
-import TooltipButton from "../elements/TooltipButton";
 import MatrixClientContext from "../../../contexts/MatrixClientContext";
 import RoomListStore, { LISTS_UPDATE_EVENT } from "../../../stores/room-list/RoomListStore";
 import {
@@ -53,6 +52,8 @@ import {
 } from "../../../stores/spaces";
 import { MatrixClientPeg } from "../../../MatrixClientPeg";
 import AccessibleTooltipButton from "../elements/AccessibleTooltipButton";
+import RightPanelStore from "../../../stores/right-panel/RightPanelStore";
+import TooltipTarget from "../elements/TooltipTarget";
 
 const contextMenuBelow = (elementRect: DOMRect) => {
     // align the context menu's icons with the icon which opened the context menu
@@ -62,7 +63,7 @@ const contextMenuBelow = (elementRect: DOMRect) => {
     return { left, top, chevronFace };
 };
 
-const PrototypeCommunityContextMenu = (props) => {
+const PrototypeCommunityContextMenu = (props: ComponentProps<typeof SpaceContextMenu>) => {
     const communityId = CommunityPrototypeStore.instance.getSelectedCommunityId();
 
     let settingsOption;
@@ -101,7 +102,7 @@ const PrototypeCommunityContextMenu = (props) => {
                 action: 'view_room',
                 room_id: chat.roomId,
             }, true);
-            dis.dispatch({ action: Action.SetRightPanelPhase, phase: RightPanelPhases.RoomMemberList });
+            RightPanelStore.instance.setCard({ phase: RightPanelPhases.RoomMemberList }, undefined, chat.roomId);
         } else {
             // "This should never happen" clauses go here for the prototype.
             Modal.createTrackedDialog('Failed to find general chat', '', ErrorDialog, {
@@ -175,6 +176,8 @@ const RoomListHeader = ({ spacePanelDisabled, onVisibilityChange }: IProps) => {
             return null;
         }
     });
+
+    const spaceName = useEventEmitterState(activeSpace, "Room.name", () => activeSpace?.name);
 
     useEffect(() => {
         if (onVisibilityChange) {
@@ -340,21 +343,20 @@ const RoomListHeader = ({ spacePanelDisabled, onVisibilityChange }: IProps) => {
 
     let title: string;
     if (activeSpace) {
-        title = activeSpace.name;
+        title = spaceName;
     } else if (communityId) {
         title = CommunityPrototypeStore.instance.getSelectedCommunityName();
     } else {
         title = getMetaSpaceName(spaceKey as MetaSpace, allRoomsInHome);
     }
 
-    let pendingRoomJoinSpinner;
+    let pendingRoomJoinSpinner: JSX.Element;
     if (joiningRooms.size) {
-        pendingRoomJoinSpinner = <InlineSpinner>
-            <TooltipButton helpText={_t(
-                "Currently joining %(count)s rooms",
-                { count: joiningRooms.size },
-            )} />
-        </InlineSpinner>;
+        pendingRoomJoinSpinner = <TooltipTarget
+            label={_t("Currently joining %(count)s rooms", { count: joiningRooms.size })}
+        >
+            <InlineSpinner />
+        </TooltipTarget>;
     }
 
     let contextMenuButton: JSX.Element = <div className="mx_RoomListHeader_contextLessTitle">{ title }</div>;
@@ -365,7 +367,7 @@ const RoomListHeader = ({ spacePanelDisabled, onVisibilityChange }: IProps) => {
             isExpanded={mainMenuDisplayed}
             className="mx_RoomListHeader_contextMenuButton"
             title={activeSpace
-                ? _t("%(spaceName)s menu", { spaceName: activeSpace.name })
+                ? _t("%(spaceName)s menu", { spaceName })
                 : _t("Home options")}
         >
             { title }

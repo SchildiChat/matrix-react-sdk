@@ -19,6 +19,8 @@ import { MatrixClient } from 'matrix-js-sdk/src/client';
 import { MatrixEvent } from 'matrix-js-sdk/src/models/event';
 import { MatrixCall } from 'matrix-js-sdk/src/webrtc/call';
 import classNames from 'classnames';
+import { ISyncStateData, SyncState } from 'matrix-js-sdk/src/sync';
+import { IUsageLimit } from 'matrix-js-sdk/src/@types/partials';
 
 import { Key } from '../../Keyboard';
 import PageTypes from '../../PageTypes';
@@ -42,7 +44,6 @@ import CallContainer from '../views/voip/CallContainer';
 import { ViewRoomDeltaPayload } from "../../dispatcher/payloads/ViewRoomDeltaPayload";
 import RoomListStore from "../../stores/room-list/RoomListStore";
 import NonUrgentToastContainer from "./NonUrgentToastContainer";
-import { ToggleRightPanelPayload } from "../../dispatcher/payloads/ToggleRightPanelPayload";
 import { IOOBData, IThreepidInvite } from "../../stores/ThreepidInviteStore";
 import Modal from "../../Modal";
 import { ICollapseConfig } from "../../resizer/distributors/collapse";
@@ -68,13 +69,17 @@ import { mediaFromMxc } from "../../customisations/Media";
 import { RecheckThemePayload } from '../../dispatcher/payloads/RecheckThemePayload';
 import LegacyCommunityPreview from "./LegacyCommunityPreview";
 import { Layout } from '../../settings/enums/Layout';
+import RightPanelStore from '../../stores/right-panel/RightPanelStore';
 
 // We need to fetch each pinned message individually (if we don't already have it)
 // so each pinned message may trigger a request. Limit the number per room for sanity.
 // NB. this is just for server notices rather than pinned messages in general.
 const MAX_PINNED_NOTICES_PER_ROOM = 2;
 
-export function getInputableElement(el: HTMLElement): HTMLElement | null {
+// Used to find the closest inputable thing. Because of how our composer works,
+// your caret might be within a paragraph/font/div/whatever within the
+// contenteditable rather than directly in something inputable.
+function getInputableElement(el: HTMLElement): HTMLElement | null {
     return el.closest("input, textarea, select, [contenteditable=true]");
 }
 
@@ -106,24 +111,8 @@ interface IProps {
     forceTimeline?: boolean; // see props on MatrixChat
 }
 
-interface IUsageLimit {
-    // "hs_disabled" is NOT a specced string, but is used in Synapse
-    // This is tracked over at https://github.com/matrix-org/synapse/issues/9237
-    // eslint-disable-next-line camelcase
-    limit_type: "monthly_active_user" | "hs_disabled" | string;
-    // eslint-disable-next-line camelcase
-    admin_contact?: string;
-}
-
 interface IState {
-    syncErrorData?: {
-        error: {
-            // This is not specced, but used in Synapse. See
-            // https://github.com/matrix-org/synapse/issues/9237#issuecomment-768238922
-            data: IUsageLimit;
-            errcode: string;
-        };
-    };
+    syncErrorData?: ISyncStateData;
     usageLimitDismissed: boolean;
     usageLimitEventContent?: IUsageLimit;
     usageLimitEventTs?: number;
@@ -306,45 +295,35 @@ class LoggedInView extends React.Component<IProps, IState> {
         }
     };
 
-    onLayoutChanged = (setting, roomId, level, valueAtLevel, newValue) => {
+    private onLayoutChanged = () => {
         this.setState({
-            layout: valueAtLevel,
+            layout: SettingsStore.getValue("layout"),
         });
     };
 
-    onCompactLayoutChanged = (setting, roomId, level, valueAtLevel, newValue) => {
+    private onCompactLayoutChanged = () => {
         this.setState({
-            useCompactLayout: valueAtLevel,
+            useCompactLayout: SettingsStore.getValue("useCompactLayout"),
         });
     };
 
-    onSync = (syncState, oldSyncState, data) => {
-        const oldErrCode = (
-            this.state.syncErrorData &&
-            this.state.syncErrorData.error &&
-            this.state.syncErrorData.error.errcode
-        );
+    private onSync = (syncState: SyncState, oldSyncState?: SyncState, data?: ISyncStateData): void => {
+        const oldErrCode = this.state.syncErrorData?.error?.errcode;
         const newErrCode = data && data.error && data.error.errcode;
         if (syncState === oldSyncState && oldErrCode === newErrCode) return;
 
-        if (syncState === 'ERROR') {
-            this.setState({
-                syncErrorData: data,
-            });
-        } else {
-            this.setState({
-                syncErrorData: null,
-            });
-        }
+        this.setState({
+            syncErrorData: syncState === SyncState.Error ? data : null,
+        });
 
-        if (oldSyncState === 'PREPARED' && syncState === 'SYNCING') {
+        if (oldSyncState === SyncState.Prepared && syncState === SyncState.Syncing) {
             this.updateServerNoticeEvents();
         } else {
             this.calculateServerLimitToast(this.state.syncErrorData, this.state.usageLimitEventContent);
         }
     };
 
-    onRoomStateEvents = (ev, state) => {
+    private onRoomStateEvents = (ev: MatrixEvent): void => {
         const serverNoticeList = RoomListStore.instance.orderedLists[DefaultTagID.ServerNotice];
         if (serverNoticeList && serverNoticeList.some(r => r.roomId === ev.getRoomId())) {
             this.updateServerNoticeEvents();
@@ -360,7 +339,7 @@ class LoggedInView extends React.Component<IProps, IState> {
     private calculateServerLimitToast(syncError: IState["syncErrorData"], usageLimitEventContent?: IUsageLimit) {
         const error = syncError && syncError.error && syncError.error.errcode === "M_RESOURCE_LIMIT_EXCEEDED";
         if (error) {
-            usageLimitEventContent = syncError.error.data;
+            usageLimitEventContent = syncError.error.data as IUsageLimit;
         }
 
         // usageLimitDismissed is true when the user has explicitly hidden the toast
@@ -524,10 +503,7 @@ class LoggedInView extends React.Component<IProps, IState> {
                 break;
             case NavigationAction.ToggleRoomSidePanel:
                 if (this.props.page_type === "room_view" || this.props.page_type === "group_view") {
-                    dis.dispatch<ToggleRightPanelPayload>({
-                        action: Action.ToggleRightPanel,
-                        type: this.props.page_type === "room_view" ? "room" : "group",
-                    });
+                    RightPanelStore.instance.togglePanel();
                     handled = true;
                 }
                 break;

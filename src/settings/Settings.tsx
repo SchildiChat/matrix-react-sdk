@@ -32,7 +32,6 @@ import SystemFontController from './controllers/SystemFontController';
 import UseSystemFontController from './controllers/UseSystemFontController';
 import { SettingLevel } from "./SettingLevel";
 import SettingController from "./controllers/SettingController";
-import { RightPanelPhases } from "../stores/RightPanelStorePhases";
 import { isMac } from '../Keyboard';
 import UIFeatureController from "./controllers/UIFeatureController";
 import { UIFeature } from "./UIFeature";
@@ -225,13 +224,6 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         supportedLevels: LEVELS_FEATURE,
         default: true,
     },
-    "feature_maximised_widgets": {
-        isFeature: true,
-        labsGroup: LabGroup.Widgets,
-        displayName: _td("Maximised widgets"),
-        supportedLevels: LEVELS_FEATURE,
-        default: false,
-    },
     "feature_thread": {
         isFeature: true,
         labsGroup: LabGroup.Messaging,
@@ -372,6 +364,15 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         displayName: _td("New spotlight search experience"),
         default: false,
     },
+    "feature_jump_to_date": {
+        // We purposely leave out `isFeature: true` so it doesn't show in Labs
+        // by default. We will conditionally show it depending on whether we can
+        // detect MSC3030 support (see LabUserSettingsTab.tsx).
+        // labsGroup: LabGroup.Messaging,
+        displayName: _td("Jump to date (adds /jumptodate)"),
+        supportedLevels: LEVELS_FEATURE,
+        default: false,
+    },
     "RoomList.backgroundImage": {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
         default: null,
@@ -413,6 +414,7 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS,
         displayName: _td("Use a more compact 'Modern' layout"),
         default: false,
+        controller: new IncompatibleController("layout", false, v => v !== Layout.Group),
     },
     "showRedactions": {
         supportedLevels: LEVELS_ROOM_SETTINGS_WITH_ROOM,
@@ -793,21 +795,13 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         displayName: _td("Show previews/thumbnails for images"),
         default: true,
     },
-    "showRightPanelInRoom": {
-        supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS,
-        default: false,
+    "RightPanel.phasesGlobal": {
+        supportedLevels: [SettingLevel.DEVICE],
+        default: null,
     },
-    "showRightPanelInGroup": {
-        supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS,
-        default: false,
-    },
-    "lastRightPanelPhaseForRoom": {
-        supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS,
-        default: RightPanelPhases.RoomSummary,
-    },
-    "lastRightPanelPhaseForGroup": {
-        supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS,
-        default: RightPanelPhases.GroupMemberList,
+    "RightPanel.phases": {
+        supportedLevels: [SettingLevel.ROOM_DEVICE],
+        default: null,
     },
     "enableEventIndexing": {
         supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS,
@@ -895,14 +889,6 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         default: true,
         controller: new IncompatibleController("showCommunitiesInsteadOfSpaces", null),
     },
-    "Spaces.showSpaceMemberDMs": {
-        displayName: _td("Show people in spaces"),
-        description: _td("If disabled, you can still add Direct Messages to Personal Spaces. " +
-            "If enabled, you'll automatically see everyone who is a member of the Space."),
-        supportedLevels: LEVELS_ACCOUNT_SETTINGS,
-        default: false,
-        controller: new IncompatibleController("showCommunitiesInsteadOfSpaces", null),
-    },
     "Spaces.showSpaceDMBadges": {
         displayName: _td("Show notification badges for People in Spaces"),
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
@@ -924,6 +910,11 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         controller: new IncompatibleController("feature_spaces_metaspaces", {
             [MetaSpace.Home]: true,
         }, false),
+    },
+    "Spaces.showPeopleInSpace": {
+        supportedLevels: [SettingLevel.ROOM_ACCOUNT],
+        default: false,
+        controller: new IncompatibleController("showCommunitiesInsteadOfSpaces", null),
     },
     "showCommunitiesInsteadOfSpaces": {
         displayName: _td("Display Communities instead of Spaces"),
@@ -1010,6 +1001,10 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         controller: new IncompatibleController("showCommunitiesInsteadOfSpaces", false, false),
     },
     [UIFeature.AdvancedSettings]: {
+        supportedLevels: LEVELS_UI_FEATURE,
+        default: true,
+    },
+    [UIFeature.TimelineEnableRelativeDates]: {
         supportedLevels: LEVELS_UI_FEATURE,
         default: true,
     },
