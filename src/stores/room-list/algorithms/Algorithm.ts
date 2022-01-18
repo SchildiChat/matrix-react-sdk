@@ -202,7 +202,9 @@ export class Algorithm extends EventEmitter {
     }
 
     private updateStickyRoom(val: Room) {
-        this.doUpdateStickyRoom(val);
+        // Schildi: we don't want it sticky
+        this.doUpdateStickyRoom(null);
+        //this.doUpdateStickyRoom(val);
         this._lastStickyRoom = null; // clear to indicate we're done changing
     }
 
