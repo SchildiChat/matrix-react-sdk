@@ -1412,9 +1412,15 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
                 this.screenAfterLogin.params,
             );
             this.screenAfterLogin = null;
-        // } else if (localStorage && localStorage.getItem('mx_last_room_id')) {
-        //     // Before defaulting to directory, show the last viewed room
-        //     this.viewLastRoom();
+        } else if (!SettingsStore.getValue("Spaces.returnToPreviouslyOpenedRoom")
+            && localStorage && localStorage.getItem('mx_active_space')
+            && localStorage.getItem('mx_active_space')[0] === "!") {
+            // SC: Show the last viewed space
+            this.viewLastSpace();
+        } else if (SettingsStore.getValue("Spaces.returnToPreviouslyOpenedRoom")
+            && localStorage && localStorage.getItem('mx_last_room_id')) {
+            // Before defaulting to directory, show the last viewed room
+            this.viewLastRoom();
         } else {
             if (MatrixClientPeg.get().isGuest()) {
                 dis.dispatch({ action: 'view_welcome_page' });
@@ -1422,6 +1428,14 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
                 dis.dispatch({ action: 'view_home_page' });
             }
         }
+    }
+
+    private viewLastSpace() {
+        // SC-ToDo: Make this work for meta spaces
+        dis.dispatch({
+            action: Action.ViewRoom,
+            room_id: localStorage.getItem('mx_active_space'),
+        });
     }
 
     private viewLastRoom() {
