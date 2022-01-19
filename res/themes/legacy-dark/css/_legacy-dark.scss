@@ -26,7 +26,7 @@ $light-fg-color: $header-panel-text-secondary-color;
 // used for focusing form controls
 $focus-bg-color: $room-highlight-color;
 
-$other-user-pill-bg-color: $room-highlight-color;
+$other-user-pill-bg-color: rgba(0, 0, 0, 0.2);
 $rte-room-pill-color: $room-highlight-color;
 
 // informational plinth
