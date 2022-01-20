@@ -47,6 +47,7 @@ import RoomName from "../elements/RoomName";
 import UIStore from "../../../stores/UIStore";
 import ExportDialog from "../dialogs/ExportDialog";
 import RightPanelStore from "../../../stores/right-panel/RightPanelStore";
+import RoomTopic from "../elements/RoomTopic";
 
 interface IProps {
     room: Room;
@@ -287,6 +288,15 @@ const RoomSummaryCard: React.FC<IProps> = ({ room, onClose }) => {
 
     const memberCount = useRoomMemberCount(room);
 
+    // SC: Show topic in room info card
+    const topicElement = <RoomTopic room={room}>
+        { (topic, ref) => topic ? <Group title={_t("Room Topic")} className="mx_RoomSummaryCard_topicGroup">
+            <div ref={ref} className="mx_RoomSummaryCard_topic" dir="auto">
+                { topic }
+            </div>
+        </Group> : null }
+    </RoomTopic>;
+
     return <BaseCard header={header} className="mx_RoomSummaryCard" onClose={onClose}>
         <Group title={_t("About")} className="mx_RoomSummaryCard_aboutGroup">
             <Button className="mx_RoomSummaryCard_icon_people" onClick={onRoomMembersClick}>
@@ -310,6 +320,8 @@ const RoomSummaryCard: React.FC<IProps> = ({ room, onClose }) => {
         </Group>
 
         { SettingsStore.getValue(UIFeature.Widgets) && <AppsSection room={room} /> }
+
+        { topicElement }
     </BaseCard>;
 };
 
