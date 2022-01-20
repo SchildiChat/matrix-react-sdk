@@ -24,7 +24,7 @@ replace_colors() {
     if [[ "$f" =~ "dark" ]]; then
         BG_ACCENT="$M_ACCENT_DARK"
         CODEBLOCK_BACKGROUND_COLOR="#121212"
-        OTHER_USER_PILL_COLOR="rgba(0, 0, 0, 0.2)"
+        OTHER_USER_PILL_COLOR="rgba(255, 255, 255, 0.15)"
     else
         BG_ACCENT="$M_ACCENT_LIGHT"
         CODEBLOCK_BACKGROUND_COLOR="#00000010"
