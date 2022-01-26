@@ -3,12 +3,15 @@
 shopt -s globstar
 
 mydir="$(dirname "$(realpath "$0")")"
+automatic_commit="$1"
 
-# Require clean git state
-uncommitted=`git status --porcelain`
-if [ ! -z "$uncommitted" ]; then
-    echo "Uncommitted changes are present, please commit first!"
-    exit 1
+if [[ "$automatic_commit" == [Yy]* ]]; then
+    # Require clean git state
+    uncommitted=`git status --porcelain`
+    if [ ! -z "$uncommitted" ]; then
+        echo "Uncommitted changes are present, please commit first!"
+        exit 1
+    fi
 fi
 
 pushd "$mydir" > /dev/null
@@ -131,6 +134,8 @@ done
 
 popd > /dev/null
 
-# see: https://devops.stackexchange.com/a/5443
-git add -A
-git diff-index --quiet HEAD || git commit -m "Automatic theme update"
+if [[ "$automatic_commit" == [Yy]* ]]; then
+    # see: https://devops.stackexchange.com/a/5443
+    git add -A
+    git diff-index --quiet HEAD || git commit -m "Automatic theme update"
+fi
