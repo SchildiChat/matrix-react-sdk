@@ -24,11 +24,11 @@ replace_colors() {
     if [[ "$f" =~ "dark" ]]; then
         BG_ACCENT="$M_ACCENT_DARK"
         CODEBLOCK_BACKGROUND_COLOR="#121212"
-        OTHER_USER_PILL_COLOR="rgba(255, 255, 255, 0.15)"
+        PILL_COLOR="rgba(255, 255, 255, 0.12)"
     else
         BG_ACCENT="$M_ACCENT_LIGHT"
         CODEBLOCK_BACKGROUND_COLOR="#00000010"
-        OTHER_USER_PILL_COLOR="rgba(0, 0, 0, 0.1)" # default
+        PILL_COLOR="rgba(0, 0, 0, 0.1)" # default
     fi
     # Neutral colors
     sed -i 's|#15171b|#212121|gi' "$f"
@@ -96,7 +96,8 @@ replace_colors() {
     sed -i "s|\\(\$event-highlight-bg-color: \\).*;|\\1transparent;|gi" "$f"
     sed -i "s|\\(\$preview-widget-bar-color: \\).*;|\\1#bdbdbd;|gi" "$f"
     sed -i "s|\\(\$blockquote-bar-color: \\).*;|\\1#bdbdbd;|gi" "$f"
-    sed -i "s|\\(\$other-user-pill-bg-color: \\).*;|\\1$OTHER_USER_PILL_COLOR;|gi" "$f"
+    sed -i "s|\\(\$other-user-pill-bg-color: \\).*;|\\1$PILL_COLOR;|gi" "$f"
+    sed -i "s|\\(\$rte-room-pill-color: \\).*;|\\1$PILL_COLOR;|gi" "$f"
 
     sed -i "s|\\(\$codeblock-background-color: \\).*;|\\1$CODEBLOCK_BACKGROUND_COLOR;|gi" "$f"
 

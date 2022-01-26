@@ -103,8 +103,6 @@ $light-fg-color: var(--timeline-text-secondary-color);
 $focus-bg-color: var(--focus-bg-color, $focus-bg-color);
 $room-highlight-color: var(--room-highlight-color);
 
-$rte-room-pill-color: $room-highlight-color;
-
 // was #888888
 $info-plinth-fg-color: var(--timeline-text-secondary-color);
 //
@@ -142,4 +140,5 @@ $message-bubble-background-selected: var(--eventbubble-selected-bg, $message-bub
 $reaction-row-button-selected-bg-color: var(--reaction-row-button-selected-bg-color, $reaction-row-button-selected-bg-color);
 
 $menu-selected-color: var(--menu-selected-color, $menu-selected-color);
+$rte-room-pill-color: var(--rte-room-pill-color, $rte-room-pill-color);
 $other-user-pill-bg-color: var(--other-user-pill-bg-color, $other-user-pill-bg-color);
