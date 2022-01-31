@@ -2567,7 +2567,7 @@
     "Set my room layout for everyone": "A szoba megjelenésének beállítása mindenki számára",
     "%(senderName)s has updated the widget layout": "%(senderName)s megváltoztatta a kisalkalmazás megjelenését",
     "Use app": "Alkalmazás használata",
-    "Element Web is experimental on mobile. For a better experience and the latest features, use our free native app.": "Az SchildiChat Web kísérleti állapotban van mobiltelefonon. A jobb élmény és a legújabb funkciók használatához használja az ingyenes natív alkalmazást.",
+    "Element Web is experimental on mobile. For a better experience and the latest features, use our free native app.": "Az Element Web kísérleti állapotban van mobiltelefonon. A jobb élmény és a legújabb funkciók használatához használja az ingyenes natív alkalmazást.",
     "Use app for a better experience": "A jobb élmény érdekében használjon alkalmazást",
     "Converts the DM to a room": "A közvetlen beszélgetésből egy szobát készít",
     "Converts the room to a DM": "A szobából közvetlen beszélgetést készít",
@@ -3156,7 +3156,7 @@
     "Before you upgrade": "Mielőtt frissítene",
     "To join a space you'll need an invite.": "A térre való belépéshez meghívóra van szükség.",
     "You can also make Spaces from <a>communities</a>.": "<a>Közösségből</a> is lehet Tereket készíteni.",
-    "Temporarily show communities instead of Spaces for this session. Support for this will be removed in the near future. This will reload Element.": "Közösségek megjelenítése átmenetileg a terek helyett ebben a munkamenetben. Ez a lehetőség később kivezetésre kerül. Az SchildiChat újratöltődik.",
+    "Temporarily show communities instead of Spaces for this session. Support for this will be removed in the near future. This will reload Element.": "Közösségek megjelenítése átmenetileg a terek helyett ebben a munkamenetben. Ez a lehetőség később kivezetésre kerül. Az Element újratöltődik.",
     "Display Communities instead of Spaces": "Közösségek megjelenítése a terek helyett",
     "%(reactors)s reacted with %(content)s": "%(reactors)s reagált: %(content)s",
     "Joining space …": "Belépés a térbe…",
@@ -3466,7 +3466,7 @@
     "Sections to show": "Megjelenítendő részek",
     "Link to room": "Hivatkozás a szobához",
     "Processing...": "Feldolgozás…",
-    "Help us identify issues and improve Element by sharing anonymous usage data. To understand how people use multiple devices, we'll generate a random identifier, shared by your devices.": "Segíts észrevennünk a hibákat, és jobbá tenni az SchildiChat-et a névtelen használati adatok küldése által. Ahhoz, hogy megértsük, hogyan használnak a felhasználók egyszerre több eszközt, egy véletlenszerű azonosítót generálunk, ami az eszközeid között meg lesz osztva.",
+    "Help us identify issues and improve Element by sharing anonymous usage data. To understand how people use multiple devices, we'll generate a random identifier, shared by your devices.": "Segíts észrevennünk a hibákat, és jobbá tenni az Element-et a névtelen használati adatok küldése által. Ahhoz, hogy megértsük, hogyan használnak a felhasználók egyszerre több eszközt, egy véletlenszerű azonosítót generálunk, ami az eszközeid között meg lesz osztva.",
     "You can read all our terms <PrivacyPolicyUrl>here</PrivacyPolicyUrl>": "Elolvashatja az összes feltételünket <PrivacyPolicyUrl>itt</PrivacyPolicyUrl>",
     "%(count)s members including you, %(commaSeparatedMembers)s|one": "%(count)s tag Önt is beleértve és %(commaSeparatedMembers)s",
     "%(count)s members including you, %(commaSeparatedMembers)s|zero": "Ön",
@@ -3507,9 +3507,5 @@
     "Dial": "Tárcsáz",
     "Back to thread": "Vissza az üzenetszálhoz",
     "Room members": "Szoba tagok",
-    "Back to chat": "Vissza a beszélgetésbe",
-    "Enable layout with message bubbles": "Üzenetbuborékos elrendezés engedélyezése",
-    "Show message bubbles on one side only": "Üzenetbuborékok megjelenítése csak az egyik oldalon",
-    "Show message bubbles depending on the width either on both sides or only on one side": "Üzenetbuborékok megjelenítése a szélességtől függően mindkét oldalon vagy csak az egyik oldalon",
-    "Normal priority": "Normál prioritás"
+    "Back to chat": "Vissza a beszélgetésbe"
 }

@@ -1942,7 +1942,7 @@
     "Surround selected text when typing special characters": "Obklopiť vybraný text pri písaní špeciálnych znakov",
     "Use Ctrl + Enter to send a message": "Na odoslanie správy použiť klávesovú skratku Ctrl + Enter",
     "Displaying time": "Zobrazovanie času",
-    "Temporarily show communities instead of Spaces for this session. Support for this will be removed in the near future. This will reload Element.": "Dočasne zobrazovať komunity namiesto Priestorov pre túto reláciu. Podpora pre túto funkciu bude v blízkej budúcnosti odstránená. Tým sa znovu načíta SchildiChat.",
+    "Temporarily show communities instead of Spaces for this session. Support for this will be removed in the near future. This will reload Element.": "Dočasne zobrazovať komunity namiesto Priestorov pre túto reláciu. Podpora pre túto funkciu bude v blízkej budúcnosti odstránená. Tým sa znovu načíta Element.",
     "An image will help people identify your community.": "Obrázok pomôže ľuďom identifikovať vašu komunitu.",
     "If a community isn't shown you may not have permission to convert it.": "Ak komunita nie je zobrazená, nemusíte mať povolenie na jej konverziu.",
     "Show my Communities": "Zobraziť moje komunity",
@@ -2130,7 +2130,7 @@
     "Olm version:": "Olm verzia:",
     "Backup version:": "Verzia zálohy:",
     "New version of %(brand)s is available": "K dispozícii je nová verzia %(brand)s",
-    "Element Web is experimental on mobile. For a better experience and the latest features, use our free native app.": "SchildiChat Web je v mobilnej verzii experimentálny. Ak chcete získať lepší zážitok a najnovšie funkcie, použite našu bezplatnú natívnu aplikáciu.",
+    "Element Web is experimental on mobile. For a better experience and the latest features, use our free native app.": "Element Web je v mobilnej verzii experimentálny. Ak chcete získať lepší zážitok a najnovšie funkcie, použite našu bezplatnú natívnu aplikáciu.",
     "Manage your signed-in devices below. A device's name is visible to people you communicate with.": "Spravujte svoje prihlásené zariadenia. Názov zariadenia je viditeľný pre ľudí, s ktorými komunikujete.",
     "Role in <RoomName/>": "Rola v <RoomName/>",
     "Plain Text": "Obyčajný text",
@@ -2419,7 +2419,7 @@
     "Only people invited will be able to find and join this room.": "Len pozvaní ľudia budú môcť nájsť túto miestnosť a pripojiť sa k nej.",
     "You can't disable this later. Bridges & most bots won't work yet.": "Toto neskôr nemôžete vypnúť. Premostenia a väčšina botov zatiaľ nebudú fungovať.",
     "Specify a homeserver": "Zadajte domovský server",
-    "You can use the custom server options to sign into other Matrix servers by specifying a different homeserver URL. This allows you to use Element with an existing Matrix account on a different homeserver.": "Môžete použiť nastavenia vlastného servera na prihlásenie sa na iné servery Matrix-u zadaním inej adresy URL domovského servera. To vám umožní používať SchildiChat s existujúcim účtom Matrix na inom domovskom serveri.",
+    "You can use the custom server options to sign into other Matrix servers by specifying a different homeserver URL. This allows you to use Element with an existing Matrix account on a different homeserver.": "Môžete použiť nastavenia vlastného servera na prihlásenie sa na iné servery Matrix-u zadaním inej adresy URL domovského servera. To vám umožní používať Element s existujúcim účtom Matrix na inom domovskom serveri.",
     "Specify a number of messages": "Zadajte počet správ",
     "From the beginning": "Od začiatku",
     "Scroll up/down in the timeline": "Posun nahor/dole na časovej osi",
@@ -2907,10 +2907,5 @@
     "%(spaceName)s and %(count)s others|one": "%(spaceName)s a %(count)s ďalší",
     "%(spaceName)s and %(count)s others|other": "%(spaceName)s a %(count)s ďalší",
     "Some invites couldn't be sent": "Niektoré pozvánky nebolo možné odoslať",
-    "%(date)s at %(time)s": "%(date)s o %(time)s",
-    "Enable layout with message bubbles": "Povolenie rozloženia s bublinami správ",
-    "Show message bubbles on one side only": "Zobrazenie bublín správ len na jednej strane",
-    "Show message bubbles depending on the width either on both sides or only on one side": "Zobrazenie bublín správ v závislosti od šírky buď na oboch stranách, alebo len na jednej strane",
-    "Message bubbles": "Bubliny správ",
-    "Normal priority": "Normálna priorita"
+    "%(date)s at %(time)s": "%(date)s o %(time)s"
 }
