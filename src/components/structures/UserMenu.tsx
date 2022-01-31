@@ -59,6 +59,7 @@ import { replaceableComponent } from "../../utils/replaceableComponent";
 import MatrixClientContext from "../../contexts/MatrixClientContext";
 import { SettingUpdatedPayload } from "../../dispatcher/payloads/SettingUpdatedPayload";
 import { Theme } from "../../settings/enums/Theme";
+import UserIdentifierCustomisations from "../../customisations/UserIdentifier";
 
 const CustomStatusSection = () => {
     const cli = useContext(MatrixClientContext);
@@ -460,7 +461,8 @@ export default class UserMenu extends React.Component<IProps, IState> {
                         { OwnProfileStore.instance.displayName }
                     </span>
                     <span className="mx_UserMenu_contextMenu_userId">
-                        { MatrixClientPeg.get().getUserId() }
+                        { UserIdentifierCustomisations.getDisplayUserIdentifier(
+                            MatrixClientPeg.get().getUserId(), { withDisplayName: true }) }
                     </span>
                 </div>
 

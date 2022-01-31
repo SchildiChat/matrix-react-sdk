@@ -56,7 +56,7 @@ import AccessibleButton from "../views/elements/AccessibleButton";
 import RightPanelStore from "../../stores/right-panel/RightPanelStore";
 import { haveTileForEvent } from "../views/rooms/EventTile";
 import RoomContext, { TimelineRenderingType } from "../../contexts/RoomContext";
-import MatrixClientContext, { withMatrixClientHOC, MatrixClientProps } from "../../contexts/MatrixClientContext";
+import MatrixClientContext, { MatrixClientProps, withMatrixClientHOC } from "../../contexts/MatrixClientContext";
 import { E2EStatus, shieldStatusForRoom } from '../../utils/ShieldUtils';
 import { Action } from "../../dispatcher/actions";
 import { IMatrixClientCreds } from "../../MatrixClientPeg";
@@ -974,10 +974,10 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         }
     };
 
-    private onRoomTimeline = (ev: MatrixEvent, room: Room, toStartOfTimeline: boolean, removed, data) => {
+    private onRoomTimeline = (ev: MatrixEvent, room: Room | null, toStartOfTimeline: boolean, removed, data) => {
         if (this.unmounted) return;
 
-        // ignore events for other rooms
+        // ignore events for other rooms or the notification timeline set
         if (!room || room.roomId !== this.state.room?.roomId) return;
 
         // ignore events from filtered timelines
@@ -1877,7 +1877,10 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
     onHiddenHighlightsClick = () => {
         const oldRoom = this.getOldRoom();
         if (!oldRoom) return;
-        dis.dispatch({ action: "view_room", room_id: oldRoom.roomId });
+        dis.dispatch({
+            action: Action.ViewRoom,
+            room_id: oldRoom.roomId,
+        });
     };
 
     render() {
@@ -2336,7 +2339,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
                             excludedRightPanelPhaseButtons={excludedRightPanelPhaseButtons}
                         />
                         <MainSplit panel={rightPanel} resizeNotifier={this.props.resizeNotifier}>
-                            <div className="mx_RoomView_body">
+                            <div className="mx_RoomView_body" data-layout={this.state.layout}>
                                 { mainSplitBody }
                             </div>
                         </MainSplit>

@@ -1,5 +1,5 @@
 /*
-Copyright 2021 The Matrix.org Foundation C.I.C.
+Copyright 2021 - 2022 The Matrix.org Foundation C.I.C.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,7 +30,13 @@ import IconizedContextMenu, {
 } from "../context_menus/IconizedContextMenu";
 import defaultDispatcher from "../../../dispatcher/dispatcher";
 import dis from "../../../dispatcher/dispatcher";
-import { shouldShowSpaceInvite, showAddExistingRooms, showCreateNewRoom, showSpaceInvite } from "../../../utils/space";
+import {
+    shouldShowSpaceInvite,
+    showAddExistingRooms,
+    showCreateNewRoom,
+    showCreateNewSubspace,
+    showSpaceInvite,
+} from "../../../utils/space";
 import { CommunityPrototypeStore } from "../../../stores/CommunityPrototypeStore";
 import { ButtonEvent } from "../elements/AccessibleButton";
 import Modal from "../../../Modal";
@@ -54,6 +60,7 @@ import { MatrixClientPeg } from "../../../MatrixClientPeg";
 import AccessibleTooltipButton from "../elements/AccessibleTooltipButton";
 import RightPanelStore from "../../../stores/right-panel/RightPanelStore";
 import TooltipTarget from "../elements/TooltipTarget";
+import { BetaPill } from "../beta/BetaCard";
 
 const contextMenuBelow = (elementRect: DOMRect) => {
     // align the context menu's icons with the icon which opened the context menu
@@ -99,7 +106,7 @@ const PrototypeCommunityContextMenu = (props: ComponentProps<typeof SpaceContext
         const chat = CommunityPrototypeStore.instance.getSelectedCommunityGeneralChat();
         if (chat) {
             dis.dispatch({
-                action: 'view_room',
+                action: Action.ViewRoom,
                 room_id: chat.roomId,
             }, true);
             RightPanelStore.instance.setCard({ phase: RightPanelPhases.RoomMemberList }, undefined, chat.roomId);
@@ -253,9 +260,10 @@ const RoomListHeader = ({ spacePanelDisabled, onVisibilityChange }: IProps) => {
         }
 
         let addExisitingRoomOption: JSX.Element;
+        let addSpaceOption: JSX.Element;
         if (activeSpace?.currentState.maySendStateEvent(EventType.SpaceChild, cli.getUserId())) {
             addExisitingRoomOption = <IconizedContextMenuOption
-                iconClassName="mx_RoomList_iconAddExistingRoom"
+                iconClassName="mx_RoomListHeader_iconPlus"
                 label={_t("Add existing room")}
                 onClick={(e) => {
                     e.preventDefault();
@@ -264,6 +272,18 @@ const RoomListHeader = ({ spacePanelDisabled, onVisibilityChange }: IProps) => {
                     closePlusMenu();
                 }}
             />;
+            addSpaceOption = <IconizedContextMenuOption
+                label={_t("Add space")}
+                iconClassName="mx_RoomListHeader_iconPlus"
+                onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    showCreateNewSubspace(activeSpace);
+                    closePlusMenu();
+                }}
+            >
+                <BetaPill />
+            </IconizedContextMenuOption>;
         }
 
         contextMenu = <IconizedContextMenu
@@ -273,16 +293,6 @@ const RoomListHeader = ({ spacePanelDisabled, onVisibilityChange }: IProps) => {
         >
             <IconizedContextMenuOptionList first>
                 { inviteOption }
-                <IconizedContextMenuOption
-                    label={_t("Start new chat")}
-                    iconClassName="mx_RoomListHeader_iconStartChat"
-                    onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        defaultDispatcher.dispatch({ action: "view_create_chat" });
-                        closePlusMenu();
-                    }}
-                />
                 { createNewRoomOption }
                 { /* SC: Added beneath search all spaces */ }
                 { /* <IconizedContextMenuOption
@@ -291,12 +301,16 @@ const RoomListHeader = ({ spacePanelDisabled, onVisibilityChange }: IProps) => {
                     onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        defaultDispatcher.dispatch({ action: Action.ViewRoomDirectory });
+                        defaultDispatcher.dispatch({
+                            action: Action.ViewRoom,
+                            room_id: activeSpace.roomId,
+                        });
                         closePlusMenu();
                     }}
                 /> */ }
 
                 { addExisitingRoomOption }
+                { addSpaceOption }
             </IconizedContextMenuOptionList>
         </IconizedContextMenu>;
     } else if (plusMenuDisplayed) {

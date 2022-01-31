@@ -50,6 +50,8 @@ import DocumentPosition from "../../../editor/position";
 import { ICompletion } from "../../../autocomplete/Autocompleter";
 import { AutocompleteAction, getKeyBindingsManager, MessageComposerAction } from '../../../KeyBindingsManager';
 import { replaceableComponent } from "../../../utils/replaceableComponent";
+import { ALTERNATE_KEY_NAME } from '../../../accessibility/KeyboardShortcuts';
+import { _t } from "../../../languageHandler";
 
 // matches emoticons which follow the start of a line or whitespace
 const REGEX_EMOTICON_WHITESPACE = new RegExp('(?:^|\\s)(' + EMOTICON_REGEX.source + ')\\s|:^$');
@@ -66,7 +68,7 @@ const SURROUND_WITH_DOUBLE_CHARACTERS = new Map([
 ]);
 
 function ctrlShortcutLabel(key: string): string {
-    return (IS_MAC ? "⌘" : "Ctrl") + "+" + key;
+    return (IS_MAC ? "⌘" : _t(ALTERNATE_KEY_NAME[Key.CONTROL])) + "+" + key;
 }
 
 function cloneSelection(selection: Selection): Partial<Selection> {
@@ -199,7 +201,7 @@ export default class BasicMessageEditor extends React.Component<IProps, IState> 
 
                 // this returns the amount of added/removed characters during the replace
                 // so the caret position can be adjusted.
-                return range.replace([partCreator.plain(data.unicode)]);
+                return range.replace([partCreator.emoji(data.unicode)]);
             }
         }
     }
@@ -831,7 +833,7 @@ export default class BasicMessageEditor extends React.Component<IProps, IState> 
         const caret = this.getCaret();
         const position = model.positionForOffset(caret.offset, caret.atNodeEnd);
         model.transform(() => {
-            const addedLen = model.insert([partCreator.plain(text)], position);
+            const addedLen = model.insert(partCreator.plainWithEmoji(text), position);
             return model.positionForOffset(caret.offset + addedLen, true);
         });
     }

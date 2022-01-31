@@ -77,6 +77,7 @@ import { TimelineRenderingType } from "../../../contexts/RoomContext";
 import RightPanelStore from '../../../stores/right-panel/RightPanelStore';
 import { IRightPanelCardState } from '../../../stores/right-panel/RightPanelStoreIPanelState';
 import { useUserStatusMessage } from "../../../hooks/useUserStatusMessage";
+import UserIdentifierCustomisations from '../../../customisations/UserIdentifier';
 
 export interface IDevice {
     deviceId: string;
@@ -567,10 +568,10 @@ const RoomKickButton = ({ room, member, startUpdating, stopUpdating }: Omit<IBas
             room.isSpaceRoom() ? ConfirmSpaceUserActionDialog : ConfirmUserActionDialog,
             {
                 member,
-                action: member.membership === "invite" ? _t("Disinvite") : _t("Kick"),
+                action: member.membership === "invite" ? _t("Disinvite") : _t("Remove from chat"),
                 title: member.membership === "invite"
                     ? _t("Disinvite from %(roomName)s", { roomName: room.name })
-                    : _t("Kick from %(roomName)s", { roomName: room.name }),
+                    : _t("Remove from %(roomName)s", { roomName: room.name }),
                 askReason: member.membership === "join",
                 danger: true,
                 // space-specific props
@@ -583,8 +584,8 @@ const RoomKickButton = ({ room, member, startUpdating, stopUpdating }: Omit<IBas
                         myMember.powerLevel > theirMember.powerLevel &&
                         child.currentState.hasSufficientPowerLevelFor("kick", myMember.powerLevel);
                 },
-                allLabel: _t("Kick them from everything I'm able to"),
-                specificLabel: _t("Kick them from specific things I'm able to"),
+                allLabel: _t("Remove them from everything I'm able to"),
+                specificLabel: _t("Remove them from specific things I'm able to"),
                 warningMessage: _t("They'll still be able to access whatever you're not an admin of."),
             },
             room.isSpaceRoom() ? "mx_ConfirmSpaceUserActionDialog_wrapper" : undefined,
@@ -602,7 +603,7 @@ const RoomKickButton = ({ room, member, startUpdating, stopUpdating }: Omit<IBas
         }, function(err) {
             logger.error("Kick error: " + err);
             Modal.createTrackedDialog('Failed to kick', '', ErrorDialog, {
-                title: _t("Failed to kick"),
+                title: _t("Failed to remove user"),
                 description: ((err && err.message) ? err.message : "Operation failed"),
             });
         }).finally(() => {
@@ -610,7 +611,7 @@ const RoomKickButton = ({ room, member, startUpdating, stopUpdating }: Omit<IBas
         });
     };
 
-    const kickLabel = member.membership === "invite" ? _t("Disinvite") : _t("Kick");
+    const kickLabel = member.membership === "invite" ? _t("Disinvite") : _t("Remove from room");
     return <AccessibleButton className="mx_UserInfo_field mx_UserInfo_destructive" onClick={onKick}>
         { kickLabel }
     </AccessibleButton>;
@@ -1517,7 +1518,8 @@ export type Member = User | RoomMember | GroupMember;
 const UserInfoHeader: React.FC<{
     member: Member;
     e2eStatus: E2EStatus;
-}> = ({ member, e2eStatus }) => {
+    roomId: string;
+}> = ({ member, e2eStatus, roomId }) => {
     const cli = useContext(MatrixClientContext);
     const statusMessage = useUserStatusMessage(member);
 
@@ -1604,7 +1606,7 @@ const UserInfoHeader: React.FC<{
                         </span>
                     </h2>
                 </div>
-                <div>{ member.userId }</div>
+                <div>{ UserIdentifierCustomisations.getDisplayUserIdentifier(member.userId, { roomId, withDisplayName: true }) }</div>
                 <div className="mx_UserInfo_profileStatus">
                     { presenceLabel }
                     { statusLabel }
@@ -1708,7 +1710,7 @@ const UserInfo: React.FC<IProps> = ({
 
     const header = <React.Fragment>
         { scopeHeader }
-        <UserInfoHeader member={member} e2eStatus={e2eStatus} />
+        <UserInfoHeader member={member} e2eStatus={e2eStatus} roomId={room.roomId} />
     </React.Fragment>;
     return <BaseCard
         className={classes.join(" ")}

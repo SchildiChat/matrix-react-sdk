@@ -223,7 +223,8 @@ export default class MFileBody extends React.Component<IProps, IState> {
             </span>;
         }
 
-        const showDownloadLink = this.props.tileShape || !this.props.showGenericPlaceholder;
+        const showDownloadLink = (this.props.tileShape || !this.props.showGenericPlaceholder) &&
+            this.props.tileShape !== TileShape.Thread;
 
         if (isEncrypted) {
             if (!this.state.decryptedBlob) {
@@ -272,6 +273,8 @@ export default class MFileBody extends React.Component<IProps, IState> {
                             be suitable to just remove this bit of code.
                          */ }
                         <iframe
+                            aria-hidden
+                            title={presentableTextForFile(this.content, _t("Attachment"), true, true)}
                             src={url}
                             onLoad={() => this.downloadFile(this.fileName, this.linkText)}
                             ref={this.iframe}

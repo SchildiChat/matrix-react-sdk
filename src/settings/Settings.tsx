@@ -177,6 +177,13 @@ export interface IFeature extends Omit<IBaseSetting, "isFeature"> {
 export type ISetting = IBaseSetting | IFeature;
 
 export const SETTINGS: {[setting: string]: ISetting} = {
+    "feature_msc3531_hide_messages_pending_moderation": {
+        isFeature: true,
+        labsGroup: LabGroup.Moderation,
+        displayName: _td("Let moderators hide messages pending moderation."),
+        supportedLevels: LEVELS_FEATURE,
+        default: false,
+    },
     "feature_report_to_moderators": {
         isFeature: true,
         labsGroup: LabGroup.Moderation,
@@ -305,11 +312,11 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS_WITH_CONFIG,
         default: true,
     },
-    "feature_polls": {
+    "feature_extensible_events": {
         isFeature: true,
-        labsGroup: LabGroup.Messaging,
+        labsGroup: LabGroup.Developer, // developer for now, eventually Messaging and default on
         supportedLevels: LEVELS_FEATURE,
-        displayName: _td("Polls (under active development)"),
+        displayName: _td("Show extensible event representation of events"),
         default: false,
     },
     "feature_location_share": {
@@ -339,17 +346,6 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         displayName: _td("Show info about bridges in room settings"),
         default: false,
     },
-    "feature_spaces_metaspaces": {
-        isFeature: true,
-        labsGroup: LabGroup.Spaces,
-        supportedLevels: LEVELS_FEATURE,
-        displayName: _td("Meta Spaces"),
-        default: false,
-        controller: new OrderedMultiController([
-            new IncompatibleController("showCommunitiesInsteadOfSpaces"),
-            new ReloadOnChangeController(),
-        ]),
-    },
     "feature_breadcrumbs_v2": {
         isFeature: true,
         labsGroup: LabGroup.Rooms,
@@ -362,6 +358,13 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         labsGroup: LabGroup.Rooms,
         supportedLevels: LEVELS_FEATURE,
         displayName: _td("New spotlight search experience"),
+        default: false,
+    },
+    "feature_right_panel_default_open": {
+        isFeature: true,
+        labsGroup: LabGroup.Rooms,
+        supportedLevels: LEVELS_FEATURE,
+        displayName: _td("Right panel stays open (defaults to room member list)"),
         default: false,
     },
     "feature_jump_to_date": {
@@ -405,6 +408,12 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         default: true,
         controller: new UIFeatureController(UIFeature.Widgets, false),
     },
+    "MessageComposerInput.showLocationButton": {
+        supportedLevels: LEVELS_ACCOUNT_SETTINGS,
+        displayName: _td('Enable location sharing'),
+        default: true,
+        controller: new IncompatibleController("feature_location_share", false, false),
+    },
     // TODO: Wire up appropriately to UI (FTUE notifications)
     "Notifications.alwaysShowBadgeCounts": {
         supportedLevels: LEVELS_ROOM_OR_ACCOUNT,
@@ -424,7 +433,7 @@ export const SETTINGS: {[setting: string]: ISetting} = {
     },
     "showJoinLeaves": {
         supportedLevels: LEVELS_ROOM_SETTINGS_WITH_ROOM,
-        displayName: _td('Show join/leave messages (invites/kicks/bans unaffected)'),
+        displayName: _td('Show join/leave messages (invites/removes/bans unaffected)'),
         default: true,
         invertedSettingName: 'hideJoinLeaves',
     },
@@ -907,9 +916,6 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         default: {
             [MetaSpace.Home]: true,
         },
-        controller: new IncompatibleController("feature_spaces_metaspaces", {
-            [MetaSpace.Home]: true,
-        }, false),
     },
     "Spaces.showPeopleInSpace": {
         supportedLevels: [SettingLevel.ROOM_ACCOUNT],
@@ -932,6 +938,12 @@ export const SETTINGS: {[setting: string]: ISetting} = {
     "automaticErrorReporting": {
         displayName: _td("Automatically send debug logs on any error"),
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
+        default: false,
+        controller: new ReloadOnChangeController(),
+    },
+    "automaticDecryptionErrorReporting": {
+        displayName: _td("Automatically send debug logs on decryption errors"),
+        supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS,
         default: false,
         controller: new ReloadOnChangeController(),
     },

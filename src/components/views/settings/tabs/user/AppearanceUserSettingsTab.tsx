@@ -29,7 +29,6 @@ import LayoutSwitcher from "../../LayoutSwitcher";
 import StyledRadioButton from '../../../elements/StyledRadioButton';
 import { Theme } from '../../../../../settings/enums/Theme';
 import { RoomListStyle } from '../../../../../settings/enums/RoomListStyle';
-
 import FontScalingPanel from '../../FontScalingPanel';
 import ThemeChoicePanel from '../../ThemeChoicePanel';
 import ImageSizePanel from "../../ImageSizePanel";
@@ -159,16 +158,6 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
     render() {
         const brand = SdkConfig.get().brand;
 
-        const layoutSection = (
-            <LayoutSwitcher
-                userId={this.state.userId}
-                displayName={this.state.displayName}
-                avatarUrl={this.state.avatarUrl}
-                messagePreviewText={this.MESSAGE_PREVIEW_TEXT}
-                onLayoutChanged={this.onLayoutChanged}
-            />
-        );
-
         return (
             <div className="mx_SettingsTab mx_AppearanceUserSettingsTab">
                 <div className="mx_SettingsTab_heading">{ _t("Customise your appearance") }</div>
@@ -177,7 +166,13 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                 </div>
                 <ThemeChoicePanel />
                 { this.renderRoomListSection() }
-                { layoutSection }
+                <LayoutSwitcher
+                    userId={this.state.userId}
+                    displayName={this.state.displayName}
+                    avatarUrl={this.state.avatarUrl}
+                    messagePreviewText={this.MESSAGE_PREVIEW_TEXT}
+                    onLayoutChanged={this.onLayoutChanged}
+                />
                 <FontScalingPanel />
                 <ImageSizePanel />
             </div>
