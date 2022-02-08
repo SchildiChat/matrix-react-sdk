@@ -30,7 +30,7 @@ const BREADCRUMBS_EVENT_TYPES = [BREADCRUMBS_LEGACY_EVENT_TYPE, BREADCRUMBS_EVEN
 const RECENT_EMOJI_EVENT_TYPE = "io.element.recent_emoji";
 const INTEG_PROVISIONING_EVENT_TYPE = "im.vector.setting.integration_provisioning";
 const ANALYTICS_EVENT_TYPE = "im.vector.analytics";
-
+const YOUTUBE_EMBED_PLAYER_EVENT_TYPE = "im.element.setting.youtube_embed_player";
 /**
  * Gets and sets settings at the "account" level for the current user.
  * This handler does not make use of the roomId parameter.
@@ -82,6 +82,12 @@ export default class AccountSettingsHandler extends MatrixClientBackedSettingsHa
     };
 
     public getValue(settingName: string, roomId: string): any {
+        // Special case for YouTube embed player
+        if (settingName === "youtubeEmbedPlayer") {
+            const content = this.getSettings(YOUTUBE_EMBED_PLAYER_EVENT_TYPE);
+            return content ? content["recent_emoji"] : null;
+        }
+
         // Special case URL previews
         if (settingName === "urlPreviewsEnabled") {
             const content = this.getSettings("org.matrix.preview_urls") || {};
@@ -154,6 +160,14 @@ export default class AccountSettingsHandler extends MatrixClientBackedSettingsHa
     }
 
     public async setValue(settingName: string, roomId: string, newValue: any): Promise<void> {
+        // Special case for YouTube embed player
+        if (settingName === "youtubeEmbedPlayer") {
+            const content = this.getSettings(YOUTUBE_EMBED_PLAYER_EVENT_TYPE) || {};
+            content["recent_emoji"] = newValue;
+            await MatrixClientPeg.get().setAccountData(YOUTUBE_EMBED_PLAYER_EVENT_TYPE, content);
+            return;
+        }
+
         // Special case URL previews
         if (settingName === "urlPreviewsEnabled") {
             const content = this.getSettings("org.matrix.preview_urls") || {};

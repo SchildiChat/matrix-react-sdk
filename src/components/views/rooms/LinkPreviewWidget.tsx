@@ -18,6 +18,8 @@ import React, { ComponentProps, createRef } from 'react';
 import { AllHtmlEntities } from 'html-entities';
 import { MatrixEvent } from 'matrix-js-sdk/src/models/event';
 import { IPreviewUrlResponse } from 'matrix-js-sdk/src/client';
+import LiteYouTubeEmbed from 'react-lite-youtube-embed';
+import 'react-lite-youtube-embed/dist/LiteYouTubeEmbed.css';
 
 import { linkifyElement } from '../../../HtmlUtils';
 import SettingsStore from "../../../settings/SettingsStore";
@@ -27,13 +29,11 @@ import { replaceableComponent } from "../../../utils/replaceableComponent";
 import { mediaFromMxc } from "../../../customisations/Media";
 import ImageView from '../elements/ImageView';
 
-import LiteYouTubeEmbed from 'react-lite-youtube-embed';
-import 'react-lite-youtube-embed/dist/LiteYouTubeEmbed.css'
-
 interface IProps {
     link: string;
     preview: IPreviewUrlResponse;
     mxEvent: MatrixEvent; // the Event associated with the preview
+    youtubeEmbedPlayerEnabled?: boolean; // whether youtube embeds are enabled
 }
 
 @replaceableComponent("views.rooms.LinkPreviewWidget")
@@ -124,15 +124,16 @@ export default class LinkPreviewWidget extends React.Component<IProps> {
         const description = AllHtmlEntities.decode(p["og:description"] || "");
 
         // Youtube video player embed
-        if (this.props.link.match(/^https?:\/\/(m[.]|www[.])?(youtube[.]com\/watch[?]v=|youtu[.]be\/)([\w\-]+)(\S+)?$/)) {
-            let videoID;
+        const youtubeRegex = /^https?:\/\/(m[.]|www[.])?(youtube[.]com\/watch[?]v=|youtu[.]be\/)([\w-]+)(\S+)?$/;
+        if (this.props.youtubeEmbedPlayerEnabled && this.props.link.match(youtubeRegex)) {
+            let videoID: string;
             if (this.props.link.includes("watch?v=")) {
                 videoID = this.props.link.split("watch?v=")[1].split("&")[0];
             } else if (this.props.link.includes("youtu.be/")) {
                 videoID = this.props.link.split("youtu.be/")[1].split("&")[0];
             }
 
-            return <div className="mx_LinkPreviewWidget">
+            return (<div className="mx_LinkPreviewWidget">
                 <div className="mx_LinkPreviewWidget_caption">
                     <div className="mx_LinkPreviewWidget_title">
                         <a href={this.props.link} target="_blank" rel="noreferrer noopener">{ p["og:title"] }</a>
@@ -145,15 +146,15 @@ export default class LinkPreviewWidget extends React.Component<IProps> {
                     </div>
 
                     <div className="mx_LinkPreviewWidget_youtubePlayer">
-                    <LiteYouTubeEmbed
-                        id={videoID} 
-                        title={p["og:title"]}
-                        adNetwork={false}
-                        noCookie={true}
-                    />
+                        <LiteYouTubeEmbed
+                            id={videoID}
+                            title={p["og:title"]}
+                            adNetwork={false}
+                            noCookie={true}
+                        />
                     </div>
                 </div>
-            </div>
+            </div>);
         }
 
         return (

@@ -48,6 +48,7 @@ export interface IBodyProps {
     scBubble: boolean;
     scBubbleGroupTimestamp: any;
     scBubbleActionBar: any;
+    youtubeEmbedPlayerEnabled?: boolean;
 
     /*
     If present and `true`, the message has been marked as hidden pending moderation

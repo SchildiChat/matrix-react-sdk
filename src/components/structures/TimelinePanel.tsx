@@ -144,6 +144,7 @@ interface IProps {
 
     hideThreadedMessages?: boolean;
     disableGrouping?: boolean;
+    youtubeEmbedPlayerEnabled?: boolean;
 }
 
 interface IState {
@@ -1622,6 +1623,7 @@ class TimelinePanel extends React.Component<IProps, IState> {
                 enableFlair={SettingsStore.getValue(UIFeature.Flair)}
                 hideThreadedMessages={this.props.hideThreadedMessages}
                 disableGrouping={this.props.disableGrouping}
+                youtubeEmbedPlayerEnabled={this.props.youtubeEmbedPlayerEnabled}
             />
         );
     }

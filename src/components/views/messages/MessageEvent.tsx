@@ -177,6 +177,7 @@ export default class MessageEvent extends React.Component<IProps> implements IMe
             scBubbleActionBar={this.props.scBubbleActionBar}
             getRelationsForEvent={this.props.getRelationsForEvent}
             isSeeingThroughMessageHiddenForModeration={this.props.isSeeingThroughMessageHiddenForModeration}
+            youtubeEmbedPlayerEnabled={this.props.youtubeEmbedPlayerEnabled}
         /> : null;
     }
 }
