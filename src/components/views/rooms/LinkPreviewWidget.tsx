@@ -27,6 +27,9 @@ import { replaceableComponent } from "../../../utils/replaceableComponent";
 import { mediaFromMxc } from "../../../customisations/Media";
 import ImageView from '../elements/ImageView';
 
+import LiteYouTubeEmbed from 'react-lite-youtube-embed';
+import 'react-lite-youtube-embed/dist/LiteYouTubeEmbed.css'
+
 interface IProps {
     link: string;
     preview: IPreviewUrlResponse;
@@ -119,6 +122,37 @@ export default class LinkPreviewWidget extends React.Component<IProps> {
         // The description includes &-encoded HTML entities, we decode those as React treats the thing as an
         // opaque string. This does not allow any HTML to be injected into the DOM.
         const description = AllHtmlEntities.decode(p["og:description"] || "");
+
+        // Youtube video player embed
+        if (this.props.link.match(/^https?:\/\/(m[.]|www[.])?(youtube[.]com\/watch[?]v=|youtu[.]be\/)([\w\-]+)(\S+)?$/)) {
+            let videoID;
+            if (this.props.link.includes("watch?v=")) {
+                videoID = this.props.link.split("watch?v=")[1].split("&")[0];
+            } else if (this.props.link.includes("youtu.be/")) {
+                videoID = this.props.link.split("youtu.be/")[1].split("&")[0];
+            }
+
+            return <div className="mx_LinkPreviewWidget">
+                <div className="mx_LinkPreviewWidget_caption">
+                    <div className="mx_LinkPreviewWidget_title">
+                        <a href={this.props.link} target="_blank" rel="noreferrer noopener">{ p["og:title"] }</a>
+                        { p["og:site_name"] && <span className="mx_LinkPreviewWidget_siteName">
+                            { (" - " + p["og:site_name"]) }
+                        </span> }
+                    </div>
+                    <div className="mx_LinkPreviewWidget_description" ref={this.description}>
+                        { description }
+                    </div>
+
+                    <LiteYouTubeEmbed
+                        id={videoID} 
+                        title={p["og:title"]}
+                        adNetwork={false}
+                        noCookie={true}
+                    />
+                </div>
+            </div>
+        }
 
         return (
             <div className="mx_LinkPreviewWidget" dir="auto">
