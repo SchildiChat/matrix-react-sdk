@@ -144,12 +144,14 @@ export default class LinkPreviewWidget extends React.Component<IProps> {
                         { description }
                     </div>
 
+                    <div className="mx_LinkPreviewWidget_youtubePlayer">
                     <LiteYouTubeEmbed
                         id={videoID} 
                         title={p["og:title"]}
                         adNetwork={false}
                         noCookie={true}
                     />
+                    </div>
                 </div>
             </div>
         }

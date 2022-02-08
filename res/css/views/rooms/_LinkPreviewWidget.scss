@@ -27,6 +27,18 @@ limitations under the License.
     line-height: $font-18px;
 }
 
+.mx_LinkPreviewWidget_youtubePlayer {
+    flex: 0 0 100px;
+    margin-top: 10px;
+    margin-bottom: auto;
+    text-align: center;
+    cursor: pointer;
+
+    .yt-lite {
+        max-width: 50vh;
+    }
+}
+
 .mx_LinkPreviewWidget_image {
     flex: 0 0 100px;
     margin-top: auto;
