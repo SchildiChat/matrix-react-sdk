@@ -151,6 +151,7 @@ export default class LinkPreviewWidget extends React.Component<IProps> {
                             title={p["og:title"]}
                             adNetwork={false}
                             noCookie={true}
+                            thumbnail={image}
                         />
                     </div>
                 </div>
