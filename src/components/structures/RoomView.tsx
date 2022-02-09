@@ -280,6 +280,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             dragCounter: 0,
             timelineRenderingType: TimelineRenderingType.Room,
             liveTimeline: undefined,
+            youtubeEmbedPlayerEnabled: SettingsStore.getValue("youtubeEmbedPlayer"),
         };
 
         this.dispatcherRef = dis.register(this.onAction);
