@@ -303,6 +303,9 @@ interface IProps {
     // Specifies which userNameColorMode to use.
     userNameColorMode?: UserNameColorMode;
 
+    // Specifies whether youtube embed player is enabled
+    youtubeEmbedPlayer?: boolean;
+
     // whether or not to show flair at all
     enableFlair?: boolean;
 
@@ -342,7 +345,6 @@ interface IProps {
     // displayed to the current user either because they're
     // the author or they are a moderator
     isSeeingThroughMessageHiddenForModeration?: boolean;
-    youtubeEmbedPlayer?: boolean;
 }
 
 interface IState {

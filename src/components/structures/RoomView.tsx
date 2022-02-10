@@ -189,6 +189,7 @@ export interface IRoomState {
     singleSideBubbles: boolean;
     adaptiveSideBubbles: boolean;
     userNameColorMode: UserNameColorMode;
+    youtubeEmbedPlayer?: boolean;
     lowBandwidth: boolean;
     alwaysShowTimestamps: boolean;
     showTwelveHourTimestamps: boolean;
@@ -214,7 +215,6 @@ export interface IRoomState {
     editState?: EditorStateTransfer;
     timelineRenderingType: TimelineRenderingType;
     liveTimeline?: EventTimeline;
-    youtubeEmbedPlayer?: boolean;
 }
 
 @replaceableComponent("structures.RoomView")
@@ -264,6 +264,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             singleSideBubbles: SettingsStore.getValue("singleSideBubbles"),
             adaptiveSideBubbles: SettingsStore.getValue("adaptiveSideBubbles"),
             userNameColorMode: UserNameColorMode.Uniform,
+            youtubeEmbedPlayer: SettingsStore.getValue("youtubeEmbedPlayer"),
             lowBandwidth: SettingsStore.getValue("lowBandwidth"),
             alwaysShowTimestamps: SettingsStore.getValue("alwaysShowTimestamps"),
             showTwelveHourTimestamps: SettingsStore.getValue("showTwelveHourTimestamps"),
@@ -280,7 +281,6 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             dragCounter: 0,
             timelineRenderingType: TimelineRenderingType.Room,
             liveTimeline: undefined,
-            youtubeEmbedPlayer: SettingsStore.getValue("youtubeEmbedPlayer"),
         };
 
         this.dispatcherRef = dis.register(this.onAction);
@@ -327,6 +327,9 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             SettingsStore.watchSetting("userNameColorModePublic", null, (...[,,, value]) =>
                 this.recalculateUserNameColorMode(),
             ),
+            SettingsStore.watchSetting("youtubeEmbedPlayer", null, (...[,,, value]) =>
+                this.setState({ youtubeEmbedPlayer: value as boolean }),
+            ),
             SettingsStore.watchSetting("lowBandwidth", null, (...[,,, value]) =>
                 this.setState({ lowBandwidth: value as boolean }),
             ),
@@ -344,9 +347,6 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             ),
             SettingsStore.watchSetting("showHiddenEventsInTimeline", null, (...[,,, value]) =>
                 this.setState({ showHiddenEventsInTimeline: value as boolean }),
-            ),
-            SettingsStore.watchSetting("youtubeEmbedPlayer", null, (...[,,, value]) =>
-                this.setState({ youtubeEmbedPlayer: value as boolean }),
             ),
         ];
     }
@@ -2236,8 +2236,8 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
                 layout={this.state.layout}
                 singleSideBubbles={this.state.singleSideBubbles}
                 userNameColorMode={this.state.userNameColorMode}
-                editState={this.state.editState}
                 youtubeEmbedPlayer={this.state.youtubeEmbedPlayer}
+                editState={this.state.editState}
             />);
 
         let topUnreadMessagesBar = null;

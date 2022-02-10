@@ -33,7 +33,7 @@ interface IProps {
     mxEvent: MatrixEvent; // the Event associated with the preview
     onCancelClick(): void; // called when the preview's cancel ('hide') button is clicked
     onHeightChanged(): void; // called when the preview's contents has loaded
-    youtubeEmbedPlayer?: boolean; // whether youtube embeds are enabled
+    youtubeEmbedPlayer?: boolean; // called when youtube embed player setting is changed
 }
 
 const LinkPreviewGroup: React.FC<IProps> = ({ links, mxEvent, onCancelClick, onHeightChanged, youtubeEmbedPlayer }) => {

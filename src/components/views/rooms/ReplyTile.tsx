@@ -173,6 +173,7 @@ export default class ReplyTile extends React.PureComponent<IProps> {
                         highlightLink={this.props.highlightLink}
                         onHeightChanged={this.props.onHeightChanged}
                         userNameColorMode={this.props.userNameColorMode}
+                        youtubeEmbedPlayer={false}
                         showUrlPreview={false}
                         overrideBodyTypes={msgtypeOverrides}
                         overrideEventTypes={evOverrides}
@@ -180,7 +181,6 @@ export default class ReplyTile extends React.PureComponent<IProps> {
                         maxImageHeight={96}
                         getRelationsForEvent={this.props.getRelationsForEvent}
                         isSeeingThroughMessageHiddenForModeration={isSeeingThroughMessageHiddenForModeration}
-                        youtubeEmbedPlayer={false}
                     />
                 </a>
             </div>

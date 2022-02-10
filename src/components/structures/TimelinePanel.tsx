@@ -122,6 +122,9 @@ interface IProps {
     // Specifies which userNameColorMode to use.
     userNameColorMode?: UserNameColorMode;
 
+    // Specifies whether youtube embed player is enabled
+    youtubeEmbedPlayer?: boolean;
+
     // whether to always show timestamps for an event
     alwaysShowTimestamps?: boolean;
 
@@ -144,7 +147,6 @@ interface IProps {
 
     hideThreadedMessages?: boolean;
     disableGrouping?: boolean;
-    youtubeEmbedPlayer?: boolean;
 }
 
 interface IState {
@@ -1620,10 +1622,10 @@ class TimelinePanel extends React.Component<IProps, IState> {
                 layout={this.props.layout}
                 singleSideBubbles={this.props.singleSideBubbles}
                 userNameColorMode={this.props.userNameColorMode}
+                youtubeEmbedPlayer={this.props.youtubeEmbedPlayer}
                 enableFlair={SettingsStore.getValue(UIFeature.Flair)}
                 hideThreadedMessages={this.props.hideThreadedMessages}
                 disableGrouping={this.props.disableGrouping}
-                youtubeEmbedPlayer={this.props.youtubeEmbedPlayer}
             />
         );
     }

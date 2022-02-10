@@ -166,6 +166,9 @@ interface IProps {
     // whether to use single side bubbles
     singleSideBubbles?: boolean;
 
+    // Specifies whether youtube embed player is enabled
+    youtubeEmbedPlayer?: boolean;
+
     // whether or not to show flair at all
     enableFlair?: boolean;
 
@@ -189,7 +192,6 @@ interface IProps {
 
     hideThreadedMessages?: boolean;
     disableGrouping?: boolean;
-    youtubeEmbedPlayer?: boolean;
 }
 
 interface IState {
@@ -823,13 +825,13 @@ export default class MessagePanel extends React.Component<IProps, IState> {
                     showReactions={this.props.showReactions}
                     layout={this.props.layout}
                     singleSideBubbles={this.props.singleSideBubbles}
+                    youtubeEmbedPlayer={this.props.youtubeEmbedPlayer}
                     userNameColorMode={this.props.userNameColorMode}
                     enableFlair={this.props.enableFlair}
                     showReadReceipts={this.props.showReadReceipts}
                     callEventGrouper={callEventGrouper}
                     hideSender={this.state.isDirect && this.props.layout === Layout.Bubble}
                     timelineRenderingType={this.context.timelineRenderingType}
-                    youtubeEmbedPlayer={this.props.youtubeEmbedPlayer}
                 />
             </TileErrorBoundary>,
         );
