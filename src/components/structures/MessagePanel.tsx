@@ -189,7 +189,7 @@ interface IProps {
 
     hideThreadedMessages?: boolean;
     disableGrouping?: boolean;
-    youtubeEmbedPlayerEnabled?: boolean;
+    youtubeEmbedPlayer?: boolean;
 }
 
 interface IState {
@@ -829,7 +829,7 @@ export default class MessagePanel extends React.Component<IProps, IState> {
                     callEventGrouper={callEventGrouper}
                     hideSender={this.state.isDirect && this.props.layout === Layout.Bubble}
                     timelineRenderingType={this.context.timelineRenderingType}
-                    youtubeEmbedPlayerEnabled={this.props.youtubeEmbedPlayerEnabled}
+                    youtubeEmbedPlayer={this.props.youtubeEmbedPlayer}
                 />
             </TileErrorBoundary>,
         );

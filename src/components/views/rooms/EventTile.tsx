@@ -342,7 +342,7 @@ interface IProps {
     // displayed to the current user either because they're
     // the author or they are a moderator
     isSeeingThroughMessageHiddenForModeration?: boolean;
-    youtubeEmbedPlayerEnabled?: boolean;
+    youtubeEmbedPlayer?: boolean;
 }
 
 interface IState {
@@ -1464,7 +1464,7 @@ export default class EventTile extends React.Component<IProps, IState> {
                             editState={this.props.editState}
                             getRelationsForEvent={this.props.getRelationsForEvent}
                             isSeeingThroughMessageHiddenForModeration={isSeeingThroughMessageHiddenForModeration}
-                            youtubeEmbedPlayerEnabled={this.props.youtubeEmbedPlayerEnabled}
+                            youtubeEmbedPlayer={this.props.youtubeEmbedPlayer}
                         />
                     </div>,
                 ]);
@@ -1508,7 +1508,7 @@ export default class EventTile extends React.Component<IProps, IState> {
                             replacingEventId={this.props.replacingEventId}
                             getRelationsForEvent={this.props.getRelationsForEvent}
                             isSeeingThroughMessageHiddenForModeration={isSeeingThroughMessageHiddenForModeration}
-                            youtubeEmbedPlayerEnabled={this.props.youtubeEmbedPlayerEnabled}
+                            youtubeEmbedPlayer={this.props.youtubeEmbedPlayer}
                         />
                         { actionBar }
                         { timestamp }
@@ -1587,7 +1587,7 @@ export default class EventTile extends React.Component<IProps, IState> {
                             editState={this.props.editState}
                             getRelationsForEvent={this.props.getRelationsForEvent}
                             isSeeingThroughMessageHiddenForModeration={isSeeingThroughMessageHiddenForModeration}
-                            youtubeEmbedPlayerEnabled={this.props.youtubeEmbedPlayerEnabled}
+                            youtubeEmbedPlayer={this.props.youtubeEmbedPlayer}
                         />
                     </div>,
                     <a
@@ -1701,7 +1701,7 @@ export default class EventTile extends React.Component<IProps, IState> {
                                             scBubble={true}
                                             scBubbleActionBar={mediaBody ? actionBar : null}
                                             scBubbleGroupTimestamp={<>{ placeholderTimestamp }{ linkedTimestamp }</>}
-                                            youtubeEmbedPlayerEnabled={this.props.youtubeEmbedPlayerEnabled}
+                                            youtubeEmbedPlayer={this.props.youtubeEmbedPlayer}
                                         />
                                         { !mediaBody ? actionBar : null }
                                     </div>
@@ -1753,7 +1753,7 @@ export default class EventTile extends React.Component<IProps, IState> {
                                     getRelationsForEvent={this.props.getRelationsForEvent}
                                     isSeeingThroughMessageHiddenForModeration={isSeeingThroughMessageHiddenForModeration}
                                     timestamp={bubbleTimestamp}
-                                    youtubeEmbedPlayerEnabled={this.props.youtubeEmbedPlayerEnabled}
+                                    youtubeEmbedPlayer={this.props.youtubeEmbedPlayer}
                                 />
                                 { keyRequestInfo }
                                 { actionBar }

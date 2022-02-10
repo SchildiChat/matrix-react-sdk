@@ -180,7 +180,7 @@ export default class ReplyTile extends React.PureComponent<IProps> {
                         maxImageHeight={96}
                         getRelationsForEvent={this.props.getRelationsForEvent}
                         isSeeingThroughMessageHiddenForModeration={isSeeingThroughMessageHiddenForModeration}
-                        youtubeEmbedPlayerEnabled={false}
+                        youtubeEmbedPlayer={false}
                     />
                 </a>
             </div>

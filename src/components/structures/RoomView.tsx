@@ -214,7 +214,7 @@ export interface IRoomState {
     editState?: EditorStateTransfer;
     timelineRenderingType: TimelineRenderingType;
     liveTimeline?: EventTimeline;
-    youtubeEmbedPlayerEnabled?: boolean;
+    youtubeEmbedPlayer?: boolean;
 }
 
 @replaceableComponent("structures.RoomView")
@@ -280,7 +280,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             dragCounter: 0,
             timelineRenderingType: TimelineRenderingType.Room,
             liveTimeline: undefined,
-            youtubeEmbedPlayerEnabled: SettingsStore.getValue("youtubeEmbedPlayer"),
+            youtubeEmbedPlayer: SettingsStore.getValue("youtubeEmbedPlayer"),
         };
 
         this.dispatcherRef = dis.register(this.onAction);
@@ -346,7 +346,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
                 this.setState({ showHiddenEventsInTimeline: value as boolean }),
             ),
             SettingsStore.watchSetting("youtubeEmbedPlayer", null, (...[,,, value]) =>
-                this.setState({ youtubeEmbedPlayerEnabled: value as boolean }),
+                this.setState({ youtubeEmbedPlayer: value as boolean }),
             ),
         ];
     }
@@ -992,10 +992,6 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             this.updatePreviewUrlVisibility(room);
         }
 
-        if (ev.getType() === "im.element.setting.youtube_embed_player") {
-            this.updateYoutubeEmbedPlayerVisibility();
-        }
-
         if (ev.getType() === "m.room.encryption") {
             this.updateE2EStatus(room);
         }
@@ -1167,12 +1163,6 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         });
     }
 
-    private updateYoutubeEmbedPlayerVisibility() {
-        this.setState({
-            youtubeEmbedPlayerEnabled: SettingsStore.getValue("youtubeEmbedPlayer"),
-        });
-    }
-
     private onRoom = (room: Room) => {
         if (!room || room.roomId !== this.state.roomId) {
             return;
@@ -1239,10 +1229,6 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             this.updatePreviewUrlVisibility(this.state.room);
         }
 
-        if (type === "im.element.setting.youtube_embed_player") {
-            this.updateYoutubeEmbedPlayerVisibility();
-        }
-
         // SC: userNameColorMode can change dependent on if room is DM
         if (type === "m.direct") {
             this.recalculateUserNameColorMode();
@@ -1255,10 +1241,6 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             if (type === "org.matrix.room.preview_urls" || type === "im.vector.web.settings") {
                 // non-e2ee url previews are stored in legacy event type `org.matrix.room.preview_urls`
                 this.updatePreviewUrlVisibility(room);
-            }
-
-            if (type === "im.element.setting.youtube_embed_player") {
-                this.updateYoutubeEmbedPlayerVisibility();
             }
         }
     };
@@ -2255,7 +2237,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
                 singleSideBubbles={this.state.singleSideBubbles}
                 userNameColorMode={this.state.userNameColorMode}
                 editState={this.state.editState}
-                youtubeEmbedPlayerEnabled={this.state.youtubeEmbedPlayerEnabled}
+                youtubeEmbedPlayer={this.state.youtubeEmbedPlayer}
             />);
 
         let topUnreadMessagesBar = null;

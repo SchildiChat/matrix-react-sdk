@@ -282,7 +282,7 @@ export default class HTMLExporter extends Exporter {
                     layout={Layout.Group}
                     enableFlair={false}
                     showReadReceipts={false}
-                    youtubeEmbedPlayerEnabled={false}
+                    youtubeEmbedPlayer={false}
                 />
             </MatrixClientContext.Provider>
         </div>;

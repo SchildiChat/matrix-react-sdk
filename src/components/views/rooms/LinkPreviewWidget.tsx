@@ -33,7 +33,7 @@ interface IProps {
     link: string;
     preview: IPreviewUrlResponse;
     mxEvent: MatrixEvent; // the Event associated with the preview
-    youtubeEmbedPlayerEnabled?: boolean; // whether youtube embeds are enabled
+    youtubeEmbedPlayer?: boolean; // whether youtube embeds are enabled
 }
 
 @replaceableComponent("views.rooms.LinkPreviewWidget")
@@ -125,7 +125,7 @@ export default class LinkPreviewWidget extends React.Component<IProps> {
 
         // Youtube video player embed
         const youtubeRegex = /^https?:\/\/(m[.]|www[.])?(youtube[.]com\/watch[?]v=|youtu[.]be\/)([\w-]+)(\S+)?$/;
-        if (this.props.youtubeEmbedPlayerEnabled && this.props.link.match(youtubeRegex)) {
+        if (this.props.youtubeEmbedPlayer && this.props.link.match(youtubeRegex)) {
             let videoID: string;
             if (this.props.link.includes("watch?v=")) {
                 videoID = this.props.link.split("watch?v=")[1].split("&")[0];

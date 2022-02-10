@@ -198,7 +198,7 @@ export default class TimelineCard extends React.Component<IProps, IState> {
                         resizeNotifier={this.props.resizeNotifier}
                         highlightedEventId={highlightedEventId}
                         onUserScroll={this.onScroll}
-                        youtubeEmbedPlayerEnabled={true}
+                        youtubeEmbedPlayer={true}
                     />
 
                     { ContentMessages.sharedInstance().getCurrentUploads(this.props.composerRelation).length > 0 && (
