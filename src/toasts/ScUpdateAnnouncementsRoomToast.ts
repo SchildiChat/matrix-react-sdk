@@ -49,8 +49,6 @@ export const showToast = () => {
     PlatformPeg.get().canSelfUpdate().then((b) => {
         if (b) return;
 
-        if (!SdkConfig.get()['sc_update_announcement_room']) return;
-
         ToastStore.sharedInstance().addOrReplaceToast({
             key: TOAST_KEY,
             title: _t("Update notifications"),
