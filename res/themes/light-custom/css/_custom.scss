@@ -130,7 +130,7 @@ $event-highlight-bg-color: var(--timeline-highlights-color);
 $settings-grey-fg-color: $primary-content;
 
 // Background for code in event tile
-$codeblock-background-color: var(--roomlist-background-color);
+$codeblock-background-color: var(--codeblock-background-color, $codeblock-background-color);
 
 // bubble layout variables
 $message-bubble-background: var(--eventbubble-others-bg, $message-bubble-background);
