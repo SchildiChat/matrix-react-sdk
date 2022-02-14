@@ -201,6 +201,7 @@ const RoomListHeader = ({ spacePanelDisabled, onVisibilityChange }: IProps) => {
     }
 
     const communityId = CommunityPrototypeStore.instance.getSelectedCommunityId();
+    const canAddRooms = activeSpace?.currentState?.maySendStateEvent(EventType.SpaceChild, cli.getUserId());
 
     let contextMenu: JSX.Element;
     if (mainMenuDisplayed) {
@@ -259,33 +260,6 @@ const RoomListHeader = ({ spacePanelDisabled, onVisibilityChange }: IProps) => {
             />;
         }
 
-        let addExisitingRoomOption: JSX.Element;
-        let addSpaceOption: JSX.Element;
-        if (activeSpace?.currentState.maySendStateEvent(EventType.SpaceChild, cli.getUserId())) {
-            addExisitingRoomOption = <IconizedContextMenuOption
-                iconClassName="mx_RoomListHeader_iconPlus"
-                label={_t("Add existing room")}
-                onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    showAddExistingRooms(activeSpace);
-                    closePlusMenu();
-                }}
-            />;
-            addSpaceOption = <IconizedContextMenuOption
-                label={_t("Add space")}
-                iconClassName="mx_RoomListHeader_iconPlus"
-                onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    showCreateNewSubspace(activeSpace);
-                    closePlusMenu();
-                }}
-            >
-                <BetaPill />
-            </IconizedContextMenuOption>;
-        }
-
         contextMenu = <IconizedContextMenu
             {...contextMenuBelow(plusMenuHandle.current.getBoundingClientRect())}
             onFinished={closePlusMenu}
@@ -308,9 +282,32 @@ const RoomListHeader = ({ spacePanelDisabled, onVisibilityChange }: IProps) => {
                         closePlusMenu();
                     }}
                 /> */ }
-
-                { addExisitingRoomOption }
-                { addSpaceOption }
+                <IconizedContextMenuOption
+                    label={_t("Add existing room")}
+                    iconClassName="mx_RoomListHeader_iconPlus"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        showAddExistingRooms(activeSpace);
+                        closePlusMenu();
+                    }}
+                    disabled={!canAddRooms}
+                    tooltip={!canAddRooms && _t("You do not have permissions to add rooms to this space")}
+                />
+                <IconizedContextMenuOption
+                    label={_t("Add space")}
+                    iconClassName="mx_RoomListHeader_iconPlus"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        showCreateNewSubspace(activeSpace);
+                        closePlusMenu();
+                    }}
+                    disabled={!canAddRooms}
+                    tooltip={!canAddRooms && _t("You do not have permissions to add spaces to this space")}
+                >
+                    <BetaPill />
+                </IconizedContextMenuOption>
             </IconizedContextMenuOptionList>
         </IconizedContextMenu>;
     } else if (plusMenuDisplayed) {

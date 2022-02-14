@@ -175,6 +175,20 @@ export async function setRoomMarkedAsUnread(room: Room, value = true): Promise<v
     );
 }
 
+export function spaceContextDetailsText(space: Room): string {
+    if (!space.isSpaceRoom()) return undefined;
+
+    const [parent, ...otherParents] = SpaceStore.instance.getKnownParents(space.roomId);
+    if (parent) {
+        return _t("%(spaceName)s and %(count)s others", {
+            spaceName: space.client.getRoom(parent).name,
+            count: otherParents.length,
+        });
+    }
+
+    return space.getCanonicalAlias();
+}
+
 export function roomContextDetailsText(room: Room): string {
     if (room.isSpaceRoom()) return undefined;
 
