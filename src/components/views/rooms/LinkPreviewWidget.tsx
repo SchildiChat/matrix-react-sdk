@@ -101,7 +101,7 @@ export default class LinkPreviewWidget extends React.Component<IProps> {
             image = mediaFromMxc(image).getThumbnailOfSourceHttp(imageMaxWidth, imageMaxHeight, 'scale');
         }
 
-        let thumbHeight = imageMaxHeight;
+        let thumbHeight = null;
         if (p["og:image:width"] && p["og:image:height"]) {
             thumbHeight = ImageUtils.thumbHeight(
                 p["og:image:width"], p["og:image:height"],
