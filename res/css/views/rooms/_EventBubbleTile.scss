@@ -36,6 +36,7 @@ limitations under the License.
     margin-top: var(--gutterSize);
     margin-left: 49px;
     font-size: $font-14px;
+    flex-shrink: 0;
 
     .mx_ThreadInfo {
         clear: both;
@@ -279,9 +280,15 @@ limitations under the License.
     }
 
     &:not(.mx_EventTile_noBubble) .mx_EventTile_line:not(.mx_EventTile_mediaLine) {
-        padding: var(--gutterSize);
+        // make the top and bottom padding 1px smaller so that we can pad .mx_EventTile_content by 1px
+        // to avoid anti-zalgo cutting off our larger than text emojis.
+        padding: calc(var(--gutterSize) - 1px);
         padding-right: 60px; // space for the timestamp
         background: var(--backgroundColor);
+
+        .mx_EventTile_content {
+            padding: 1px;
+        }
     }
 
     &.mx_EventTile_continuation[data-self=false] .mx_EventTile_line {
@@ -377,6 +384,15 @@ limitations under the License.
                     display: none;
                 }
             }
+        }
+    }
+
+    .mx_MPollBody {
+        width: 550px; // to prevent timestamp overlapping summary text
+
+        .mx_MPollBody_totalVotes {
+            // align summary text with corner timestamp
+            padding: 4px 0;
         }
     }
 
@@ -579,4 +595,8 @@ limitations under the License.
             background: transparent;
         }
     }
+}
+
+.mx_EventTile_tileError[data-layout=bubble] .mx_EventTile_line {
+    flex-direction: column; // restore the centering
 }

@@ -231,9 +231,9 @@ const ForwardDialog: React.FC<IProps> = ({ matrixClient: cli, event, permalinkCr
     >
         <h3>{ _t("Message preview") }</h3>
         <div className={classnames("mx_ForwardDialog_preview", {
-            "mx_IRCLayout": previewLayout == Layout.IRC,
-            "mx_GroupLayout": previewLayout == Layout.Group,
-            "sc_BubbleLayout": previewLayout == Layout.Bubble,
+            "mx_IRCLayout": previewLayout === Layout.IRC,
+            "mx_GroupLayout": previewLayout === Layout.Group,
+            "sc_BubbleLayout": previewLayout === Layout.Bubble,
         })}>
             <EventTile
                 mxEvent={mockEvent}

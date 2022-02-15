@@ -33,7 +33,7 @@ export enum UIFeature {
     AdvancedSettings = "UIFeature.advancedSettings",
     RoomHistorySettings = "UIFeature.roomHistorySettings",
     TimelineEnableRelativeDates = "UIFeature.timelineEnableRelativeDates",
-    YoutubeEmbedPlayer = "UIFeature.YoutubeEmbedPlayer"
+    YoutubeEmbedPlayer = "UIFeature.YoutubeEmbedPlayer",
 }
 
 export enum UIComponent {

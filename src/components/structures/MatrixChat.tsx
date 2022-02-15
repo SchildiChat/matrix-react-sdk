@@ -23,6 +23,7 @@ import { MatrixEvent } from "matrix-js-sdk/src/models/event";
 import { Screen as ScreenEvent } from "matrix-analytics-events/types/typescript/Screen";
 import { defer, IDeferred, QueryDict } from "matrix-js-sdk/src/utils";
 import { logger } from "matrix-js-sdk/src/logger";
+import { throttle } from "lodash";
 
 // focus-visible is a Polyfill for the :focus-visible CSS pseudo-attribute used by _AccessibleButton.scss
 import 'focus-visible';
@@ -91,7 +92,7 @@ import { RoomUpdateCause } from "../../stores/room-list/models";
 import SecurityCustomisations from "../../customisations/Security";
 import Spinner from "../views/elements/Spinner";
 import QuestionDialog from "../views/dialogs/QuestionDialog";
-import UserSettingsDialog from '../views/dialogs/UserSettingsDialog';
+import UserSettingsDialog, { UserTab } from '../views/dialogs/UserSettingsDialog';
 import CreateGroupDialog from '../views/dialogs/CreateGroupDialog';
 import CreateRoomDialog from '../views/dialogs/CreateRoomDialog';
 import RoomDirectory from './RoomDirectory';
@@ -114,12 +115,10 @@ import { PosthogAnalytics } from '../../PosthogAnalytics';
 import { initSentry } from "../../sentry";
 import CallHandler from "../../CallHandler";
 import { showSpaceInvite } from "../../utils/space";
-import GenericToast from "../views/toasts/GenericToast";
-import InfoDialog from "../views/dialogs/InfoDialog";
-import FeedbackDialog from "../views/dialogs/FeedbackDialog";
 import AccessibleButton from "../views/elements/AccessibleButton";
 import { ActionPayload } from "../../dispatcher/payloads";
 import { SummarizedNotificationState } from "../../stores/notifications/SummarizedNotificationState";
+import GenericToast from '../views/toasts/GenericToast';
 
 /** constants for MatrixChat.state.view */
 export enum Views {
@@ -448,6 +447,10 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
         }
     }
 
+    public componentDidMount(): void {
+        window.addEventListener("resize", this.onWindowResized);
+    }
+
     componentDidUpdate(prevProps, prevState) {
         if (this.shouldTrackPageChange(prevState, this.state)) {
             const durationMs = this.stopPageChangeTimer();
@@ -468,22 +471,23 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
         this.fontWatcher.stop();
         UIStore.destroy();
         this.state.resizeNotifier.removeListener("middlePanelResized", this.dispatchTimelineResize);
+        window.removeEventListener("resize", this.onWindowResized);
 
         if (this.accountPasswordTimer !== null) clearTimeout(this.accountPasswordTimer);
     }
 
     public trackScreenChange(durationMs: number): void {
-        const notLoggedInMap = {};
+        const notLoggedInMap: Partial<Record<Views, ScreenEvent["screenName"]>> = {};
         notLoggedInMap[Views.LOADING] = "WebLoading";
-        notLoggedInMap[Views.WELCOME] = "WebWelcome";
-        notLoggedInMap[Views.LOGIN] = "WebLogin";
-        notLoggedInMap[Views.REGISTER] = "WebRegister";
-        notLoggedInMap[Views.FORGOT_PASSWORD] = "WebForgotPassword";
+        notLoggedInMap[Views.WELCOME] = "Welcome";
+        notLoggedInMap[Views.LOGIN] = "Login";
+        notLoggedInMap[Views.REGISTER] = "Register";
+        notLoggedInMap[Views.FORGOT_PASSWORD] = "ForgotPassword";
         notLoggedInMap[Views.COMPLETE_SECURITY] = "WebCompleteSecurity";
         notLoggedInMap[Views.E2E_SETUP] = "WebE2ESetup";
         notLoggedInMap[Views.SOFT_LOGOUT] = "WebSoftLogout";
 
-        const loggedInPageTypeMap = {};
+        const loggedInPageTypeMap: Partial<Record<PageType, ScreenEvent["screenName"]>> = {};
         loggedInPageTypeMap[PageType.HomePage] = "Home";
         loggedInPageTypeMap[PageType.RoomView] = "Room";
         loggedInPageTypeMap[PageType.RoomDirectory] = "RoomDirectory";
@@ -496,11 +500,40 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
             notLoggedInMap[this.state.view];
 
         return PosthogAnalytics.instance.trackEvent<ScreenEvent>({
-            eventName: "Screen",
+            eventName: "$screen",
             screenName,
             durationMs,
         });
     }
+
+    private onWindowResized = (): void => {
+        // XXX: This is a very unreliable way to detect whether or not the the devtools are open
+        this.warnInConsole();
+    };
+
+    private warnInConsole = throttle((): void => {
+        const largeFontSize = "50px";
+        const normalFontSize = "15px";
+
+        const waitText = _t("Wait!");
+        const scamText = _t(
+            "If someone told you to copy/paste something here, " +
+            "there is a high likelihood you're being scammed!",
+        );
+        const devText = _t(
+            "If you know what you're doing, Element is open-source, " +
+            "be sure to check out our GitHub (https://github.com/vector-im/element-web/) " +
+            "and contribute!",
+        );
+
+        global.mx_rage_logger.bypassRageshake(
+            "log",
+            `%c${waitText}\n%c${scamText}\n%c${devText}`,
+            `font-size:${largeFontSize}; color:blue;`,
+            `font-size:${normalFontSize}; color:red;`,
+            `font-size:${normalFontSize};`,
+        );
+    }, 1000);
 
     private getFallbackHsUrl(): string {
         if (this.props.serverConfig?.isDefault) {
@@ -1537,61 +1570,42 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
                 showNotificationsToast(false);
             }
 
-            // SC: No feedback changes toast
+            // SC: No search beta toast
             // eslint-disable-next-line no-constant-condition
-            if (!localStorage.getItem("mx_seen_ia_1.1_changes_toast") && false) {
-                const key = "IA_1.1_TOAST";
-                ToastStore.sharedInstance().addOrReplaceToast({
-                    key,
-                    title: _t("Testing small changes"),
-                    props: {
-                        description: _t("Your feedback is wanted as we try out some design changes."),
-                        acceptLabel: _t("More info"),
-                        onAccept: () => {
-                            Modal.createDialog(InfoDialog, {
-                                title: _t("We're testing some design changes"),
-                                description: <>
-                                    <img
-                                        src={require("../../../res/img/ia-design-changes.png")}
-                                        width="636"
-                                        height="303"
-                                        alt=""
-                                    />
-                                    <p>{ _t(
-                                        "Your ongoing feedback would be very welcome, so if you see anything " +
-                                        "different you want to comment on, <a>please let us know about it</a>. " +
-                                        "Click your avatar to find a quick feedback link.",
-                                        {},
-                                        {
-                                            a: sub => <AccessibleButton
-                                                kind="link"
-                                                onClick={(ev) => {
-                                                    ev.preventDefault();
-                                                    ev.stopPropagation();
-                                                    Modal.createTrackedDialog('Feedback Dialog', '', FeedbackDialog);
-                                                }}
-                                            >
-                                                { sub }
-                                            </AccessibleButton>,
-                                        },
-                                    ) }</p>
-                                    <p>{ _t("If you'd like to preview or test some potential upcoming changes, " +
-                                        "there's an option in feedback to let us contact you.") }</p>
-                                </>,
-                            }, "mx_DialogDesignChanges_wrapper");
-                            localStorage.setItem("mx_seen_ia_1.1_changes_toast", "true");
-                            ToastStore.sharedInstance().dismissToast(key);
+            if (!localStorage.getItem("mx_seen_feature_spotlight_toast") && false) {
+                setTimeout(() => {
+                    // Skip the toast if the beta is already enabled or the user has changed the setting from default
+                    if (SettingsStore.getValue("feature_spotlight") ||
+                        SettingsStore.getValue("feature_spotlight", null, true) !== null) {
+                        return;
+                    }
+
+                    const key = "BETA_SPOTLIGHT_TOAST";
+                    ToastStore.sharedInstance().addOrReplaceToast({
+                        key,
+                        title: _t("New search beta available"),
+                        props: {
+                            description: _t("We're testing a new search to make finding what you want quicker.\n"),
+                            acceptLabel: _t("Learn more"),
+                            onAccept: () => {
+                                dis.dispatch({
+                                    action: Action.ViewUserSettings,
+                                    initialTabId: UserTab.Labs,
+                                });
+                                localStorage.setItem("mx_seen_feature_spotlight_toast", "true");
+                                ToastStore.sharedInstance().dismissToast(key);
+                            },
+                            rejectLabel: _t("Dismiss"),
+                            onReject: () => {
+                                localStorage.setItem("mx_seen_feature_spotlight_toast", "true");
+                                ToastStore.sharedInstance().dismissToast(key);
+                            },
                         },
-                        rejectLabel: _t("Dismiss"),
-                        onReject: () => {
-                            localStorage.setItem("mx_seen_ia_1.1_changes_toast", "true");
-                            ToastStore.sharedInstance().dismissToast(key);
-                        },
-                    },
-                    icon: "labs",
-                    component: GenericToast,
-                    priority: 9,
-                });
+                        icon: "labs",
+                        component: GenericToast,
+                        priority: 9,
+                    });
+                }, 5 * 60 * 1000); // show after 5 minutes to not overload user with toasts on launch
             }
 
             dis.fire(Action.FocusSendMessageComposer);
