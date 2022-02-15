@@ -430,8 +430,8 @@ export default class MessageComposer extends React.Component<IProps, IState> {
             // When IRC layout gets something for the message composer we can use the following
             // "mx_IRCLayout": this.props.layout == Layout.IRC,
             // "mx_GroupLayout": this.props.layout == Layout.Group,
-            "mx_GroupLayout": this.props.layout == Layout.IRC || this.props.layout == Layout.Group,
-            "sc_BubbleLayout": this.props.layout == Layout.Bubble,
+            "mx_GroupLayout": this.props.layout === Layout.IRC || this.props.layout === Layout.Group,
+            "sc_BubbleLayout": this.props.layout === Layout.Bubble,
 
             "mx_MessageComposer--compact": this.props.compact,
             "mx_MessageComposer_e2eStatus": this.props.e2eStatus != undefined,
