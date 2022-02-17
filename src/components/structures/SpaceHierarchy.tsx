@@ -411,7 +411,7 @@ export const HierarchyLevel = ({
     const hasPermissions = space?.currentState.maySendStateEvent(EventType.SpaceChild, cli.getUserId());
 
     const sortedChildren = sortBy(root.children_state, ev => {
-        return getChildOrder(ev.content.order, ev.origin_server_ts, ev.state_key);
+        return getChildOrder(ev.content.order, ev.origin_server_ts, ev.state_key, cli.getRoom(ev.state_key)?.name);
     });
 
     const [subspaces, childRooms] = sortedChildren.reduce((result, ev: IHierarchyRelation) => {
