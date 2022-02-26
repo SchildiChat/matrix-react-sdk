@@ -28,6 +28,7 @@ import * as ImageUtils from "../../../ImageUtils";
 import { replaceableComponent } from "../../../utils/replaceableComponent";
 import { mediaFromMxc } from "../../../customisations/Media";
 import ImageView from '../elements/ImageView';
+import { ImageSize, suggestedSize as suggestedVideoSize } from "../../../settings/enums/ImageSize";
 
 interface IProps {
     link: string;
@@ -40,8 +41,13 @@ interface IProps {
 export default class LinkPreviewWidget extends React.Component<IProps> {
     private readonly description = createRef<HTMLDivElement>();
     private image = createRef<HTMLImageElement>();
+    private sizeWatcher: string;
 
     componentDidMount() {
+        this.sizeWatcher = SettingsStore.watchSetting("Images.size", null, () => {
+            this.forceUpdate(); // we don't really have a reliable thing to update, so just update the whole thing
+        });
+
         if (this.description.current) {
             linkifyElement(this.description.current);
         }
@@ -51,6 +57,10 @@ export default class LinkPreviewWidget extends React.Component<IProps> {
         if (this.description.current) {
             linkifyElement(this.description.current);
         }
+    }
+
+    private suggestedDimensions(isPortrait): { w: number, h: number } {
+        return suggestedVideoSize(SettingsStore.getValue("Images.size") as ImageSize);
     }
 
     private onImageClick = ev => {
@@ -133,19 +143,11 @@ export default class LinkPreviewWidget extends React.Component<IProps> {
                 videoID = this.props.link.split("youtu.be/")[1].split("&")[0];
             }
 
-            return (<div className="mx_LinkPreviewWidget">
-                <div className="mx_LinkPreviewWidget_caption">
-                    <div className="mx_LinkPreviewWidget_title">
-                        <a href={this.props.link} target="_blank" rel="noreferrer noopener">{ p["og:title"] }</a>
-                        { p["og:site_name"] && <span className="mx_LinkPreviewWidget_siteName">
-                            { (" - " + p["og:site_name"]) }
-                        </span> }
-                    </div>
-                    <div className="mx_LinkPreviewWidget_description" ref={this.description}>
-                        { description }
-                    </div>
+            const restrictedDims = this.suggestedDimensions(false);
 
-                    <div className="mx_LinkPreviewWidget_youtubePlayer">
+            return (
+                <div className="mx_LinkPreviewWidget sc_LinkPreviewWidget_youtubeEmbed">
+                    <div className="mx_LinkPreviewWidget_image sc_LinkPreviewWidget_youtubePlayer" style={{ flexBasis: restrictedDims.w, maxHeight: restrictedDims.h }}>
                         <LiteYouTubeEmbed
                             id={videoID}
                             title={p["og:title"]}
@@ -154,8 +156,19 @@ export default class LinkPreviewWidget extends React.Component<IProps> {
                             thumbnail={image}
                         />
                     </div>
+                    <div className="mx_LinkPreviewWidget_caption sc_LinkPreviewWidget_youtubeCaption">
+                        <div className="mx_LinkPreviewWidget_title">
+                            <a href={this.props.link} target="_blank" rel="noreferrer noopener">{ p["og:title"] }</a>
+                            { p["og:site_name"] && <span className="mx_LinkPreviewWidget_siteName">
+                                { (" - " + p["og:site_name"]) }
+                            </span> }
+                        </div>
+                        <div className="mx_LinkPreviewWidget_description" ref={this.description}>
+                            { description }
+                        </div>
+                    </div>
                 </div>
-            </div>);
+            );
         }
 
         return (

@@ -27,17 +27,6 @@ limitations under the License.
     line-height: $font-18px;
 }
 
-.mx_LinkPreviewWidget_youtubePlayer {
-    flex: 0 0 100px;
-    margin-top: auto;
-    margin-bottom: auto;
-    cursor: pointer;
-
-    .yt-lite {
-        max-width: 50vh;
-    }
-}
-
 .mx_LinkPreviewWidget_image {
     flex: 0 0 100px;
     margin-top: auto;
@@ -82,5 +71,25 @@ limitations under the License.
     .mx_LinkPreviewWidget {
         margin-top: 6px;
         margin-bottom: 6px;
+    }
+}
+
+.sc_LinkPreviewWidget_youtubeEmbed {
+    flex-wrap: wrap;
+}
+
+.sc_LinkPreviewWidget_youtubePlayer {
+    max-width: 100%;
+
+    .yt-lite > .lty-playbtn {
+        cursor: pointer;
+    }
+}
+
+.sc_LinkPreviewWidget_youtubeCaption {
+    flex-basis: 40%;
+
+    .mx_LinkPreviewWidget_description {
+        -webkit-line-clamp: unset;
     }
 }
