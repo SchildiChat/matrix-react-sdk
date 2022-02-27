@@ -33,9 +33,10 @@ interface IProps {
     mxEvent: MatrixEvent; // the Event associated with the preview
     onCancelClick(): void; // called when the preview's cancel ('hide') button is clicked
     onHeightChanged(): void; // called when the preview's contents has loaded
+    youtubeEmbedPlayer?: boolean; // called when youtube embed player setting is changed
 }
 
-const LinkPreviewGroup: React.FC<IProps> = ({ links, mxEvent, onCancelClick, onHeightChanged }) => {
+const LinkPreviewGroup: React.FC<IProps> = ({ links, mxEvent, onCancelClick, onHeightChanged, youtubeEmbedPlayer }) => {
     const cli = useContext(MatrixClientContext);
     const [expanded, toggleExpanded] = useStateToggle();
 
@@ -61,7 +62,7 @@ const LinkPreviewGroup: React.FC<IProps> = ({ links, mxEvent, onCancelClick, onH
 
     return <div className="mx_LinkPreviewGroup">
         { showPreviews.map(([link, preview], i) => (
-            <LinkPreviewWidget key={link} link={link} preview={preview} mxEvent={mxEvent}>
+            <LinkPreviewWidget youtubeEmbedPlayer={youtubeEmbedPlayer} key={link} link={link} preview={preview} mxEvent={mxEvent}>
                 { i === 0 ? (
                     <AccessibleButton
                         className="mx_LinkPreviewGroup_hide"

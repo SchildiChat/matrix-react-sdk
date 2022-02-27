@@ -18,6 +18,8 @@ import React, { ComponentProps, createRef } from 'react';
 import { AllHtmlEntities } from 'html-entities';
 import { MatrixEvent } from 'matrix-js-sdk/src/models/event';
 import { IPreviewUrlResponse } from 'matrix-js-sdk/src/client';
+import LiteYouTubeEmbed from 'react-lite-youtube-embed';
+import 'react-lite-youtube-embed/dist/LiteYouTubeEmbed.css';
 
 import { linkifyElement } from '../../../HtmlUtils';
 import SettingsStore from "../../../settings/SettingsStore";
@@ -26,19 +28,26 @@ import * as ImageUtils from "../../../ImageUtils";
 import { replaceableComponent } from "../../../utils/replaceableComponent";
 import { mediaFromMxc } from "../../../customisations/Media";
 import ImageView from '../elements/ImageView';
+import { ImageSize, suggestedSize as suggestedVideoSize } from "../../../settings/enums/ImageSize";
 
 interface IProps {
     link: string;
     preview: IPreviewUrlResponse;
     mxEvent: MatrixEvent; // the Event associated with the preview
+    youtubeEmbedPlayer?: boolean; // whether youtube embeds are enabled
 }
 
 @replaceableComponent("views.rooms.LinkPreviewWidget")
 export default class LinkPreviewWidget extends React.Component<IProps> {
     private readonly description = createRef<HTMLDivElement>();
     private image = createRef<HTMLImageElement>();
+    private sizeWatcher: string;
 
     componentDidMount() {
+        this.sizeWatcher = SettingsStore.watchSetting("Images.size", null, () => {
+            this.forceUpdate(); // we don't really have a reliable thing to update, so just update the whole thing
+        });
+
         if (this.description.current) {
             linkifyElement(this.description.current);
         }
@@ -48,6 +57,10 @@ export default class LinkPreviewWidget extends React.Component<IProps> {
         if (this.description.current) {
             linkifyElement(this.description.current);
         }
+    }
+
+    private suggestedDimensions(isPortrait): { w: number, h: number } {
+        return suggestedVideoSize(SettingsStore.getValue("Images.size") as ImageSize);
     }
 
     private onImageClick = ev => {
@@ -119,6 +132,44 @@ export default class LinkPreviewWidget extends React.Component<IProps> {
         // The description includes &-encoded HTML entities, we decode those as React treats the thing as an
         // opaque string. This does not allow any HTML to be injected into the DOM.
         const description = AllHtmlEntities.decode(p["og:description"] || "");
+
+        // Youtube video player embed
+        const youtubeRegex = /^https?:\/\/(m[.]|www[.])?(youtube[.]com\/watch[?]v=|youtu[.]be\/)([\w-]+)(\S+)?$/;
+        if (this.props.youtubeEmbedPlayer && this.props.link.match(youtubeRegex)) {
+            let videoID: string;
+            if (this.props.link.includes("watch?v=")) {
+                videoID = this.props.link.split("watch?v=")[1].split("&")[0];
+            } else if (this.props.link.includes("youtu.be/")) {
+                videoID = this.props.link.split("youtu.be/")[1].split("&")[0];
+            }
+
+            const restrictedDims = this.suggestedDimensions(false);
+
+            return (
+                <div className="mx_LinkPreviewWidget sc_LinkPreviewWidget_youtubeEmbed">
+                    <div className="mx_LinkPreviewWidget_image sc_LinkPreviewWidget_youtubePlayer" style={{ flexBasis: restrictedDims.w, maxHeight: restrictedDims.h }}>
+                        <LiteYouTubeEmbed
+                            id={videoID}
+                            title={p["og:title"]}
+                            adNetwork={false}
+                            noCookie={true}
+                            thumbnail={image}
+                        />
+                    </div>
+                    <div className="mx_LinkPreviewWidget_caption sc_LinkPreviewWidget_youtubeCaption">
+                        <div className="mx_LinkPreviewWidget_title">
+                            <a href={this.props.link} target="_blank" rel="noreferrer noopener">{ p["og:title"] }</a>
+                            { p["og:site_name"] && <span className="mx_LinkPreviewWidget_siteName">
+                                { (" - " + p["og:site_name"]) }
+                            </span> }
+                        </div>
+                        <div className="mx_LinkPreviewWidget_description" ref={this.description}>
+                            { description }
+                        </div>
+                    </div>
+                </div>
+            );
+        }
 
         return (
             <div className="mx_LinkPreviewWidget" dir="auto">

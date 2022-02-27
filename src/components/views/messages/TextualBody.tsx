@@ -297,6 +297,7 @@ export default class TextualBody extends React.Component<IBodyProps, IState> {
                 nextProps.replacingEventId !== this.props.replacingEventId ||
                 nextProps.highlightLink !== this.props.highlightLink ||
                 nextProps.showUrlPreview !== this.props.showUrlPreview ||
+                nextProps.youtubeEmbedPlayer !== this.props.youtubeEmbedPlayer ||
                 nextProps.editState !== this.props.editState ||
                 nextState.links !== this.state.links ||
                 nextState.widgetHidden !== this.state.widgetHidden ||
@@ -620,6 +621,7 @@ export default class TextualBody extends React.Component<IBodyProps, IState> {
                 mxEvent={this.props.mxEvent}
                 onCancelClick={this.onCancelClick}
                 onHeightChanged={this.props.onHeightChanged}
+                youtubeEmbedPlayer={this.props.youtubeEmbedPlayer}
             />;
         }
 

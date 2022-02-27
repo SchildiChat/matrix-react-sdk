@@ -718,6 +718,12 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         default: false,
         controller: new UIFeatureController(UIFeature.URLPreviews),
     },
+    "youtubeEmbedPlayer": {
+        supportedLevels: LEVELS_ACCOUNT_SETTINGS,
+        displayName: _td('Enable YouTube embed player'),
+        default: true,
+        controller: new UIFeatureController(UIFeature.YoutubeEmbedPlayer),
+    },
     "notificationsEnabled": {
         supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS,
         default: false,
@@ -1025,6 +1031,10 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         default: true,
     },
     [UIFeature.TimelineEnableRelativeDates]: {
+        supportedLevels: LEVELS_UI_FEATURE,
+        default: true,
+    },
+    [UIFeature.YoutubeEmbedPlayer]: {
         supportedLevels: LEVELS_UI_FEATURE,
         default: true,
     },

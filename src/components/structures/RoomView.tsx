@@ -189,6 +189,7 @@ export interface IRoomState {
     singleSideBubbles: boolean;
     adaptiveSideBubbles: boolean;
     userNameColorMode: UserNameColorMode;
+    youtubeEmbedPlayer?: boolean;
     lowBandwidth: boolean;
     alwaysShowTimestamps: boolean;
     showTwelveHourTimestamps: boolean;
@@ -263,6 +264,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             singleSideBubbles: SettingsStore.getValue("singleSideBubbles"),
             adaptiveSideBubbles: SettingsStore.getValue("adaptiveSideBubbles"),
             userNameColorMode: UserNameColorMode.Uniform,
+            youtubeEmbedPlayer: SettingsStore.getValue("youtubeEmbedPlayer"),
             lowBandwidth: SettingsStore.getValue("lowBandwidth"),
             alwaysShowTimestamps: SettingsStore.getValue("alwaysShowTimestamps"),
             showTwelveHourTimestamps: SettingsStore.getValue("showTwelveHourTimestamps"),
@@ -324,6 +326,9 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             ),
             SettingsStore.watchSetting("userNameColorModePublic", null, (...[,,, value]) =>
                 this.recalculateUserNameColorMode(),
+            ),
+            SettingsStore.watchSetting("youtubeEmbedPlayer", null, (...[,,, value]) =>
+                this.setState({ youtubeEmbedPlayer: value as boolean }),
             ),
             SettingsStore.watchSetting("lowBandwidth", null, (...[,,, value]) =>
                 this.setState({ lowBandwidth: value as boolean }),
@@ -2222,6 +2227,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
                 layout={this.state.layout}
                 singleSideBubbles={this.state.singleSideBubbles}
                 userNameColorMode={this.state.userNameColorMode}
+                youtubeEmbedPlayer={this.state.youtubeEmbedPlayer}
                 editState={this.state.editState}
             />);
 
