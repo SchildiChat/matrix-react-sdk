@@ -1178,7 +1178,7 @@ export default class EventTile extends React.Component<IProps, IState> {
 
         const scBubbleEnabled = this.props.layout === Layout.Bubble &&
             this.context.timelineRenderingType !== TimelineRenderingType.Notification &&
-            this.context.timelineRenderingType === TimelineRenderingType.File;
+            this.context.timelineRenderingType !== TimelineRenderingType.File;
         const showRight = isOwnEvent && !this.props.singleSideBubbles;
         const showLeft = !isOwnEvent || this.props.singleSideBubbles;
 
