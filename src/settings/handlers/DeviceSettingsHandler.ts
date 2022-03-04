@@ -20,7 +20,6 @@ import SettingsHandler from "./SettingsHandler";
 import { MatrixClientPeg } from "../../MatrixClientPeg";
 import { SettingLevel } from "../SettingLevel";
 import { CallbackFn, WatchManager } from "../WatchManager";
-import { Layout } from "../enums/Layout";
 import { Theme } from "../enums/Theme";
 
 /**
@@ -56,28 +55,6 @@ export default class DeviceSettingsHandler extends SettingsHandler {
             const value = localStorage.getItem("audio_notifications_enabled");
             if (typeof(value) === "string") return value === "true";
             return null; // wrong type or otherwise not set
-        }
-
-        // Special case for old useBubbleLayout and useIRCLayout setting
-        if (settingName === "layout") {
-            const settings = this.getSettings() || {};
-
-            // Set the new layout setting and delete the old one so that we
-            // can delete this block of code after some time
-            let write = false;
-            if (settings["useIRCLayout"]) {
-                settings["layout"] = Layout.IRC;
-                delete settings["useIRCLayout"];
-                write = true;
-            }
-            if ("useBubbleLayout" in settings) {
-                if (settings["useBubbleLayout"] === false) settings["layout"] = Layout.Group;
-                delete settings["useBubbleLayout"];
-                write = true;
-            }
-            if (write) localStorage.setItem("mx_local_settings", JSON.stringify(settings));
-
-            return settings[settingName];
         }
 
         // Special case for old use_system_theme and theme setting

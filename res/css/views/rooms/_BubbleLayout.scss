@@ -101,7 +101,7 @@ $left-gutter: 5.4rem;
         padding-left: $left-gutter;
     }
 
-    .mx_EventListSummary {
+    .mx_GenericEventListSummary {
         // For toggle
         position: relative;
 
@@ -124,7 +124,7 @@ $left-gutter: 5.4rem;
         }
     }
 
-    .mx_EventListSummary_toggle {
+    .mx_GenericEventListSummary_toggle {
         // ToDo: Find better way to not crash bubble on small width screens
         float: unset;
         position: absolute;
@@ -442,7 +442,7 @@ $left-gutter: 5.4rem;
         line-height: unset;
     }
 
-    .mx_EventListSummary .sc_EventTile_bubbleLine_info {
+    .mx_GenericEventListSummary .sc_EventTile_bubbleLine_info {
         // ToDo: Find better way to not crash bubble with toggle on small width screens
         // padding-left: 110px;
         padding-left: 0;
@@ -723,7 +723,7 @@ $left-gutter: 5.4rem;
             margin-top: -2px;
         }
 
-        .mx_EventListSummary_avatars {
+        .mx_GenericEventListSummary_avatars {
             padding-top: unset;
         }
 
@@ -905,7 +905,7 @@ $left-gutter: 5.4rem;
             max-width: calc(104rem - $left-gutter);
         }
 
-        .sc_EventTile_bubbleLine_info, .mx_DateSeparator, .mx_EventListSummary,
+        .sc_EventTile_bubbleLine_info, .mx_DateSeparator, .mx_GenericEventListSummary,
         .mx_RoomView_MessageList > li > .mx_Spinner {
             max-width: calc($left-gutter + 104rem);
         }

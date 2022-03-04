@@ -504,7 +504,7 @@ class LoggedInView extends React.Component<IProps, IState> {
                 break;
             case KeyBindingAction.GoToHome:
                 dis.dispatch({
-                    action: 'view_home_page',
+                    action: Action.ViewHomePage,
                 });
                 Modal.closeCurrentModal("homeKeyboardShortcut");
                 handled = true;
@@ -642,10 +642,6 @@ class LoggedInView extends React.Component<IProps, IState> {
 
             case PageTypes.MyGroups:
                 pageElement = <MyGroups />;
-                break;
-
-            case PageTypes.RoomDirectory:
-                // handled by MatrixChat for now
                 break;
 
             case PageTypes.HomePage:

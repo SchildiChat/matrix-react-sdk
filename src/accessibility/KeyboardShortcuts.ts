@@ -17,8 +17,9 @@ limitations under the License.
 
 import { _td } from "../languageHandler";
 import { isMac, Key } from "../Keyboard";
-import { ISetting } from "../settings/Settings";
+import { IBaseSetting } from "../settings/Settings";
 import SettingsStore from "../settings/SettingsStore";
+import IncompatibleController from "../settings/controllers/IncompatibleController";
 
 export enum KeyBindingAction {
     /** Send a message */
@@ -118,9 +119,20 @@ export enum KeyBindingAction {
     ToggleHiddenEventVisibility = 'KeyBinding.toggleHiddenEventVisibility',
 }
 
+export type KeyBindingConfig = {
+    key: string;
+    ctrlOrCmdKey?: boolean;
+    ctrlKey?: boolean;
+    altKey?: boolean;
+    shiftKey?: boolean;
+    metaKey?: boolean;
+};
+
+type KeyboardShortcutSetting = IBaseSetting<KeyBindingConfig>;
+
 type IKeyboardShortcuts = {
     // TODO: We should figure out what to do with the keyboard shortcuts that are not handled by KeybindingManager
-    [k in (KeyBindingAction | string)]: ISetting;
+    [k in (KeyBindingAction | string)]: KeyboardShortcutSetting;
 };
 
 export interface ICategory {
@@ -249,7 +261,8 @@ export const CATEGORIES: Record<CategoryName, ICategory> = {
 // This is very intentionally modelled after SETTINGS as it will make it easier
 // to implement customizable keyboard shortcuts
 // TODO: TravisR will fix this nightmare when the new version of the SettingsStore becomes a thing
-const KEYBOARD_SHORTCUTS: IKeyboardShortcuts = {
+// XXX: Exported for tests
+export const KEYBOARD_SHORTCUTS: IKeyboardShortcuts = {
     [KeyBindingAction.FormatBold]: {
         default: {
             ctrlOrCmdKey: true,
@@ -396,18 +409,19 @@ const KEYBOARD_SHORTCUTS: IKeyboardShortcuts = {
             key: Key.ESCAPE,
         },
         displayName: _td("Clear room list filter field"),
+        controller: new IncompatibleController("feature_spotlight", { key: null }),
     },
     [KeyBindingAction.NextRoom]: {
         default: {
             key: Key.ARROW_DOWN,
         },
-        displayName: _td("Navigate up in the room list"),
+        displayName: _td("Navigate down in the room list"),
     },
     [KeyBindingAction.PrevRoom]: {
         default: {
             key: Key.ARROW_UP,
         },
-        displayName: _td("Navigate down in the room list"),
+        displayName: _td("Navigate up in the room list"),
     },
     [KeyBindingAction.ToggleUserMenu]: {
         default: {
@@ -580,7 +594,7 @@ const getNonCustomizableShortcuts = (): IKeyboardShortcuts => {
 };
 
 export const getCustomizableShortcuts = (): IKeyboardShortcuts => {
-    const keyboardShortcuts = KEYBOARD_SHORTCUTS;
+    const keyboardShortcuts = Object.assign({}, KEYBOARD_SHORTCUTS);
 
     keyboardShortcuts[KeyBindingAction.EditRedo] = {
         default: {
@@ -591,7 +605,12 @@ export const getCustomizableShortcuts = (): IKeyboardShortcuts => {
         displayName: _td("Redo edit"),
     };
 
-    return keyboardShortcuts;
+    return Object.keys(keyboardShortcuts).filter(k => {
+        return !keyboardShortcuts[k].controller?.settingDisabled;
+    }).reduce((o, key) => {
+        o[key] = keyboardShortcuts[key];
+        return o;
+    }, {});
 };
 
 export const getKeyboardShortcuts = (): IKeyboardShortcuts => {
@@ -600,14 +619,17 @@ export const getKeyboardShortcuts = (): IKeyboardShortcuts => {
         ...Object.entries(getCustomizableShortcuts()),
     ];
 
-    const keyboardShortcuts: IKeyboardShortcuts = {};
-    for (const [key, value] of entries) {
-        keyboardShortcuts[key] = value;
-    }
-    return keyboardShortcuts;
+    return entries.reduce((acc, [key, value]) => {
+        acc[key] = value;
+        return acc;
+    }, {});
 };
 
-export const registerShortcut = (shortcutName: string, categoryName: CategoryName, shortcut: ISetting): void => {
+export const registerShortcut = (
+    shortcutName: string,
+    categoryName: CategoryName,
+    shortcut: KeyboardShortcutSetting,
+): void => {
     KEYBOARD_SHORTCUTS[shortcutName] = shortcut;
     CATEGORIES[categoryName].settingNames.push(shortcutName);
 };

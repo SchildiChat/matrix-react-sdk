@@ -62,6 +62,8 @@ import { useEventEmitterState } from "../../hooks/useEventEmitter";
 import { IOOBData } from "../../stores/ThreepidInviteStore";
 import { awaitRoomDownSync } from "../../utils/RoomUpgrade";
 import RoomViewStore from "../../stores/RoomViewStore";
+import { ViewRoomPayload } from "../../dispatcher/payloads/ViewRoomPayload";
+import { JoinRoomReadyPayload } from "../../dispatcher/payloads/JoinRoomReadyPayload";
 
 interface IProps {
     space: Room;
@@ -326,10 +328,9 @@ export const showRoom = (cli: MatrixClient, hierarchy: RoomHierarchy, roomId: st
     }
 
     const roomAlias = getDisplayAliasForRoom(room) || undefined;
-    dis.dispatch({
+    dis.dispatch<ViewRoomPayload>({
         action: Action.ViewRoom,
         should_peek: true,
-        _type: "room_directory", // instrumentation
         room_alias: roomAlias,
         room_id: room.room_id,
         via_servers: Array.from(hierarchy.viaMap.get(roomId) || []),
@@ -339,6 +340,7 @@ export const showRoom = (cli: MatrixClient, hierarchy: RoomHierarchy, roomId: st
             name: room.name || roomAlias || _t("Unnamed room"),
             roomType,
         } as IOOBData,
+        metricsTrigger: "RoomDirectory",
     });
 };
 
@@ -354,7 +356,13 @@ export const joinRoom = (cli: MatrixClient, hierarchy: RoomHierarchy, roomId: st
         viaServers: Array.from(hierarchy.viaMap.get(roomId) || []),
     });
 
-    prom.catch(err => {
+    prom.then(() => {
+        dis.dispatch<JoinRoomReadyPayload>({
+            action: Action.JoinRoomReady,
+            roomId,
+            metricsTrigger: "SpaceHierarchy",
+        });
+    }, err => {
         RoomViewStore.showJoinRoomError(err, roomId);
     });
 

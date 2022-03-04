@@ -26,7 +26,6 @@ import * as RoomNotifs from '../../RoomNotifs';
 import * as Unread from '../../Unread';
 import { NotificationState } from "./NotificationState";
 import { getUnsentMessages } from "../../components/structures/RoomStatusBar";
-
 import { isRoomMarkedAsUnread, MARKED_UNREAD_TYPE } from "../../Rooms";
 import SettingsStore from "../../settings/SettingsStore";
 
@@ -40,7 +39,7 @@ export class RoomNotificationState extends NotificationState implements IDestroy
         this.room.on("Room.myMembership", this.handleMembershipUpdate);
         this.room.on("Room.localEchoUpdated", this.handleLocalEchoUpdated);
         this.room.on("Room.accountData", this.handleRoomAccountDataUpdate);
-        MatrixClientPeg.get().on("Event.decrypted", this.handleRoomEventUpdate);
+        MatrixClientPeg.get().on("Event.decrypted", this.onEventDecrypted);
         MatrixClientPeg.get().on("accountData", this.handleAccountDataUpdate);
 
         this.featureMarkedUnreadWatcherRef = SettingsStore.watchSetting("feature_mark_unread", null, () => {
@@ -63,7 +62,7 @@ export class RoomNotificationState extends NotificationState implements IDestroy
         this.room.removeListener("Room.localEchoUpdated", this.handleLocalEchoUpdated);
         this.room.removeListener("Room.accountData", this.handleRoomAccountDataUpdate);
         if (MatrixClientPeg.get()) {
-            MatrixClientPeg.get().removeListener("Event.decrypted", this.handleRoomEventUpdate);
+            MatrixClientPeg.get().removeListener("Event.decrypted", this.onEventDecrypted);
             MatrixClientPeg.get().removeListener("accountData", this.handleAccountDataUpdate);
         }
         SettingsStore.unwatchSetting(this.featureMarkedUnreadWatcherRef);
@@ -83,8 +82,15 @@ export class RoomNotificationState extends NotificationState implements IDestroy
         this.updateNotificationState();
     };
 
+    private onEventDecrypted = (event: MatrixEvent) => {
+        if (event.getRoomId() !== this.room.roomId) return; // ignore - not for us or notifications timeline
+
+        this.updateNotificationState();
+    };
+
     private handleRoomEventUpdate = (event: MatrixEvent, room: Room | null) => {
         if (room?.roomId !== this.room.roomId) return; // ignore - not for us or notifications timeline
+
         this.updateNotificationState();
     };
 

@@ -39,4 +39,5 @@ export enum UIFeature {
 export enum UIComponent {
     InviteUsers = "UIComponent.sendInvites",
     CreateRooms = "UIComponent.roomCreation",
+    CreateSpaces = "UIComponent.spaceCreation",
 }

@@ -28,7 +28,6 @@ import BaseCard from "../views/right_panel/BaseCard";
 import { RightPanelPhases } from "../../stores/right-panel/RightPanelStorePhases";
 import { replaceableComponent } from "../../utils/replaceableComponent";
 import ResizeNotifier from '../../utils/ResizeNotifier';
-import { TileShape } from '../views/rooms/EventTile';
 import MessageComposer from '../views/rooms/MessageComposer';
 import { RoomPermalinkCreator } from '../../utils/permalinks/Permalinks';
 import { Layout } from '../../settings/enums/Layout';
@@ -46,6 +45,7 @@ import { _t } from '../../languageHandler';
 import ThreadListContextMenu from '../views/context_menus/ThreadListContextMenu';
 import RightPanelStore from '../../stores/right-panel/RightPanelStore';
 import SettingsStore from "../../settings/SettingsStore";
+import { ViewRoomPayload } from "../../dispatcher/payloads/ViewRoomPayload";
 
 interface IProps {
     room: Room;
@@ -94,7 +94,7 @@ export default class ThreadView extends React.Component<IProps, IState> {
 
     public componentWillUnmount(): void {
         this.teardownThread();
-        dis.unregister(this.dispatcherRef);
+        if (this.dispatcherRef) dis.unregister(this.dispatcherRef);
         const room = MatrixClientPeg.get().getRoom(this.props.mxEvent.getRoomId());
         room.removeListener(ThreadEvent.New, this.onNewThread);
         SettingsStore.unwatchSetting(this.layoutWatcherRef);
@@ -195,12 +195,13 @@ export default class ThreadView extends React.Component<IProps, IState> {
 
     private onScroll = (): void => {
         if (this.props.initialEvent && this.props.isInitialEventHighlighted) {
-            dis.dispatch({
+            dis.dispatch<ViewRoomPayload>({
                 action: Action.ViewRoom,
                 room_id: this.props.room.roomId,
                 event_id: this.props.initialEvent?.getId(),
                 highlighted: false,
                 replyingToEvent: this.state.replyToEvent,
+                metricsTrigger: undefined, // room doesn't change
             });
         }
     };
@@ -262,6 +263,7 @@ export default class ThreadView extends React.Component<IProps, IState> {
             <RoomContext.Provider value={{
                 ...this.context,
                 timelineRenderingType: TimelineRenderingType.Thread,
+                threadId: this.state.thread?.id,
                 liveTimeline: this.state?.thread?.timelineSet?.getLiveTimeline(),
             }}>
 
@@ -281,7 +283,6 @@ export default class ThreadView extends React.Component<IProps, IState> {
                             sendReadReceiptOnLoad={true}
                             timelineSet={this.state?.thread?.timelineSet}
                             showUrlPreview={true}
-                            tileShape={TileShape.Thread}
                             // ThreadView doesn't support IRC layout at this time
                             layout={this.state.layout === Layout.Bubble ? Layout.Bubble : Layout.Group}
                             hideThreadedMessages={false}

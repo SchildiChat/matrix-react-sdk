@@ -30,6 +30,7 @@ import Field from '../elements/Field';
 import StyledRadioGroup from "../elements/StyledRadioGroup";
 import { SettingLevel } from "../../../settings/SettingLevel";
 import { replaceableComponent } from "../../../utils/replaceableComponent";
+import PosthogTrackers from "../../../PosthogTrackers";
 
 import StyledRadioButton from '../elements/StyledRadioButton';
 import { Theme } from '../../../settings/enums/Theme';
@@ -80,6 +81,8 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
 
     private onLightThemeChange = (newTheme: string): void => {
         if (this.state.lightTheme === newTheme) return;
+
+        PosthogTrackers.trackInteraction("WebSettingsAppearanceTabThemeSelector");
 
         // doing getValue in the .catch will still return the value we failed to set,
         // so remember what the value was before we tried to set it so we can revert

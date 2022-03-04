@@ -103,6 +103,9 @@ import AppsDrawer from '../views/rooms/AppsDrawer';
 import { RightPanelPhases } from '../../stores/right-panel/RightPanelStorePhases';
 import { ActionPayload } from "../../dispatcher/payloads";
 import { KeyBindingAction } from "../../accessibility/KeyboardShortcuts";
+import { ViewRoomPayload } from "../../dispatcher/payloads/ViewRoomPayload";
+import { JoinRoomPayload } from "../../dispatcher/payloads/JoinRoomPayload";
+import { DoAfterSyncPreparedPayload } from '../../dispatcher/payloads/DoAfterSyncPreparedPayload';
 
 const DEBUG = false;
 let debuglog = function(msg: string) {};
@@ -214,6 +217,7 @@ export interface IRoomState {
     wasContextSwitch?: boolean;
     editState?: EditorStateTransfer;
     timelineRenderingType: TimelineRenderingType;
+    threadId?: string;
     liveTimeline?: EventTimeline;
 }
 
@@ -252,7 +256,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             canPeek: false,
             showApps: false,
             isPeeking: false,
-            showRightPanel: RightPanelStore.instance.isOpenForRoom,
+            showRightPanel: false,
             joining: false,
             atEndOfLiveTimeline: true,
             atEndOfLiveTimelineInit: false,
@@ -371,7 +375,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             // Show chat in right panel when a widget is maximised
             RightPanelStore.instance.setCard({ phase: RightPanelPhases.Timeline });
         } else if (
-            RightPanelStore.instance.isOpenForRoom &&
+            RightPanelStore.instance.isOpen &&
             RightPanelStore.instance.roomPhaseHistory.some(card => (card.phase === RightPanelPhases.Timeline))
         ) {
             // hide chat in right panel when the widget is minimized
@@ -440,6 +444,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             showDisplaynameChanges: SettingsStore.getValue("showDisplaynameChanges", roomId),
             wasContextSwitch: RoomViewStore.getWasContextSwitch(),
             initialEventId: null, // default to clearing this, will get set later in the method if needed
+            showRightPanel: RightPanelStore.instance.isOpenForRoom(roomId),
         };
 
         const initialEventId = RoomViewStore.getInitialEventId();
@@ -811,19 +816,20 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
 
     private onUserScroll = () => {
         if (this.state.initialEventId && this.state.isInitialEventHighlighted) {
-            dis.dispatch({
+            dis.dispatch<ViewRoomPayload>({
                 action: Action.ViewRoom,
                 room_id: this.state.room.roomId,
                 event_id: this.state.initialEventId,
                 highlighted: false,
                 replyingToEvent: this.state.replyToEvent,
+                metricsTrigger: undefined, // room doesn't change
             });
         }
     };
 
     private onRightPanelStoreUpdate = () => {
         this.setState({
-            showRightPanel: RightPanelStore.instance.isOpenForRoom,
+            showRightPanel: RightPanelStore.instance.isOpenForRoom(this.state.roomId),
         });
     };
 
@@ -915,18 +921,19 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
                     }
 
                     setImmediate(() => {
-                        dis.dispatch({
+                        dis.dispatch<ViewRoomPayload>({
                             action: Action.ViewRoom,
                             room_id: roomId,
                             deferred_action: payload,
+                            metricsTrigger: "MessageSearch",
                         });
                     });
                 }
                 break;
-            case 'sync_state':
+            case 'MatrixActions.sync':
                 if (!this.state.matrixClientIsReady) {
                     this.setState({
-                        matrixClientIsReady: this.context && this.context.isInitialSyncComplete(),
+                        matrixClientIsReady: this.context?.isInitialSyncComplete(),
                     }, () => {
                         // send another "initial" RVS update to trigger peeking if needed
                         this.onRoomViewStoreUpdate(true);
@@ -1253,9 +1260,10 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
 
         if (ev.getType() === EventType.RoomCanonicalAlias) {
             // re-view the room so MatrixChat can manage the alias in the URL properly
-            dis.dispatch({
+            dis.dispatch<ViewRoomPayload>({
                 action: Action.ViewRoom,
                 room_id: this.state.room.roomId,
+                metricsTrigger: undefined, // room doesn't change
             });
             return; // this event cannot affect permissions so bail
         }
@@ -1348,22 +1356,23 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         if (this.context && this.context.isGuest()) {
             // Join this room once the user has registered and logged in
             // (If we failed to peek, we may not have a valid room object.)
-            dis.dispatch({
-                action: 'do_after_sync_prepared',
+            dis.dispatch<DoAfterSyncPreparedPayload<ViewRoomPayload>>({
+                action: Action.DoAfterSyncPrepared,
                 deferred_action: {
                     action: Action.ViewRoom,
                     room_id: this.getRoomId(),
+                    metricsTrigger: undefined,
                 },
             });
             dis.dispatch({ action: 'require_registration' });
         } else {
             Promise.resolve().then(() => {
                 const signUrl = this.props.threepidInvite?.signUrl;
-                dis.dispatch({
+                dis.dispatch<JoinRoomPayload>({
                     action: Action.JoinRoom,
                     roomId: this.getRoomId(),
                     opts: { inviteSignUrl: signUrl },
-                    _type: "unknown", // TODO: instrumentation
+                    metricsTrigger: this.state.room?.getMyMembership() === "invite" ? "Invite" : "RoomPreview",
                 });
                 return Promise.resolve();
             });
@@ -1646,7 +1655,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             rejecting: true,
         });
         this.context.leave(this.state.roomId).then(() => {
-            dis.dispatch({ action: 'view_home_page' });
+            dis.dispatch({ action: Action.ViewHomePage });
             this.setState({
                 rejecting: false,
             });
@@ -1679,7 +1688,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             await this.context.setIgnoredUsers(ignoredUsers);
 
             await this.context.leave(this.state.roomId);
-            dis.dispatch({ action: 'view_home_page' });
+            dis.dispatch({ action: Action.ViewHomePage });
             this.setState({
                 rejecting: false,
             });
@@ -1728,9 +1737,10 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             // If we were viewing a highlighted event, firing view_room without
             // an event will take care of both clearing the URL fragment and
             // jumping to the bottom
-            dis.dispatch({
+            dis.dispatch<ViewRoomPayload>({
                 action: Action.ViewRoom,
                 room_id: this.state.room.roomId,
+                metricsTrigger: undefined, // room doesn't change
             });
         } else {
             // Otherwise we have to jump manually
@@ -1867,7 +1877,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
     };
 
     private getOldRoom() {
-        const createEvent = this.state.room.currentState.getStateEvents("m.room.create", "");
+        const createEvent = this.state.room.currentState.getStateEvents(EventType.RoomCreate, "");
         if (!createEvent || !createEvent.getContent()['predecessor']) return null;
 
         return this.context.getRoom(createEvent.getContent()['predecessor']['room_id']);
@@ -1882,9 +1892,10 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
     onHiddenHighlightsClick = () => {
         const oldRoom = this.getOldRoom();
         if (!oldRoom) return;
-        dis.dispatch({
+        dis.dispatch<ViewRoomPayload>({
             action: Action.ViewRoom,
             room_id: oldRoom.roomId,
+            metricsTrigger: "Predecessor",
         });
     };
 

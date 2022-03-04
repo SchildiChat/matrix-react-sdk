@@ -84,7 +84,8 @@ limitations under the License.
         margin-right: 2px;
     }
 
-    .mx_EventListSummary:not([data-layout=bubble]) .mx_EventTile_line {
+    .mx_GenericEventListSummary:not([data-layout=bubble]) .mx_EventTile_line,
+    .mx_GenericEventListSummary:not([data-layout=bubble]) > .mx_GenericEventListSummary_unstyledList > .mx_EventTile_info .mx_EventTile_avatar ~ .mx_EventTile_line {
         padding-left: 36px;
     }
 
@@ -111,4 +112,9 @@ limitations under the License.
     .mx_WhoIsTypingTile_avatars {
         flex-basis: 48px; // 12 (padding on message list) + 36 (padding on event lines)
     }
+}
+
+.mx_TimelineCard_timeline {
+    overflow: hidden;
+    position: relative; // offset parent for jump to bottom button
 }

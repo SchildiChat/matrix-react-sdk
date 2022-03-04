@@ -60,6 +60,8 @@ import MatrixClientContext from "../../contexts/MatrixClientContext";
 import { SettingUpdatedPayload } from "../../dispatcher/payloads/SettingUpdatedPayload";
 import { Theme } from "../../settings/enums/Theme";
 import UserIdentifierCustomisations from "../../customisations/UserIdentifier";
+import PosthogTrackers from "../../PosthogTrackers";
+import { ViewHomePagePayload } from "../../dispatcher/payloads/ViewHomePagePayload";
 
 const CustomStatusSection = () => {
     const cli = useContext(MatrixClientContext);
@@ -270,6 +272,7 @@ export default class UserMenu extends React.Component<IProps, IState> {
 
         const newTheme = this.state.themeInUse === Theme.Dark ? Theme.Light : Theme.Dark;
         SettingsStore.setValue("theme_in_use", null, SettingLevel.DEVICE, newTheme); // set at same level as Appearance tab
+        PosthogTrackers.trackInteraction("WebUserMenuThemeToggleButton", ev);
     };
 
     private onSettingsOpen = (ev: ButtonEvent, tabId: string) => {
@@ -318,7 +321,7 @@ export default class UserMenu extends React.Component<IProps, IState> {
         ev.preventDefault();
         ev.stopPropagation();
 
-        defaultDispatcher.dispatch({ action: 'view_home_page' });
+        defaultDispatcher.dispatch<ViewHomePagePayload>({ action: Action.ViewHomePage });
         this.setState({ contextMenuPosition: null }); // also close the menu
     };
 
