@@ -439,7 +439,7 @@ export const SETTINGS: {[setting: string]: ISetting} = {
     "MessageComposerInput.collapseButtons": {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
         displayName: _td('Collapse additional buttons'),
-        default: true,
+        default: false,
         controller: new UIFeatureController(UIFeature.Widgets, false),
     },
     // TODO: Wire up appropriately to UI (FTUE notifications)
