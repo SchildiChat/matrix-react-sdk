@@ -648,6 +648,7 @@ export default class TextualBody extends React.Component<IBodyProps, IState> {
             return (
                 <div className="mx_MNoticeBody mx_EventTile_content"
                     onClick={this.onBodyLinkClick}
+                    dir="auto"
                 >
                     { body }
                     { widgets }
@@ -658,6 +659,7 @@ export default class TextualBody extends React.Component<IBodyProps, IState> {
         return (
             <div className="mx_MTextBody mx_EventTile_content"
                 onClick={this.onBodyLinkClick}
+                dir="auto"
             >
                 { body }
                 { widgets }
