@@ -38,7 +38,6 @@ $accent: #8BC34A;
 $selection-fg-color: $primary-bg-color;
 
 $focus-brightness: 105%;
-$location-marker-color: #ffffff;
 
 $other-user-pill-bg-color: rgba(0, 0, 0, 0.1);
 
@@ -292,6 +291,12 @@ $message-bubble-background-selected: #DBEDC6;
 $pinned-color: $tertiary-content;
 
 $groupFilterPanel-divider-color: $tertiary-content;
+
+// Location sharing
+// ********************
+$location-marker-color: #ffffff;
+$location-live-color: #5c56f5;
+// ********************
 
 // ***** Mixins! *****
 

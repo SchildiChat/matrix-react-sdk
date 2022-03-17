@@ -24,7 +24,7 @@ import encrypt from "browser-encrypt-attachment";
 import extractPngChunks from "png-chunks-extract";
 import { IAbortablePromise, IImageInfo } from "matrix-js-sdk/src/@types/partials";
 import { logger } from "matrix-js-sdk/src/logger";
-import { IEventRelation, ISendEventResponse } from "matrix-js-sdk/src";
+import { IEventRelation, ISendEventResponse } from "matrix-js-sdk/src/matrix";
 
 import { IEncryptedFile, IMediaEventInfo } from "./customisations/models/IMediaEventContent";
 import dis from './dispatcher/dispatcher';
@@ -447,7 +447,7 @@ export default class ContentMessages {
     public async sendContentListToRoom(
         files: File[],
         roomId: string,
-        relation: IEventRelation | null,
+        relation: IEventRelation | undefined,
         matrixClient: MatrixClient,
         context = TimelineRenderingType.Room,
     ): Promise<void> {
@@ -566,7 +566,7 @@ export default class ContentMessages {
     private sendContentToRoom(
         file: File,
         roomId: string,
-        relation: IEventRelation,
+        relation: IEventRelation | undefined,
         matrixClient: MatrixClient,
         promBefore: Promise<any>,
     ) {

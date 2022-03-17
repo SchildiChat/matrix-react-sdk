@@ -36,7 +36,6 @@ import {
 } from '../../../editor/serialize';
 import BasicMessageComposer, { REGEX_EMOTICON } from "./BasicMessageComposer";
 import { CommandPartCreator, Part, PartCreator, SerializedPart } from '../../../editor/parts';
-import ReplyChain from "../elements/ReplyChain";
 import { findEditableEvent } from '../../../utils/EventUtils';
 import SendHistoryManager from "../../../SendHistoryManager";
 import { CommandCategories } from '../../../SlashCommands';
@@ -58,6 +57,7 @@ import { ComposerType } from "../../../dispatcher/payloads/ComposerInsertPayload
 import { getSlashCommand, isSlashCommand, runSlashCommand, shouldSendAnyway } from "../../../editor/commands";
 import { KeyBindingAction } from "../../../accessibility/KeyboardShortcuts";
 import { PosthogAnalytics } from "../../../PosthogAnalytics";
+import { getNestedReplyText, getRenderInMixin, makeReplyMixIn } from '../../../utils/Reply';
 
 interface IAddReplyOpts {
     permalinkCreator?: RoomPermalinkCreator;
@@ -72,13 +72,13 @@ function addReplyToMessageContent(
         includeLegacyFallback: true,
     },
 ): void {
-    const replyContent = ReplyChain.makeReplyMixIn(replyToEvent, opts.renderIn);
+    const replyContent = makeReplyMixIn(replyToEvent, opts.renderIn);
     Object.assign(content, replyContent);
 
     if (opts.includeLegacyFallback) {
         // Part of Replies fallback support - prepend the text we're sending
         // with the text we're replying to
-        const nestedReply = ReplyChain.getNestedReplyText(replyToEvent, opts.permalinkCreator);
+        const nestedReply = getNestedReplyText(replyToEvent, opts.permalinkCreator);
         if (nestedReply) {
             if (content.formatted_body) {
                 content.formatted_body = nestedReply.html + content.formatted_body;
@@ -132,7 +132,7 @@ export function createMessageContent(
         addReplyToMessageContent(content, replyToEvent, {
             permalinkCreator,
             includeLegacyFallback: true,
-            renderIn: ReplyChain.getRenderInMixin(relation),
+            renderIn: getRenderInMixin(relation),
         });
     }
 
@@ -345,12 +345,17 @@ export class SendMessageComposer extends React.Component<ISendMessageComposerPro
             return;
         }
 
-        PosthogAnalytics.instance.trackEvent<ComposerEvent>({
+        const posthogEvent: ComposerEvent = {
             eventName: "Composer",
             isEditing: false,
-            inThread: this.props.relation?.rel_type === RelationType.Thread,
             isReply: !!this.props.replyToEvent,
-        });
+            inThread: this.props.relation?.rel_type === RelationType.Thread,
+        };
+        if (posthogEvent.inThread) {
+            const threadRoot = this.props.room.findEventById(this.props.relation.event_id);
+            posthogEvent.startsThread = threadRoot?.getThread()?.events.length === 1;
+        }
+        PosthogAnalytics.instance.trackEvent<ComposerEvent>(posthogEvent);
 
         // Replace emoticon at the end of the message
         if (SettingsStore.getValue('MessageComposerInput.autoReplaceEmoji')) {
@@ -384,7 +389,7 @@ export class SendMessageComposer extends React.Component<ISendMessageComposerPro
                         addReplyToMessageContent(content, replyToEvent, {
                             permalinkCreator: this.props.permalinkCreator,
                             includeLegacyFallback: true,
-                            renderIn: ReplyChain.getRenderInMixin(this.props.relation),
+                            renderIn: getRenderInMixin(this.props.relation),
                         });
                     }
                 } else {

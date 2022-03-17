@@ -19,14 +19,22 @@ limitations under the License.
 
 import React from 'react';
 import { base32 } from "rfc4648";
-import { MatrixCall, CallErrorCode, CallState, CallEvent, CallParty, CallType } from "matrix-js-sdk/src/webrtc/call";
-import { CallError } from "matrix-js-sdk/src/webrtc/call";
+import {
+    CallError,
+    CallErrorCode,
+    CallEvent,
+    CallParty,
+    CallState,
+    CallType,
+    MatrixCall,
+} from "matrix-js-sdk/src/webrtc/call";
 import { logger } from 'matrix-js-sdk/src/logger';
-import { randomUppercaseString, randomLowercaseString } from "matrix-js-sdk/src/randomstring";
+import { randomLowercaseString, randomUppercaseString } from "matrix-js-sdk/src/randomstring";
 import EventEmitter from 'events';
 import { RuleId, TweakName, Tweaks } from "matrix-js-sdk/src/@types/PushRules";
 import { PushProcessor } from 'matrix-js-sdk/src/pushprocessor';
 import { SyncState } from "matrix-js-sdk/src/sync";
+import { CallEventHandlerEvent } from "matrix-js-sdk/src/webrtc/callEventHandler";
 
 import { MatrixClientPeg } from './MatrixClientPeg';
 import Modal from './Modal';
@@ -50,10 +58,9 @@ import VoipUserMapper from './VoipUserMapper';
 import { addManagedHybridWidget, isManagedHybridWidgetEnabled } from './widgets/ManagedHybrid';
 import SdkConfig from './SdkConfig';
 import { ensureDMExists, findDMForUser } from './createRoom';
-import { WidgetLayoutStore, Container } from './stores/widgets/WidgetLayoutStore';
-import { getIncomingCallToastKey } from './toasts/IncomingCallToast';
+import { Container, WidgetLayoutStore } from './stores/widgets/WidgetLayoutStore';
+import IncomingCallToast, { getIncomingCallToastKey } from './toasts/IncomingCallToast';
 import ToastStore from './stores/ToastStore';
-import IncomingCallToast from "./toasts/IncomingCallToast";
 import Resend from './Resend';
 import { ViewRoomPayload } from "./dispatcher/payloads/ViewRoomPayload";
 
@@ -145,9 +152,9 @@ export default class CallHandler extends EventEmitter {
     public roomIdForCall(call: MatrixCall): string {
         if (!call) return null;
 
-        const voipConfig = SdkConfig.get()['voip'];
-
-        if (voipConfig && voipConfig.obeyAssertedIdentity) {
+        // check asserted identity: if we're not obeying asserted identity,
+        // this map will never be populated, but we check anyway for sanity
+        if (this.shouldObeyAssertedfIdentity()) {
             const nativeUser = this.assertedIdentityNativeUsers[call.callId];
             if (nativeUser) {
                 const room = findDMForUser(MatrixClientPeg.get(), nativeUser);
@@ -172,7 +179,7 @@ export default class CallHandler extends EventEmitter {
         }
 
         if (SettingsStore.getValue(UIFeature.Voip)) {
-            MatrixClientPeg.get().on('Call.incoming', this.onCallIncoming);
+            MatrixClientPeg.get().on(CallEventHandlerEvent.Incoming, this.onCallIncoming);
         }
 
         this.checkProtocols(CHECK_PROTOCOLS_ATTEMPTS);
@@ -181,7 +188,7 @@ export default class CallHandler extends EventEmitter {
     public stop(): void {
         const cli = MatrixClientPeg.get();
         if (cli) {
-            cli.removeListener('Call.incoming', this.onCallIncoming);
+            cli.removeListener(CallEventHandlerEvent.Incoming, this.onCallIncoming);
         }
     }
 
@@ -253,6 +260,10 @@ export default class CallHandler extends EventEmitter {
                 }, 10000);
             }
         }
+    }
+
+    private shouldObeyAssertedfIdentity(): boolean {
+        return SdkConfig.get()['voip']?.obeyAssertedIdentity;
     }
 
     public getSupportsPstnProtocol(): boolean {
@@ -481,6 +492,11 @@ export default class CallHandler extends EventEmitter {
             if (!this.matchesCallForThisRoom(call)) return;
 
             logger.log(`Call ID ${call.callId} got new asserted identity:`, call.getRemoteAssertedIdentity());
+
+            if (!this.shouldObeyAssertedfIdentity()) {
+                logger.log("asserted identity not enabled in config: ignoring");
+                return;
+            }
 
             const newAssertedIdentity = call.getRemoteAssertedIdentity().id;
             let newNativeAssertedIdentity = newAssertedIdentity;
