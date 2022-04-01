@@ -101,7 +101,7 @@ $left-gutter: 5.4rem;
         padding-left: $left-gutter;
     }
 
-    .mx_GenericEventListSummary {
+    .mx_GenericEventListSummary, .mx_EventTile_tileError {
         // For toggle
         position: relative;
 
@@ -139,6 +139,21 @@ $left-gutter: 5.4rem;
 
         .mx_MessageActionBar {
             top: -21px; // counteract padding: 24-3
+        }
+    }
+
+    .mx_EventTile_tileError {
+        .sc_EventTile_bubbleLine_info {
+            max-width: unset;
+        }
+
+        .sc_EventTile_bubble_info > * {
+            display: block;
+        }
+
+        .mx_AccessibleButton {
+            position: relative; // Make the source button clickable
+            display: block;
         }
     }
 
