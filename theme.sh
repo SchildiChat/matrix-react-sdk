@@ -5,6 +5,8 @@ shopt -s globstar
 mydir="$(dirname "$(realpath "$0")")"
 automatic_commit="$1"
 
+pushd "$mydir" > /dev/null
+
 if [[ "$automatic_commit" == [Yy]* ]]; then
     # Require clean git state
     uncommitted=`git status --porcelain`
@@ -13,8 +15,6 @@ if [[ "$automatic_commit" == [Yy]* ]]; then
         exit 1
     fi
 fi
-
-pushd "$mydir" > /dev/null
 
 M_ACCENT="#8BC34A"
 M_ACCENT_DEC="139, 195, 74"
