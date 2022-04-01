@@ -67,12 +67,11 @@ const SidebarUserSettingsTab = () => {
                     checked={!!homeEnabled}
                     onChange={onMetaSpaceChangeFactory(MetaSpace.Home, "WebSettingsSidebarTabSpacesCheckbox")}
                     className="mx_SidebarUserSettingsTab_homeCheckbox"
-                    disabled={homeEnabled}
                 >
                     { _t("Home") }
                 </StyledCheckbox>
                 <div className="mx_SidebarUserSettingsTab_checkboxMicrocopy">
-                    { _t("Home is useful for getting an overview of everything.") }
+                    { _t("Home is useful for getting an overview of everything. Keep in mind that disabling it could leave you unable to see certain rooms.") }
                 </div>
 
                 <StyledCheckbox
