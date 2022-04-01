@@ -28,10 +28,12 @@ replace_colors() {
         BG_ACCENT="$M_ACCENT_DARK"
         CODEBLOCK_BACKGROUND_COLOR="#121212"
         PILL_COLOR="rgba(255, 255, 255, 0.12)"
+        PRESENCE_OFFLINE="#e0e0e0" # not applied because not existing specifically for dark
     else
         BG_ACCENT="$M_ACCENT_LIGHT"
         CODEBLOCK_BACKGROUND_COLOR="#00000010"
         PILL_COLOR="rgba(0, 0, 0, 0.1)" # default
+        PRESENCE_OFFLINE="#bdbdbd" # for light this should actually be darker
     fi
     # Neutral colors
     sed -i 's|#15171b|#212121|gi' "$f"
@@ -104,6 +106,8 @@ replace_colors() {
     sed -i "s|\\(\$rte-room-pill-color: \\).*;|\\1$PILL_COLOR;|gi" "$f"
 
     sed -i "s|\\(\$codeblock-background-color: \\).*;|\\1$CODEBLOCK_BACKGROUND_COLOR;|gi" "$f"
+
+    sed -i "s|\\(\$presence-offline: \\).*;|\\1$PRESENCE_OFFLINE;|gi" "$f"
 
     # Accent colors
     sed -i "s|#368bd6|$M_ACCENT|gi" "$f"
