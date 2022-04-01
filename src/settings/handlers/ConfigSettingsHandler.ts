@@ -20,6 +20,8 @@ import { isNullOrUndefined } from "matrix-js-sdk/src/utils";
 import SettingsHandler from "./SettingsHandler";
 import SdkConfig from "../../SdkConfig";
 import { Theme } from "../enums/Theme";
+import { SnakedObject } from "../../utils/SnakedObject";
+import { IConfigOptions } from "../../IConfigOptions";
 
 /**
  * Gets and sets settings at the "config" level. This handler does not make use of the
@@ -31,10 +33,10 @@ export default class ConfigSettingsHandler extends SettingsHandler {
     }
 
     public getValue(settingName: string, roomId: string): any {
-        const config = SdkConfig.get() || {};
+        const config = new SnakedObject<IConfigOptions>(SdkConfig.get());
 
         if (this.featureNames.includes(settingName)) {
-            const labsConfig = config["features"] || {};
+            const labsConfig = config.get("features") || {};
             const val = labsConfig[settingName];
             if (isNullOrUndefined(val)) return null; // no definition at this level
             if (val === true || val === false) return val; // new style: mapped as a boolean
@@ -45,13 +47,14 @@ export default class ConfigSettingsHandler extends SettingsHandler {
         }
 
         // Special case themes
-        if (settingName === "theme_in_use" && config["default_theme"]) {
-            if (config["default_theme"] === "light") return Theme.Light;
-            if (config["default_theme"] === "dark") return Theme.Dark;
-            if (config["default_theme"] === "system") Theme.System;
+        const defaultTheme = config.get("default_theme");
+        if (settingName === "theme_in_use" && defaultTheme) {
+            if (defaultTheme === "light") return Theme.Light;
+            if (defaultTheme === "dark") return Theme.Dark;
+            if (defaultTheme === "system") Theme.System;
         }
 
-        const settingsConfig = config["settingDefaults"];
+        const settingsConfig = config.get("setting_defaults");
         if (!settingsConfig || isNullOrUndefined(settingsConfig[settingName])) return null;
         return settingsConfig[settingName];
     }

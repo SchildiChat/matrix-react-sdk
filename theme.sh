@@ -82,6 +82,7 @@ replace_colors() {
     sed -i 's|#e9e9e9|#e0e0e0|gi' "$f"
     sed -i 's|#e9edf1|#e0e0e0|gi' "$f"
     sed -i 's|#e8eef5|#e0e0e0|gi' "$f"
+    sed -i 's|#deddfd|#e0e0e0|gi' "$f" # $location-live-secondary-color, what to use really?
     sed -i 's|#edf3ff|#eeeeee|gi' "$f"
     sed -i 's|#f4f6fa|#f5f5f5|gi' "$f"
     sed -i 's|#f6f7f8|#f5f5f5|gi' "$f"

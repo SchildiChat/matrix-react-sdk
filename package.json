@@ -1,6 +1,6 @@
 {
   "name": "matrix-react-sdk",
-  "version": "3.42.0",
+  "version": "3.42.1",
   "description": "SDK for matrix.org using React",
   "author": "matrix.org",
   "repository": {
@@ -93,7 +93,7 @@
     "maplibre-gl": "^1.15.2",
     "matrix-analytics-events": "github:matrix-org/matrix-analytics-events.git#daad3faed54f0b1f1e026a7498b4653e4d01cd90",
     "matrix-events-sdk": "^0.0.1-beta.7",
-    "matrix-js-sdk": "16.0.0",
+    "matrix-js-sdk": "16.0.1",
     "matrix-widget-api": "^0.1.0-beta.18",
     "minimist": "^1.2.5",
     "opus-recorder": "^8.0.3",
@@ -145,6 +145,7 @@
     "@types/css-font-loading-module": "^0.0.6",
     "@types/diff-match-patch": "^1.0.32",
     "@types/enzyme": "^3.10.9",
+    "@types/escape-html": "^1.0.1",
     "@types/file-saver": "^2.0.3",
     "@types/flux": "^3.1.9",
     "@types/jest": "^26.0.20",
@@ -232,7 +233,8 @@
       "<rootDir>/src/**/*.{js,ts,tsx}"
     ],
     "coverageReporters": [
-      "text"
+      "text",
+      "json"
     ]
   },
   "typings": "./lib/index.d.ts"

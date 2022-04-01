@@ -145,6 +145,7 @@ $rte-code-bg-color: rgba(0, 0, 0, 0.04);
 // ********************
 $presence-away: #d9b072;
 $presence-offline: $quinary-content;
+$presence-busy: $alert;
 // ********************
 
 // Inputs
@@ -307,7 +308,8 @@ $copy-button-url: "$(res)/img/feather-customised/clipboard.svg";
 // Location sharing
 // ********************
 $location-marker-color: #ffffff;
-$location-live-color: #8BC34A;
+$location-live-color: #5c56f5;
+$location-live-secondary-color: #deddfd;
 // ********************
 
 // Mixins

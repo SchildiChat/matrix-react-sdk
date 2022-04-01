@@ -1776,6 +1776,11 @@
     "@types/cheerio" "*"
     "@types/react" "*"
 
+"@types/escape-html@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@types/escape-html/-/escape-html-1.0.1.tgz#b19b4646915f0ae2c306bf984dc0a59c5cfc97ba"
+  integrity sha512-4mI1FuUUZiuT95fSVqvZxp/ssQK9zsa86S43h9x3zPOSU9BBJ+BfDkXwuaU7BfsD+e7U0/cUUfJFk3iW2M4okA==
+
 "@types/events@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@types/events/-/events-3.0.0.tgz#2862f3f58a9a7f7c3e78d79f130dd4d71c25c2a7"
@@ -6270,10 +6275,10 @@ matrix-events-sdk@^0.0.1-beta.7:
   resolved "https://registry.yarnpkg.com/matrix-events-sdk/-/matrix-events-sdk-0.0.1-beta.7.tgz#5ffe45eba1f67cc8d7c2377736c728b322524934"
   integrity sha512-9jl4wtWanUFSy2sr2lCjErN/oC8KTAtaeaozJtrgot1JiQcEI4Rda9OLgQ7nLKaqb4Z/QUx/fR3XpDzm5Jy1JA==
 
-matrix-js-sdk@16.0.0:
-  version "16.0.0"
-  resolved "https://registry.yarnpkg.com/matrix-js-sdk/-/matrix-js-sdk-16.0.0.tgz#0eba446a7d17f0c0bf8880f11e1e46f897408984"
-  integrity sha512-ZlrRjqo493pY6OwtQto+oNG2tFALbJKHUtIHUbay0eX100jQjbgMzXtWHrrFEU01+/aAccx+UP4ap0/MRcsALQ==
+matrix-js-sdk@16.0.1:
+  version "16.0.1"
+  resolved "https://registry.yarnpkg.com/matrix-js-sdk/-/matrix-js-sdk-16.0.1.tgz#9b389ef16677ba648efad2929a7802af6f1dc81f"
+  integrity sha512-GRYZY7JZRqsVFa2nKO2qJbU4gQail2+1PgX2QDcibWizTL5Gh8YS384twprpIKqzdLHJ3d7H7A0L+uqc562ZsQ==
   dependencies:
     "@babel/runtime" "^7.12.5"
     another-json "^0.2.0"
