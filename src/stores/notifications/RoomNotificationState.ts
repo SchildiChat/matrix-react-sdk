@@ -25,14 +25,15 @@ import { EffectiveMembership, getEffectiveMembership } from "../../utils/members
 import { readReceiptChangeIsFor } from "../../utils/read-receipts";
 import * as RoomNotifs from '../../RoomNotifs';
 import * as Unread from '../../Unread';
-import { NotificationState } from "./NotificationState";
+import { NotificationState, NotificationStateEvents } from "./NotificationState";
 import { getUnsentMessages } from "../../components/structures/RoomStatusBar";
 import { isRoomMarkedAsUnread, MARKED_UNREAD_TYPE } from "../../Rooms";
 import SettingsStore from "../../settings/SettingsStore";
+import { ThreadsRoomNotificationState } from "./ThreadsRoomNotificationState";
 
 export class RoomNotificationState extends NotificationState implements IDestroyable {
     private featureMarkedUnreadWatcherRef = null;
-    constructor(public readonly room: Room) {
+    constructor(public readonly room: Room, private readonly threadsState?: ThreadsRoomNotificationState) {
         super();
         this.room.on(RoomEvent.Receipt, this.handleReadReceipt);
         this.room.on(RoomEvent.Timeline, this.handleRoomEventUpdate);
@@ -40,6 +41,9 @@ export class RoomNotificationState extends NotificationState implements IDestroy
         this.room.on(RoomEvent.MyMembership, this.handleMembershipUpdate);
         this.room.on(RoomEvent.LocalEchoUpdated, this.handleLocalEchoUpdated);
         this.room.on(RoomEvent.AccountData, this.handleRoomAccountDataUpdate);
+        if (threadsState) {
+            threadsState.on(NotificationStateEvents.Update, this.handleThreadsUpdate);
+        }
         MatrixClientPeg.get().on(MatrixEventEvent.Decrypted, this.onEventDecrypted);
         MatrixClientPeg.get().on(ClientEvent.AccountData, this.handleAccountDataUpdate);
 
@@ -62,12 +66,19 @@ export class RoomNotificationState extends NotificationState implements IDestroy
         this.room.removeListener(RoomEvent.MyMembership, this.handleMembershipUpdate);
         this.room.removeListener(RoomEvent.LocalEchoUpdated, this.handleLocalEchoUpdated);
         this.room.removeListener(RoomEvent.AccountData, this.handleRoomAccountDataUpdate);
+        if (this.threadsState) {
+            this.threadsState.removeListener(NotificationStateEvents.Update, this.handleThreadsUpdate);
+        }
         if (MatrixClientPeg.get()) {
             MatrixClientPeg.get().removeListener(MatrixEventEvent.Decrypted, this.onEventDecrypted);
             MatrixClientPeg.get().removeListener(ClientEvent.AccountData, this.handleAccountDataUpdate);
         }
         SettingsStore.unwatchSetting(this.featureMarkedUnreadWatcherRef);
     }
+
+    private handleThreadsUpdate = () => {
+        this.updateNotificationState();
+    };
 
     private handleLocalEchoUpdated = () => {
         this.updateNotificationState();

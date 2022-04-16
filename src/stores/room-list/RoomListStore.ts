@@ -21,13 +21,12 @@ import { logger } from "matrix-js-sdk/src/logger";
 import { EventType } from "matrix-js-sdk/src/@types/event";
 
 import SettingsStore from "../../settings/SettingsStore";
-import { DefaultTagID, isCustomTag, OrderedDefaultTagIDs, RoomUpdateCause, TagID } from "./models";
+import { DefaultTagID, OrderedDefaultTagIDs, RoomUpdateCause, TagID } from "./models";
 import { IListOrderingMap, ITagMap, ITagSortingMap, ListAlgorithm, SortAlgorithm } from "./algorithms/models";
 import { ActionPayload } from "../../dispatcher/payloads";
 import defaultDispatcher from "../../dispatcher/dispatcher";
 import { readReceiptChangeIsFor } from "../../utils/read-receipts";
 import { FILTER_CHANGED, FilterKind, IFilterCondition } from "./filters/IFilterCondition";
-import { TagWatcher } from "./TagWatcher";
 import RoomViewStore from "../RoomViewStore";
 import { Algorithm, LIST_UPDATED_EVENT } from "./algorithms/Algorithm";
 import { EffectiveMembership, getEffectiveMembership } from "../../utils/membership";
@@ -38,14 +37,10 @@ import { NameFilterCondition } from "./filters/NameFilterCondition";
 import { RoomNotificationStateStore } from "../notifications/RoomNotificationStateStore";
 import { VisibilityProvider } from "./filters/VisibilityProvider";
 import { SpaceWatcher } from "./SpaceWatcher";
-import SpaceStore from "../spaces/SpaceStore";
-import { Action } from "../../dispatcher/actions";
-import { SettingUpdatedPayload } from "../../dispatcher/payloads/SettingUpdatedPayload";
 import { IRoomTimelineActionPayload } from "../../actions/MatrixActionCreators";
 
 interface IState {
-    tagsEnabled?: boolean;
-    unifiedRoomList?: boolean;
+    // state is tracked in underlying classes
 }
 
 /**
@@ -72,23 +67,14 @@ export class RoomListStoreClass extends AsyncStoreWithClient<IState> {
         this.emit(LISTS_UPDATE_EVENT);
     });
 
-    private readonly watchedSettings = [
-        'feature_custom_tags',
-        'unifiedRoomList',
-    ];
-
     constructor() {
         super(defaultDispatcher);
-        this.setMaxListeners(20); // CustomRoomTagStore + RoomList + LeftPanel + 8xRoomSubList + spares
+        this.setMaxListeners(20); // RoomList + LeftPanel + 8xRoomSubList + spares
     }
 
     private setupWatchers() {
-        // TODO: Maybe destroy these if this class supports destruction
-        if (SpaceStore.spacesEnabled) {
-            new SpaceWatcher(this);
-        } else {
-            new TagWatcher(this);
-        }
+        // TODO: Maybe destroy this if this class supports destruction
+        new SpaceWatcher(this);
     }
 
     public get unfilteredLists(): ITagMap {
@@ -125,7 +111,6 @@ export class RoomListStoreClass extends AsyncStoreWithClient<IState> {
             this.readyStore.useUnitTestClient(forcedClient);
         }
 
-        for (const settingName of this.watchedSettings) SettingsStore.monitorSetting(settingName, null);
         RoomViewStore.addListener(() => this.handleRVSUpdate({}));
         this.algorithm.on(LIST_UPDATED_EVENT, this.onAlgorithmListUpdated);
         this.algorithm.on(FILTER_CHANGED, this.onAlgorithmFilterUpdated);
@@ -133,22 +118,12 @@ export class RoomListStoreClass extends AsyncStoreWithClient<IState> {
 
         // Update any settings here, as some may have happened before we were logically ready.
         logger.log("Regenerating room lists: Startup");
-        await this.readAndCacheSettingsFromStore();
+        this.updateAlgorithmInstances();
         this.regenerateAllLists({ trigger: false });
         this.handleRVSUpdate({ trigger: false }); // fake an RVS update to adjust sticky room, if needed
 
         this.updateFn.mark(); // we almost certainly want to trigger an update.
         this.updateFn.trigger();
-    }
-
-    private async readAndCacheSettingsFromStore() {
-        const tagsEnabled = SettingsStore.getValue("feature_custom_tags");
-        const unifiedRoomList = SettingsStore.getValue("unifiedRoomList");
-        await this.updateState({
-            tagsEnabled,
-            unifiedRoomList,
-        });
-        this.updateAlgorithmInstances();
     }
 
     /**
@@ -206,17 +181,6 @@ export class RoomListStoreClass extends AsyncStoreWithClient<IState> {
         // Everything here requires a MatrixClient or some sort of logical readiness.
         const logicallyReady = this.matrixClient && this.initialListsGenerated;
         if (!logicallyReady) return;
-
-        if (payload.action === Action.SettingUpdated) {
-            const settingUpdatedPayload = payload as SettingUpdatedPayload;
-            if (this.watchedSettings.includes(settingUpdatedPayload.settingName)) {
-                logger.log("Regenerating room lists: Settings changed");
-                await this.readAndCacheSettingsFromStore();
-
-                this.regenerateAllLists({ trigger: false }); // regenerate the lists now
-                this.updateFn.trigger();
-            }
-        }
 
         if (!this.algorithm) {
             // This shouldn't happen because `initialListsGenerated` implies we have an algorithm.
@@ -516,7 +480,7 @@ export class RoomListStoreClass extends AsyncStoreWithClient<IState> {
         }
 
         // SC: Unified list for DMs and groups
-        this.algorithm.setUnifiedRoomList(this.state.unifiedRoomList);
+        this.algorithm.setUnifiedRoomList(SettingsStore.getValue("unifiedRoomList"));
     }
 
     private onAlgorithmListUpdated = () => {
@@ -541,7 +505,7 @@ export class RoomListStoreClass extends AsyncStoreWithClient<IState> {
 
         // if spaces are enabled only consider the prefilter conditions when there are no runtime conditions
         // for the search all spaces feature
-        if (this.prefilterConditions.length > 0 && (!SpaceStore.spacesEnabled || !this.filterConditions.length)) {
+        if (this.prefilterConditions.length > 0 && !this.filterConditions.length) {
             rooms = rooms.filter(r => {
                 for (const filter of this.prefilterConditions) {
                     if (!filter.isVisible(r)) {
@@ -568,18 +532,9 @@ export class RoomListStoreClass extends AsyncStoreWithClient<IState> {
 
         const rooms = this.getPlausibleRooms();
 
-        const customTags = new Set<TagID>();
-        if (this.state.tagsEnabled) {
-            for (const room of rooms) {
-                if (!room.tags) continue;
-                const tags = Object.keys(room.tags).filter(t => isCustomTag(t));
-                tags.forEach(t => customTags.add(t));
-            }
-        }
-
         const sorts: ITagSortingMap = {};
         const orders: IListOrderingMap = {};
-        const allTags = [...OrderedDefaultTagIDs, ...Array.from(customTags)];
+        const allTags = [...OrderedDefaultTagIDs];
         for (const tagId of allTags) {
             sorts[tagId] = this.calculateTagSorting(tagId);
             orders[tagId] = this.calculateListOrder(tagId);
@@ -608,12 +563,10 @@ export class RoomListStoreClass extends AsyncStoreWithClient<IState> {
             promise = this.recalculatePrefiltering();
         } else {
             this.filterConditions.push(filter);
-            // Runtime filters with spaces disable prefiltering for the search all spaces feature
-            if (SpaceStore.spacesEnabled) {
-                // this has to be awaited so that `setKnownRooms` is called in time for the `addFilterCondition` below
-                // this way the runtime filters are only evaluated on one dataset and not both.
-                await this.recalculatePrefiltering();
-            }
+            // Runtime filters with spaces disable prefiltering for the search all spaces feature.
+            // this has to be awaited so that `setKnownRooms` is called in time for the `addFilterCondition` below
+            // this way the runtime filters are only evaluated on one dataset and not both.
+            await this.recalculatePrefiltering();
             if (this.algorithm) {
                 this.algorithm.addFilterCondition(filter);
             }
@@ -639,9 +592,7 @@ export class RoomListStoreClass extends AsyncStoreWithClient<IState> {
                 this.algorithm.removeFilterCondition(filter);
             }
             // Runtime filters with spaces disable prefiltering for the search all spaces feature
-            if (SpaceStore.spacesEnabled) {
-                promise = this.recalculatePrefiltering();
-            }
+            promise = this.recalculatePrefiltering();
             removed = true;
         }
 
@@ -683,7 +634,7 @@ export class RoomListStoreClass extends AsyncStoreWithClient<IState> {
         const algorithmTags = this.algorithm.getTagsForRoom(room);
 
         if (!algorithmTags) {
-            if (this.state.unifiedRoomList) {
+            if (SettingsStore.getValue("unifiedRoomList")) {
                 return [DefaultTagID.Unified];
             } else {
                 return [DefaultTagID.Untagged];

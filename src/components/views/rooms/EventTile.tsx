@@ -116,7 +116,6 @@ const stateEventTileTypes = {
     [EventType.RoomTombstone]: 'messages.TextualEvent',
     [EventType.RoomJoinRules]: 'messages.TextualEvent',
     [EventType.RoomGuestAccess]: 'messages.TextualEvent',
-    'm.room.related_groups': 'messages.TextualEvent', // legacy communities flair
 };
 
 const stateEventSingular = new Set([
@@ -134,7 +133,6 @@ const stateEventSingular = new Set([
     EventType.RoomTombstone,
     EventType.RoomJoinRules,
     EventType.RoomGuestAccess,
-    'm.room.related_groups',
 ]);
 
 // Add all the Mjolnir stuff to the renderer
@@ -301,9 +299,6 @@ interface IProps {
 
     // Specifies whether youtube embed player is enabled
     youtubeEmbedPlayer?: boolean;
-
-    // whether or not to show flair at all
-    enableFlair?: boolean;
 
     // whether or not to show read receipts
     showReadReceipts?: boolean;
@@ -516,7 +511,9 @@ export class UnwrappedEventTile extends React.Component<IProps, IState> {
             }
         }
 
-        const room = MatrixClientPeg.get().getRoom(this.props.mxEvent.getRoomId());
+        client.decryptEventIfNeeded(this.props.mxEvent);
+
+        const room = client.getRoom(this.props.mxEvent.getRoomId());
         room?.on(ThreadEvent.New, this.onNewThread);
     }
 
@@ -625,7 +622,7 @@ export class UnwrappedEventTile extends React.Component<IProps, IState> {
          * when we are at the sync stage
          */
         const room = MatrixClientPeg.get().getRoom(this.props.mxEvent.getRoomId());
-        const thread = room?.threads.get(this.props.mxEvent.getId());
+        const thread = room?.threads?.get(this.props.mxEvent.getId());
 
         return thread || null;
     }
@@ -644,12 +641,22 @@ export class UnwrappedEventTile extends React.Component<IProps, IState> {
     }
 
     private renderThreadInfo(): React.ReactNode {
+        if (this.state.thread?.id === this.props.mxEvent.getId()) {
+            return <ThreadSummary mxEvent={this.props.mxEvent} thread={this.state.thread} />;
+        }
+
         if (this.context.timelineRenderingType === TimelineRenderingType.Search && this.props.mxEvent.threadRootId) {
+            if (this.props.highlightLink) {
+                return (
+                    <a className="mx_ThreadSummaryIcon" href={this.props.highlightLink}>
+                        { _t("From a thread") }
+                    </a>
+                );
+            }
+
             return (
                 <p className="mx_ThreadSummaryIcon">{ _t("From a thread") }</p>
             );
-        } else if (this.state.thread?.id === this.props.mxEvent.getId()) {
-            return <ThreadSummary mxEvent={this.props.mxEvent} thread={this.state.thread} />;
         }
     }
 
@@ -1178,18 +1185,19 @@ export class UnwrappedEventTile extends React.Component<IProps, IState> {
             ? undefined
             : this.props.mxEvent.getId();
 
-        let avatar;
-        let sender;
-        let avatarSize;
-        let needsSenderProfile;
+        let avatar: JSX.Element;
+        let sender: JSX.Element;
+        let avatarSize: number;
+        let needsSenderProfile: boolean;
 
         if (!isInfoMessage && scBubbleEnabled && showRight) {
             avatarSize = 0;
             needsSenderProfile = false;
-        } else if (this.context.timelineRenderingType === TimelineRenderingType.Notification ||
-            this.context.timelineRenderingType === TimelineRenderingType.ThreadsList
-        ) {
+        } else if (this.context.timelineRenderingType === TimelineRenderingType.Notification) {
             avatarSize = 24;
+            needsSenderProfile = true;
+        } else if (this.context.timelineRenderingType === TimelineRenderingType.ThreadsList) {
+            avatarSize = 36;
             needsSenderProfile = true;
         } else if (tileHandler === 'messages.RoomCreate' || isBubbleMessage) {
             avatarSize = 0;
@@ -1246,13 +1254,11 @@ export class UnwrappedEventTile extends React.Component<IProps, IState> {
                 sender = <SenderProfile
                     onClick={this.onSenderProfileClick}
                     mxEvent={this.props.mxEvent}
-                    enableFlair={this.props.enableFlair}
                     userNameColorMode={this.props.userNameColorMode}
                 />;
             } else {
                 sender = <SenderProfile
                     mxEvent={this.props.mxEvent}
-                    enableFlair={this.props.enableFlair}
                     userNameColorMode={this.props.userNameColorMode}
                 />;
             }
@@ -1423,7 +1429,8 @@ export class UnwrappedEventTile extends React.Component<IProps, IState> {
                         </a>
                     </div>,
                     <div className={lineClasses} key="mx_EventTile_line">
-                        <EventTileType ref={this.tile}
+                        <EventTileType
+                            ref={this.tile}
                             mxEvent={this.props.mxEvent}
                             highlights={this.props.highlights}
                             highlightLink={this.props.highlightLink}
@@ -1459,9 +1466,7 @@ export class UnwrappedEventTile extends React.Component<IProps, IState> {
                     </div>,
                     <div className="mx_EventTile_senderDetails" key="mx_EventTile_senderDetails">
                         { avatar }
-                        <a href={permalink} onClick={this.onPermalinkClicked}>
-                            { sender }
-                        </a>
+                        { sender }
                     </div>,
                     <div className={lineClasses} key="mx_EventTile_line">
                         { replyChain }
@@ -1478,7 +1483,9 @@ export class UnwrappedEventTile extends React.Component<IProps, IState> {
                             youtubeEmbedPlayer={this.props.youtubeEmbedPlayer}
                         />
                         { actionBar }
-                        { timestamp }
+                        <a href={permalink} onClick={this.onPermalinkClicked}>
+                            { timestamp }
+                        </a>
                     </div>,
                     reactionsRow,
                 ]);

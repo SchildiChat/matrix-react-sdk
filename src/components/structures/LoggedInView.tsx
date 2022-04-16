@@ -60,16 +60,10 @@ import { UPDATE_EVENT } from "../../stores/AsyncStore";
 import RoomView from './RoomView';
 import type { RoomView as RoomViewType } from './RoomView';
 import ToastContainer from './ToastContainer';
-import MyGroups from "./MyGroups";
 import UserView from "./UserView";
-import GroupView from "./GroupView";
 import BackdropPanel from "./BackdropPanel";
-import SpaceStore from "../../stores/spaces/SpaceStore";
-import GroupFilterPanel from './GroupFilterPanel';
-import CustomRoomTagPanel from './CustomRoomTagPanel';
 import { mediaFromMxc } from "../../customisations/Media";
 import { RecheckThemePayload } from '../../dispatcher/payloads/RecheckThemePayload';
-import LegacyCommunityPreview from "./LegacyCommunityPreview";
 import { Layout } from '../../settings/enums/Layout';
 import { UserTab } from "../views/dialogs/UserSettingsDialog";
 import { OpenToTabPayload } from "../../dispatcher/payloads/OpenToTabPayload";
@@ -77,6 +71,7 @@ import RightPanelStore from '../../stores/right-panel/RightPanelStore';
 import { TimelineRenderingType } from "../../contexts/RoomContext";
 import { KeyBindingAction } from "../../accessibility/KeyboardShortcuts";
 import { SwitchSpacePayload } from "../../dispatcher/payloads/SwitchSpacePayload";
+import LegacyGroupView from "./LegacyGroupView";
 import { IConfigOptions } from "../../IConfigOptions";
 import LeftPanelLiveShareWarning from '../views/beacon/LeftPanelLiveShareWarning';
 
@@ -108,11 +103,11 @@ interface IProps {
     collapseLhs: boolean;
     config: IConfigOptions;
     currentUserId?: string;
-    currentGroupId?: string;
-    currentGroupIsNew?: boolean;
     justRegistered?: boolean;
     roomJustCreatedOpts?: IOpts;
     forceTimeline?: boolean; // see props on MatrixChat
+
+    currentGroupId?: string;
 }
 
 interface IState {
@@ -513,7 +508,7 @@ class LoggedInView extends React.Component<IProps, IState> {
                 handled = true;
                 break;
             case KeyBindingAction.ToggleRoomSidePanel:
-                if (this.props.page_type === "room_view" || this.props.page_type === "group_view") {
+                if (this.props.page_type === "room_view") {
                     RightPanelStore.instance.togglePanel();
                     handled = true;
                 }
@@ -548,11 +543,11 @@ class LoggedInView extends React.Component<IProps, IState> {
                     unread: true,
                 });
                 break;
-            case KeyBindingAction.PreviousVisitedRoomOrCommunity:
+            case KeyBindingAction.PreviousVisitedRoomOrSpace:
                 PlatformPeg.get().navigateForwardBack(true);
                 handled = true;
                 break;
-            case KeyBindingAction.NextVisitedRoomOrCommunity:
+            case KeyBindingAction.NextVisitedRoomOrSpace:
                 PlatformPeg.get().navigateForwardBack(false);
                 handled = true;
                 break;
@@ -584,7 +579,6 @@ class LoggedInView extends React.Component<IProps, IState> {
         if (
             !handled &&
             PlatformPeg.get().overrideBrowserShortcuts() &&
-            SpaceStore.spacesEnabled &&
             ev.code.startsWith("Digit") &&
             ev.code !== "Digit0" && // this is the shortcut for reset zoom, don't override it
             isOnlyCtrlOrCmdKeyEvent(ev)
@@ -656,10 +650,6 @@ class LoggedInView extends React.Component<IProps, IState> {
                 />;
                 break;
 
-            case PageTypes.MyGroups:
-                pageElement = <MyGroups />;
-                break;
-
             case PageTypes.HomePage:
                 pageElement = <HomePage justRegistered={this.props.justRegistered} />;
                 break;
@@ -667,16 +657,9 @@ class LoggedInView extends React.Component<IProps, IState> {
             case PageTypes.UserView:
                 pageElement = <UserView userId={this.props.currentUserId} resizeNotifier={this.props.resizeNotifier} />;
                 break;
-            case PageTypes.GroupView:
-                if (SpaceStore.spacesEnabled) {
-                    pageElement = <LegacyCommunityPreview groupId={this.props.currentGroupId} />;
-                } else {
-                    pageElement = <GroupView
-                        groupId={this.props.currentGroupId}
-                        isNew={this.props.currentGroupIsNew}
-                        resizeNotifier={this.props.resizeNotifier}
-                    />;
-                }
+
+            case PageTypes.LegacyGroupView:
+                pageElement = <LegacyGroupView groupId={this.props.currentGroupId} />;
                 break;
         }
 
@@ -708,23 +691,11 @@ class LoggedInView extends React.Component<IProps, IState> {
                         <div className='mx_LeftPanel_outerWrapper'>
                             <LeftPanelLiveShareWarning isMinimized={this.props.collapseLhs || false} />
                             <div className='mx_LeftPanel_wrapper'>
-                                { SettingsStore.getValue('TagPanel.enableTagPanel') &&
-                                (<div className="mx_GroupFilterPanelContainer">
-                                    <BackdropPanel
-                                        blurMultiplier={0.5}
-                                        backgroundImage={this.state.backgroundImage}
-                                    />
-                                    <GroupFilterPanel />
-                                    { SettingsStore.getValue("feature_custom_tags") ? <CustomRoomTagPanel /> : null }
-                                </div>)
-                                }
-                                { SpaceStore.spacesEnabled ? <>
-                                    <BackdropPanel
-                                        blurMultiplier={0.5}
-                                        backgroundImage={this.state.backgroundImage}
-                                    />
-                                    <SpacePanel />
-                                </> : null }
+                                <BackdropPanel
+                                    blurMultiplier={0.5}
+                                    backgroundImage={this.state.backgroundImage}
+                                />
+                                <SpacePanel />
                                 <BackdropPanel
                                     backgroundImage={this.state.backgroundImage}
                                 />

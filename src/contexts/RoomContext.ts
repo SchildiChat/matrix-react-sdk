@@ -47,6 +47,7 @@ const RoomContext = createContext<IRoomState>({
     statusBarVisible: false,
     canReact: false,
     canSendMessages: false,
+    resizing: false,
     layout: Layout.Group,
     singleSideBubbles: false,
     adaptiveSideBubbles: false,
