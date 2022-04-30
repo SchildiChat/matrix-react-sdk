@@ -61,7 +61,7 @@ $left-gutter: 5.4rem;
             }
         }
 
-        > .mx_SenderProfile {
+        > .mx_DisambiguatedProfile {
             line-height: $font-17px;
             padding-left: $left-gutter;
             max-width: unset !important;
@@ -157,7 +157,7 @@ $left-gutter: 5.4rem;
         }
     }
 
-    .mx_SenderProfile {
+    .mx_DisambiguatedProfile {
         text-align: left;
         font-size: $font-15px;
     }
@@ -526,7 +526,7 @@ $left-gutter: 5.4rem;
             z-index: -1; // bring the tail behind the bubble
         }
 
-        > .mx_SenderProfile {
+        > .mx_DisambiguatedProfile {
             // Sender-profile within bubble
             max-width: 100%;
             margin-bottom: 4px;
