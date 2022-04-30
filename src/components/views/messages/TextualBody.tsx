@@ -33,7 +33,6 @@ import { IntegrationManagers } from "../../../integrations/IntegrationManagers";
 import { isPermalinkHost, tryTransformPermalinkToLocalHref } from "../../../utils/permalinks/Permalinks";
 import { copyPlaintext } from "../../../utils/strings";
 import AccessibleTooltipButton from "../elements/AccessibleTooltipButton";
-import { replaceableComponent } from "../../../utils/replaceableComponent";
 import UIStore from "../../../stores/UIStore";
 import { ComposerInsertPayload } from "../../../dispatcher/payloads/ComposerInsertPayload";
 import { Action } from "../../../dispatcher/actions";
@@ -59,7 +58,6 @@ interface IState {
     widgetHidden: boolean;
 }
 
-@replaceableComponent("views.messages.TextualBody")
 export default class TextualBody extends React.Component<IBodyProps, IState> {
     private readonly contentRef = createRef<HTMLSpanElement>();
 
@@ -645,7 +643,7 @@ export default class TextualBody extends React.Component<IBodyProps, IState> {
                     &nbsp;
                     { body }
                     { widgets }
-                    { this.props.scBubbleGroupTimestamp }
+                    { this.props.scBubbleTimestamp }
                 </div>
             );
         }
@@ -657,7 +655,7 @@ export default class TextualBody extends React.Component<IBodyProps, IState> {
                 >
                     { body }
                     { widgets }
-                    { this.props.scBubbleGroupTimestamp }
+                    { this.props.scBubbleTimestamp }
                 </div>
             );
         }
@@ -668,7 +666,7 @@ export default class TextualBody extends React.Component<IBodyProps, IState> {
             >
                 { body }
                 { widgets }
-                { this.props.scBubbleGroupTimestamp }
+                { this.props.scBubbleTimestamp }
             </div>
         );
     }

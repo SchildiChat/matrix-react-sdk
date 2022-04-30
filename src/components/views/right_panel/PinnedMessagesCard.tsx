@@ -32,6 +32,7 @@ import PinnedEventTile from "../rooms/PinnedEventTile";
 import { useRoomState } from "../../../hooks/useRoomState";
 import { UserNameColorMode } from "../../../settings/enums/UserNameColorMode";
 import RoomContext, { TimelineRenderingType } from "../../../contexts/RoomContext";
+import { ReadPinsEventId } from "./types";
 
 interface IProps {
     room: Room;
@@ -57,8 +58,6 @@ export const usePinnedEvents = (room: Room): string[] => {
     }, [update]);
     return pinnedEvents;
 };
-
-export const ReadPinsEventId = "im.vector.room.read_pins";
 
 export const useReadPinnedEvents = (room: Room): Set<string> => {
     const [readPinnedEvents, setReadPinnedEvents] = useState<Set<string>>(new Set());

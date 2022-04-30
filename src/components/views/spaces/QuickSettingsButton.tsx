@@ -27,8 +27,7 @@ import { useSettingValue } from "../../../hooks/useSettings";
 import { onMetaSpaceChangeFactory } from "../settings/tabs/user/SidebarUserSettingsTab";
 import defaultDispatcher from "../../../dispatcher/dispatcher";
 import { Action } from "../../../dispatcher/actions";
-import { UserTab } from "../dialogs/UserSettingsDialog";
-// import QuickThemeSwitcher from "./QuickThemeSwitcher";
+import { UserTab } from "../dialogs/UserTab";
 import { Icon as PinUprightIcon } from '../../../../res/img/element-icons/room/pin-upright.svg';
 import { Icon as EllipsisIcon } from '../../../../res/img/element-icons/room/ellipsis.svg';
 import { Icon as MembersIcon } from '../../../../res/img/element-icons/room/members.svg';
@@ -36,7 +35,7 @@ import { Icon as FavoriteIcon } from '../../../../res/img/element-icons/roomlist
 import SettingsStore from "../../../settings/SettingsStore";
 import Modal from "../../../Modal";
 import DevtoolsDialog from "../dialogs/DevtoolsDialog";
-import RoomViewStore from "../../../stores/RoomViewStore";
+import { RoomViewStore } from "../../../stores/RoomViewStore";
 
 const QuickSettingsButton = ({ isPanelCollapsed = false }) => {
     const [menuDisplayed, handle, openMenu, closeMenu] = useContextMenu<HTMLDivElement>();
@@ -72,7 +71,7 @@ const QuickSettingsButton = ({ isPanelCollapsed = false }) => {
                     onClick={() => {
                         closeMenu();
                         Modal.createDialog(DevtoolsDialog, {
-                            roomId: RoomViewStore.getRoomId(),
+                            roomId: RoomViewStore.instance.getRoomId(),
                         }, "mx_DevtoolsDialog_wrapper");
                     }}
                     kind="danger_outline"

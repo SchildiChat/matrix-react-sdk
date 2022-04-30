@@ -21,7 +21,6 @@ import { logger } from "matrix-js-sdk/src/logger";
 import { _t } from '../../../languageHandler';
 import Modal from '../../../Modal';
 import AccessibleButton from "../elements/AccessibleButton";
-import { replaceableComponent } from "../../../utils/replaceableComponent";
 import { mediaFromContent } from "../../../customisations/Media";
 import ErrorDialog from "../dialogs/ErrorDialog";
 import { presentableTextForFile } from "../../../utils/FileUtils";
@@ -106,7 +105,6 @@ interface IState {
     decryptedBlob?: Blob;
 }
 
-@replaceableComponent("views.messages.MFileBody")
 export default class MFileBody extends React.Component<IProps, IState> {
     static contextType = RoomContext;
     public context!: React.ContextType<typeof RoomContext>;
@@ -252,7 +250,7 @@ export default class MFileBody extends React.Component<IProps, IState> {
                                 { _t("Decrypt %(text)s", { text: this.linkText }) }
                             </AccessibleButton>
                         </div> }
-                        { this.props.scBubbleGroupTimestamp }
+                        { this.props.scBubbleTimestamp }
                     </span>
                 );
             }
@@ -290,7 +288,7 @@ export default class MFileBody extends React.Component<IProps, IState> {
                             ref={this.iframe}
                             sandbox="allow-scripts allow-downloads allow-downloads-without-user-activation" />
                     </div> }
-                    { this.props.scBubbleGroupTimestamp }
+                    { this.props.scBubbleTimestamp }
                 </span>
             );
         } else if (contentUrl) {
@@ -352,7 +350,7 @@ export default class MFileBody extends React.Component<IProps, IState> {
                             </div>
                         ) }
                     </div> }
-                    { this.props.scBubbleGroupTimestamp }
+                    { this.props.scBubbleTimestamp }
                 </span>
             );
         } else {
@@ -360,7 +358,7 @@ export default class MFileBody extends React.Component<IProps, IState> {
             return <span className="mx_MFileBody">
                 { placeholder }
                 { _t("Invalid file%(extra)s", { extra: extra }) }
-                { this.props.scBubbleGroupTimestamp }
+                { this.props.scBubbleTimestamp }
             </span>;
         }
     }

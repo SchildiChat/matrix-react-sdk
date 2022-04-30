@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 import React from "react";
-import { replaceableComponent } from "../../../utils/replaceableComponent";
+
 import SvgSpinner from "./SvgSpinner";
 
 interface IProps {
@@ -24,7 +24,6 @@ interface IProps {
     children?: React.ReactNode;
 }
 
-@replaceableComponent("views.elements.InlineSpinner")
 export default class InlineSpinner extends React.PureComponent<IProps> {
     static defaultProps = {
         w: 32,

@@ -25,7 +25,6 @@ import { linkifyElement } from '../../../HtmlUtils';
 import SettingsStore from "../../../settings/SettingsStore";
 import Modal from "../../../Modal";
 import * as ImageUtils from "../../../ImageUtils";
-import { replaceableComponent } from "../../../utils/replaceableComponent";
 import { mediaFromMxc } from "../../../customisations/Media";
 import ImageView from '../elements/ImageView';
 import { ImageSize, suggestedSize as suggestedVideoSize } from "../../../settings/enums/ImageSize";
@@ -37,7 +36,6 @@ interface IProps {
     youtubeEmbedPlayer?: boolean; // whether youtube embeds are enabled
 }
 
-@replaceableComponent("views.rooms.LinkPreviewWidget")
 export default class LinkPreviewWidget extends React.Component<IProps> {
     private readonly description = createRef<HTMLDivElement>();
     private image = createRef<HTMLImageElement>();

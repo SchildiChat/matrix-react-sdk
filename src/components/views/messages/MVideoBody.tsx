@@ -21,9 +21,8 @@ import { logger } from "matrix-js-sdk/src/logger";
 import { _t } from '../../../languageHandler';
 import SettingsStore from "../../../settings/SettingsStore";
 import InlineSpinner from '../elements/InlineSpinner';
-import { replaceableComponent } from "../../../utils/replaceableComponent";
 import { mediaFromContent } from "../../../customisations/Media";
-import { BLURHASH_FIELD } from "../../../ContentMessages";
+import { BLURHASH_FIELD } from "../../../utils/image-media";
 import { IMediaEventContent } from "../../../customisations/models/IMediaEventContent";
 import { IBodyProps } from "./IBodyProps";
 import MFileBody from "./MFileBody";
@@ -40,7 +39,6 @@ interface IState {
     blurhashUrl: string;
 }
 
-@replaceableComponent("views.messages.MVideoBody")
 export default class MVideoBody extends React.PureComponent<IBodyProps, IState> {
     static contextType = RoomContext;
     public context!: React.ContextType<typeof RoomContext>;
@@ -247,7 +245,7 @@ export default class MVideoBody extends React.PureComponent<IBodyProps, IState> 
                     { _t("Error decrypting video") }
                     { this.props.scBubbleActionBar }
                 </span>
-                { this.props.scBubbleGroupTimestamp }
+                { this.props.scBubbleTimestamp }
             </>);
         }
 
@@ -264,7 +262,7 @@ export default class MVideoBody extends React.PureComponent<IBodyProps, IState> 
                     { this.props.scBubbleActionBar }
                     { spaceFiller }
                 </span>
-                { this.props.scBubbleGroupTimestamp }
+                { this.props.scBubbleTimestamp }
             </>;
         }
 

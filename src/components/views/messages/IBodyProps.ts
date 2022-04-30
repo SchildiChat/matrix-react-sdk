@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import React, { LegacyRef } from "react";
 import { MatrixEvent } from "matrix-js-sdk/src/models/event";
 import { Relations } from "matrix-js-sdk/src/models/relations";
 
@@ -35,6 +36,11 @@ export interface IBodyProps {
     onHeightChanged: () => void;
 
     showUrlPreview?: boolean;
+    layout?: Layout;
+    youtubeEmbedPlayer?: boolean;
+    scBubble?: boolean;
+    scBubbleTimestamp?: any;
+    scBubbleActionBar?: any;
     forExport?: boolean;
     maxImageHeight?: number;
     replacingEventId?: string;
@@ -42,11 +48,6 @@ export interface IBodyProps {
     onMessageAllowed: () => void; // TODO: Docs
     permalinkCreator: RoomPermalinkCreator;
     mediaEventHelper: MediaEventHelper;
-    layout: Layout;
-    scBubble: boolean;
-    scBubbleGroupTimestamp: any;
-    scBubbleActionBar: any;
-    youtubeEmbedPlayer?: boolean;
 
     /*
     If present and `true`, the message has been marked as hidden pending moderation
@@ -58,4 +59,6 @@ export interface IBodyProps {
 
     // helper function to access relations for this event
     getRelationsForEvent?: (eventId: string, relationType: string, eventType: string) => Relations;
+
+    ref?: React.RefObject<any> | LegacyRef<any>;
 }

@@ -39,7 +39,7 @@ import { ClientEvent } from "matrix-js-sdk/src/client";
 
 import { StopGapWidgetDriver } from "./StopGapWidgetDriver";
 import { WidgetMessagingStore } from "./WidgetMessagingStore";
-import RoomViewStore from "../RoomViewStore";
+import { RoomViewStore } from "../RoomViewStore";
 import { MatrixClientPeg } from "../../MatrixClientPeg";
 import { OwnProfileStore } from "../OwnProfileStore";
 import WidgetUtils from '../../utils/WidgetUtils';
@@ -53,7 +53,6 @@ import { Action } from "../../dispatcher/actions";
 import { ElementWidgetActions, IViewRoomApiRequest } from "./ElementWidgetActions";
 import { ModalWidgetStore } from "../ModalWidgetStore";
 import ThemeWatcher from "../../settings/watchers/ThemeWatcher";
-import { getCustomTheme } from "../../theme";
 import { ElementWidgetCapabilities } from "./ElementWidgetCapabilities";
 import { ELEMENT_CLIENT_ID } from "../../identifiers";
 import { getUserLanguage } from "../../languageHandler";
@@ -162,7 +161,7 @@ export class StopGapWidget extends EventEmitter {
 
         if (this.roomId) return this.roomId;
 
-        return RoomViewStore.getRoomId();
+        return RoomViewStore.instance.getRoomId();
     }
 
     public get widgetApi(): ClientWidgetApi {
@@ -348,13 +347,13 @@ export class StopGapWidget extends EventEmitter {
                     // TODO: Open the right integration manager for the widget
                     if (SettingsStore.getValue("feature_many_integration_managers")) {
                         IntegrationManagers.sharedInstance().openAll(
-                            MatrixClientPeg.get().getRoom(RoomViewStore.getRoomId()),
+                            MatrixClientPeg.get().getRoom(RoomViewStore.instance.getRoomId()),
                             `type_${integType}`,
                             integId,
                         );
                     } else {
                         IntegrationManagers.sharedInstance().getPrimaryManager().open(
-                            MatrixClientPeg.get().getRoom(RoomViewStore.getRoomId()),
+                            MatrixClientPeg.get().getRoom(RoomViewStore.instance.getRoomId()),
                             `type_${integType}`,
                             integId,
                         );

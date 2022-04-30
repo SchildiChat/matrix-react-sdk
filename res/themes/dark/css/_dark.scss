@@ -6,13 +6,10 @@ $tertiary-content: #808080;
 $quaternary-content: #757575;
 $quinary-content: #424242;
 
-$system: #383838;
-$background: #212121;
 
 $panel-base: #808080; // This color is not intended for use in the app
 $panels: rgba($system, 0.9);
 $panel-selected: rgba($panel-base, 0.3);
-$panel-hover: rgba($panel-base, 0.1);
 $panel-actions: rgba($panel-base, 0.2);
 $space-nav: rgba($panel-base, 0.1);
 // ********************

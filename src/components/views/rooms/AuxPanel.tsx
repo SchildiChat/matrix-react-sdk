@@ -29,7 +29,6 @@ import { UIFeature } from "../../../settings/UIFeature";
 import ResizeNotifier from "../../../utils/ResizeNotifier";
 import CallViewForRoom from '../voip/CallViewForRoom';
 import { objectHasDiff } from "../../../utils/objects";
-import { replaceableComponent } from "../../../utils/replaceableComponent";
 
 interface IProps {
     // js-sdk room object
@@ -56,7 +55,6 @@ interface IState {
     counters: Counter[];
 }
 
-@replaceableComponent("views.rooms.AuxPanel")
 export default class AuxPanel extends React.Component<IProps, IState> {
     static defaultProps = {
         showApps: true,

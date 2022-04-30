@@ -17,11 +17,9 @@ limitations under the License.
 import React from 'react';
 
 import MImageBody from './MImageBody';
-import { replaceableComponent } from "../../../utils/replaceableComponent";
-import { BLURHASH_FIELD } from "../../../ContentMessages";
+import { BLURHASH_FIELD } from "../../../utils/image-media";
 import Tooltip from "../elements/Tooltip";
 
-@replaceableComponent("views.messages.MStickerBody")
 export default class MStickerBody extends MImageBody {
     // Mostly empty to prevent default behaviour of MImageBody
     protected onClick = (ev: React.MouseEvent) => {
@@ -39,7 +37,7 @@ export default class MStickerBody extends MImageBody {
             onClick = this.onClick;
         }
         const wrapper = <div className="mx_MStickerBody_wrapper" onClick={onClick}> { children } </div>;
-        return [wrapper, this.props.scBubbleGroupTimestamp];
+        return [wrapper, this.props.scBubbleTimestamp];
     }
 
     // Placeholder to show in place of the sticker image if

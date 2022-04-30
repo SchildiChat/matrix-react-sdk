@@ -16,7 +16,6 @@ limitations under the License.
 
 import React, { ChangeEvent } from 'react';
 
-import EventTilePreview from '../elements/EventTilePreview';
 import Field from '../elements/Field';
 import SettingsFlag from '../elements/SettingsFlag';
 import SettingsStore from "../../../settings/SettingsStore";
@@ -27,7 +26,6 @@ import { Layout } from "../../../settings/enums/Layout";
 import { MatrixClientPeg } from '../../../MatrixClientPeg';
 import { SettingLevel } from "../../../settings/SettingLevel";
 import { _t } from "../../../languageHandler";
-import { replaceableComponent } from "../../../utils/replaceableComponent";
 import SdkConfig from '../../../SdkConfig';
 
 interface IProps {
@@ -50,10 +48,7 @@ interface IState {
     systemFont: string;
 }
 
-@replaceableComponent("views.settings.tabs.user.FontScalingPanel")
 export default class FontScalingPanel extends React.Component<IProps, IState> {
-    private readonly MESSAGE_PREVIEW_TEXT = _t("Hey you. You're the best!");
-
     private unmounted = false;
 
     constructor(props: IProps) {

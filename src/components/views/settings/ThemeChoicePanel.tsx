@@ -29,7 +29,6 @@ import { Action } from '../../../dispatcher/actions';
 import Field from '../elements/Field';
 import StyledRadioGroup from "../elements/StyledRadioGroup";
 import { SettingLevel } from "../../../settings/SettingLevel";
-import { replaceableComponent } from "../../../utils/replaceableComponent";
 import PosthogTrackers from "../../../PosthogTrackers";
 
 import StyledRadioButton from '../elements/StyledRadioButton';
@@ -59,7 +58,6 @@ interface IState extends IThemeState {
     userNameColorModePublic: UserNameColorMode;
 }
 
-@replaceableComponent("views.settings.tabs.user.ThemeChoicePanel")
 export default class ThemeChoicePanel extends React.Component<IProps, IState> {
     private themeTimer: number;
 
