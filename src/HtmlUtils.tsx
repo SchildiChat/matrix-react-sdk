@@ -219,7 +219,7 @@ const transformTags: IExtendedSanitizeOptions["transformTags"] = { // custom to 
         const height = Math.min(requestedHeight || 600, 600);
         // specify width/height as max values instead of absolute ones to allow object-fit to do its thing
         // we only allow our own styles for this tag so overwrite the attribute
-        attribs.style = `max-width: ${width}px; max-height: ${height}px;`;
+        attribs.style = `max-width: min(100%, ${width}px); max-height: ${height}px;`;
         if (requestedWidth) {
             attribs.style += "width: 100%;";
         }
