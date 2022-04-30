@@ -41,7 +41,6 @@ interface IProps {
 export default class LinkPreviewWidget extends React.Component<IProps> {
     private readonly description = createRef<HTMLDivElement>();
     private image = createRef<HTMLImageElement>();
-    private sizeWatcher: string;
 
     componentDidMount() {
         this.sizeWatcher = SettingsStore.watchSetting("Images.size", null, () => {
@@ -57,10 +56,6 @@ export default class LinkPreviewWidget extends React.Component<IProps> {
         if (this.description.current) {
             linkifyElement(this.description.current);
         }
-    }
-
-    private suggestedDimensions(isPortrait): { w: number, h: number } {
-        return suggestedVideoSize(SettingsStore.getValue("Images.size") as ImageSize);
     }
 
     private onImageClick = ev => {
@@ -143,7 +138,10 @@ export default class LinkPreviewWidget extends React.Component<IProps> {
                 videoID = this.props.link.split("youtu.be/")[1].split("&")[0];
             }
 
-            const restrictedDims = this.suggestedDimensions(false);
+            const restrictedDims = suggestedVideoSize(
+                SettingsStore.getValue("Images.size") as ImageSize,
+                { w: p["og:image:width"], h: p["og:image:height"] },
+            );
 
             return (
                 <div className="mx_LinkPreviewWidget sc_LinkPreviewWidget_youtubeEmbed">
