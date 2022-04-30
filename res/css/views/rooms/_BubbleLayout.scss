@@ -232,10 +232,10 @@ $left-gutter: 5.4rem;
     // No unnecessary horizontal scrolling of code blocks
     .markdown-body {
         pre {
-            padding-left: calc(16px + 1em);
+            padding-left: 1.5em;
 
-            .mx_EventTile_lineNumber {
-                padding-left: 0;
+            .mx_EventTile_lineNumbers {
+                margin-left: -2em;
             }
         }
     }
