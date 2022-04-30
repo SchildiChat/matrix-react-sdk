@@ -26,9 +26,9 @@ $left-gutter: 5.4rem;
     }
 
     .mx_RoomTile {
-        .mx_RoomTile_nameContainer {
-            .mx_RoomTile_name,
-            .mx_RoomTile_messagePreview {
+        .mx_RoomTile_titleContainer {
+            .mx_RoomTile_title,
+            .mx_RoomTile_subtitle {
                 margin: 2px 2px;
             }
         }

@@ -51,7 +51,6 @@ limitations under the License.
     }
 
     .mx_RoomTile_titleContainer {
-        height: 32px;
         min-width: 0;
         flex-basis: 0;
         flex-grow: 1;
@@ -235,13 +234,13 @@ limitations under the License.
         }
     }
 
-    .mx_RoomTile_nameContainer {
+    .mx_RoomTile_titleContainer {
         max-height: 4.8rem; // same as avatar
 
-        .mx_RoomTile_messagePreview {
+        .mx_RoomTile_subtitle {
             font-size: 1.3rem;
             line-height: 1.6rem;
-            max-height: 2 * 1.6rem;
+            max-height: calc(2 * 1.6rem);
             white-space: unset;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -249,7 +248,7 @@ limitations under the License.
             margin-bottom: -.3rem; // shift the preview down a bit more
         }
 
-        .mx_RoomTile_nameWithPreview {
+        .mx_RoomTile_titleWithSubtitle {
             margin-top: -.4rem; // shift the name up a bit more
         }
     }
@@ -271,17 +270,17 @@ limitations under the License.
         }
     }
 
-    .mx_RoomTile_nameContainer {
+    .mx_RoomTile_titleContainer {
         max-height: 3.2rem; // same as avatar
 
-        .mx_RoomTile_messagePreview {
+        .mx_RoomTile_subtitle {
             font-size: 1.3rem;
             line-height: 1.8rem;
             max-height: 1.8rem;
             margin-bottom: -.4rem; // shift the preview down a bit more
         }
 
-        .mx_RoomTile_nameWithPreview {
+        .mx_RoomTile_titleWithSubtitle {
             margin-top: -.4rem; // shift the name up a bit more
         }
     }
@@ -307,29 +306,30 @@ limitations under the License.
         }
     }
 
-    .mx_RoomTile_nameContainer {
+    .mx_RoomTile_titleContainer {
         display: inline;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         margin-right: .4rem; // spacing to buttons/badges
 
-        .mx_RoomTile_name,
-        .mx_RoomTile_messagePreview {
+        .mx_RoomTile_title,
+        .mx_RoomTile_subtitle {
             display: inline;
             text-overflow: unset;
+            margin: 0 .2rem;
         }
 
-        .mx_RoomTile_name {
+        .mx_RoomTile_title {
             font-size: 1.4rem;
             line-height: 2.2rem;
         }
 
-        .mx_RoomTile_name.mx_RoomTile_nameHasUnreadEvents {
+        .mx_RoomTile_title.mx_RoomTile_titleHasUnreadEvents {
             font-weight: 600;
         }
 
-        .mx_RoomTile_messagePreview {
+        .mx_RoomTile_subtitle {
             font-size: 1.3rem;
             line-height: 2.2rem;
         }
