@@ -33,13 +33,11 @@ $focus-bg-color: #dddddd;
 $accent-fg-color: #ffffff;
 $accent-alt: #368bd6;
 
-$accent: #8BC34A;
-
 $selection-fg-color: $primary-bg-color;
 
 $focus-brightness: 105%;
 
-$other-user-pill-bg-color: rgba(0, 0, 0, 0.1);
+$other-user-pill-bg-color: rgba(0, 0, 0, 0.13);
 
 // informational plinth
 $info-plinth-bg-color: #f7f7f7;
@@ -119,7 +117,7 @@ $settings-subsection-fg-color: #616161;
 
 $rte-bg-color: #e0e0e0;
 $rte-code-bg-color: rgba(0, 0, 0, 0.04);
-$rte-room-pill-color: rgba(0, 0, 0, 0.1);
+$rte-room-pill-color: rgba(0, 0, 0, 0.13);
 
 $header-panel-text-primary-color: #757575;
 
@@ -135,7 +133,7 @@ $room-icon-unread-color: #757575;
 
 $theme-button-bg-color: #e0e0e0;
 
-$roomtile-default-badge-bg-color: $accent;
+$roomtile-default-badge-bg-color: #8BC34A;
 $roomtile-selected-bg-color: #fff;
 
 $presence-away: #d9b072;
@@ -143,6 +141,7 @@ $presence-offline: #bdbdbd;
 $presence-busy: #FF5B55;
 
 // Legacy theme backports
+$accent: #8BC34A;
 $alert: #FF5B55;
 $links: #0086e6;
 $primary-content: $primary-fg-color;
@@ -254,7 +253,7 @@ $authpage-lang-color: #424242;
 $authpage-primary-color: #212121;
 $authpage-secondary-color: #616161;
 
-$dark-panel-bg-color: $roomlist-bg-color;
+$dark-panel-bg-color: $secondary-accent-color;
 $panel-gradient: rgba(248, 248, 248, 0), rgba(248, 248, 248, 1);
 
 $message-action-bar-bg-color: $primary-bg-color;
@@ -263,7 +262,6 @@ $message-action-bar-border-color: #e0e0e0;
 $message-action-bar-hover-border-color: $focus-bg-color;
 
 $reaction-row-button-hover-border-color: $focus-bg-color;
-$reaction-row-button-selected-bg-color: #DCEDC8;
 $reaction-row-button-selected-bg-color: #DCEDC8;
 
 $kbd-border-color: $message-action-bar-border-color;

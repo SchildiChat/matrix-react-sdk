@@ -27,8 +27,8 @@ $light-fg-color: $header-panel-text-secondary-color;
 // used for focusing form controls
 $focus-bg-color: $room-highlight-color;
 
-$other-user-pill-bg-color: rgba(255, 255, 255, 0.12);
-$rte-room-pill-color: rgba(255, 255, 255, 0.12);
+$other-user-pill-bg-color: rgba(255, 255, 255, 0.15);
+$rte-room-pill-color: rgba(255, 255, 255, 0.15);
 
 // informational plinth
 $info-plinth-bg-color: $header-panel-bg-color;
@@ -127,7 +127,7 @@ $roomsublist-skeleton-ui-bg: linear-gradient(180deg, #424242 0%, #42424200 100%)
 
 $spacePanel-divider-color: $tertiary-content;
 
-$roomtile-default-badge-bg-color: $accent;
+$roomtile-default-badge-bg-color: #8BC34A;
 $roomtile-selected-bg-color: #303030;
 
 // ********************

@@ -6,10 +6,15 @@ $tertiary-content: #808080;
 $quaternary-content: #757575;
 $quinary-content: #424242;
 
+$system: #383838;
+$system-transparent: rgba($system, 0.0); // XXX: workaround for Safari 15.3 linear-gradient bug
+$background: #212121;
+$overlay-background: rgba($background, 0.85);
 
 $panel-base: #808080; // This color is not intended for use in the app
 $panels: rgba($system, 0.9);
 $panel-selected: rgba($panel-base, 0.3);
+$panel-hover: rgba($panel-base, 0.1);
 $panel-actions: rgba($panel-base, 0.2);
 $space-nav: rgba($panel-base, 0.1);
 // ********************
@@ -89,8 +94,8 @@ $roomheader-addroom-fg-color: $primary-content;
 
 // Rich-text-editor
 // ********************
-$rte-room-pill-color: rgba(255, 255, 255, 0.12);
-$other-user-pill-bg-color: rgba(255, 255, 255, 0.12);
+$rte-room-pill-color: rgba(255, 255, 255, 0.15);
+$other-user-pill-bg-color: rgba(255, 255, 255, 0.15);
 // ********************
 
 // Inputs
@@ -113,7 +118,7 @@ $dialog-close-external-color: $primary-content;
 // ********************
 $roomlist-bg-color: rgba($system, 0.90);
 $roomsublist-skeleton-ui-bg: linear-gradient(180deg, #424242 0%, #42424200 100%);
-$roomtile-default-badge-bg-color: $accent;
+$roomtile-default-badge-bg-color: #8BC34A;
 // ********************
 
 // Tabbed views
@@ -158,8 +163,10 @@ $reaction-row-button-selected-bg-color: #33691E;
 // ********************
 $voice-record-stop-border-color: $quaternary-content;
 $voice-record-icon-color: $quaternary-content;
+// ********************
 
 // Message bubbles
+// ********************
 $message-bubble-background: #424242;
 $message-bubble-background-self: #303030;
 $message-bubble-background-selected: #3F4931;

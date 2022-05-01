@@ -155,8 +155,8 @@ $roomheader-addroom-fg-color: #616161;
 
 // Rich-text-editor
 // ********************
-$rte-room-pill-color: rgba(0, 0, 0, 0.1);
-$other-user-pill-bg-color: rgba(0, 0, 0, 0.1);
+$rte-room-pill-color: rgba(0, 0, 0, 0.13);
+$other-user-pill-bg-color: rgba(0, 0, 0, 0.13);
 $rte-bg-color: #e0e0e0;
 $rte-code-bg-color: rgba(0, 0, 0, 0.04);
 // ********************
@@ -198,7 +198,7 @@ $imagebody-giflabel-color: $background;
 // ********************
 $roomlist-bg-color: rgba(245, 245, 245, 0.90);
 $roomsublist-skeleton-ui-bg: linear-gradient(180deg, $background 0%, #ffffff00 100%);
-$roomtile-default-badge-bg-color: $accent;
+$roomtile-default-badge-bg-color: #8BC34A;
 // ********************
 
 // e2e

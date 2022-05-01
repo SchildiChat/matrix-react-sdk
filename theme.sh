@@ -27,12 +27,12 @@ replace_colors() {
     if [[ "$f" =~ "dark" ]]; then
         BG_ACCENT="$M_ACCENT_DARK"
         CODEBLOCK_BACKGROUND_COLOR="#121212"
-        PILL_COLOR="rgba(255, 255, 255, 0.12)"
+        PILL_COLOR="rgba(255, 255, 255, 0.15)"
         PRESENCE_OFFLINE="#e0e0e0" # not applied because not existing specifically for dark
     else
         BG_ACCENT="$M_ACCENT_LIGHT"
         CODEBLOCK_BACKGROUND_COLOR="#00000010"
-        PILL_COLOR="rgba(0, 0, 0, 0.1)" # default
+        PILL_COLOR="rgba(0, 0, 0, 0.13)" # default
         PRESENCE_OFFLINE="#bdbdbd" # for light this should actually be darker
     fi
     # Neutral colors
@@ -123,9 +123,8 @@ replace_colors() {
     sed -i "s|rgba(3, 179, 129,|rgba($M_ACCENT_DEC,|gi" "$f"
     sed -i "s|\\(\$accent-alt: \\).*;|\\1$M_LINK;|gi" "$f"
     #sed -i "s|\\(\$accent-darker: \\).*;|\\1$M_ACCENT_DARK;|gi" "$f"
-    sed -i "s|\\(\$roomtile-default-badge-bg-color: \\).*;|\\1\$accent;|gi" "$f"
+    sed -i "s|\\(\$roomtile-default-badge-bg-color: \\).*;|\\1$M_ACCENT;|gi" "$f"
     #sed -i "s|\\(\$input-focused-border-color: \\).*;|\\1\$accent;|gi" "$f" # not existing anymore, need replacement?
-    sed -i "s|\\(\$reaction-row-button-selected-bg-color: \\).*;|\\1$BG_ACCENT;|gi" "$f"
     sed -i "s|\\(\$reaction-row-button-selected-bg-color: \\).*;|\\1$BG_ACCENT;|gi" "$f"
 }
 
