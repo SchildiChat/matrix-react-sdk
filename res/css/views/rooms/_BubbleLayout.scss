@@ -298,7 +298,7 @@ $left-gutter: 5.4rem;
             overflow: hidden;
         }
         
-        .sc_MVideoBody_video_container {
+        .mx_MVideoBody_container {
             border-color: $event-timestamp-color !important;
         }
     }
@@ -390,7 +390,7 @@ $left-gutter: 5.4rem;
         border-radius: unset;
     }
 
-    .mx_MImageBody, .sc_MVideoBody_video_container {
+    .mx_MImageBody, .mx_MVideoBody_container {
         box-sizing: border-box;
         border: 1px solid $message-bubble-background;
     }
@@ -403,6 +403,7 @@ $left-gutter: 5.4rem;
         display: block;
         position: relative;
         text-align: right;
+        overflow: visible;
 
         video.mx_MVideoBody {
             display: block;
@@ -441,7 +442,7 @@ $left-gutter: 5.4rem;
         }
     }
 
-    .sc_MVideoBody_video_container {
+    .mx_MVideoBody_container {
         display: block;
         border-radius: $border-radius-4px;
         overflow: hidden;
@@ -859,7 +860,7 @@ $left-gutter: 5.4rem;
             }
 
             > span.mx_MVideoBody {
-                .sc_MVideoBody_video_container {
+                .mx_MVideoBody_container {
                     background: $accent;
                     border-radius: $border-radius-4px;
                     display: block;

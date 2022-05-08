@@ -239,14 +239,14 @@ export default class MVideoBody extends React.PureComponent<IBodyProps, IState> 
         const spaceFiller = <div style={{ width: maxWidth, height: maxHeight }} />;
 
         if (this.state.error !== null) {
-            return (<>
+            return (
                 <span className="mx_MVideoBody">
                     <img src={require("../../../../res/img/warning.svg").default} width="16" height="16" />
                     { _t("Error decrypting video") }
                     { this.props.scBubbleActionBar }
+                    { this.props.scBubbleTimestamp }
                 </span>
-                { this.props.scBubbleTimestamp }
-            </>);
+            );
         }
 
         // Important: If we aren't autoplaying and we haven't decrypted it yet, show a video with a poster.
@@ -254,16 +254,16 @@ export default class MVideoBody extends React.PureComponent<IBodyProps, IState> 
             // Need to decrypt the attachment
             // The attachment is decrypted in componentDidMount.
             // For now show a spinner.
-            return <>
+            return (
                 <span className="mx_MVideoBody">
                     <div className="mx_MVideoBody_container" style={{ maxWidth, maxHeight, aspectRatio }}>
                         <InlineSpinner />
                     </div>
-                    { this.props.scBubbleActionBar }
                     { spaceFiller }
+                    { this.props.scBubbleActionBar }
+                    { this.props.scBubbleTimestamp }
                 </span>
-                { this.props.scBubbleTimestamp }
-            </>;
+            );
         }
 
         const contentUrl = this.getContentUrl();
@@ -294,6 +294,8 @@ export default class MVideoBody extends React.PureComponent<IBodyProps, IState> 
                     { spaceFiller }
                 </div>
                 { fileBody }
+                { this.props.scBubbleActionBar }
+                { this.props.scBubbleTimestamp }
             </span>
         );
     }
