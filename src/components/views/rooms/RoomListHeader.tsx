@@ -299,6 +299,7 @@ const RoomListHeader = ({ onVisibilityChange }: IProps) => {
                         e.preventDefault();
                         e.stopPropagation();
                         defaultDispatcher.dispatch({ action: "view_create_chat" });
+                        PosthogTrackers.trackInteraction("WebRoomListHeaderPlusMenuCreateChatItem", e);
                         closePlusMenu();
                     }}
                 />
@@ -329,20 +330,21 @@ const RoomListHeader = ({ onVisibilityChange }: IProps) => {
             </>;
         }
         // SC: Added beneath search all spaces
-        // if (canExploreRooms) {
-        //     joinRoomOpt = (
-        //         <IconizedContextMenuOption
-        //             label={_t("Join public room")}
-        //             iconClassName="mx_RoomListHeader_iconExplore"
-        //             onClick={(e) => {
-        //                 e.preventDefault();
-        //                 e.stopPropagation();
-        //                 defaultDispatcher.dispatch({ action: Action.ViewRoomDirectory });
-        //                 closePlusMenu();
-        //             }}
-        //         />
-        //     );
-        // }
+        if (canExploreRooms) {
+            joinRoomOpt = (
+                <IconizedContextMenuOption
+                    label={_t("Join public room")}
+                    iconClassName="mx_RoomListHeader_iconExplore"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        defaultDispatcher.dispatch({ action: Action.ViewRoomDirectory });
+                        PosthogTrackers.trackInteraction("WebRoomListHeaderPlusMenuExploreRoomsItem", e);
+                        closePlusMenu();
+                    }}
+                />
+            );
+        }
 
         contextMenu = <IconizedContextMenu
             {...contextMenuBelow(plusMenuHandle.current.getBoundingClientRect())}

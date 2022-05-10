@@ -17,6 +17,7 @@ limitations under the License.
 
 import { AllHtmlEntities } from 'html-entities';
 import cheerio from 'cheerio';
+import escapeHtml from "escape-html";
 import _ from 'lodash';
 
 import Markdown from '../Markdown';
@@ -53,7 +54,19 @@ export function mdSerialize(model: EditorModel): string {
     }, "");
 }
 
-export function htmlSerializeIfNeeded(model: EditorModel, { forceHTML = false } = {}): string {
+interface ISerializeOpts {
+    forceHTML?: boolean;
+    useMarkdown?: boolean;
+}
+
+export function htmlSerializeIfNeeded(
+    model: EditorModel,
+    { forceHTML = false, useMarkdown = true }: ISerializeOpts = {},
+): string {
+    if (!useMarkdown) {
+        return escapeHtml(textSerialize(model)).replace(/\n/g, '<br/>');
+    }
+
     let md = mdSerialize(model);
     // copy of raw input to remove unwanted math later
     const orig = md;

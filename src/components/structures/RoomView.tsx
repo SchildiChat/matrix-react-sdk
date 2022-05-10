@@ -75,8 +75,7 @@ import EffectsOverlay from "../views/elements/EffectsOverlay";
 import { containsEmoji } from '../../effects/utils';
 import { CHAT_EFFECTS } from '../../effects';
 import WidgetStore from "../../stores/WidgetStore";
-import { getVideoChannel } from "../../utils/VideoChannelUtils";
-import AppTile from "../views/elements/AppTile";
+import VideoRoomView from "./VideoRoomView";
 import { UPDATE_EVENT } from "../../stores/AsyncStore";
 import Notifier from "../../Notifier";
 import { showToast as showNotificationsToast } from "../../toasts/DesktopNotificationsToast";
@@ -182,9 +181,7 @@ export interface IRoomState {
     // this is true if we are fully scrolled-down, and are looking at
     // the end of the live timeline. It has the effect of hiding the
     // 'scroll to bottom' knob, among a couple of other things.
-    atEndOfLiveTimeline: boolean;
-    // used by componentDidUpdate to avoid unnecessary checks
-    atEndOfLiveTimelineInit: boolean;
+    atEndOfLiveTimeline?: boolean;
     showTopUnreadMessagesBar: boolean;
     statusBarVisible: boolean;
     // We load this later by asking the js-sdk to suggest a version for us.
@@ -264,8 +261,6 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             isPeeking: false,
             showRightPanel: false,
             joining: false,
-            atEndOfLiveTimeline: true,
-            atEndOfLiveTimelineInit: false,
             showTopUnreadMessagesBar: false,
             statusBarVisible: false,
             canReact: false,
@@ -731,9 +726,8 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         // in render() prevents the ref from being set on first mount, so we try and
         // catch the messagePanel when it does mount. Because we only want the ref once,
         // we use a boolean flag to avoid duplicate work.
-        if (this.messagePanel && !this.state.atEndOfLiveTimelineInit) {
+        if (this.messagePanel && this.state.atEndOfLiveTimeline === undefined) {
             this.setState({
-                atEndOfLiveTimelineInit: true,
                 atEndOfLiveTimeline: this.messagePanel.isAtEndOfLiveTimeline(),
             });
         }
@@ -1331,7 +1325,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         }
     };
 
-    private onInviteButtonClick = () => {
+    private onInviteClick = () => {
         // open the room inviter
         dis.dispatch({
             action: 'view_invite',
@@ -1486,7 +1480,12 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
                             .getServerAggregatedRelation<IThreadBundledRelationship>(THREAD_RELATION_TYPE.name);
                         if (!bundledRelationship || event.getThread()) continue;
                         const room = this.context.getRoom(event.getRoomId());
-                        event.setThread(room.findThreadForEvent(event) ?? room.createThread(event, [], true));
+                        const thread = room.findThreadForEvent(event);
+                        if (thread) {
+                            event.setThread(thread);
+                        } else {
+                            room.createThread(event.getId(), event, [], true);
+                        }
                     }
                 }
             }
@@ -2010,7 +2009,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             statusBar = <RoomStatusBar
                 room={this.state.room}
                 isPeeking={myMembership !== "join"}
-                onInviteClick={this.onInviteButtonClick}
+                onInviteClick={this.onInviteClick}
                 onVisible={this.onStatusBarVisible}
                 onHidden={this.onStatusBarHidden}
             />;
@@ -2215,7 +2214,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         }
         let jumpToBottom;
         // Do not show JumpToBottomButton if we have search results showing, it makes no sense
-        if (!this.state.atEndOfLiveTimeline && !this.state.searchResults) {
+        if (this.state.atEndOfLiveTimeline === false && !this.state.searchResults) {
             jumpToBottom = (<JumpToBottomButton
                 highlight={this.state.room.getUnreadNotificationCount(NotificationCountType.Highlight) > 0}
                 numUnreadMessages={this.state.numUnreadMessages}
@@ -2283,18 +2282,11 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
                 </>;
                 break;
             case MainSplitContentType.Video: {
-                const app = getVideoChannel(this.state.room.roomId);
-                if (!app) break;
                 mainSplitContentClassName = "mx_MainSplit_video";
-                mainSplitBody = <AppTile
-                    app={app}
-                    room={this.state.room}
-                    userId={this.context.credentials.userId}
-                    creatorUserId={app.creatorUserId}
-                    waitForIframeLoad={app.waitForIframeLoad}
-                    showMenubar={false}
-                    pointerEvents={this.state.resizing ? "none" : null}
-                />;
+                mainSplitBody = <>
+                    <VideoRoomView room={this.state.room} resizing={this.state.resizing} />
+                    { previewBar }
+                </>;
             }
         }
         const mainSplitContentClasses = classNames("mx_RoomView_body", mainSplitContentClassName);
@@ -2304,6 +2296,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         let onAppsClick = this.onAppsClick;
         let onForgetClick = this.onForgetClick;
         let onSearchClick = this.onSearchClick;
+        let onInviteClick = null;
 
         // Simplify the header for other main split types
         switch (this.state.mainSplitContentType) {
@@ -2326,6 +2319,9 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
                 onAppsClick = null;
                 onForgetClick = null;
                 onSearchClick = null;
+                if (this.state.room.canInvite(this.context.credentials.userId)) {
+                    onInviteClick = this.onInviteClick;
+                }
         }
 
         return (
@@ -2341,6 +2337,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
                             oobData={this.props.oobData}
                             inRoom={myMembership === 'join'}
                             onSearchClick={onSearchClick}
+                            onInviteClick={onInviteClick}
                             onForgetClick={(myMembership === "leave") ? onForgetClick : null}
                             e2eStatus={this.state.e2eStatus}
                             onAppsClick={this.state.hasPinnedWidgets ? onAppsClick : null}

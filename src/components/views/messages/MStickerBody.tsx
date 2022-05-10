@@ -40,11 +40,19 @@ export default class MStickerBody extends MImageBody {
         return [wrapper, this.props.scBubbleTimestamp];
     }
 
-    // Placeholder to show in place of the sticker image if
-    // img onLoad hasn't fired yet.
+    // Placeholder to show in place of the sticker image if img onLoad hasn't fired yet.
     protected getPlaceholder(width: number, height: number): JSX.Element {
         if (this.props.mxEvent.getContent().info?.[BLURHASH_FIELD]) return super.getPlaceholder(width, height);
-        return <img src={require("../../../../res/img/icons-show-stickers.svg").default} width="75" height="75" />;
+        return (
+            <img
+                className="mx_MStickerBody_placeholder"
+                src={require("../../../../res/img/icons-show-stickers.svg").default}
+                width="80"
+                height="80"
+                onMouseEnter={this.onImageEnter}
+                onMouseLeave={this.onImageLeave}
+            />
+        );
     }
 
     // Tooltip to show on mouse over
