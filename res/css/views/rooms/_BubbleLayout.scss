@@ -172,16 +172,16 @@ $left-gutter: 5.4rem;
         text-align: unset;
         position: unset;
 
-        margin-left: 8px;
+        margin-left: 4px;
         margin-right: unset;
 
         /* Hack to stop the height of this pushing the messages apart.
            Replaces margin-top: -6px. This interacts better with a read
            marker being in between. Content overflows. */
         // SC: Reserve our space
-        height: 14px;
-        margin-top: 6px;
-        margin-bottom: 6px;
+        height: 24px;
+        margin-top: 1px;
+        margin-bottom: 1px;
 
         // stop read avatars overflowing
         width: 100%;
@@ -194,24 +194,15 @@ $left-gutter: 5.4rem;
     }
 
     .mx_EventTile_bubbleContainer .mx_EventTile_msgOption {
-        grid-column: unset; // show read avatara like always
+        grid-column: unset; // show read avatars like always
     }    
 
-    .mx_EventTile_readAvatars {
-        // SC-TODO align left below msg area
-        //top: 29px;
-        top: 0;
-
-        // stop read avatars overflowing
-        width: 100%;
-        height: 22px;
-        overflow-x: scroll;
-        overflow-y: hidden;
-        z-index: 0; // let message action bar not jump away
+    .mx_ReadReceiptGroup {
+        position: unset;
     }
 
-    .mx_EventTile_readAvatarRemainder {
-        height: 14px;
+    .mx_ReadReceiptGroup .mx_ReadReceiptGroup_button {
+        flex-direction: row-reverse;
     }
 
     .mx_EventTile_content {

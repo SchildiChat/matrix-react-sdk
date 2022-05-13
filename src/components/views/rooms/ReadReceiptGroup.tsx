@@ -31,10 +31,11 @@ import { useTooltip } from "../../../utils/useTooltip";
 import { _t } from "../../../languageHandler";
 import { useRovingTabIndex } from "../../../accessibility/RovingTabIndex";
 
-// #20547 Design specified that we should show the three latest read receipts
-const MAX_READ_AVATARS_PLUS_N = 3;
-// #21935 If we’ve got just 4, don’t show +1, just show all of them
-const MAX_READ_AVATARS = MAX_READ_AVATARS_PLUS_N + 1;
+// SC: Pass this as props
+// // #20547 Design specified that we should show the three latest read receipts
+// const MAX_READ_AVATARS_PLUS_N = 3;
+// // #21935 If we’ve got just 4, don’t show +1, just show all of them
+// const MAX_READ_AVATARS = MAX_READ_AVATARS_PLUS_N + 1;
 
 const READ_AVATAR_OFFSET = 10;
 export const READ_AVATAR_SIZE = 16;
@@ -45,6 +46,8 @@ interface Props {
     checkUnmounting: () => boolean;
     suppressAnimation: boolean;
     isTwelveHour: boolean;
+    maxReadAvatarsPlusN: number;
+    maxReadAvatars: number;
 }
 
 interface IAvatarPosition {
@@ -84,9 +87,16 @@ export function readReceiptTooltip(members: string[], hasMore: boolean): string 
 }
 
 export function ReadReceiptGroup(
-    { readReceipts, readReceiptMap, checkUnmounting, suppressAnimation, isTwelveHour }: Props,
+    {
+        readReceipts, readReceiptMap, checkUnmounting, suppressAnimation, isTwelveHour,
+        maxReadAvatarsPlusN, maxReadAvatars,
+    }: Props,
 ) {
     const [menuDisplayed, button, openMenu, closeMenu] = useContextMenu();
+
+    // SC: Passed this as props, restore names
+    const MAX_READ_AVATARS_PLUS_N = maxReadAvatarsPlusN;
+    const MAX_READ_AVATARS = maxReadAvatars;
 
     // If we are above MAX_READ_AVATARS, we’ll have to remove a few to have space for the +n count.
     const hasMore = readReceipts.length > MAX_READ_AVATARS;
@@ -122,7 +132,7 @@ export function ReadReceiptGroup(
         // (because it lost its container).
         // See also https://github.com/vector-im/element-web/issues/17561
         return (
-            <div className="mx_EventTile_msgOption">
+            <div className="mx_EventTile_msgOption sc_readReceipts_empty">
                 <div className="mx_ReadReceiptGroup">
                     <div className="mx_ReadReceiptGroup_button">
                         <span className="mx_ReadReceiptGroup_container" />

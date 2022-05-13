@@ -1235,18 +1235,6 @@ export class UnwrappedEventTile extends React.Component<IProps, IState> {
         const groupPadlock = !useIRCLayout && !isBubbleMessage && this.renderE2EPadlock();
         const ircPadlock = useIRCLayout && !isBubbleMessage && this.renderE2EPadlock();
 
-        // const msgOptionClasses = classNames(
-        //     "mx_EventTile_msgOption",
-        //     {
-        //         "sc_readReceipts_empty": (
-        //             // Don't reserve space below bubbles if there are no read receipts
-        //             (!this.props.readReceipts || this.props.readReceipts.length === 0) &&
-        //             // ToDo: Maybe incorporate sent/sending state into bubble?!?
-        //             !(this.shouldShowSentReceipt || this.shouldShowSendingReceipt)
-        //         ),
-        //     },
-        // );
-
         let msgOption;
         if (this.props.showReadReceipts) {
             if (this.shouldShowSentReceipt || this.shouldShowSendingReceipt) {
@@ -1258,6 +1246,8 @@ export class UnwrappedEventTile extends React.Component<IProps, IState> {
                     checkUnmounting={this.props.checkUnmounting}
                     suppressAnimation={this.suppressReadReceiptAnimation}
                     isTwelveHour={this.props.isTwelveHour}
+                    maxReadAvatarsPlusN={this.props.layout == Layout.Bubble ? 8 : 3}
+                    maxReadAvatars={this.props.layout == Layout.Bubble ? 9 : 4}
                 />;
             }
         }
