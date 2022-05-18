@@ -18,6 +18,7 @@ import React from "react";
 import classNames from "classnames";
 import { MatrixEvent } from "matrix-js-sdk/src/models/event";
 
+import { MatrixClientPeg } from "../../../MatrixClientPeg";
 import { _t } from "../../../languageHandler";
 import { formatCommaSeparatedList } from "../../../utils/FormattingUtils";
 import dis from "../../../dispatcher/dispatcher";
@@ -130,9 +131,18 @@ export default class ReactionsRowButton extends React.PureComponent<IProps, ISta
                 onMouseOver={this.onMouseOver}
                 onMouseLeave={this.onMouseLeave}
             >
-                <span className="mx_ReactionsRowButton_content" aria-hidden="true">
-                    {content}
-                </span>
+                {content.startsWith("mxc://") ? (
+                    <img
+                        className="mx_ReactionsRowButton_content"
+                        src={MatrixClientPeg.get().mxcUrlToHttp(content)}
+                        width="16"
+                        height="16"
+                    />
+                ) : (
+                    <span className="mx_ReactionsRowButton_content" aria-hidden="true">
+                        {content}
+                    </span>
+                )}
                 <span className="mx_ReactionsRowButton_count" aria-hidden="true">
                     {count}
                 </span>
