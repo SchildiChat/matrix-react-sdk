@@ -45,7 +45,7 @@ $panel-actions: rgba($tertiary-content, 0.2);
 $space-nav: rgba($tertiary-content, 0.15);
 
 $accent: #8BC34A;
-$alert: #FF5B55;
+$alert: #F4511E;
 $links: #0086e6;
 
 $username-variant1-color: #4189c9;
@@ -155,8 +155,8 @@ $roomheader-addroom-fg-color: #616161;
 
 // Rich-text-editor
 // ********************
-$pill-bg-color: #aaa;
-$pill-hover-bg-color: #ccc;
+$pill-bg-color: rgba(0, 0, 0, 0.13);
+$pill-hover-bg-color: rgba(0, 0, 0, 0.10);
 $rte-bg-color: #e0e0e0;
 $rte-code-bg-color: rgba(0, 0, 0, 0.04);
 // ********************
@@ -258,8 +258,8 @@ $reaction-row-button-selected-bg-color: #DCEDC8;
 // ********************
 // These two don't change between themes. They are the $alert, but we don't want
 // custom themes to affect them by accident.
-$voice-record-stop-symbol-color: #ff5b55;
-$voice-record-live-circle-color: #ff5b55;
+$voice-record-stop-symbol-color: #F4511E;
+$voice-record-live-circle-color: #F4511E;
 $voice-record-stop-border-color: $quinary-content;
 $voice-record-icon-color: $tertiary-content;
 // ********************

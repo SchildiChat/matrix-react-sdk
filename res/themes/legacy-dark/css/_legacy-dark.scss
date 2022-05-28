@@ -27,8 +27,8 @@ $light-fg-color: $header-panel-text-secondary-color;
 // used for focusing form controls
 $focus-bg-color: $room-highlight-color;
 
-$pill-bg-color: $room-highlight-color;
-$pill-hover-bg-color: #616161;
+$pill-bg-color: rgba(255, 255, 255, 0.15);
+$pill-hover-bg-color: rgba(255, 255, 255, 0.18);
 
 // informational plinth
 $info-plinth-bg-color: $header-panel-bg-color;
@@ -90,7 +90,7 @@ $room-icon-unread-color: #fff;
 
 // Legacy theme backports
 $accent: #8BC34A;
-$alert: #FF5B55;
+$alert: #F4511E;
 $links: #0086e6;
 $primary-content: $primary-fg-color;
 $secondary-content: $secondary-fg-color;

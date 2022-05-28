@@ -20,6 +20,7 @@ M_ACCENT="#8BC34A"
 M_ACCENT_DEC="139, 195, 74"
 M_ACCENT_DARK="#33691E"
 M_ACCENT_LIGHT="#DCEDC8"
+M_ALERT="#F4511E"
 M_LINK="#368bd6"
 
 replace_colors() {
@@ -28,11 +29,13 @@ replace_colors() {
         BG_ACCENT="$M_ACCENT_DARK"
         CODEBLOCK_BACKGROUND_COLOR="#121212"
         PILL_COLOR="rgba(255, 255, 255, 0.15)"
+        PILL_HOVER_COLOR="rgba(255, 255, 255, 0.18)"
         PRESENCE_OFFLINE="#e0e0e0" # not applied because not existing specifically for dark
     else
         BG_ACCENT="$M_ACCENT_LIGHT"
         CODEBLOCK_BACKGROUND_COLOR="#00000010"
-        PILL_COLOR="rgba(0, 0, 0, 0.13)" # default
+        PILL_COLOR="rgba(0, 0, 0, 0.13)"
+        PILL_HOVER_COLOR="rgba(0, 0, 0, 0.10)"
         PRESENCE_OFFLINE="#bdbdbd" # for light this should actually be darker
     fi
     # Neutral colors
@@ -104,8 +107,8 @@ replace_colors() {
     sed -i "s|\\(\$event-highlight-bg-color: \\).*;|\\1transparent;|gi" "$f"
     sed -i "s|\\(\$preview-widget-bar-color: \\).*;|\\1#bdbdbd;|gi" "$f"
     sed -i "s|\\(\$blockquote-bar-color: \\).*;|\\1#bdbdbd;|gi" "$f"
-    sed -i "s|\\(\$other-user-pill-bg-color: \\).*;|\\1$PILL_COLOR;|gi" "$f"
-    sed -i "s|\\(\$rte-room-pill-color: \\).*;|\\1$PILL_COLOR;|gi" "$f"
+    sed -i "s|\\(\$pill-bg-color: \\).*;|\\1$PILL_COLOR;|gi" "$f"
+    sed -i "s|\\(\$pill-hover-bg-color: \\).*;|\\1$PILL_HOVER_COLOR;|gi" "$f"
 
     sed -i "s|\\(\$codeblock-background-color: \\).*;|\\1$CODEBLOCK_BACKGROUND_COLOR;|gi" "$f"
 
@@ -123,6 +126,8 @@ replace_colors() {
     sed -i "s|#76CFA6|$M_ACCENT|gi" "$f"
     sed -i "s|#03b381|$M_ACCENT|gi" "$f"
     sed -i "s|rgba(3, 179, 129,|rgba($M_ACCENT_DEC,|gi" "$f"
+    sed -i "s|#03b381|$M_ACCENT|gi" "$f"
+    sed -i "s|#FF5B55|$M_ALERT|gi" "$f"
     sed -i "s|\\(\$accent-alt: \\).*;|\\1$M_LINK;|gi" "$f"
     #sed -i "s|\\(\$accent-darker: \\).*;|\\1$M_ACCENT_DARK;|gi" "$f"
     sed -i "s|\\(\$roomtile-default-badge-bg-color: \\).*;|\\1$M_ACCENT;|gi" "$f"

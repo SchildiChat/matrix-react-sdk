@@ -94,8 +94,8 @@ $roomheader-addroom-fg-color: $primary-content;
 
 // Rich-text-editor
 // ********************
-$pill-bg-color: $room-highlight-color;
-$pill-hover-bg-color: #616161;
+$pill-bg-color: rgba(255, 255, 255, 0.15);
+$pill-hover-bg-color: rgba(255, 255, 255, 0.18);
 // ********************
 
 // Inputs

@@ -24,11 +24,12 @@ limitations under the License.
 
     cursor: pointer;
 
-    color: $accent-fg-color !important; // To override .markdown-body
+    color: $primary-content !important; // To override .markdown-body
     background-color: $pill-bg-color !important; // To override .markdown-body
 
     &.mx_UserPill_me,
     &.mx_AtRoomPill {
+        color: $accent-fg-color !important; // To override .markdown-body
         background-color: $alert !important; // To override .markdown-body
     }
 
@@ -37,11 +38,13 @@ limitations under the License.
     }
 
     &.mx_UserPill_me:hover {
-        background-color: #ff6b75 !important; // To override .markdown-body | same on both themes
+        color: $accent-fg-color !important; // To override .markdown-body
+        background-color: #FF5722 !important; // To override .markdown-body | same on both themes
     }
 
     // We don't want to indicate clickability
     &.mx_AtRoomPill:hover {
+        color: $accent-fg-color !important; // To override .markdown-body
         background-color: $alert !important; // To override .markdown-body
         cursor: unset;
     }
