@@ -50,6 +50,10 @@ limitations under the License.
         }
     }
 
+    .mx_RoomTile_details {
+        min-width: 0;
+    }
+
     .mx_RoomTile_titleContainer {
         min-width: 0;
         flex-basis: 0;

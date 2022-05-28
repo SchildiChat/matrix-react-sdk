@@ -85,7 +85,7 @@ interface IProps {
     replyToEvent?: MatrixEvent;
     relation?: IEventRelation;
     e2eStatus?: E2EStatus;
-    layout: Layout;
+    layout?: Layout;
     userNameColorMode?: UserNameColorMode;
     compact?: boolean;
 }
@@ -442,7 +442,6 @@ export default class MessageComposer extends React.Component<IProps, IState> {
             recordingTooltip = <Tooltip
                 label={_t("%(seconds)ss left", { seconds: secondsLeft })}
                 alignment={Alignment.Top}
-                yOffset={-50}
             />;
         }
 
@@ -466,11 +465,9 @@ export default class MessageComposer extends React.Component<IProps, IState> {
         const classes = classNames({
             "mx_MessageComposer": true,
 
-            // IRC layout has nothing for message composer so use group layout stuff
-            // When IRC layout gets something for the message composer we can use the following
-            // "mx_IRCLayout": this.props.layout == Layout.IRC,
-            // "mx_GroupLayout": this.props.layout == Layout.Group,
-            "mx_GroupLayout": this.props.layout === Layout.IRC || this.props.layout === Layout.Group,
+            // SC: IRC layout has nothing for message composer so use group layout stuff
+            // SC: Also use group layout if layout prop is missing
+            "mx_GroupLayout": this.props.layout !== Layout.Bubble,
             "sc_BubbleLayout": this.props.layout === Layout.Bubble,
 
             "mx_MessageComposer--compact": this.props.compact,

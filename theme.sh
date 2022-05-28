@@ -63,6 +63,7 @@ replace_colors() {
     sed -i 's|#61708b|#616161|gi' "$f"
     sed -i 's|#616b7f|#616161|gi' "$f"
     sed -i 's|#5c6470|#616161|gi' "$f"
+    sed -i 's|#545a66|#616161|gi' "$f" # pill hover bg color
     sed -i 's|#737D8C|#757575|gi' "$f"
     sed -i 's|#6F7882|#757575|gi' "$f"
     sed -i 's|#91A1C0|#757575|gi' "$f" # icon in button color
@@ -89,6 +90,7 @@ replace_colors() {
     sed -i 's|#f4f6fa|#f5f5f5|gi' "$f"
     sed -i 's|#f6f7f8|#f5f5f5|gi' "$f"
     sed -i 's|#f2f5f8|#f5f5f5|gi' "$f"
+    sed -i 's|#f5f8fa|#f5f5f5|gi' "$f"
     sed -i 's|#f3f8fd|#fafafa|gi' "$f"
     sed -i 's|rgba(33, 38, 34,|rgba(48, 48, 48,|gi' "$f"
     sed -i 's|rgba(33, 38, 44,|rgba(48, 48, 48,|gi' "$f"

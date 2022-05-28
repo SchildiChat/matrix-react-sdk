@@ -14,13 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import React, { createRef, useContext, useRef, useState } from "react";
+import React, { createRef } from "react";
 import { Room } from "matrix-js-sdk/src/models/room";
-import classNames from "classnames";
 
 import { MatrixClientPeg } from "../../MatrixClientPeg";
 import defaultDispatcher from "../../dispatcher/dispatcher";
-import dis from "../../dispatcher/dispatcher";
 import { ActionPayload } from "../../dispatcher/payloads";
 import { Action } from "../../dispatcher/actions";
 import { _t } from "../../languageHandler";
@@ -32,9 +30,7 @@ import Modal from "../../Modal";
 import LogoutDialog from "../views/dialogs/LogoutDialog";
 import SettingsStore from "../../settings/SettingsStore";
 import {
-    RovingAccessibleButton,
     RovingAccessibleTooltipButton,
-    useRovingTabIndex,
 } from "../../accessibility/RovingTabIndex";
 import AccessibleButton, { ButtonEvent } from "../views/elements/AccessibleButton";
 import SdkConfig from "../../SdkConfig";
@@ -44,7 +40,6 @@ import { UPDATE_EVENT } from "../../stores/AsyncStore";
 import BaseAvatar from '../views/avatars/BaseAvatar';
 import { SettingLevel } from "../../settings/SettingLevel";
 import IconizedContextMenu, {
-    IconizedContextMenuCheckbox,
     IconizedContextMenuOption,
     IconizedContextMenuOptionList,
 } from "../views/context_menus/IconizedContextMenu";
@@ -52,65 +47,10 @@ import { UIFeature } from "../../settings/UIFeature";
 import HostSignupAction from "./HostSignupAction";
 import SpaceStore from "../../stores/spaces/SpaceStore";
 import { UPDATE_SELECTED_SPACE } from "../../stores/spaces";
-import MatrixClientContext from "../../contexts/MatrixClientContext";
-import { SettingUpdatedPayload } from "../../dispatcher/payloads/SettingUpdatedPayload";
 import { Theme } from "../../settings/enums/Theme";
 import UserIdentifierCustomisations from "../../customisations/UserIdentifier";
 import PosthogTrackers from "../../PosthogTrackers";
 import { ViewHomePagePayload } from "../../dispatcher/payloads/ViewHomePagePayload";
-
-const CustomStatusSection = () => {
-    const cli = useContext(MatrixClientContext);
-    const setStatus = cli.getUser(cli.getUserId()).unstable_statusMessage || "";
-    const [value, setValue] = useState(setStatus);
-
-    const ref = useRef<HTMLInputElement>(null);
-    const [onFocus, isActive] = useRovingTabIndex(ref);
-
-    const classes = classNames({
-        'mx_UserMenu_CustomStatusSection_field': true,
-        'mx_UserMenu_CustomStatusSection_field_hasQuery': value,
-    });
-
-    let details: JSX.Element;
-    if (value !== setStatus) {
-        details = <>
-            <p>{ _t("Your status will be shown to people you have a DM with.") }</p>
-
-            <RovingAccessibleButton
-                onClick={() => cli._unstable_setStatusMessage(value)}
-                kind="primary_outline"
-            >
-                { value ? _t("Set status") : _t("Clear status") }
-            </RovingAccessibleButton>
-        </>;
-    }
-
-    return <form className="mx_UserMenu_CustomStatusSection">
-        <div className={classes}>
-            <input
-                type="text"
-                value={value}
-                className="mx_UserMenu_CustomStatusSection_input"
-                onChange={e => setValue(e.target.value)}
-                placeholder={_t("Set a new status")}
-                autoComplete="off"
-                onFocus={onFocus}
-                ref={ref}
-                tabIndex={isActive ? 0 : -1}
-            />
-            <AccessibleButton
-                // The clear button is only for mouse users
-                tabIndex={-1}
-                title={_t("Clear")}
-                className="mx_UserMenu_CustomStatusSection_clear"
-                onClick={() => setValue("")}
-            />
-        </div>
-
-        { details }
-    </form>;
-};
 
 interface IProps {
     isPanelCollapsed: boolean;
@@ -122,7 +62,6 @@ interface IState {
     contextMenuPosition: PartialDOMRect;
     themeInUse: Theme;
     selectedSpace?: Room;
-    dndEnabled: boolean;
 }
 
 const toRightOf = (rect: PartialDOMRect) => {
@@ -153,19 +92,11 @@ export default class UserMenu extends React.Component<IProps, IState> {
         this.state = {
             contextMenuPosition: null,
             themeInUse: SettingsStore.getValue("theme_in_use"),
-            dndEnabled: this.doNotDisturb,
             selectedSpace: SpaceStore.instance.activeSpaceRoom,
         };
 
         OwnProfileStore.instance.on(UPDATE_EVENT, this.onProfileUpdate);
         SpaceStore.instance.on(UPDATE_SELECTED_SPACE, this.onSelectedSpaceUpdate);
-
-        SettingsStore.monitorSetting("feature_dnd", null);
-        SettingsStore.monitorSetting("doNotDisturb", null);
-    }
-
-    private get doNotDisturb(): boolean {
-        return SettingsStore.getValue("doNotDisturb");
     }
 
     private get hasHomePage(): boolean {
@@ -210,20 +141,6 @@ export default class UserMenu extends React.Component<IProps, IState> {
                     if (this.buttonRef.current) this.buttonRef.current.click();
                 }
                 break;
-
-            case Action.SettingUpdated: {
-                const settingUpdatedPayload = payload as SettingUpdatedPayload;
-                switch (settingUpdatedPayload.settingName) {
-                    case "feature_dnd":
-                    case "doNotDisturb": {
-                        const dndEnabled = this.doNotDisturb;
-                        if (this.state.dndEnabled !== dndEnabled) {
-                            this.setState({ dndEnabled });
-                        }
-                        break;
-                    }
-                }
-            }
         }
     };
 
@@ -283,7 +200,7 @@ export default class UserMenu extends React.Component<IProps, IState> {
         const cli = MatrixClientPeg.get();
         if (!cli || !cli.isCryptoEnabled() || !(await cli.exportRoomKeys())?.length) {
             // log out without user prompt if they have no local megolm sessions
-            dis.dispatch({ action: 'logout' });
+            defaultDispatcher.dispatch({ action: 'logout' });
         } else {
             Modal.createTrackedDialog('Logout from LeftPanel', '', LogoutDialog);
         }
@@ -292,12 +209,12 @@ export default class UserMenu extends React.Component<IProps, IState> {
     };
 
     private onSignInClick = () => {
-        dis.dispatch({ action: 'start_login' });
+        defaultDispatcher.dispatch({ action: 'start_login' });
         this.setState({ contextMenuPosition: null }); // also close the menu
     };
 
     private onRegisterClick = () => {
-        dis.dispatch({ action: 'start_registration' });
+        defaultDispatcher.dispatch({ action: 'start_registration' });
         this.setState({ contextMenuPosition: null }); // also close the menu
     };
 
@@ -307,12 +224,6 @@ export default class UserMenu extends React.Component<IProps, IState> {
 
         defaultDispatcher.dispatch<ViewHomePagePayload>({ action: Action.ViewHomePage });
         this.setState({ contextMenuPosition: null }); // also close the menu
-    };
-
-    private onDndToggle = (ev: ButtonEvent) => {
-        ev.stopPropagation();
-        const current = SettingsStore.getValue("doNotDisturb");
-        SettingsStore.setValue("doNotDisturb", null, SettingLevel.DEVICE, !current);
     };
 
     private renderContextMenu = (): React.ReactNode => {
@@ -361,24 +272,6 @@ export default class UserMenu extends React.Component<IProps, IState> {
             );
         }
 
-        let customStatusSection: JSX.Element;
-        if (SettingsStore.getValue("feature_custom_status")) {
-            customStatusSection = <CustomStatusSection />;
-        }
-
-        let dndButton: JSX.Element;
-        if (SettingsStore.getValue("feature_dnd")) {
-            dndButton = (
-                <IconizedContextMenuCheckbox
-                    iconClassName={this.state.dndEnabled ? "mx_UserMenu_iconDnd" : "mx_UserMenu_iconDndOff"}
-                    label={_t("Do not disturb")}
-                    onClick={this.onDndToggle}
-                    active={this.state.dndEnabled}
-                    words
-                />
-            );
-        }
-
         let feedbackButton;
         if (SettingsStore.getValue(UIFeature.Feedback)) {
             feedbackButton = <IconizedContextMenuOption
@@ -391,7 +284,6 @@ export default class UserMenu extends React.Component<IProps, IState> {
         let primaryOptionList = (
             <IconizedContextMenuOptionList>
                 { homeButton }
-                { dndButton }
                 <IconizedContextMenuOption
                     iconClassName="mx_UserMenu_iconBell"
                     label={_t("Notifications")}
@@ -466,7 +358,6 @@ export default class UserMenu extends React.Component<IProps, IState> {
                     </RovingAccessibleTooltipButton> : null
                 }
             </div>
-            { customStatusSection }
             { topSection }
             { primaryOptionList }
         </IconizedContextMenu>;
@@ -478,11 +369,6 @@ export default class UserMenu extends React.Component<IProps, IState> {
         const userId = MatrixClientPeg.get().getUserId();
         const displayName = OwnProfileStore.instance.displayName || userId;
         const avatarUrl = OwnProfileStore.instance.getHttpAvatarUrl(avatarSize);
-
-        let badge: JSX.Element;
-        if (this.state.dndEnabled) {
-            badge = <div className="mx_UserMenu_dndBadge" />;
-        }
 
         let name: JSX.Element;
         if (!this.props.isPanelCollapsed) {
@@ -498,9 +384,6 @@ export default class UserMenu extends React.Component<IProps, IState> {
                 label={_t("User menu")}
                 isExpanded={!!this.state.contextMenuPosition}
                 onContextMenu={this.onContextMenu}
-                className={classNames({
-                    mx_UserMenu_cutout: badge,
-                })}
             >
                 <div className="mx_UserMenu_userAvatar">
                     <BaseAvatar
@@ -512,7 +395,6 @@ export default class UserMenu extends React.Component<IProps, IState> {
                         resizeMethod="crop"
                         className="mx_UserMenu_userAvatar_BaseAvatar"
                     />
-                    { badge }
                 </div>
                 { name }
 

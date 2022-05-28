@@ -255,7 +255,7 @@ class EmojiPicker extends React.Component<IProps, IState> {
                 >
                     { this.categories.map(category => {
                         const emojis = this.memoizedDataByCategory[category.id];
-                        const categoryElement = ((
+                        const categoryElement = (
                             <Category
                                 key={category.id}
                                 id={category.id}
@@ -269,7 +269,7 @@ class EmojiPicker extends React.Component<IProps, IState> {
                                 onMouseLeave={this.onHoverEmojiEnd}
                                 selectedEmojis={this.props.selectedEmojis}
                             />
-                        ));
+                        );
                         const height = EmojiPicker.categoryHeightForEmojiCount(emojis.length);
                         heightBefore += height;
                         return categoryElement;

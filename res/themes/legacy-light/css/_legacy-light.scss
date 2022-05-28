@@ -37,8 +37,6 @@ $selection-fg-color: $primary-bg-color;
 
 $focus-brightness: 105%;
 
-$other-user-pill-bg-color: rgba(0, 0, 0, 0.13);
-
 // informational plinth
 $info-plinth-bg-color: #f7f7f7;
 $info-plinth-fg-color: #888;
@@ -117,9 +115,11 @@ $settings-subsection-fg-color: #616161;
 
 $rte-bg-color: #e0e0e0;
 $rte-code-bg-color: rgba(0, 0, 0, 0.04);
-$rte-room-pill-color: rgba(0, 0, 0, 0.13);
 
 $header-panel-text-primary-color: #757575;
+
+$pill-bg-color: #aaa;
+$pill-hover-bg-color: #ccc;
 
 $topleftmenu-color: #212121;
 $roomheader-bg-color: $primary-bg-color;
@@ -175,6 +175,7 @@ $call-view-button-on-foreground: $secondary-content;
 $call-view-button-on-background: $background;
 $call-view-button-off-foreground: $background;
 $call-view-button-off-background: $secondary-content;
+$call-view-content-background: #21262C;
 
 $video-feed-secondary-background: #424242; // XXX: Color from dark theme
 
@@ -351,6 +352,10 @@ $location-live-secondary-color: #e0e0e0;
 @define-mixin mx_Dialog_link {
     color: $accent;
     text-decoration: none;
+}
+
+body {
+    color-scheme: light;
 }
 
 // diff highlight colors

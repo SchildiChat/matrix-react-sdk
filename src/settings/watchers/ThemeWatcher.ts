@@ -15,8 +15,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { logger } from "matrix-js-sdk/src/logger";
-
 import SettingsStore from '../SettingsStore';
 import dis from '../../dispatcher/dispatcher';
 import { Action } from '../../dispatcher/actions';
@@ -114,22 +112,6 @@ export default class ThemeWatcher {
         } else {
             return SettingsStore.getValue('light_theme');
         }
-    }
-
-    private themeBasedOnSystem() {
-        let newTheme: string;
-        if (this.preferDark.matches) {
-            newTheme = 'dark';
-        } else if (this.preferLight.matches) {
-            newTheme = 'light';
-        }
-        if (this.preferHighContrast.matches) {
-            const hcTheme = findHighContrastTheme(newTheme);
-            if (hcTheme) {
-                newTheme = hcTheme;
-            }
-        }
-        return newTheme;
     }
 
     public isSystemThemeSupported() {
