@@ -24,7 +24,6 @@ import SettingsStore from '../../../settings/SettingsStore';
 
 const FORCED_IMAGE_HEIGHT = 20;
 
-@replaceableComponent("views.messages.ReactionImage")
 export default class ReactionImage extends MImageBody {
     public onClick = (ev: React.MouseEvent): void => {
         ev.preventDefault();
