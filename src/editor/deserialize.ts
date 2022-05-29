@@ -90,7 +90,13 @@ function parseLink(n: Node, pc: PartCreator, opts: IParseOptions): Part[] {
 }
 
 function parseImage(n: Node, pc: PartCreator, opts: IParseOptions): Part[] {
-    const { alt, src } = n as HTMLImageElement;
+    const elm = n as HTMLImageElement;
+    const { alt, src } = elm;
+    const isCustomEmoji = elm.hasAttribute("data-mx-emoticon");
+    if (isCustomEmoji) {
+        const shortcode = elm.title || elm.alt || ":SHORTCODE_MISSING:";
+        return [pc.customEmoji(shortcode, src)];
+    }
     return pc.plainWithEmoji(`![${escape(alt)}](${src})`);
 }
 
