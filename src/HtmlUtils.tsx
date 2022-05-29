@@ -578,8 +578,8 @@ export function bodyToHtml(content: IContent, highlights: string[], opts: IOpts 
     }
 
     let emojiBody = false;
-    if (!opts.disableBigEmoji && bodyHasEmoji) {
-        let contentBodyTrimmed = contentBody !== undefined ? contentBody.trim() : '';
+    if (!opts.disableBigEmoji) {
+        let contentBodyTrimmed = (bodyHasEmoji && contentBody !== undefined) ? contentBody.trim() : '';
 
         // Ignore spaces in body text. Emojis with spaces in between should
         // still be counted as purely emoji messages.
