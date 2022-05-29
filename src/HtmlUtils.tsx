@@ -486,6 +486,7 @@ export function bodyToHtml(content: IContent, highlights: string[], opts: IOpts 
     let strippedBody: string;
     let safeBody: string;
     let isDisplayedWithHtml: boolean;
+    let isAllHtmlEmoji: boolean = false;
     // XXX: We sanitize the HTML whilst also highlighting its text nodes, to avoid accidentally trying
     // to highlight HTML tags themselves.  However, this does mean that we don't highlight textnodes which
     // are interrupted by HTML tags (not that we did before) - e.g. foo<span/>bar won't get highlighted
@@ -544,6 +545,25 @@ export function bodyToHtml(content: IContent, highlights: string[], opts: IOpts 
                 });
                 safeBody = phtml.html();
             }
+            if (isHtmlMessage) {
+                isAllHtmlEmoji = (phtml.root()[0] as cheerio.TagElement).children.every(elm => {
+                    if (elm.type === 'text') {
+                        let elmText = elm.data;
+                        elmText = elmText.replace(WHITESPACE_REGEX, '');
+
+                        // Remove zero width joiner characters from emoji messages. This ensures
+                        // that emojis that are made up of multiple unicode characters are still
+                        // presented as large.
+                        elmText = elmText.replace(ZWJ_REGEX, '');
+                
+                        const match = BIGEMOJI_REGEX.exec(elmText);
+                        return match && match[0] && match[0].length === elmText.length;
+                    } else if (elm.type == 'tag') {
+                        return elm.name === 'img' && 'data-mx-emoticon' in elm.attribs;
+                    }
+                    return true;
+                });
+            }
             if (bodyHasEmoji) {
                 safeBody = formatEmojis(safeBody, true).join('');
             }
@@ -571,11 +591,8 @@ export function bodyToHtml(content: IContent, highlights: string[], opts: IOpts 
         contentBodyTrimmed = contentBodyTrimmed.replace(ZWJ_REGEX, '');
 
         const match = BIGEMOJI_REGEX.exec(contentBodyTrimmed);
-        emojiBody = match && match[0] && match[0].length === contentBodyTrimmed.length &&
-                    // Prevent user pills expanding for users with only emoji in
-                    // their username. Permalinks (links in pills) can be any URL
-                    // now, so we just check for an HTTP-looking thing.
-                    (
+        const matched = match && match[0] && match[0].length === contentBodyTrimmed.length;
+        emojiBody = (matched || isAllHtmlEmoji) && (
                         strippedBody === safeBody || // replies have the html fallbacks, account for that here
                         content.formatted_body === undefined ||
                         (!content.formatted_body.includes("http:") &&
