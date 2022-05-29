@@ -407,7 +407,7 @@ class EmojiPart extends BasePart implements IBasePart {
 
 class CustomEmojiPart extends PillPart implements IPillPart {
     protected get className(): string {
-        return "mx_CustomEmojiPill";
+        return "mx_CustomEmojiPill mx_Pill";
     }
     protected setAvatar(node: HTMLElement): void {
         const url = mediaFromMxc(this.resourceId).getThumbnailOfSourceHttp(24, 24, "crop");
