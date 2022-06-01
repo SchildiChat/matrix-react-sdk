@@ -51,4 +51,5 @@ img[data-mx-emoticon] {
     height: max($font-18px, 1em) !important;
     vertical-align: bottom;
     object-position: center;
+    object-fit: contain;
 }
