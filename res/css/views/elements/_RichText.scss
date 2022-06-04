@@ -43,13 +43,13 @@
     vertical-align: bottom;
 }
 
-// same for custom emojis 
+// SC: same for custom emojis 
 img[data-mx-emoticon] {
     // Should be 1.8rem for our default message bodies, and scale with the
     // surrounding text
     max-height: unset !important;
     height: max($font-18px, 1em) !important;
-    vertical-align: bottom;
+    vertical-align: text-bottom;
     object-position: center;
     object-fit: contain;
 }

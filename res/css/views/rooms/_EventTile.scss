@@ -371,11 +371,21 @@ $threadInfoLineHeight: calc(2 * $font-12px); // See: _commons.scss
 }
 
 .mx_EventTile_bigEmoji {
-    font-size: 48px;
-    line-height: 57px;
+    --big-emoji-font-size: 4.8rem;
+    --big-emoji-line-height: 5.7rem;
+
+    font-size: var(--big-emoji-font-size);
+    line-height: var(--big-emoji-line-height);
 
     .mx_Emoji {
         font-size: inherit !important;
+    }
+
+    // SC: same for custom emojis 
+    img[data-mx-emoticon] {
+        font-size: inherit !important;
+        height: 1em !important;
+        margin: calc((var(--big-emoji-line-height) - var(--big-emoji-font-size)) / 2) 0;
     }
 }
 
