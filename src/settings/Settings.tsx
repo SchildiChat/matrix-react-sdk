@@ -45,6 +45,7 @@ import { ImageSize } from "./enums/ImageSize";
 import { MetaSpace } from "../stores/spaces";
 import SdkConfig from "../SdkConfig";
 import ThreadBetaController from './controllers/ThreadBetaController';
+import { FontWatcher } from "./watchers/FontWatcher";
 
 // These are just a bunch of helper arrays to avoid copy/pasting a bunch of times
 const LEVELS_ROOM_SETTINGS = [
@@ -434,7 +435,7 @@ export const SETTINGS: {[setting: string]: ISetting} = {
     "baseFontSize": {
         displayName: _td("Font size"),
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
-        default: 10,
+        default: FontWatcher.DEFAULT_SIZE,
         controller: new FontSizeController(),
     },
     "useCustomFontSize": {
@@ -1000,6 +1001,10 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         default: false,
     },
     "debug_timeline_panel": {
+        supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS,
+        default: false,
+    },
+    "debug_registration": {
         supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS,
         default: false,
     },

@@ -112,10 +112,5 @@ limitations under the License.
         padding: 0;
         margin: 0;
         margin-bottom: $font-3px;
-
-        // truncate long display names
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
     }
 }
