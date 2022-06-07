@@ -2646,7 +2646,7 @@
     "Only invited people can join.": "Solo las personas invitadas pueden unirse.",
     "Private (invite only)": "Privado (solo por invitación)",
     "This upgrade will allow members of selected spaces access to this room without an invite.": "Si actualizas, podrás configurar la sala para que los miembros de los espacios que elijas puedan unirse sin que tengas que invitarles.",
-    "Message bubbles": "Burbujas de mensajes",
+    "Message bubbles": "Burbujas de mensaje",
     "Show all rooms": "Ver todas las salas",
     "Give feedback.": "Danos tu opinión.",
     "Thank you for trying Spaces. Your feedback will help inform the next versions.": "Gracias por probar los espacios. Tu opinión nos ayudará a tomar decisiones sobre las próximas versiones.",
@@ -3164,7 +3164,7 @@
     "This feature is a work in progress, we'd love to hear your feedback.": "Todavía estamos trabajando en esta funcionalidad, nos gustaría saber tu opinión.",
     "Open user settings": "Abrir los ajustes de usuario",
     "Accessibility": "Accesibilidad",
-    "If you know what you're doing, Element is open-source, be sure to check out our GitHub (https://github.com/vector-im/element-web/) and contribute!": "Si sabes de estos temas, SchildiChat es de código abierto. ¡Echa un vistazo a nuestro GitHub (https://github.com/vector-im/element-web/) y colabora!",
+    "If you know what you're doing, Element is open-source, be sure to check out our GitHub (https://github.com/vector-im/element-web/) and contribute!": "Si sabes de estos temas, Element es de código abierto. ¡Echa un vistazo a nuestro GitHub (https://github.com/vector-im/element-web/) y colabora!",
     "Unable to check if username has been taken. Try again later.": "No ha sido posible comprobar si el nombre de usuario está libre. Inténtalo de nuevo más tarde.",
     "Search Dialog": "Ventana de búsqueda",
     "Join %(roomAddress)s": "Unirte a %(roomAddress)s",
@@ -3448,9 +3448,5 @@
     "Joining…": "Uniéndose…",
     "To join, please enable video rooms in Labs first": "Para unirse, por favor activa las salas de vídeo en Labs primero",
     "%(count)s people joined|one": "%(count)s persona unida",
-    "%(count)s people joined|other": "%(count)s personas unidas",
-    "Show message bubbles on one side only": "mostrar las burbujas de mensajes en un solo lado",
-    "Normal priority": "Prioridad normal",
-    "Enable layout with message bubbles": "Activar diseño con mensajes de burbujas",
-    "Show message bubbles depending on the width either on both sides or only on one side": "Mostrar mensajes de burbuja dependiendo del tamaño tanto en ambos lados o solo en un lado"
+    "%(count)s people joined|other": "%(count)s personas unidas"
 }
