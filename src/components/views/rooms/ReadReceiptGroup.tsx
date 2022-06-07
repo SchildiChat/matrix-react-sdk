@@ -30,6 +30,7 @@ import ContextMenu, { aboveLeftOf, MenuItem, useContextMenu } from "../../struct
 import { useTooltip } from "../../../utils/useTooltip";
 import { _t } from "../../../languageHandler";
 import { useRovingTabIndex } from "../../../accessibility/RovingTabIndex";
+import { Layout } from "../../../settings/enums/Layout";
 
 // SC: Pass this as props
 // // #20547 Design specified that we should show the three latest read receipts
@@ -37,7 +38,7 @@ import { useRovingTabIndex } from "../../../accessibility/RovingTabIndex";
 // // #21935 If we’ve got just 4, don’t show +1, just show all of them
 // const MAX_READ_AVATARS = MAX_READ_AVATARS_PLUS_N + 1;
 
-const READ_AVATAR_OFFSET = 10;
+// const READ_AVATAR_OFFSET = 10;
 export const READ_AVATAR_SIZE = 16;
 
 interface Props {
@@ -48,6 +49,7 @@ interface Props {
     isTwelveHour: boolean;
     maxReadAvatarsPlusN: number;
     maxReadAvatars: number;
+    layout?: Layout;
 }
 
 interface IAvatarPosition {
@@ -89,7 +91,7 @@ export function readReceiptTooltip(members: string[], hasMore: boolean): string 
 export function ReadReceiptGroup(
     {
         readReceipts, readReceiptMap, checkUnmounting, suppressAnimation, isTwelveHour,
-        maxReadAvatarsPlusN, maxReadAvatars,
+        maxReadAvatarsPlusN, maxReadAvatars, layout,
     }: Props,
 ) {
     const [menuDisplayed, button, openMenu, closeMenu] = useContextMenu();
@@ -103,6 +105,9 @@ export function ReadReceiptGroup(
     const maxAvatars = hasMore
         ? MAX_READ_AVATARS_PLUS_N
         : MAX_READ_AVATARS;
+
+    // SC: Don't use offset for bubble layout
+    const READ_AVATAR_OFFSET = layout == Layout.Bubble ? READ_AVATAR_SIZE-1 : 10;
 
     const tooltipMembers: string[] = readReceipts.slice(0, maxAvatars)
         .map(it => it.roomMember?.name ?? it.userId);

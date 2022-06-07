@@ -1247,8 +1247,9 @@ export class UnwrappedEventTile extends React.Component<IProps, IState> {
                     checkUnmounting={this.props.checkUnmounting}
                     suppressAnimation={this.suppressReadReceiptAnimation}
                     isTwelveHour={this.props.isTwelveHour}
-                    maxReadAvatarsPlusN={this.props.layout == Layout.Bubble ? 8 : 3}
-                    maxReadAvatars={this.props.layout == Layout.Bubble ? 9 : 4}
+                    maxReadAvatarsPlusN={this.props.layout == Layout.Bubble ? 12 : 3}
+                    maxReadAvatars={this.props.layout == Layout.Bubble ? 13 : 4}
+                    layout={this.props.layout}
                 />;
             }
         }
