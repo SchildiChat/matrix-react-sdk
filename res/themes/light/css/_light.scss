@@ -49,7 +49,7 @@ $panel-actions: rgba($tertiary-content, 0.2);
 $space-nav: rgba($tertiary-content, 0.15);
 
 $accent: #8BC34A;
-$alert: #F4511E;
+$alert: #E53935;
 $links: #0086e6;
 
 $username-variant1-color: #4189c9;
@@ -262,8 +262,8 @@ $reaction-row-button-selected-bg-color: #DCEDC8;
 // ********************
 // These two don't change between themes. They are the $alert, but we don't want
 // custom themes to affect them by accident.
-$voice-record-stop-symbol-color: #F4511E;
-$voice-record-live-circle-color: #F4511E;
+$voice-record-stop-symbol-color: #E53935;
+$voice-record-live-circle-color: #E53935;
 $voice-record-stop-border-color: $quinary-content;
 $voice-record-icon-color: $tertiary-content;
 // ********************
