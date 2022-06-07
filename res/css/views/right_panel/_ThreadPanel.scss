@@ -87,7 +87,7 @@ limitations under the License.
     .mx_AutoHideScrollbar,
     .mx_RoomView_messagePanelSpinner {
         background-color: $background;
-        border-radius: 8px;
+        border-radius: $border-radius-8px;
         padding-inline-end: 0;
         overflow-y: scroll; // set gap between the thread tile and the right border
         height: 100%;
@@ -136,7 +136,7 @@ limitations under the License.
             flex-grow: 1;
 
             .mx_FileDropTarget {
-                border-radius: 8px;
+                border-radius: $border-radius-8px;
             }
         }
 
@@ -173,7 +173,7 @@ limitations under the License.
 
     .mx_MessageComposer {
         background-color: $background;
-        border-radius: 8px;
+        border-radius: $border-radius-8px;
         margin-top: 8px;
         padding: 0 8px;
         box-sizing: border-box;
@@ -181,7 +181,7 @@ limitations under the License.
 
     .mx_ThreadPanel_dropdown {
         padding: 3px 4px 3px 8px;
-        border-radius: 4px;
+        border-radius: $border-radius-4px;
         line-height: 1.5;
         user-select: none;
     }
@@ -305,7 +305,7 @@ limitations under the License.
 }
 
 .mx_ThreadPanel_empty {
-    border-radius: 8px;
+    border-radius: $border-radius-8px;
     background: $background;
     display: flex;
     flex-direction: column;
