@@ -414,7 +414,7 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         supportedLevels: LEVELS_FEATURE,
         labsGroup: LabGroup.Rooms,
         displayName: _td("Right-click message context menu"),
-        default: false,
+        default: true,
     },
     "feature_location_share_pin_drop": {
         isFeature: true,
