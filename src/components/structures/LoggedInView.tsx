@@ -138,6 +138,7 @@ class LoggedInView extends React.Component<IProps, IState> {
     protected readonly resizeHandler: React.RefObject<HTMLDivElement>;
     protected layoutWatcherRef: string;
     protected compactLayoutWatcherRef: string;
+    protected borderRadiusWatcherRef: string;
     protected backgroundImageWatcherRef: string;
     protected resizer: Resizer;
 
@@ -189,6 +190,9 @@ class LoggedInView extends React.Component<IProps, IState> {
         this.compactLayoutWatcherRef = SettingsStore.watchSetting(
             "useCompactLayout", null, this.onCompactLayoutChanged,
         );
+        this.borderRadiusWatcherRef = SettingsStore.watchSetting(
+            "borderRadius", null, this.onBorderRadiusChanged,
+        );
         this.backgroundImageWatcherRef = SettingsStore.watchSetting(
             "RoomList.backgroundImage", null, this.refreshBackgroundImage,
         );
@@ -199,6 +203,9 @@ class LoggedInView extends React.Component<IProps, IState> {
         OwnProfileStore.instance.on(UPDATE_EVENT, this.refreshBackgroundImage);
         this.loadResizerPreferences();
         this.refreshBackgroundImage();
+
+        // SC: Initially apply border radius on load without being actually changed
+        this.onBorderRadiusChanged();
     }
 
     componentWillUnmount() {
@@ -302,6 +309,11 @@ class LoggedInView extends React.Component<IProps, IState> {
         this.setState({
             useCompactLayout: SettingsStore.getValue("useCompactLayout"),
         });
+    };
+
+    private onBorderRadiusChanged = () => {
+        // SC: This is messy here, but whatever
+        document.body.setAttribute("data-border-radius", SettingsStore.getValue("borderRadius"));
     };
 
     private onSync = (syncState: SyncState, oldSyncState?: SyncState, data?: ISyncStateData): void => {

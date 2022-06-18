@@ -34,6 +34,7 @@ import PosthogTrackers from "../../../PosthogTrackers";
 import StyledRadioButton from '../elements/StyledRadioButton';
 import { Theme } from '../../../settings/enums/Theme';
 import { UserNameColorMode } from '../../../settings/enums/UserNameColorMode';
+import { BorderRadius } from '../../../settings/enums/BorderRadius';
 
 interface IProps {
 }
@@ -42,6 +43,7 @@ interface IThemeState {
     lightTheme: string;
     darkTheme: string;
     themeInUse: Theme;
+    borderRadius: BorderRadius;
 }
 
 export interface CustomThemeMessage {
@@ -68,6 +70,7 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
             lightTheme: SettingsStore.getValue("light_theme"),
             darkTheme: SettingsStore.getValue("dark_theme"),
             themeInUse: SettingsStore.getValue("theme_in_use"),
+            borderRadius: SettingsStore.getValue("borderRadius"),
             customThemeUrl: "",
             customThemeMessage: { isError: false, text: "" },
             showAdvancedThemeSettings: false,
@@ -118,6 +121,12 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
         this.setState({ themeInUse: themeInUse });
         SettingsStore.setValue("theme_in_use", null, SettingLevel.DEVICE, themeInUse);
         dis.dispatch<RecheckThemePayload>({ action: Action.RecheckTheme });
+    };
+
+    private onBorderRadiusChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        const borderRadius = e.target.value as BorderRadius;
+        this.setState({ borderRadius: borderRadius });
+        SettingsStore.setValue("borderRadius", null, SettingLevel.DEVICE, borderRadius);
     };
 
     private onAddCustomTheme = async (): Promise<void> => {
@@ -271,6 +280,49 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
             }
         </div>;
 
+        const borderRadiusSection = <div className="mx_SettingsTab_inlineRadioSelectors">
+            <label>
+                <StyledRadioButton
+                    name="border_radius"
+                    value={BorderRadius.Default}
+                    checked={this.state.borderRadius === BorderRadius.Default}
+                    onChange={this.onBorderRadiusChange}
+                >
+                    { _t("Default") }
+                </StyledRadioButton>
+            </label>
+            <label>
+                <StyledRadioButton
+                    name="border_radius"
+                    value={BorderRadius.Round}
+                    checked={this.state.borderRadius === BorderRadius.Round}
+                    onChange={this.onBorderRadiusChange}
+                >
+                    { _t("Round") }
+                </StyledRadioButton>
+            </label>
+            <label>
+                <StyledRadioButton
+                    name="border_radius"
+                    value={BorderRadius.ExtraRound}
+                    checked={this.state.borderRadius === BorderRadius.ExtraRound}
+                    onChange={this.onBorderRadiusChange}
+                >
+                    { _t("Extra round") }
+                </StyledRadioButton>
+            </label>
+            <label>
+                <StyledRadioButton
+                    name="border_radius"
+                    value={BorderRadius.Mixed}
+                    checked={this.state.borderRadius === BorderRadius.Mixed}
+                    onChange={this.onBorderRadiusChange}
+                >
+                    { _t("Mixed") }
+                </StyledRadioButton>
+            </label>
+        </div>;
+
         let customThemeForm: JSX.Element;
         if (SettingsStore.getValue("feature_custom_themes")) {
             let messageElement = null;
@@ -363,6 +415,10 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
             <div className="mx_SettingsTab_section mx_ThemeChoicePanel_themeInUseSection">
                 <span className="mx_SettingsTab_subheading">{ _t("Theme in use") }</span>
                 { themeInUseSection }
+            </div>
+            <div className="mx_SettingsTab_section mx_ThemeChoicePanel_borderRadiusSection">
+                <span className="mx_SettingsTab_subheading">{ _t("Corners") }</span>
+                { borderRadiusSection }
             </div>
             <div className="mx_SettingsTab_section mx_ThemeChoicePanel_Advanced">
                 { toggle }

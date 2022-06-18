@@ -46,6 +46,7 @@ import { MetaSpace } from "../stores/spaces";
 import SdkConfig from "../SdkConfig";
 import ThreadBetaController from './controllers/ThreadBetaController';
 import { FontWatcher } from "./watchers/FontWatcher";
+import { BorderRadius } from './enums/BorderRadius';
 
 // These are just a bunch of helper arrays to avoid copy/pasting a bunch of times
 const LEVELS_ROOM_SETTINGS = [
@@ -481,6 +482,10 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         displayName: _td("Use a more compact 'Modern' layout"),
         default: false,
         controller: new IncompatibleController("layout", false, v => v !== Layout.Group),
+    },
+    "borderRadius": {
+        supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS_WITH_CONFIG,
+        default: BorderRadius.Default,
     },
     "showRedactions": {
         supportedLevels: LEVELS_ROOM_SETTINGS_WITH_ROOM,

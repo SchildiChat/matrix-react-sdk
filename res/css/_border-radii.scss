@@ -14,11 +14,57 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-$border-radius-2px: 2px;
-$border-radius-3px: 3px;
-$border-radius-4px: 3px;
-$border-radius-5px: 3px;
-$border-radius-6px: 3px;
-$border-radius-8px: 3px;
-$border-radius-10px: 3px;
-$border-radius-12px: 3px;
+$border-radius-2px: var(--sc-border-radius-2px, 2px);
+$border-radius-3px: var(--sc-border-radius-3px, 3px);
+$border-radius-4px: var(--sc-border-radius-4px, 3px);
+$border-radius-5px: var(--sc-border-radius-5px, 3px);
+$border-radius-6px: var(--sc-border-radius-6px, 3px);
+$border-radius-8px: var(--sc-border-radius-8px, 3px);
+$border-radius-10px: var(--sc-border-radius-10px, 3px);
+$border-radius-12px: var(--sc-border-radius-12px, 3px);
+
+body, .mx_MatrixChat_wrapper, .mx_NonUrgentToastContainer {
+    &[data-border-radius="default"] {
+        --sc-border-radius-2px: 2px;
+        --sc-border-radius-3px: 3px;
+        --sc-border-radius-4px: 3px;
+        --sc-border-radius-5px: 3px;
+        --sc-border-radius-6px: 3px;
+        --sc-border-radius-8px: 3px;
+        --sc-border-radius-10px: 3px;
+        --sc-border-radius-12px: 3px;
+    }
+
+    &[data-border-radius="round"] {
+        --sc-border-radius-2px: 2px;
+        --sc-border-radius-3px: 8px;
+        --sc-border-radius-4px: 8px;
+        --sc-border-radius-5px: 8px;
+        --sc-border-radius-6px: 8px;
+        --sc-border-radius-8px: 8px;
+        --sc-border-radius-10px: 8px;
+        --sc-border-radius-12px: 8px;
+    }
+
+    &[data-border-radius="extraround"] {
+        --sc-border-radius-2px: 2px;
+        --sc-border-radius-3px: 12px;
+        --sc-border-radius-4px: 12px;
+        --sc-border-radius-5px: 12px;
+        --sc-border-radius-6px: 12px;
+        --sc-border-radius-8px: 12px;
+        --sc-border-radius-10px: 12px;
+        --sc-border-radius-12px: 12px;
+    }
+
+    &[data-border-radius="mixed"] {
+        --sc-border-radius-2px: 2px;
+        --sc-border-radius-3px: 3px;
+        --sc-border-radius-4px: 4px;
+        --sc-border-radius-5px: 5px;
+        --sc-border-radius-6px: 6px;
+        --sc-border-radius-8px: 8px;
+        --sc-border-radius-10px: 10px;
+        --sc-border-radius-12px: 12px;
+    }
+}
