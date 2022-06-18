@@ -23,7 +23,7 @@ $border-radius-8px: var(--sc-border-radius-8px, 3px);
 $border-radius-10px: var(--sc-border-radius-10px, 3px);
 $border-radius-12px: var(--sc-border-radius-12px, 3px);
 
-body, .mx_MatrixChat_wrapper, .mx_NonUrgentToastContainer {
+body {
     &[data-border-radius="default"] {
         --sc-border-radius-2px: 2px;
         --sc-border-radius-3px: 3px;
