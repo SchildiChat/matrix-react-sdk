@@ -34,7 +34,7 @@ import { renderModel } from '../../../editor/render';
 import TypingStore from "../../../stores/TypingStore";
 import SettingsStore from "../../../settings/SettingsStore";
 import { IS_MAC, Key } from "../../../Keyboard";
-import { EMOTICON_TO_EMOJI } from "../../../emoji";
+import { EMOTICON_TO_EMOJI, IEmoji } from "../../../emoji";
 import { CommandCategories, CommandMap, parseCommandString } from "../../../SlashCommands";
 import Range from "../../../editor/range";
 import MessageComposerFormatBar, { Formatting } from "./MessageComposerFormatBar";
@@ -47,6 +47,8 @@ import { getKeyBindingsManager } from '../../../KeyBindingsManager';
 import { ALTERNATE_KEY_NAME, KeyBindingAction } from '../../../accessibility/KeyboardShortcuts';
 import { _t } from "../../../languageHandler";
 import { linkify } from '../../../linkify-matrix';
+import { ICustomEmoji } from '../../../emojipicker/customemoji';
+import { mediaFromMxc } from '../../../customisations/Media';
 
 // matches emoticons which follow the start of a line or whitespace
 const REGEX_EMOTICON_WHITESPACE = new RegExp('(?:^|\\s)(' + EMOTICON_REGEX.source + ')\\s|:^$');
@@ -840,6 +842,24 @@ export default class BasicMessageEditor extends React.Component<IProps, IState> 
         const position = model.positionForOffset(caret.offset, caret.atNodeEnd);
         model.transform(() => {
             const addedLen = model.insert(partCreator.plainWithEmoji(text), position);
+            return model.positionForOffset(caret.offset + addedLen, true);
+        });
+    }
+
+    public insertEmoji(emoji: ICustomEmoji | IEmoji) {
+        this.modifiedFlag = true;
+        const { model } = this.props;
+        const { partCreator } = model;
+        const caret = this.getCaret();
+        const position = model.positionForOffset(caret.offset, caret.atNodeEnd);
+        let emojiPart : Part;
+        if ('unicode' in emoji) {
+            emojiPart = partCreator.emoji(emoji.unicode);
+        } else {
+            emojiPart = partCreator.customEmoji(emoji.shortcodes[0], emoji.url);
+        }
+        model.transform(() => {
+            const addedLen = model.insert([emojiPart], position);
             return model.positionForOffset(caret.offset + addedLen, true);
         });
     }

@@ -19,6 +19,8 @@ import { MatrixEvent } from "matrix-js-sdk/src/models/event";
 import { ActionPayload } from "../payloads";
 import { Action } from "../actions";
 import { TimelineRenderingType } from "../../contexts/RoomContext";
+import { IEmoji } from "../../emoji";
+import { ICustomEmoji } from "../../emojipicker/customemoji";
 
 export enum ComposerType {
     Send = "send",
@@ -43,8 +45,13 @@ interface IComposerInsertPlaintextPayload extends IBaseComposerInsertPayload {
     text: string;
 }
 
+interface IComposerInsertEmojiPayload extends IBaseComposerInsertPayload {
+    emoji: IEmoji | ICustomEmoji;
+}
+
 export type ComposerInsertPayload =
     IComposerInsertMentionPayload |
     IComposerInsertQuotePayload |
-    IComposerInsertPlaintextPayload;
+    IComposerInsertPlaintextPayload |
+    IComposerInsertEmojiPayload;
 

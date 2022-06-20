@@ -26,6 +26,7 @@ import dis from "../../../dispatcher/dispatcher";
 import { Action } from '../../../dispatcher/actions';
 import RoomContext from "../../../contexts/RoomContext";
 import { FocusComposerPayload } from '../../../dispatcher/payloads/FocusComposerPayload';
+import { IEmoji } from '../../../emoji';
 
 interface IProps {
     mxEvent: MatrixEvent;
@@ -90,7 +91,8 @@ class ReactionPicker extends React.Component<IProps, IState> {
         });
     };
 
-    private onChoose = (reaction: string) => {
+    private onChoose = (reactionEmoji: IEmoji) => {
+        const reaction = reactionEmoji.unicode;
         this.componentWillUnmount();
         this.props.onFinished();
         const myReactions = this.getReactions();

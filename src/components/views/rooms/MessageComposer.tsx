@@ -53,6 +53,8 @@ import { SettingUpdatedPayload } from "../../../dispatcher/payloads/SettingUpdat
 import MessageComposerButtons from './MessageComposerButtons';
 import { ButtonEvent } from '../elements/AccessibleButton';
 import { ViewRoomPayload } from "../../../dispatcher/payloads/ViewRoomPayload";
+import { IEmoji } from '../../../emoji';
+import { ICustomEmoji } from '../../../emojipicker/customemoji';
 
 let instanceCount = 0;
 
@@ -297,10 +299,10 @@ export default class MessageComposer extends React.Component<IProps, IState> {
         }
     };
 
-    private addEmoji = (emoji: string): boolean => {
+    private addEmoji = (emoji: IEmoji | ICustomEmoji): boolean => {
         dis.dispatch<ComposerInsertPayload>({
             action: Action.ComposerInsert,
-            text: emoji,
+            emoji: emoji,
             timelineRenderingType: this.context.timelineRenderingType,
         });
         return true;

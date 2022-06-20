@@ -19,19 +19,38 @@ import React from 'react';
 
 import { MenuItem } from "../../structures/ContextMenu";
 import { IEmoji } from "../../../emoji";
+import { ICustomEmoji } from '../../../emojipicker/customemoji';
+import { mediaFromMxc } from '../../../customisations/Media';
 
 interface IProps {
-    emoji: IEmoji;
+    emoji: IEmoji | ICustomEmoji;
     selectedEmojis?: Set<string>;
-    onClick(emoji: IEmoji): void;
-    onMouseEnter(emoji: IEmoji): void;
-    onMouseLeave(emoji: IEmoji): void;
+    onClick(emoji: IEmoji | ICustomEmoji): void;
+    onMouseEnter(emoji: IEmoji | ICustomEmoji): void;
+    onMouseLeave(emoji: IEmoji | ICustomEmoji): void;
 }
 
 class Emoji extends React.PureComponent<IProps> {
     render() {
         const { onClick, onMouseEnter, onMouseLeave, emoji, selectedEmojis } = this.props;
-        const isSelected = selectedEmojis && selectedEmojis.has(emoji.unicode);
+
+        let emojiElement: JSX.Element;
+        if ('unicode' in emoji) {
+            const isSelected = selectedEmojis && selectedEmojis.has(emoji.unicode);
+            emojiElement = <div className={`mx_EmojiPicker_item ${isSelected ? 'mx_EmojiPicker_item_selected' : ''}`}>
+                {emoji.unicode}
+            </div>;
+        } else {
+            const mediaUrl = mediaFromMxc(emoji.url).getThumbnailOfSourceHttp(24, 24, 'scale');
+            emojiElement = <div className="mx_EmojiPicker_item">
+                <img
+                    className="mx_customEmoji_image"
+                    src={mediaUrl}
+                    alt={emoji.shortcodes[0]} />
+            </div>
+        }
+        emojiElement;
+
         return (
             <MenuItem
                 element="li"
@@ -39,11 +58,9 @@ class Emoji extends React.PureComponent<IProps> {
                 onMouseEnter={() => onMouseEnter(emoji)}
                 onMouseLeave={() => onMouseLeave(emoji)}
                 className="mx_EmojiPicker_item_wrapper"
-                label={emoji.unicode}
+                label={'unicode' in emoji ? emoji.unicode : emoji.shortcodes[0]}
             >
-                <div className={`mx_EmojiPicker_item ${isSelected ? 'mx_EmojiPicker_item_selected' : ''}`}>
-                    { emoji.unicode }
-                </div>
+                {emojiElement}
             </MenuItem>
         );
     }

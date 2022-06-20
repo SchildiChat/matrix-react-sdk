@@ -33,6 +33,7 @@ import SettingsStore from "../settings/SettingsStore";
 import { EMOJI, IEmoji } from '../emoji';
 import { TimelineRenderingType } from '../contexts/RoomContext';
 import { mediaFromMxc } from '../customisations/Media';
+import { ICustomEmoji, loadImageSet } from '../emojipicker/customemoji';
 
 const LIMIT = 20;
 
@@ -43,12 +44,6 @@ const EMOJI_REGEX = new RegExp('(' + EMOTICON_REGEX.source + '|(?:^|\\s):[+-\\w]
 interface ISortedEmoji {
     emoji: IEmoji | ICustomEmoji;
     _orderBy: number;
-}
-
-export interface ICustomEmoji {
-    shortcodes: string[];
-    emoticon?: string;
-    url: string;
 }
 
 const SORTED_EMOJI: ISortedEmoji[] = EMOJI.sort((a, b) => {
@@ -98,11 +93,8 @@ export default class EmojiProvider extends AutocompleteProvider {
         });
 
         // Load this room's image sets.
-        const loadedImages: ICustomEmoji[] = [];
         const imageSetEvents = room.currentState.getStateEvents('im.ponies.room_emotes');
-        imageSetEvents.forEach(imageSetEvent => {
-            this.loadImageSet(loadedImages, imageSetEvent);
-        });
+        const loadedImages: ICustomEmoji[] = imageSetEvents.flatMap(imageSetEvent => loadImageSet(imageSetEvent));
         const sortedCustomImages = loadedImages.map((emoji, index) => ({
             emoji,
             // Include the index so that we can preserve the original order
@@ -113,20 +105,6 @@ export default class EmojiProvider extends AutocompleteProvider {
             funcs: [o => o.emoji.shortcodes.map(s => `:${s}:`)],
             shouldMatchWordsOnly: true,
         });
-    }
-
-    private loadImageSet(loadedImages: ICustomEmoji[], imageSetEvent: MatrixEvent): void {
-        const images = imageSetEvent.getContent().images;
-        if (!images) {
-            return;
-        }
-        for (const imageKey in images) {
-            const imageData = images[imageKey];
-            loadedImages.push({
-                shortcodes: [imageKey],
-                url: imageData.url,
-            });
-        }
     }
 
     async getCompletions(
@@ -196,13 +174,9 @@ export default class EmojiProvider extends AutocompleteProvider {
                         component: (
                             <PillCompletion title={`:${c.emoji.shortcodes[0]}:`}>
                                 <img
-                                    className="mx_BaseAvatar_image"
+                                    className="mx_customEmoji_image"
                                     src={mediaUrl}
-                                    alt={c.emoji.shortcodes[0]}
-                                    style={{
-                                        width: '24px',
-                                        height: '24px',
-                                    }} />
+                                    alt={c.emoji.shortcodes[0]} />
                             </PillCompletion>
                         ),
                         range,

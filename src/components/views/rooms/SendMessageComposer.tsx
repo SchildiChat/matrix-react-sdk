@@ -531,6 +531,8 @@ export class SendMessageComposer extends React.Component<ISendMessageComposerPro
                     this.editorRef.current?.insertQuotedMessage(payload.event);
                 } else if (payload.text) {
                     this.editorRef.current?.insertPlaintext(payload.text);
+                } else if (payload.emoji) {
+                    this.editorRef.current?.insertEmoji(payload.emoji);
                 }
                 break;
         }

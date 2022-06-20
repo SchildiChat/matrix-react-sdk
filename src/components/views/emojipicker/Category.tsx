@@ -21,14 +21,16 @@ import { CATEGORY_HEADER_HEIGHT, EMOJI_HEIGHT, EMOJIS_PER_ROW } from "./EmojiPic
 import LazyRenderList from "../elements/LazyRenderList";
 import { DATA_BY_CATEGORY, IEmoji } from "../../../emoji";
 import Emoji from './Emoji';
+import { ICustomEmoji } from '../../../emojipicker/customemoji';
 
 const OVERFLOW_ROWS = 3;
 
-export type CategoryKey = (keyof typeof DATA_BY_CATEGORY) | "recent";
+export type CategoryKey = (keyof typeof DATA_BY_CATEGORY) | "recent" | "room";
 
 export interface ICategory {
     id: CategoryKey;
     name: string;
+    representativeEmoji?: ICustomEmoji;
     enabled: boolean;
     visible: boolean;
     ref: RefObject<HTMLButtonElement>;
@@ -37,14 +39,14 @@ export interface ICategory {
 interface IProps {
     id: string;
     name: string;
-    emojis: IEmoji[];
+    emojis: Array<IEmoji | ICustomEmoji>;
     selectedEmojis: Set<string>;
     heightBefore: number;
     viewportHeight: number;
     scrollTop: number;
-    onClick(emoji: IEmoji): void;
-    onMouseEnter(emoji: IEmoji): void;
-    onMouseLeave(emoji: IEmoji): void;
+    onClick(emoji: IEmoji | ICustomEmoji): void;
+    onMouseEnter(emoji: IEmoji | ICustomEmoji): void;
+    onMouseLeave(emoji: IEmoji | ICustomEmoji): void;
 }
 
 class Category extends React.PureComponent<IProps> {
@@ -54,7 +56,7 @@ class Category extends React.PureComponent<IProps> {
         return (<div key={rowIndex}>{
             emojisForRow.map(emoji => (
                 <Emoji
-                    key={emoji.hexcode}
+                    key={'hexcode' in emoji ? emoji.hexcode : emoji.shortcodes[0]}
                     emoji={emoji}
                     selectedEmojis={selectedEmojis}
                     onClick={onClick}

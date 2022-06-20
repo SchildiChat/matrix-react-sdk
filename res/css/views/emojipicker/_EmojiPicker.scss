@@ -34,6 +34,8 @@ limitations under the License.
 .mx_EmojiPicker_header {
     padding: 4px 8px 0;
     border-bottom: 1px solid $message-action-bar-border-color;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .mx_EmojiPicker_anchor {
@@ -56,7 +58,7 @@ limitations under the License.
     }
 }
 
-.mx_EmojiPicker_anchor::before {
+.mx_EmojiPicker_anchor:not(.mx_CustomEmojiCategory)::before {
     background-color: $primary-content;
     content: '';
     display: inline-block;
@@ -66,7 +68,7 @@ limitations under the License.
     height: 100%;
 }
 
-.mx_EmojiPicker_anchor:disabled::before {
+.mx_EmojiPicker_anchor:disabled:not(.mx_CustomEmojiCategory)::before {
     background-color: $focus-bg-color;
 }
 
@@ -226,4 +228,23 @@ limitations under the License.
 
 .mx_EmojiPicker_quick_header .mx_EmojiPicker_name {
     margin-right: 4px;
+}
+
+.mx_customEmoji_image {
+    object-fit: contain;
+    aspect-ratio: 1;
+    vertical-align: top;
+    background-color: $background;
+    width: 24px;
+    height: 24px;
+}
+
+.mx_CustomEmojiCategory {
+    vertical-align: top;
+
+    img {
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+    }
 }
