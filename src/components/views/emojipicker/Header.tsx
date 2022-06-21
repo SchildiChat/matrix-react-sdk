@@ -22,6 +22,7 @@ import { _t } from "../../../languageHandler";
 import { CategoryKey, ICategory } from "./Category";
 import { getKeyBindingsManager } from "../../../KeyBindingsManager";
 import { KeyBindingAction } from "../../../accessibility/KeyboardShortcuts";
+import { mediaFromMxc } from '../../../customisations/Media';
 
 interface IProps {
     categories: ICategory[];
@@ -82,6 +83,16 @@ class Header extends React.PureComponent<IProps> {
         }
     };
 
+    private onWheel = (evt : React.WheelEvent) => {
+        evt.preventDefault();
+        // annoying failfox hack
+        if (evt.deltaMode === 1) {
+            evt.currentTarget.scrollLeft += evt.deltaY * 20;
+        } else {
+            evt.currentTarget.scrollLeft += evt.deltaY;
+        }
+    }
+
     render() {
         return (
             <nav
@@ -89,11 +100,25 @@ class Header extends React.PureComponent<IProps> {
                 role="tablist"
                 aria-label={_t("Categories")}
                 onKeyDown={this.onKeyDown}
+                onWheel={this.onWheel}
             >
                 { this.props.categories.map(category => {
-                    const classes = classNames(`mx_EmojiPicker_anchor mx_EmojiPicker_anchor_${category.id}`, {
-                        mx_EmojiPicker_anchor_visible: category.visible,
-                    });
+                    let emojiElement : JSX.Element;
+                    let classes : string;
+                    if (category.representativeEmoji) {
+                        const mediaUrl = mediaFromMxc(category.representativeEmoji.url).getThumbnailOfSourceHttp(24, 24, 'scale');
+                        emojiElement = <img
+                                className="mx_customEmoji_image"
+                                src={mediaUrl}
+                                alt={category.representativeEmoji.shortcodes[0]} />
+                        classes = classNames(`mx_EmojiPicker_anchor`, `mx_CustomEmojiCategory`, {
+                            mx_EmojiPicker_anchor_visible: category.visible,
+                        });
+                    } else {
+                        classes = classNames(`mx_EmojiPicker_anchor mx_EmojiPicker_anchor_${category.id}`, {
+                            mx_EmojiPicker_anchor_visible: category.visible,
+                        });
+                    }
                     // Properties of this button are also modified by EmojiPicker's updateVisibility in DOM.
                     return <button
                         disabled={!category.enabled}
@@ -106,7 +131,9 @@ class Header extends React.PureComponent<IProps> {
                         tabIndex={category.visible ? 0 : -1} // roving
                         aria-selected={category.visible}
                         aria-controls={`mx_EmojiPicker_category_${category.id}`}
-                    />;
+                    >
+                        {emojiElement}
+                    </button>;
                 }) }
             </nav>
         );

@@ -39,9 +39,11 @@ import RoomContext from '../../../contexts/RoomContext';
 import { useDispatcher } from "../../../hooks/useDispatcher";
 import { chromeFileInputFix } from "../../../utils/BrowserWorkarounds";
 import IconizedContextMenu, { IconizedContextMenuOptionList } from '../context_menus/IconizedContextMenu';
+import { IEmoji } from '../../../emoji';
+import { ICustomEmoji } from '../../../emojipicker/customemoji';
 
 interface IProps {
-    addEmoji: (emoji: string) => boolean;
+    addEmoji: (emoji: IEmoji | ICustomEmoji) => boolean;
     haveRecording: boolean;
     isMenuOpen: boolean;
     isStickerPickerOpen: boolean;
@@ -71,7 +73,7 @@ const MessageComposerButtons: React.FC<IProps> = (props: IProps) => {
     let moreButtons: ReactElement[];
     if (narrow) {
         mainButtons = [
-            emojiButton(props),
+            emojiButton(props, room),
         ];
         moreButtons = [
             uploadButton(), // props passed via UploadButtonContext
@@ -82,7 +84,7 @@ const MessageComposerButtons: React.FC<IProps> = (props: IProps) => {
         ];
     } else if (props.collapseButtons) {
         mainButtons = [
-            emojiButton(props),
+            emojiButton(props, room),
             uploadButton(), // props passed via UploadButtonContext
         ];
         moreButtons = [
@@ -93,7 +95,7 @@ const MessageComposerButtons: React.FC<IProps> = (props: IProps) => {
         ];
     } else {
         mainButtons = [
-            emojiButton(props),
+            emojiButton(props, room),
             uploadButton(), // props passed via UploadButtonContext
             showStickersButton(props),
             voiceRecordingButton(props, narrow),
@@ -136,20 +138,22 @@ const MessageComposerButtons: React.FC<IProps> = (props: IProps) => {
     </UploadButtonContextProvider>;
 };
 
-function emojiButton(props: IProps): ReactElement {
+function emojiButton(props: IProps, room: Room): ReactElement {
     return <EmojiButton
         key="emoji_button"
         addEmoji={props.addEmoji}
         menuPosition={props.menuPosition}
+        room={room}
     />;
 }
 
 interface IEmojiButtonProps {
-    addEmoji: (unicode: string) => boolean;
+    addEmoji: (emoji: ICustomEmoji | IEmoji) => boolean;
     menuPosition: AboveLeftOf;
+    room: Room
 }
 
-const EmojiButton: React.FC<IEmojiButtonProps> = ({ addEmoji, menuPosition }) => {
+const EmojiButton: React.FC<IEmojiButtonProps> = ({ addEmoji, menuPosition, room }) => {
     const overflowMenuCloser = useContext(OverflowMenuContext);
     const [menuDisplayed, button, openMenu, closeMenu] = useContextMenu();
 
@@ -167,7 +171,7 @@ const EmojiButton: React.FC<IEmojiButtonProps> = ({ addEmoji, menuPosition }) =>
             }}
             managed={false}
         >
-            <EmojiPicker onChoose={addEmoji} showQuickReactions={true} />
+            <EmojiPicker onChoose={addEmoji} showQuickReactions={true} room={room} />
         </ContextMenu>;
     }
 

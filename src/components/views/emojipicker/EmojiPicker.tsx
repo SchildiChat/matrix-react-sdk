@@ -17,6 +17,8 @@ limitations under the License.
 
 import React from 'react';
 
+import { Room } from 'matrix-js-sdk/src/models/room';
+
 import { _t } from '../../../languageHandler';
 import * as recent from '../../../emojipicker/recent';
 import { DATA_BY_CATEGORY, getEmojiFromUnicode, IEmoji } from "../../../emoji";
@@ -27,6 +29,7 @@ import Preview from "./Preview";
 import QuickReactions from "./QuickReactions";
 import Category, { ICategory, CategoryKey } from "./Category";
 import AccessibleButton from '../elements/AccessibleButton';
+import { ICustomEmoji, loadImageSet } from '../../../emojipicker/customemoji';
 
 export const CATEGORY_HEADER_HEIGHT = 20;
 export const EMOJI_HEIGHT = 35;
@@ -38,7 +41,8 @@ interface IProps {
     allowUnlisted?: boolean;
     selectedEmojis?: Set<string>;
     showQuickReactions?: boolean;
-    onChoose(unicode: string): boolean;
+    room?: Room;
+    onChoose(emoji: ICustomEmoji | IEmoji): boolean;
 }
 
 interface IState {
@@ -52,9 +56,11 @@ interface IState {
 }
 
 class EmojiPicker extends React.Component<IProps, IState> {
-    private readonly recentlyUsed: IEmoji[];
-    private readonly memoizedDataByCategory: Record<CategoryKey, IEmoji[]>;
+    private readonly recentlyUsed: Array<IEmoji | ICustomEmoji>;
+    private readonly memoizedDataByCategory: Record<CategoryKey, Array<IEmoji | ICustomEmoji>>;
+    private readonly allEmojis: Record<CategoryKey, Array<IEmoji | ICustomEmoji>>;
     private readonly categories: ICategory[];
+    private readonly shortcodes_to_custom_emoji: Record<string, ICustomEmoji> = {};
 
     private scrollRef = React.createRef<AutoHideScrollbar>();
 
@@ -68,12 +74,31 @@ class EmojiPicker extends React.Component<IProps, IState> {
             viewportHeight: 280,
         };
 
+        let loadedImages: ICustomEmoji[];
+        if (props.room) {
+            const imageSetEvents = props.room.currentState.getStateEvents('im.ponies.room_emotes');
+            loadedImages = imageSetEvents.flatMap(imageSetEvent => loadImageSet(imageSetEvent));
+        } else {
+            loadedImages = [];
+        }
+
+        // populate the map of custom emojis from shortcodes
+        loadedImages.forEach(image => {
+            image.shortcodes.forEach(shortCode => {
+                this.shortcodes_to_custom_emoji[`:${shortCode}:`] = image;
+            });
+        })
+
         // Convert recent emoji characters to emoji data, removing unknowns and duplicates
-        this.recentlyUsed = Array.from(new Set(recent.get().map(getEmojiFromUnicode).filter(Boolean)));
-        this.memoizedDataByCategory = {
+        this.recentlyUsed = Array.from(new Set(recent.get().map(recentKey => {
+            return getEmojiFromUnicode(recentKey) || this.shortcodes_to_custom_emoji[recentKey];
+        }).filter(Boolean)));
+        this.allEmojis = {
             recent: this.recentlyUsed,
+            room: loadedImages,
             ...DATA_BY_CATEGORY,
         };
+        this.memoizedDataByCategory = {...this.allEmojis};
 
         this.categories = [{
             id: "recent",
@@ -81,7 +106,8 @@ class EmojiPicker extends React.Component<IProps, IState> {
             enabled: this.recentlyUsed.length > 0,
             visible: this.recentlyUsed.length > 0,
             ref: React.createRef(),
-        }, {
+        },
+        {
             id: "people",
             name: _t("Smileys & People"),
             enabled: true,
@@ -130,6 +156,16 @@ class EmojiPicker extends React.Component<IProps, IState> {
             visible: false,
             ref: React.createRef(),
         }];
+        if (loadedImages.length > 0) {
+            this.categories.splice(1, 0, {
+                id: "room",
+                name: _t("Room Emoji"),
+                representativeEmoji: loadedImages[0],
+                enabled: true,
+                visible: true,
+                ref: React.createRef(),
+            });
+        }
     }
 
     private onScroll = () => {
@@ -160,6 +196,7 @@ class EmojiPicker extends React.Component<IProps, IState> {
                 cat.ref.current.classList.add("mx_EmojiPicker_anchor_visible");
                 cat.ref.current.setAttribute("aria-selected", "true");
                 cat.ref.current.setAttribute("tabindex", "0");
+                cat.ref.current.scrollIntoView();
             } else {
                 cat.ref.current.classList.remove("mx_EmojiPicker_anchor_visible");
                 cat.ref.current.setAttribute("aria-selected", "false");
@@ -176,12 +213,12 @@ class EmojiPicker extends React.Component<IProps, IState> {
     private onChangeFilter = (filter: string): void => {
         const lcFilter = filter.toLowerCase().trim(); // filter is case insensitive
         for (const cat of this.categories) {
-            let emojis: IEmoji[];
+            let emojis: Array<IEmoji | ICustomEmoji>;
             // If the new filter string includes the old filter string, we don't have to re-filter the whole dataset.
             if (lcFilter.includes(this.state.filter)) {
                 emojis = this.memoizedDataByCategory[cat.id];
             } else {
-                emojis = cat.id === "recent" ? this.recentlyUsed : DATA_BY_CATEGORY[cat.id];
+                emojis = this.allEmojis[cat.id];
             }
             emojis = emojis.filter(emoji => this.emojiMatchesFilter(emoji, lcFilter));
             this.memoizedDataByCategory[cat.id] = emojis;
@@ -195,14 +232,18 @@ class EmojiPicker extends React.Component<IProps, IState> {
         setTimeout(this.updateVisibility, 0);
     };
 
-    private emojiMatchesFilter = (emoji: IEmoji, filter: string): boolean => {
-        return emoji.label.toLowerCase().includes(filter) ||
-            (Array.isArray(emoji.emoticon)
-                ? emoji.emoticon.some((x) => x.includes(filter))
-                : emoji.emoticon?.includes(filter)
-            ) ||
-            emoji.shortcodes.some(x => x.toLowerCase().includes(filter)) ||
-            emoji.unicode.split(ZERO_WIDTH_JOINER).includes(filter);
+    private emojiMatchesFilter = (emoji: IEmoji | ICustomEmoji, filter: string): boolean => {
+        if ('label' in emoji) {
+            return emoji.label.toLowerCase().includes(filter) ||
+                (Array.isArray(emoji.emoticon)
+                    ? emoji.emoticon.some((x) => x.includes(filter))
+                    : emoji.emoticon?.includes(filter)
+                ) ||
+                emoji.shortcodes.some(x => x.toLowerCase().includes(filter)) ||
+                emoji.unicode.split(ZERO_WIDTH_JOINER).includes(filter);
+        } else {
+            return emoji.shortcodes.some(x => x.toLowerCase().includes(filter));
+        }
     };
 
     private onEnterFilter = () => {
@@ -225,14 +266,19 @@ class EmojiPicker extends React.Component<IProps, IState> {
         });
     };
 
-    private onClickEmoji = (emoji: IEmoji): void => {
-        if (this.props.onChoose(emoji.unicode) !== false) {
-            recent.add(emoji.unicode);
+    private onClickEmoji = (emoji: IEmoji | ICustomEmoji): void => {
+        if (this.props.onChoose(emoji) !== false) {
+            recent.add('unicode' in emoji ? emoji.unicode : `:${emoji.shortcodes[0]}:`);
         }
     };
 
     private reactWith = (reaction: string): void => {
-        this.props.onChoose(reaction);
+        this.props.onChoose({
+            label: null,
+            hexcode: null,
+            shortcodes: [],
+            unicode: reaction
+        });
     };
 
     private static categoryHeightForEmojiCount(count: number): number {
