@@ -33,6 +33,7 @@ import { _t, TranslatedString } from "../../../languageHandler";
 import LabelledToggleSwitch from "../elements/LabelledToggleSwitch";
 import SettingsStore from "../../../settings/SettingsStore";
 import StyledRadioButton from "../elements/StyledRadioButton";
+import Dropdown from "../elements/Dropdown";
 import { SettingLevel } from "../../../settings/SettingLevel";
 import Modal from "../../../Modal";
 import ErrorDialog from "../dialogs/ErrorDialog";
@@ -109,6 +110,7 @@ interface IState {
     desktopNotifications: boolean;
     desktopShowBody: boolean;
     audioNotifications: boolean;
+    soundPack: string;
 }
 
 export default class Notifications extends React.PureComponent<IProps, IState> {
@@ -122,6 +124,7 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
             desktopNotifications: SettingsStore.getValue("notificationsEnabled"),
             desktopShowBody: SettingsStore.getValue("notificationBodyEnabled"),
             audioNotifications: SettingsStore.getValue("audioNotificationsEnabled"),
+            soundPack: SettingsStore.getValue("soundPack"),
         };
 
         this.settingWatchers = [
@@ -133,6 +136,9 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
             ),
             SettingsStore.watchSetting("audioNotificationsEnabled", null, (...[,,,, value]) =>
                 this.setState({ audioNotifications: value as boolean }),
+            ),
+            SettingsStore.watchSetting("soundPack", null, (...[,,,, value]) =>
+                this.setState({ soundPack: value as string })
             ),
         ];
     }
@@ -161,6 +167,9 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
                 this.refreshPushers(),
                 this.refreshThreepids(),
             ])).reduce((p, c) => Object.assign(c, p), {});
+
+            const value = SettingsStore.getValue("soundPack", null);
+            console.info("sound pack is now", value);
 
             this.setState<keyof Omit<IState, "desktopNotifications" | "desktopShowBody" | "audioNotifications">>({
                 ...newState,
@@ -341,6 +350,12 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
 
     private onAudioNotificationsChanged = async (checked: boolean) => {
         await SettingsStore.setValue("audioNotificationsEnabled", null, SettingLevel.DEVICE, checked);
+    };
+
+    private onSoundPackChanged = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value as string;
+        this.setState({ soundPack: value });
+        await SettingsStore.setValue("soundPack", null, SettingLevel.DEVICE, value);
     };
 
     private onRadioChecked = async (rule: IVectorPushRule, checkedState: VectorState) => {
@@ -542,6 +557,32 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
                 label={_t('Enable audible notifications for this session')}
                 disabled={this.state.phase === Phase.Persisting}
             />
+
+            {this.state.audioNotifications && <>
+                <div className="mx_SettingsTab_subheading">{_t("Sound pack")}</div>
+                <div className="mx_SettingsTab_multilineRadioSelectors">
+                    <label>
+                        <StyledRadioButton
+                            name="room_list_style"
+                            value="schildi"
+                            checked={this.state.soundPack === "schildi"}
+                            onChange={this.onSoundPackChanged}
+                        >
+                            { _t("Schildi: Softer sounds for reduced anxiety") }
+                        </StyledRadioButton>
+                    </label>
+                    <label>
+                        <StyledRadioButton
+                            name="room_list_style"
+                            value="classic"
+                            checked={this.state.soundPack === "classic"}
+                            onChange={this.onSoundPackChanged}
+                        >
+                            { _t("Classic: The same sharp sounds as Element") }
+                        </StyledRadioButton>
+                    </label>
+                </div>
+            </>}
 
             { emailSwitches }
         </>;
