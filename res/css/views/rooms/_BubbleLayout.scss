@@ -373,7 +373,7 @@ $left-gutter: 5.4rem;
             top: unset;
             bottom: 0;
             border-top-left-radius: $border-radius-12px;
-            font-size: 0.85em;
+            font-size: 1.2rem;
             padding: 6px 9px;
             width: unset;
             line-height: 1;
@@ -430,7 +430,7 @@ $left-gutter: 5.4rem;
                 visibility: visible !important;
                 position: unset !important;
                 width: unset !important;
-                font-size: 0.85em;
+                font-size: 1.2rem;
                 line-height: 1;
             }
         }
@@ -440,6 +440,12 @@ $left-gutter: 5.4rem;
         display: block;
         border-radius: $border-radius-12px;
         overflow: hidden;
+    }
+
+    .mx_MPollBody {
+        .mx_MessageTimestamp {
+            margin-inline-start: 1rem;
+        }
     }
 
     // ---- Bubble specific ----
@@ -567,7 +573,7 @@ $left-gutter: 5.4rem;
                     width: unset;
                     text-align: unset;
                     display: inline;
-                    font-size: 0.85em;
+                    font-size: 1.2rem;
                 }
 
                 &:dir(rtl) {
@@ -588,7 +594,7 @@ $left-gutter: 5.4rem;
                     position: unset;
                     text-align: unset;
                     display: inline;
-                    font-size: 0.85em;
+                    font-size: 1.2rem;
                 }
 
                 &:dir(rtl) {
