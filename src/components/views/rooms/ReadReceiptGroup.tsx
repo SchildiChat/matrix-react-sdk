@@ -107,7 +107,7 @@ export function ReadReceiptGroup(
         : MAX_READ_AVATARS;
 
     // SC: Don't use offset for bubble layout
-    const READ_AVATAR_OFFSET = layout == Layout.Bubble ? READ_AVATAR_SIZE-1 : 10;
+    const READ_AVATAR_OFFSET = layout == Layout.Bubble ? READ_AVATAR_SIZE : 10;
 
     const tooltipMembers: string[] = readReceipts.slice(0, maxAvatars)
         .map(it => it.roomMember?.name ?? it.userId);

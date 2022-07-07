@@ -199,10 +199,14 @@ $left-gutter: 5.4rem;
 
     .mx_ReadReceiptGroup {
         position: unset;
-    }
 
-    .mx_ReadReceiptGroup .mx_ReadReceiptGroup_button {
-        flex-direction: row-reverse;
+        .mx_ReadReceiptGroup_button {
+            flex-direction: row-reverse;
+        }
+
+        .mx_ReadReceiptGroup_remainder {
+            margin-left: 2px;
+        }
     }
 
     .mx_EventTile_content {
