@@ -28,6 +28,7 @@ interface IProps {
     onClick(emoji: IEmoji | ICustomEmoji): void;
     onMouseEnter(emoji: IEmoji | ICustomEmoji): void;
     onMouseLeave(emoji: IEmoji | ICustomEmoji): void;
+    disabled?: boolean;
 }
 
 class Emoji extends React.PureComponent<IProps> {
@@ -38,7 +39,7 @@ class Emoji extends React.PureComponent<IProps> {
         if ('unicode' in emoji) {
             const isSelected = selectedEmojis && selectedEmojis.has(emoji.unicode);
             emojiElement = <div className={`mx_EmojiPicker_item ${isSelected ? 'mx_EmojiPicker_item_selected' : ''}`}>
-                {emoji.unicode}
+                { emoji.unicode }
             </div>;
         } else {
             const mediaUrl = mediaFromMxc(emoji.url).getThumbnailOfSourceHttp(24, 24, 'scale');
@@ -47,7 +48,7 @@ class Emoji extends React.PureComponent<IProps> {
                     className="mx_customEmoji_image"
                     src={mediaUrl}
                     alt={emoji.shortcodes[0]} />
-            </div>
+            </div>;
         }
         emojiElement;
 
@@ -59,8 +60,9 @@ class Emoji extends React.PureComponent<IProps> {
                 onMouseLeave={() => onMouseLeave(emoji)}
                 className="mx_EmojiPicker_item_wrapper"
                 label={'unicode' in emoji ? emoji.unicode : emoji.shortcodes[0]}
+                disabled={this.props.disabled}
             >
-                {emojiElement}
+                { emojiElement }
             </MenuItem>
         );
     }

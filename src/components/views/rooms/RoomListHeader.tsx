@@ -55,7 +55,7 @@ import AccessibleTooltipButton from "../elements/AccessibleTooltipButton";
 import TooltipTarget from "../elements/TooltipTarget";
 import { BetaPill } from "../beta/BetaCard";
 import PosthogTrackers from "../../../PosthogTrackers";
-import { useWebSearchMetrics } from "../dialogs/SpotlightDialog";
+import { useWebSearchMetrics } from "../dialogs/spotlight/SpotlightDialog";
 import { shouldShowComponent } from "../../../customisations/helpers/UIComponents";
 import { UIComponent } from "../../../settings/UIFeature";
 
@@ -221,16 +221,20 @@ const RoomListHeader = ({ onVisibilityChange }: IProps) => {
                         closePlusMenu();
                     }}
                 />
-                { videoRoomsEnabled && <IconizedContextMenuOption
-                    iconClassName="mx_RoomListHeader_iconNewVideoRoom"
-                    label={_t("New video room")}
-                    onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        showCreateNewRoom(activeSpace, RoomType.ElementVideo);
-                        closePlusMenu();
-                    }}
-                /> }
+                { videoRoomsEnabled && (
+                    <IconizedContextMenuOption
+                        iconClassName="mx_RoomListHeader_iconNewVideoRoom"
+                        label={_t("New video room")}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            showCreateNewRoom(activeSpace, RoomType.ElementVideo);
+                            closePlusMenu();
+                        }}
+                    >
+                        <BetaPill />
+                    </IconizedContextMenuOption>
+                ) }
             </>;
         }
 
@@ -314,19 +318,23 @@ const RoomListHeader = ({ onVisibilityChange }: IProps) => {
                         closePlusMenu();
                     }}
                 />
-                { videoRoomsEnabled && <IconizedContextMenuOption
-                    label={_t("New video room")}
-                    iconClassName="mx_RoomListHeader_iconNewVideoRoom"
-                    onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        defaultDispatcher.dispatch({
-                            action: "view_create_room",
-                            type: RoomType.ElementVideo,
-                        });
-                        closePlusMenu();
-                    }}
-                /> }
+                { videoRoomsEnabled && (
+                    <IconizedContextMenuOption
+                        label={_t("New video room")}
+                        iconClassName="mx_RoomListHeader_iconNewVideoRoom"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            defaultDispatcher.dispatch({
+                                action: "view_create_room",
+                                type: RoomType.ElementVideo,
+                            });
+                            closePlusMenu();
+                        }}
+                    >
+                        <BetaPill />
+                    </IconizedContextMenuOption>
+                ) }
             </>;
         }
         // SC: Added beneath search all spaces

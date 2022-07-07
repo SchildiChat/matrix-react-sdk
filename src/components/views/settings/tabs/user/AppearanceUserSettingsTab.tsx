@@ -147,7 +147,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                 />
             </div>
             <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_RoomListStyleSection">
-                <span className="mx_SettingsTab_subheading">{ _t("Room list style") }</span>
+                <span className="mx_SettingsTab_subsectionText">{ _t("Room list style") }</span>
                 { roomListStyleSection }
             </div>
         </>;
@@ -159,7 +159,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
         return (
             <div className="mx_SettingsTab mx_AppearanceUserSettingsTab">
                 <div className="mx_SettingsTab_heading">{ _t("Customise your appearance") }</div>
-                <div className="mx_SettingsTab_SubHeading">
+                <div className="mx_SettingsTab_subsectionText">
                     { _t("Appearance Settings only affect this %(brand)s session.", { brand }) }
                 </div>
                 <ThemeChoicePanel />

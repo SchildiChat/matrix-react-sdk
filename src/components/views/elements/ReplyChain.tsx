@@ -33,7 +33,7 @@ import Spinner from './Spinner';
 import ReplyTile from "../rooms/ReplyTile";
 import { UserNameColorMode } from '../../../settings/enums/UserNameColorMode';
 import Pill, { PillType } from './Pill';
-import { ButtonEvent } from './AccessibleButton';
+import AccessibleButton, { ButtonEvent } from './AccessibleButton';
 import { getParentEventId, shouldDisplayReply } from '../../../utils/Reply';
 import RoomContext from "../../../contexts/RoomContext";
 import { MatrixClientPeg } from '../../../MatrixClientPeg';
@@ -222,9 +222,13 @@ export default class ReplyChain extends React.Component<IProps, IState> {
                 {
                     _t('<a>In reply to</a> <pill>', {}, {
                         'a': (sub) => (
-                            <button onClick={this.onQuoteClick} className="mx_ReplyChain_show">
+                            <AccessibleButton
+                                kind="link_inline"
+                                className="mx_ReplyChain_show"
+                                onClick={this.onQuoteClick}
+                            >
                                 { sub }
-                            </button>
+                            </AccessibleButton>
                         ),
                         'pill': (
                             <Pill

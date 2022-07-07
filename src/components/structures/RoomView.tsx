@@ -30,6 +30,7 @@ import { logger } from "matrix-js-sdk/src/logger";
 import { EventTimeline } from 'matrix-js-sdk/src/models/event-timeline';
 import { EventType } from 'matrix-js-sdk/src/@types/event';
 import { RoomState, RoomStateEvent } from 'matrix-js-sdk/src/models/room-state';
+import { EventTimelineSet } from "matrix-js-sdk/src/models/event-timeline-set";
 import { CallState, CallType, MatrixCall } from "matrix-js-sdk/src/webrtc/call";
 import { throttle } from "lodash";
 import { MatrixError } from 'matrix-js-sdk/src/http-api';
@@ -170,6 +171,7 @@ export interface IRoomState {
     searchInProgress?: boolean;
     callState?: CallState;
     canPeek: boolean;
+    canSelfRedact: boolean;
     showApps: boolean;
     isPeeking: boolean;
     showRightPanel: boolean;
@@ -257,6 +259,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             searchResults: null,
             callState: null,
             canPeek: false,
+            canSelfRedact: false,
             showApps: false,
             isPeeking: false,
             showRightPanel: false,
@@ -292,10 +295,12 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         this.dispatcherRef = dis.register(this.onAction);
         context.on(ClientEvent.Room, this.onRoom);
         context.on(RoomEvent.Timeline, this.onRoomTimeline);
+        context.on(RoomEvent.TimelineReset, this.onRoomTimelineReset);
         context.on(RoomEvent.Name, this.onRoomName);
         context.on(RoomStateEvent.Events, this.onRoomStateEvents);
         context.on(RoomStateEvent.Update, this.onRoomStateUpdate);
         context.on(RoomEvent.MyMembership, this.onMyMembership);
+        context.on(ClientEvent.AccountData, this.onAccountData);
         context.on(CryptoEvent.KeyBackupStatus, this.onKeyBackupStatus);
         context.on(CryptoEvent.DeviceVerificationChanged, this.onDeviceVerificationChanged);
         context.on(CryptoEvent.UserTrustStatusChanged, this.onUserVerificationChanged);
@@ -388,7 +393,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         ) {
             // hide chat in right panel when the widget is minimized
             RightPanelStore.instance.setCard({ phase: RightPanelPhases.RoomSummary });
-            RightPanelStore.instance.togglePanel();
+            RightPanelStore.instance.togglePanel(this.state.roomId);
         }
         this.checkWidgets(this.state.room);
     };
@@ -765,6 +770,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             this.context.removeListener(RoomStateEvent.Events, this.onRoomStateEvents);
             this.context.removeListener(RoomEvent.MyMembership, this.onMyMembership);
             this.context.removeListener(RoomStateEvent.Update, this.onRoomStateUpdate);
+            this.context.removeListener(ClientEvent.AccountData, this.onAccountData);
             this.context.removeListener(CryptoEvent.KeyBackupStatus, this.onKeyBackupStatus);
             this.context.removeListener(CryptoEvent.DeviceVerificationChanged, this.onDeviceVerificationChanged);
             this.context.removeListener(CryptoEvent.UserTrustStatusChanged, this.onUserVerificationChanged);
@@ -1023,9 +1029,8 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
 
         CHAT_EFFECTS.forEach(effect => {
             if (containsEmoji(ev.getContent(), effect.emojis) || ev.getContent().msgtype === effect.msgType) {
-                // For initial threads launch, chat effects are disabled
-                // see #19731
-                if (!SettingsStore.getValue("feature_thread") || !ev.isThreadRelation) {
+                // For initial threads launch, chat effects are disabled see #19731
+                if (!SettingsStore.getValue("feature_thread") || !ev.isRelation(THREAD_RELATION_TYPE.name)) {
                     dis.dispatch({ action: `effects.${effect.command}` });
                 }
             }
@@ -1094,10 +1099,24 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         this.updatePermissions(room);
         this.checkWidgets(room);
 
+        if (
+            this.getMainSplitContentType(room) !== MainSplitContentType.Timeline
+            && RoomNotificationStateStore.instance.getRoomState(room).isUnread
+        ) {
+            // Automatically open the chat panel to make unread messages easier to discover
+            RightPanelStore.instance.setCard({ phase: RightPanelPhases.Timeline }, true, room.roomId);
+        }
+
         this.setState({
             tombstone: this.getRoomTombstone(room),
             liveTimeline: room.getLiveTimeline(),
         });
+    };
+
+    private onRoomTimelineReset = (room: Room, timelineSet: EventTimelineSet) => {
+        if (!room || room.roomId !== this.state.room?.roomId) return;
+        logger.log(`Live timeline of ${room.roomId} was reset`);
+        this.setState({ liveTimeline: timelineSet.getLiveTimeline() });
     };
 
     private getRoomTombstone(room = this.state.room) {
@@ -1207,6 +1226,10 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         if (this.state.room) {
             this.updatePreviewUrlVisibility(this.state.room);
         }
+    };
+
+    private onAccountData = (event: MatrixEvent) => {
+        const type = event.getType();
 
         // SC: userNameColorMode can change dependent on if room is DM
         if (type === "m.direct") {
@@ -1248,10 +1271,14 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
     private updatePermissions(room: Room) {
         if (room) {
             const me = this.context.getUserId();
-            const canReact = room.getMyMembership() === "join" && room.currentState.maySendEvent("m.reaction", me);
+            const canReact = (
+                room.getMyMembership() === "join" &&
+                room.currentState.maySendEvent(EventType.Reaction, me)
+            );
             const canSendMessages = room.maySendMessage();
+            const canSelfRedact = room.currentState.maySendEvent(EventType.RoomRedaction, me);
 
-            this.setState({ canReact, canSendMessages });
+            this.setState({ canReact, canSendMessages, canSelfRedact });
         }
     }
 
@@ -1466,7 +1493,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             });
         }, (error) => {
             logger.error("Search failed", error);
-            Modal.createTrackedDialog('Search failed', '', ErrorDialog, {
+            Modal.createDialog(ErrorDialog, {
                 title: _t("Search failed"),
                 description: ((error && error.message) ? error.message :
                     _t("Server may be unavailable, overloaded, or search timed out :(")),
@@ -1594,7 +1621,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             logger.error("Failed to reject invite: %s", error);
 
             const msg = error.message ? error.message : JSON.stringify(error);
-            Modal.createTrackedDialog('Failed to reject invite', '', ErrorDialog, {
+            Modal.createDialog(ErrorDialog, {
                 title: _t("Failed to reject invite"),
                 description: msg,
             });
@@ -1627,7 +1654,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             logger.error("Failed to reject invite: %s", error);
 
             const msg = error.message ? error.message : JSON.stringify(error);
-            Modal.createTrackedDialog('Failed to reject invite', '', ErrorDialog, {
+            Modal.createDialog(ErrorDialog, {
                 title: _t("Failed to reject invite"),
                 description: msg,
             });
@@ -1835,7 +1862,6 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
     private get messagePanelClassNames(): string {
         return classNames("mx_RoomView_messagePanel", {
             "mx_IRCLayout": this.state.layout === Layout.IRC,
-            "mx_GroupLayout": this.state.layout === Layout.Group,
             "sc_BubbleLayout": this.state.layout === Layout.Bubble,
             "sc_BubbleLayout_singleSide": this.state.layout === Layout.Bubble && this.state.singleSideBubbles,
         });

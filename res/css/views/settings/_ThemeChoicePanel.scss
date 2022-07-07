@@ -20,7 +20,6 @@ limitations under the License.
 }
 
 .mx_ThemeChoicePanel {
-    $radio-bg-color: $input-darker-bg-color;
     color: $primary-content;
 
     > .mx_ThemeSelectors {
@@ -39,7 +38,7 @@ limitations under the License.
             display: flex;
             align-items: center;
 
-            background: $radio-bg-color;
+            background: $quinary-content;
             opacity: 0.4;
 
             flex-shrink: 1;
@@ -49,7 +48,6 @@ limitations under the License.
             margin-top: 10px;
 
             font-weight: 600;
-            color: $muted-fg-color;
 
             .mx_StyledRadioButton_content {
                 margin-right: 0
@@ -123,11 +121,4 @@ limitations under the License.
 
 .mx_ThemeChoicePanel_Advanced {
     color: $primary-content;
-
-    .mx_ThemeChoicePanel_AdvancedToggle {
-        color: $accent;
-        cursor: pointer;
-        margin-bottom: 20px;
-        font-size: $font-15px;
-    }
 }

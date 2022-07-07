@@ -16,7 +16,6 @@ limitations under the License.
 */
 
 import React from 'react';
-
 import { Room } from 'matrix-js-sdk/src/models/room';
 
 import { _t } from '../../../languageHandler';
@@ -43,6 +42,7 @@ interface IProps {
     showQuickReactions?: boolean;
     room?: Room;
     onChoose(emoji: ICustomEmoji | IEmoji): boolean;
+    isEmojiDisabled?: (unicode: string) => boolean;
 }
 
 interface IState {
@@ -87,7 +87,7 @@ class EmojiPicker extends React.Component<IProps, IState> {
             image.shortcodes.forEach(shortCode => {
                 this.shortcodes_to_custom_emoji[`:${shortCode}:`] = image;
             });
-        })
+        });
 
         // Convert recent emoji characters to emoji data, removing unknowns and duplicates
         this.recentlyUsed = Array.from(new Set(recent.get().map(recentKey => {
@@ -98,7 +98,7 @@ class EmojiPicker extends React.Component<IProps, IState> {
             room: loadedImages,
             ...DATA_BY_CATEGORY,
         };
-        this.memoizedDataByCategory = {...this.allEmojis};
+        this.memoizedDataByCategory = { ...this.allEmojis };
 
         this.categories = [{
             id: "recent",
@@ -277,7 +277,7 @@ class EmojiPicker extends React.Component<IProps, IState> {
             label: null,
             hexcode: null,
             shortcodes: [],
-            unicode: reaction
+            unicode: reaction,
         });
     };
 
@@ -313,6 +313,7 @@ class EmojiPicker extends React.Component<IProps, IState> {
                                 onClick={this.onClickEmoji}
                                 onMouseEnter={this.onHoverEmoji}
                                 onMouseLeave={this.onHoverEmojiEnd}
+                                isEmojiDisabled={this.props.isEmojiDisabled}
                                 selectedEmojis={this.props.selectedEmojis}
                             />
                         );

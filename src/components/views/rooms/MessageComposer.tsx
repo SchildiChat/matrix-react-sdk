@@ -469,7 +469,6 @@ export default class MessageComposer extends React.Component<IProps, IState> {
 
             // SC: IRC layout has nothing for message composer so use group layout stuff
             // SC: Also use group layout if layout prop is missing
-            "mx_GroupLayout": this.props.layout !== Layout.Bubble,
             "sc_BubbleLayout": this.props.layout === Layout.Bubble,
 
             "mx_MessageComposer--compact": this.props.compact,

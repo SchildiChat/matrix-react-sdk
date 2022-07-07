@@ -30,7 +30,6 @@ import Field from '../elements/Field';
 import StyledRadioGroup from "../elements/StyledRadioGroup";
 import { SettingLevel } from "../../../settings/SettingLevel";
 import PosthogTrackers from "../../../PosthogTrackers";
-
 import StyledRadioButton from '../elements/StyledRadioButton';
 import { Theme } from '../../../settings/enums/Theme';
 import { UserNameColorMode } from '../../../settings/enums/UserNameColorMode';
@@ -359,13 +358,13 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
             );
         }
 
-        const toggle = <div
-            className="mx_ThemeChoicePanel_AdvancedToggle"
+        const toggle = <AccessibleButton
+            kind="link"
             onClick={() => this.setState({ showAdvancedThemeSettings: !this.state.showAdvancedThemeSettings })}
         >
             { this.state.showAdvancedThemeSettings ?
                 _t("Hide advanced theme settings") : _t("Show advanced theme settings") }
-        </div>;
+        </AccessibleButton>;
 
         let advanced: React.ReactNode;
 
