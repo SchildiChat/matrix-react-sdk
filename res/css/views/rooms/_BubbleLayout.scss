@@ -285,7 +285,7 @@ $left-gutter: 5.4rem;
 
         .mx_MImageBody_thumbnail_container {
             border: 1px solid $event-timestamp-color !important;
-            border-radius: $border-radius-4px;
+            border-radius: $border-radius-12px;
             overflow: hidden;
         }
         
@@ -348,7 +348,7 @@ $left-gutter: 5.4rem;
         margin-right: 0;
         position: relative;
         overflow: hidden;
-        border-radius: $border-radius-4px;
+        border-radius: $border-radius-12px;
         display: inline-flex;
 
         .mx_MFileBody_download {
@@ -368,7 +368,7 @@ $left-gutter: 5.4rem;
             right: 0;
             top: unset;
             bottom: 0;
-            border-top-left-radius: $border-radius-4px;
+            border-top-left-radius: $border-radius-12px;
             font-size: 0.85em;
             padding: 6px 9px;
             width: unset;
@@ -434,7 +434,7 @@ $left-gutter: 5.4rem;
 
     .mx_MVideoBody_container {
         display: block;
-        border-radius: $border-radius-4px;
+        border-radius: $border-radius-12px;
         overflow: hidden;
     }
 
@@ -493,7 +493,7 @@ $left-gutter: 5.4rem;
     .sc_EventTile_bubble {
         background-color: $message-bubble-background;
         padding: 7px 10px;
-        border-radius: $border-radius-4px;
+        border-radius: $border-radius-12px;
         //margin: 10px auto;
         max-width: max-content;
         // Min width: respect/"hide" bubble tail
@@ -696,7 +696,7 @@ $left-gutter: 5.4rem;
             inset: 0;
             box-shadow: inset 0px 0px 0px 1px $roomtopic-color;
             opacity: 0.15;
-            border-radius: $border-radius-4px;
+            border-radius: $border-radius-12px;
         }
 
         text-align: center;
@@ -856,7 +856,7 @@ $left-gutter: 5.4rem;
             > span.mx_MVideoBody {
                 .mx_MVideoBody_container {
                     background: $accent;
-                    border-radius: $border-radius-4px;
+                    border-radius: $border-radius-12px;
                     display: block;
                 }
                 
