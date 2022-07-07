@@ -2605,7 +2605,7 @@
     "Remove from %(roomName)s": "Odstrániť z %(roomName)s",
     "Failed to remove user": "Nepodarilo sa odstrániť používateľa",
     "Remove from room": "Odstrániť z miestnosti",
-    "Message bubbles": "Bubliny správ",
+    "Message bubbles": "Správy v bublinách",
     "GitHub issue": "Správa o probléme na GitHub",
     "Are you sure you want to end this poll? This will show the final results of the poll and stop people from being able to vote.": "Ste si istí, že chcete ukončiť túto anketu? Zobrazia sa konečné výsledky ankety a ľudia nebudú môcť už hlasovať.",
     "Send reactions": "Odoslanie reakcií",
@@ -2943,7 +2943,7 @@
     "This address does not point at this room": "Táto adresa nesmeruje do tejto miestnosti",
     "Wait!": "Počkajte!",
     "If someone told you to copy/paste something here, there is a high likelihood you're being scammed!": "Ak vám niekto povedal, aby ste sem niečo skopírovali/vložili, je veľká pravdepodobnosť, že vás niekto snaží podviesť!",
-    "If you know what you're doing, Element is open-source, be sure to check out our GitHub (https://github.com/vector-im/element-web/) and contribute!": "Ak viete, čo robíte, SchildiChat je open-source, určite si pozrite náš GitHub (https://github.com/vector-im/element-web/) a zapojte sa!",
+    "If you know what you're doing, Element is open-source, be sure to check out our GitHub (https://github.com/vector-im/element-web/) and contribute!": "Ak viete, čo robíte, Element je open-source, určite si pozrite náš GitHub (https://github.com/vector-im/element-web/) a zapojte sa!",
     "Hide stickers": "Skryť nálepky",
     "Voice Message": "Hlasová správa",
     "Poll": "Anketa",
@@ -3448,9 +3448,5 @@
     "Edit topic": "Upraviť tému",
     "Joining…": "Pripájanie sa…",
     "%(count)s people joined|one": "%(count)s človek sa pripojil",
-    "%(count)s people joined|other": "%(count)s ľudí sa pripojilo",
-    "Enable layout with message bubbles": "Povolenie rozloženia s bublinami správ",
-    "Show message bubbles on one side only": "Zobrazenie bublín správ len na jednej strane",
-    "Show message bubbles depending on the width either on both sides or only on one side": "Zobrazenie bublín správ v závislosti od šírky buď na oboch stranách, alebo len na jednej strane",
-    "Normal priority": "Normálna priorita"
+    "%(count)s people joined|other": "%(count)s ľudí sa pripojilo"
 }
