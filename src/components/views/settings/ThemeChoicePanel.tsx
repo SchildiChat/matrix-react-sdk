@@ -360,6 +360,7 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
 
         const toggle = <AccessibleButton
             kind="link"
+            className="mx_ThemeChoicePanel_AdvancedToggle"
             onClick={() => this.setState({ showAdvancedThemeSettings: !this.state.showAdvancedThemeSettings })}
         >
             { this.state.showAdvancedThemeSettings ?

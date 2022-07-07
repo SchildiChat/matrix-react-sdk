@@ -121,4 +121,8 @@ limitations under the License.
 
 .mx_ThemeChoicePanel_Advanced {
     color: $primary-content;
+
+    .mx_ThemeChoicePanel_AdvancedToggle {
+        margin-bottom: 8px;
+    }
 }
