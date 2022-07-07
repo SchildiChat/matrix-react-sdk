@@ -514,6 +514,7 @@ export default class MPollBody extends React.Component<IBodyProps, IState> {
             </div>
             <div className="mx_MPollBody_totalVotes">
                 { totalText }
+                { this.props.scBubbleTimestamp }
             </div>
         </div>;
     }
