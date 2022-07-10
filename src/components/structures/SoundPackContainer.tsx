@@ -1,5 +1,23 @@
+/*
+Copyright 2022
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 import React from "react";
-import SettingsStore from "../../settings/SettingsStore"
+
+import { SoundPack } from "../../settings/enums/SoundPack";
+import SettingsStore from "../../settings/SettingsStore";
 
 /*
  * The default sounds are played by calling .play() on these elements.
@@ -10,27 +28,34 @@ interface IProps {
 }
 
 interface IState {
-    soundPack?: string;
+    soundPack?: SoundPack;
 }
 
 export default class SoundPackContainer extends React.Component<IProps, IState> {
-    constructor(props, context) {
-        super(props, context)
+    private watcher: string;
+    private containerRef: React.RefObject<HTMLDivElement>;
+
+    constructor(props: IProps) {
+        super(props);
+
+        this.containerRef = React.createRef();
+
         this.state = {
-            soundPack: SettingsStore.getValue("soundPack")
-        }
+            soundPack: SettingsStore.getValue("soundPack"),
+        };
+
         this.watcher = SettingsStore.watchSetting("soundPack", null, (...[,,,, value]) =>
-            this.setState({ soundPack: value as string })
-        )
+            this.setState({ soundPack: value as SoundPack }),
+        );
     }
 
     public componentWillUnmount() {
-        SettingsStore.unwatchSetting(this.watcher)
+        SettingsStore.unwatchSetting(this.watcher);
     }
 
     public render() {
         return (
-            <div class="mx_SoundPackContainer" ref="container">
+            <div className="mx_SoundPackContainer" ref={this.containerRef}>
                 <audio id="messageAudio">
                     <source src={`media/${this.state.soundPack}/message.ogg`} type="audio/ogg" />
                     <source src={`media/${this.state.soundPack}/message.mp3`} type="audio/mpeg" />
@@ -52,7 +77,7 @@ export default class SoundPackContainer extends React.Component<IProps, IState> 
                     <source src={`media/${this.state.soundPack}/busy.mp3`} type="audio/mpeg" />
                 </audio>
             </div>
-        )
+        );
     }
 
     /*
@@ -61,6 +86,6 @@ export default class SoundPackContainer extends React.Component<IProps, IState> 
      * This function called .load() after the sources are updated.
      */
     componentDidUpdate() {
-        [...this.refs.container.querySelectorAll("audio")].forEach(a => a.load())
+        this.containerRef.current.querySelectorAll("audio").forEach(a => a.load());
     }
 }

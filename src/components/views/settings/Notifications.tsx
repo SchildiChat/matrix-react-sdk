@@ -33,7 +33,6 @@ import { _t, TranslatedString } from "../../../languageHandler";
 import LabelledToggleSwitch from "../elements/LabelledToggleSwitch";
 import SettingsStore from "../../../settings/SettingsStore";
 import StyledRadioButton from "../elements/StyledRadioButton";
-import Dropdown from "../elements/Dropdown";
 import { SettingLevel } from "../../../settings/SettingLevel";
 import Modal from "../../../Modal";
 import ErrorDialog from "../dialogs/ErrorDialog";
@@ -42,6 +41,7 @@ import AccessibleButton from "../elements/AccessibleButton";
 import TagComposer from "../elements/TagComposer";
 import { objectClone } from "../../../utils/objects";
 import { arrayDiff } from "../../../utils/arrays";
+import { SoundPack } from "../../../settings/enums/SoundPack";
 
 // TODO: this "view" component still has far too much application logic in it,
 // which should be factored out to other files.
@@ -110,7 +110,7 @@ interface IState {
     desktopNotifications: boolean;
     desktopShowBody: boolean;
     audioNotifications: boolean;
-    soundPack: string;
+    soundPack?: SoundPack;
 }
 
 export default class Notifications extends React.PureComponent<IProps, IState> {
@@ -138,7 +138,7 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
                 this.setState({ audioNotifications: value as boolean }),
             ),
             SettingsStore.watchSetting("soundPack", null, (...[,,,, value]) =>
-                this.setState({ soundPack: value as string })
+                this.setState({ soundPack: value as SoundPack }),
             ),
         ];
     }
@@ -353,7 +353,7 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
     };
 
     private onSoundPackChanged = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value as string;
+        const value = e.target.value as SoundPack;
         this.setState({ soundPack: value });
         await SettingsStore.setValue("soundPack", null, SettingLevel.DEVICE, value);
     };
@@ -558,14 +558,16 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
                 disabled={this.state.phase === Phase.Persisting}
             />
 
-            {this.state.audioNotifications && <>
-                <div className="mx_SettingsTab_subheading">{_t("Sound pack")}</div>
+            { emailSwitches }
+
+            { this.state.audioNotifications && <div className='mx_UserNotifSettings_floatingSection'>
+                <div className="mx_SettingsTab_subheading">{ _t("Sound pack") }</div>
                 <div className="mx_SettingsTab_multilineRadioSelectors">
                     <label>
                         <StyledRadioButton
-                            name="room_list_style"
-                            value="schildi"
-                            checked={this.state.soundPack === "schildi"}
+                            name="sound_pack"
+                            value={SoundPack.Schildi}
+                            checked={this.state.soundPack === SoundPack.Schildi}
                             onChange={this.onSoundPackChanged}
                         >
                             { _t("Schildi: Softer sounds for reduced anxiety") }
@@ -573,18 +575,16 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
                     </label>
                     <label>
                         <StyledRadioButton
-                            name="room_list_style"
-                            value="classic"
-                            checked={this.state.soundPack === "classic"}
+                            name="sound_pack"
+                            value={SoundPack.Classic}
+                            checked={this.state.soundPack === SoundPack.Classic}
                             onChange={this.onSoundPackChanged}
                         >
                             { _t("Classic: The same sharp sounds as Element") }
                         </StyledRadioButton>
                     </label>
                 </div>
-            </>}
-
-            { emailSwitches }
+            </div> }
         </>;
     }
 
