@@ -160,7 +160,7 @@ export default class HelpUserSettingsTab extends React.Component<IProps, IState>
                         </a>.
                     </li>
                     <li>
-                        The "schildi" ring sound is ©&nbsp;Ana©&nbsp;Gelez
+                        The "schildi" ring sound is ©&nbsp;Ana&nbsp;Gelez
                         used under the terms of&nbsp;
                         <a href="https://www.apache.org/licenses/LICENSE-2.0" rel="noreferrer noopener" target="_blank">Apache 2.0</a>.
                     </li>
