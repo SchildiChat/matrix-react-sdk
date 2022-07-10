@@ -29,7 +29,6 @@ import ReloadOnChangeController from "./controllers/ReloadOnChangeController";
 import FontSizeController from './controllers/FontSizeController';
 import SystemFontController from './controllers/SystemFontController';
 import UseSystemFontController from './controllers/UseSystemFontController';
-import SoundPackController from "./controllers/SoundPackController";
 import { SettingLevel } from "./SettingLevel";
 import SettingController from "./controllers/SettingController";
 import { IS_MAC } from '../Keyboard';
@@ -799,7 +798,6 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         displayName: _td("Sound pack"),
         supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS,
         default: "schildi",
-        controller: new SoundPackController(),
     },
     "notificationSound": {
         supportedLevels: LEVELS_ROOM_OR_ACCOUNT,
