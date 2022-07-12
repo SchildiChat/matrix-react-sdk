@@ -168,9 +168,6 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
                 this.refreshThreepids(),
             ])).reduce((p, c) => Object.assign(c, p), {});
 
-            const value = SettingsStore.getValue("soundPack", null);
-            console.info("sound pack is now", value);
-
             this.setState<keyof Omit<IState, "desktopNotifications" | "desktopShowBody" | "audioNotifications">>({
                 ...newState,
                 phase: Phase.Ready,
@@ -560,7 +557,7 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
 
             { emailSwitches }
 
-            { this.state.audioNotifications && <div className='mx_UserNotifSettings_floatingSection'>
+            <div className='mx_UserNotifSettings_floatingSection'>
                 <div className="mx_SettingsTab_subheading">{ _t("Sound pack") }</div>
                 <div className="mx_SettingsTab_multilineRadioSelectors">
                     <label>
@@ -584,7 +581,7 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
                         </StyledRadioButton>
                     </label>
                 </div>
-            </div> }
+            </div>
         </>;
     }
 
