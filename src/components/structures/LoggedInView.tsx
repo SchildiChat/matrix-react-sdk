@@ -45,6 +45,7 @@ import PipContainer from '../views/voip/PipContainer';
 import { ViewRoomDeltaPayload } from "../../dispatcher/payloads/ViewRoomDeltaPayload";
 import RoomListStore from "../../stores/room-list/RoomListStore";
 import NonUrgentToastContainer from "./NonUrgentToastContainer";
+import SoundPackContainer from "./SoundPackContainer";
 import { IOOBData, IThreepidInvite } from "../../stores/ThreepidInviteStore";
 import Modal from "../../Modal";
 import { ICollapseConfig } from "../../resizer/distributors/collapse";
@@ -730,6 +731,7 @@ class LoggedInView extends React.Component<IProps, IState> {
                 <PipContainer />
                 <NonUrgentToastContainer />
                 <HostSignupContainer />
+                <SoundPackContainer />
                 { audioFeedArraysForCalls }
             </MatrixClientContext.Provider>
         );

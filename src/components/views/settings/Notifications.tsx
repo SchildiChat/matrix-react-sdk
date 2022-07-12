@@ -41,6 +41,7 @@ import AccessibleButton from "../elements/AccessibleButton";
 import TagComposer from "../elements/TagComposer";
 import { objectClone } from "../../../utils/objects";
 import { arrayDiff } from "../../../utils/arrays";
+import { SoundPack } from "../../../settings/enums/SoundPack";
 
 // TODO: this "view" component still has far too much application logic in it,
 // which should be factored out to other files.
@@ -109,6 +110,7 @@ interface IState {
     desktopNotifications: boolean;
     desktopShowBody: boolean;
     audioNotifications: boolean;
+    soundPack?: SoundPack;
 }
 
 export default class Notifications extends React.PureComponent<IProps, IState> {
@@ -122,6 +124,7 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
             desktopNotifications: SettingsStore.getValue("notificationsEnabled"),
             desktopShowBody: SettingsStore.getValue("notificationBodyEnabled"),
             audioNotifications: SettingsStore.getValue("audioNotificationsEnabled"),
+            soundPack: SettingsStore.getValue("soundPack"),
         };
 
         this.settingWatchers = [
@@ -133,6 +136,9 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
             ),
             SettingsStore.watchSetting("audioNotificationsEnabled", null, (...[,,,, value]) =>
                 this.setState({ audioNotifications: value as boolean }),
+            ),
+            SettingsStore.watchSetting("soundPack", null, (...[,,,, value]) =>
+                this.setState({ soundPack: value as SoundPack }),
             ),
         ];
     }
@@ -343,6 +349,12 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
         await SettingsStore.setValue("audioNotificationsEnabled", null, SettingLevel.DEVICE, checked);
     };
 
+    private onSoundPackChanged = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value as SoundPack;
+        this.setState({ soundPack: value });
+        await SettingsStore.setValue("soundPack", null, SettingLevel.DEVICE, value);
+    };
+
     private onRadioChecked = async (rule: IVectorPushRule, checkedState: VectorState) => {
         this.setState({ phase: Phase.Persisting });
 
@@ -544,6 +556,32 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
             />
 
             { emailSwitches }
+
+            <div className='mx_UserNotifSettings_floatingSection'>
+                <div className="mx_SettingsTab_subheading">{ _t("Sound pack") }</div>
+                <div className="mx_SettingsTab_multilineRadioSelectors">
+                    <label>
+                        <StyledRadioButton
+                            name="sound_pack"
+                            value={SoundPack.Schildi}
+                            checked={this.state.soundPack === SoundPack.Schildi}
+                            onChange={this.onSoundPackChanged}
+                        >
+                            { _t("Schildi: Softer sounds for reduced anxiety") }
+                        </StyledRadioButton>
+                    </label>
+                    <label>
+                        <StyledRadioButton
+                            name="sound_pack"
+                            value={SoundPack.Classic}
+                            checked={this.state.soundPack === SoundPack.Classic}
+                            onChange={this.onSoundPackChanged}
+                        >
+                            { _t("Classic: The same sharp sounds as Element") }
+                        </StyledRadioButton>
+                    </label>
+                </div>
+            </div>
         </>;
     }
 

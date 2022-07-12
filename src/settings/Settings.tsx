@@ -47,6 +47,7 @@ import SdkConfig from "../SdkConfig";
 import ThreadBetaController from './controllers/ThreadBetaController';
 import { FontWatcher } from "./watchers/FontWatcher";
 import { BorderRadius } from './enums/BorderRadius';
+import { SoundPack } from './enums/SoundPack';
 
 // These are just a bunch of helper arrays to avoid copy/pasting a bunch of times
 const LEVELS_ROOM_SETTINGS = [
@@ -793,6 +794,11 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS,
         default: false,
         controller: new NotificationsEnabledController(),
+    },
+    "soundPack": {
+        displayName: _td("Sound pack"),
+        supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS_WITH_CONFIG,
+        default: SoundPack.Schildi,
     },
     "notificationSound": {
         supportedLevels: LEVELS_ROOM_OR_ACCOUNT,
