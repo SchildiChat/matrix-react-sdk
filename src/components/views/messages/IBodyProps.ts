@@ -61,4 +61,6 @@ export interface IBodyProps {
     getRelationsForEvent?: GetRelationsForEvent;
 
     ref?: React.RefObject<any> | LegacyRef<any>;
+
+    OrigBodyType?: React.ComponentType<Partial<IBodyProps>>;
 }
