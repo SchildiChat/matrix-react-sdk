@@ -577,6 +577,7 @@ export default class TextualBody extends React.Component<IBodyProps, IState> {
         const content = mxEvent.getContent();
         let isNotice = false;
         let isEmote = false;
+        let isCaption = false;
 
         // only strip reply if this is the original replying event, edits thereafter do not have the fallback
         const stripReply = !mxEvent.replacingEvent() && !!getParentEventId(mxEvent);
@@ -607,6 +608,8 @@ export default class TextualBody extends React.Component<IBodyProps, IState> {
         if (!body) {
             isEmote = content.msgtype === MsgType.Emote;
             isNotice = content.msgtype === MsgType.Notice;
+            // @ts-ignore
+            isCaption = [MsgType.Image, MsgType.File, MsgType.Audio, MsgType.Video].includes(content.msgtype)
             body = HtmlUtils.bodyToHtml(content, this.props.highlights, {
                 disableBigEmoji: isEmote || !SettingsStore.getValue<boolean>("TextualBody.enableBigEmoji"),
                 // Part of Replies fallback support
@@ -678,6 +681,14 @@ export default class TextualBody extends React.Component<IBodyProps, IState> {
                     {body}
                     {widgets}
                     {this.props.scBubbleTimestamp}
+                </div>
+            );
+        }
+        if (isCaption) {
+            return (
+                <div className="mx_MTextBody mx_EventTile_caption" onClick={this.onBodyLinkClick}>
+                    { body }
+                    { widgets }
                 </div>
             );
         }
