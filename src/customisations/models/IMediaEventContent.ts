@@ -52,6 +52,9 @@ export interface IMediaEventContent {
     url?: string; // required on unencrypted media
     file?: IEncryptedFile; // required for *encrypted* media
     info?: IMediaEventInfo;
+
+    format?: string;
+    formatted_body?: string;
 }
 
 export interface IPreparedMedia extends IMediaObject {
