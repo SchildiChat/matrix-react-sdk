@@ -448,6 +448,10 @@ $left-gutter: 5.4rem;
         }
     }
 
+    .mx_cryptoEvent .mx_cryptoEvent_buttons {
+        margin-left: 8px;
+    }
+
     // ---- Bubble specific ----
 
     .mx_EventTile > .sc_EventTile_bubbleLine_info {
