@@ -128,11 +128,13 @@ replace_colors() {
     sed -i "s|rgba(3, 179, 129,|rgba($M_ACCENT_DEC,|gi" "$f"
     sed -i "s|#03b381|$M_ACCENT|gi" "$f"
     sed -i "s|#FF5B55|$M_ALERT|gi" "$f"
+    sed -i "s|\\(\$accent: \\).*;|\\1var(--accent, $M_ACCENT);\n\$success: $M_ACCENT;|gi" "$f"
+    sed -i "s|\\(\$roomtile-default-badge-bg-color: \\).*;|\\1var(--accent, $M_ACCENT);|gi" "$f"
+    sed -i "s|\\(\$location-live-color: \\).*;|\\1var(--accent, $M_ACCENT);|gi" "$f"
     sed -i "s|\\(\$accent-alt: \\).*;|\\1$M_LINK;|gi" "$f"
     #sed -i "s|\\(\$accent-darker: \\).*;|\\1$M_ACCENT_DARK;|gi" "$f"
-    sed -i "s|\\(\$roomtile-default-badge-bg-color: \\).*;|\\1$M_ACCENT;|gi" "$f"
     #sed -i "s|\\(\$input-focused-border-color: \\).*;|\\1\$accent;|gi" "$f" # not existing anymore, need replacement?
-    sed -i "s|\\(\$reaction-row-button-selected-bg-color: \\).*;|\\1$BG_ACCENT;|gi" "$f"
+    sed -i "s|\\(\$reaction-row-button-selected-bg-color: \\).*;|\\1var(--reaction-row-button-selected-bg-color, $BG_ACCENT);|gi" "$f"
 }
 
 replace_colors res/themes/dark/css/_dark.scss

@@ -87,7 +87,8 @@ $roomtopic-color: $text-secondary-color;
 $room-icon-unread-color: #fff;
 
 // Legacy theme backports
-$accent: #8BC34A;
+$accent: var(--accent, #8BC34A);
+$success: #8BC34A;
 $alert: #E53935;
 $links: #0086e6;
 $primary-content: $primary-fg-color;
@@ -130,7 +131,7 @@ $roomsublist-skeleton-ui-bg: linear-gradient(180deg, #424242 0%, #42424200 100%)
 
 $spacePanel-divider-color: $tertiary-content;
 
-$roomtile-default-badge-bg-color: #8BC34A;
+$roomtile-default-badge-bg-color: var(--accent, #8BC34A);
 $roomtile-selected-bg-color: #303030;
 
 // ********************
@@ -170,7 +171,7 @@ $message-action-bar-border-color: #616161;
 $message-action-bar-hover-border-color: $header-panel-text-primary-color;
 
 $reaction-row-button-hover-border-color: $header-panel-text-primary-color;
-$reaction-row-button-selected-bg-color: #33691E;
+$reaction-row-button-selected-bg-color: var(--reaction-row-button-selected-bg-color, #33691E);
 
 $kbd-border-color: #000000;
 
@@ -199,7 +200,7 @@ $message-bubble-background-selected: #3F4931;
 // Location sharing
 // ********************
 $location-marker-color: #ffffff;
-$location-live-color: #8BC34A;
+$location-live-color: var(--accent, #8BC34A);
 $location-live-secondary-color: #e0e0e0;
 // ********************
 

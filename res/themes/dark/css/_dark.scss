@@ -117,7 +117,7 @@ $dialog-close-external-color: $primary-content;
 // ********************
 $roomlist-bg-color: rgba($system, 0.90);
 $roomsublist-skeleton-ui-bg: linear-gradient(180deg, #424242 0%, #42424200 100%);
-$roomtile-default-badge-bg-color: #8BC34A;
+$roomtile-default-badge-bg-color: var(--accent, #8BC34A);
 // ********************
 
 // Tabbed views
@@ -155,7 +155,7 @@ $message-action-bar-hover-border-color: $header-panel-text-primary-color;
 // Reaction row
 // ********************
 $reaction-row-button-hover-border-color: $header-panel-text-primary-color;
-$reaction-row-button-selected-bg-color: #33691E;
+$reaction-row-button-selected-bg-color: var(--reaction-row-button-selected-bg-color, #33691E);
 // ********************
 
 // Voice messages
@@ -194,7 +194,7 @@ $video-lobby-primary-content: $primary-content;
 
 // Location sharing
 // ********************
-$location-live-color: #8BC34A;
+$location-live-color: var(--accent, #8BC34A);
 $location-live-secondary-color: #e0e0e0;
 // ********************
 

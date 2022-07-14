@@ -68,4 +68,37 @@ limitations under the License.
     flex-wrap: wrap;
     justify-content: center;
     gap: 9px;
+
+    .mx_AccessibleButton {
+        &.mx_AccessibleButton_hasKind {
+            &.mx_AccessibleButton_kind_primary_sm {
+                background-color: $success;
+            }
+    
+            &.mx_AccessibleButton_kind_link_sm {
+                color: $success;
+            }
+    
+            &.mx_AccessibleButton_kind_confirm_sm {
+                background-color: $success;
+            }
+        }
+    
+        &.mx_AccessibleButton_kind_primary,
+        &.mx_AccessibleButton_kind_primary_outline {
+            border: 1px solid $success;
+        }
+    
+        &.mx_AccessibleButton_kind_primary {
+            background-color: $success;
+        }
+    
+        &.mx_AccessibleButton_kind_primary_outline {
+            color: $success;
+        }
+    
+        &.mx_AccessibleButton_kind_secondary {
+            color: $success;
+        }
+    }
 }
