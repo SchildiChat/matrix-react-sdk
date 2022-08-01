@@ -57,8 +57,8 @@ export interface EventTileTypeProps {
     userNameColorMode?: UserNameColorMode;
     youtubeEmbedPlayer?: boolean;
     scBubble?: boolean;
-    scBubbleActionBar?: any;
-    scBubbleTimestamp?: any;
+    scBubbleActionBar?: JSX.Element;
+    scBubbleTimestamp?: JSX.Element;
     onHeightChanged: () => void;
     forExport?: boolean;
     getRelationsForEvent?: GetRelationsForEvent;

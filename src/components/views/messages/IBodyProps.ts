@@ -39,8 +39,8 @@ export interface IBodyProps {
     layout?: Layout;
     youtubeEmbedPlayer?: boolean;
     scBubble?: boolean;
-    scBubbleTimestamp?: any;
-    scBubbleActionBar?: any;
+    scBubbleTimestamp?: JSX.Element;
+    scBubbleActionBar?: JSX.Element;
     forExport?: boolean;
     maxImageHeight?: number;
     replacingEventId?: string;
