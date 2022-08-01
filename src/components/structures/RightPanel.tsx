@@ -205,6 +205,7 @@ export default class RightPanel extends React.Component<IProps, IState> {
                         room={this.props.room}
                         onClose={this.onClose}
                         userNameColorMode={this.props.userNameColorMode}
+                        permalinkCreator={this.props.permalinkCreator}
                     />;
                 }
                 break;

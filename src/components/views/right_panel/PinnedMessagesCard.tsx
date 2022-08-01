@@ -34,9 +34,11 @@ import { UserNameColorMode } from "../../../settings/enums/UserNameColorMode";
 import RoomContext, { TimelineRenderingType } from "../../../contexts/RoomContext";
 import { ReadPinsEventId } from "./types";
 import Heading from '../typography/Heading';
+import { RoomPermalinkCreator } from "../../../utils/permalinks/Permalinks";
 
 interface IProps {
     room: Room;
+    permalinkCreator: RoomPermalinkCreator;
     onClose(): void;
     userNameColorMode?: UserNameColorMode;
 }
@@ -80,7 +82,7 @@ export const useReadPinnedEvents = (room: Room): Set<string> => {
     return readPinnedEvents;
 };
 
-const PinnedMessagesCard = ({ room, onClose, userNameColorMode }: IProps) => {
+const PinnedMessagesCard = ({ room, onClose, userNameColorMode, permalinkCreator }: IProps) => {
     const cli = useContext(MatrixClientContext);
     const roomContext = useContext(RoomContext);
     const canUnpin = useRoomState(room, state => state.mayClientSendStateEvent(EventType.RoomPinnedEvents, cli));
@@ -155,6 +157,7 @@ const PinnedMessagesCard = ({ room, onClose, userNameColorMode }: IProps) => {
                 event={ev}
                 onUnpinClicked={canUnpin ? () => onUnpinClicked(ev) : undefined}
                 userNameColorMode={userNameColorMode}
+                permalinkCreator={permalinkCreator}
             />
         ));
     } else {

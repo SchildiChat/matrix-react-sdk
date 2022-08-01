@@ -50,8 +50,8 @@ import { shouldDisplayAsBeaconTile } from "../utils/beacon/timeline";
 export interface EventTileTypeProps {
     ref?: React.RefObject<any>; // `any` because it's effectively impossible to convince TS of a reasonable type
     mxEvent: MatrixEvent;
-    highlights: string[];
-    highlightLink: string;
+    highlights?: string[];
+    highlightLink?: string;
     showUrlPreview?: boolean;
     layout?: Layout;
     userNameColorMode?: UserNameColorMode;
