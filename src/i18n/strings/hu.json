@@ -3090,7 +3090,7 @@
     "Group all your rooms that aren't part of a space in one place.": "Téren kívüli szobák csoportosítása egy helyre.",
     "Spaces are ways to group rooms and people. Alongside the spaces you're in, you can use some pre-built ones too.": "Tér használható szobák és emberek csoportosítására. Azokon kívül amikben benne van használhat előre definiáltakat is.",
     "Jump to date (adds /jumptodate and jump to date headers)": "Időpontra ugrás („/jumptodate”-et és ugrás időpontra fejlécet ad hozzá)",
-    "If you know what you're doing, Element is open-source, be sure to check out our GitHub (https://github.com/vector-im/element-web/) and contribute!": "Ha tudja mit csinál, Element egy nyílt forráskódú szoftver, nézze meg a GitHubon (https://github.com/vector-im/element-web/) és segítsen!",
+    "If you know what you're doing, Element is open-source, be sure to check out our GitHub (https://github.com/vector-im/element-web/) and contribute!": "Ha tudja mit csinál, SchildiChat egy nyílt forráskódú szoftver, nézze meg a GitHubon (https://github.com/vector-im/element-web/) és segítsen!",
     "If someone told you to copy/paste something here, there is a high likelihood you're being scammed!": "Ha valaki azt kéri hogy másoljon/illesszen be itt valamit, nagy esély van rá hogy valaki becsapja!",
     "Wait!": "Várjon!",
     "This address does not point at this room": "Ez a cím nem erre a szobára mutat",
@@ -3444,5 +3444,9 @@
     "In spaces %(space1Name)s and %(space2Name)s.": "A téren: %(space1Name)s és %(space2Name)s.",
     "Developer command: Discards the current outbound group session and sets up new Olm sessions": "Fejlesztői parancs: Eldobja a jelenlegi kimenő csoport kapcsolatot és új Olm kapcsolatot hoz létre",
     "Send your first message to invite <displayName/> to chat": "Az első üzeneteddel hívd meg ide őt: <displayName/>",
-    "Messages in this chat will be end-to-end encrypted.": "Az üzenetek a beszélgetésben végponttól végpontig titkosítottak."
+    "Messages in this chat will be end-to-end encrypted.": "Az üzenetek a beszélgetésben végponttól végpontig titkosítottak.",
+    "Enable layout with message bubbles": "Üzenetbuborékos elrendezés engedélyezése",
+    "Show message bubbles on one side only": "Üzenetbuborékok megjelenítése csak az egyik oldalon",
+    "Show message bubbles depending on the width either on both sides or only on one side": "Üzenetbuborékok megjelenítése a szélességtől függően mindkét oldalon vagy csak az egyik oldalon",
+    "Normal priority": "Normál prioritás"
 }
