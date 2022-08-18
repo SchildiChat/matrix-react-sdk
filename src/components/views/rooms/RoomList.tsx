@@ -80,10 +80,12 @@ interface IState {
     currentRoomId?: string;
     suggestedRooms: ISuggestedRoom[];
     unifiedRoomList: boolean;
+    feature_favourite_messages: boolean;
 }
 
 export const TAG_ORDER: TagID[] = [
     DefaultTagID.Invite,
+    DefaultTagID.SavedItems,
     DefaultTagID.Favourite,
     DefaultTagID.Unified,
     DefaultTagID.DM,
@@ -403,6 +405,11 @@ const TAG_AESTHETICS: ITagAestheticsMap = {
         isInvite: false,
         defaultHidden: false,
     },
+    [DefaultTagID.SavedItems]: {
+        sectionLabel: _td("Saved Items"),
+        isInvite: false,
+        defaultHidden: false,
+    },
     [DefaultTagID.Unified]: {
         sectionLabel: _td("Normal priority"),
         isInvite: false,
@@ -451,6 +458,7 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
     private roomStoreToken: fbEmitter.EventSubscription;
     private readonly unifiedRoomListWatcherRef: string;
     private treeRef = createRef<HTMLDivElement>();
+    private favouriteMessageWatcher: string;
 
     static contextType = MatrixClientContext;
     public context!: React.ContextType<typeof MatrixClientContext>;
@@ -462,6 +470,7 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
             sublists: {},
             suggestedRooms: SpaceStore.instance.suggestedRooms,
             unifiedRoomList: SettingsStore.getValue("unifiedRoomList"),
+            feature_favourite_messages: SettingsStore.getValue("feature_favourite_messages"),
         };
 
         this.unifiedRoomListWatcherRef = SettingsStore.watchSetting("unifiedRoomList", null,
@@ -473,12 +482,17 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
         this.roomStoreToken = RoomViewStore.instance.addListener(this.onRoomViewStoreUpdate);
         SpaceStore.instance.on(UPDATE_SUGGESTED_ROOMS, this.updateSuggestedRooms);
         RoomListStore.instance.on(LISTS_UPDATE_EVENT, this.updateLists);
+        this.favouriteMessageWatcher =
+            SettingsStore.watchSetting("feature_favourite_messages", null, (...[,,, value]) => {
+                this.setState({ feature_favourite_messages: value });
+            });
         this.updateLists(); // trigger the first update
     }
 
     public componentWillUnmount() {
         SpaceStore.instance.off(UPDATE_SUGGESTED_ROOMS, this.updateSuggestedRooms);
         RoomListStore.instance.off(LISTS_UPDATE_EVENT, this.updateLists);
+        SettingsStore.unwatchSetting(this.favouriteMessageWatcher);
         defaultDispatcher.unregister(this.dispatcherRef);
         if (this.roomStoreToken) this.roomStoreToken.remove();
 
@@ -616,6 +630,28 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
             );
         });
     }
+    private renderFavoriteMessagesList(): ReactComponentElement<typeof ExtraTile>[] {
+        const avatar = (
+            <RoomAvatar
+                oobData={{
+                    name: "Favourites",
+                }}
+                width={32}
+                height={32}
+                resizeMethod="crop"
+            />);
+
+        return [
+            <ExtraTile
+                isMinimized={this.props.isMinimized}
+                isSelected={false}
+                displayName="Favourite Messages"
+                avatar={avatar}
+                onClick={() => ""}
+                key="favMessagesTile_key"
+            />,
+        ];
+    }
 
     private renderSublists(): React.ReactElement[] {
         // show a skeleton UI if the user is in no rooms and they are not filtering and have no suggested rooms
@@ -627,6 +663,12 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
                 let extraTiles = null;
                 if (orderedTagId === DefaultTagID.Suggested) {
                     extraTiles = this.renderSuggestedRooms();
+                }
+
+                if (this.state.feature_favourite_messages && orderedTagId === DefaultTagID.SavedItems) {
+                    extraTiles = this.renderFavoriteMessagesList();
+                } else {
+                    extraTiles = null;
                 }
 
                 const aesthetics = TAG_AESTHETICS[orderedTagId];
@@ -655,7 +697,6 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
                 ) {
                     forceExpanded = true;
                 }
-
                 // The cost of mounting/unmounting this component offsets the cost
                 // of keeping it in the DOM and hiding it when it is not required
                 return <RoomSublist

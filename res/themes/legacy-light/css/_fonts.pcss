@@ -1,0 +1,25 @@
+// Grab the other fonts from the current theme, so we can override to Inter
+// in custom fonts if needed.
+@import "../../light/css/_fonts.pcss";
+
+// Include Nunito, for old time's sake on legacy themes.
+/* the 'src' links are relative to the bundle.css, which is in a subdirectory.
+ */
+@font-face {
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 400;
+    src: url('$(res)/fonts/Nunito/Nunito-Regular.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 600;
+    src: url('$(res)/fonts/Nunito/Nunito-SemiBold.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 700;
+    src: url('$(res)/fonts/Nunito/Nunito-Bold.ttf') format('truetype');
+}

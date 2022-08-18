@@ -27,7 +27,6 @@ export function loadImageSet(imageSetEvent: MatrixEvent): ICustomEmoji[] {
         loadedImages.push({
             shortcodes: [imageKey],
             url: imageData.url,
-            unicode: imageKey,
         });
     }
     return loadedImages;
@@ -37,5 +36,4 @@ export interface ICustomEmoji {
     shortcodes: string[];
     emoticon?: string;
     url: string;
-    unicode: string;
 }

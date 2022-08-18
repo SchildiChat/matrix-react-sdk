@@ -24,11 +24,13 @@ export enum DefaultTagID {
     Unified = "de.spiritcroc.fake.unified",
     ServerNotice = "m.server_notice",
     Suggested = "im.vector.fake.suggested",
+    SavedItems = "im.vector.fake.saved_items",
 }
 
 export const OrderedDefaultTagIDs = [
     DefaultTagID.Invite,
     DefaultTagID.Favourite,
+    DefaultTagID.SavedItems,
     DefaultTagID.Unified,
     DefaultTagID.DM,
     DefaultTagID.Untagged,
