@@ -135,10 +135,10 @@ replace_colors() {
     sed -i "s|\\(\$reaction-row-button-selected-bg-color: \\).*;|\\1$BG_ACCENT;|gi" "$f"
 }
 
-replace_colors res/themes/dark/css/_dark.scss
-replace_colors res/themes/light/css/_light.scss
-replace_colors res/themes/legacy-light/css/_legacy-light.scss
-replace_colors res/themes/legacy-dark/css/_legacy-dark.scss
+replace_colors res/themes/dark/css/_dark.pcss
+replace_colors res/themes/light/css/_light.pcss
+replace_colors res/themes/legacy-light/css/_legacy-light.pcss
+replace_colors res/themes/legacy-dark/css/_legacy-dark.pcss
 for f in res/**/*.svg; do
     replace_colors "$f"
 done
