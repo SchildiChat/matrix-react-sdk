@@ -31,13 +31,13 @@ $monospace-font-family: 'Inconsolata',
 
 /* Colors from Figma Compound https://www.figma.com/file/X4XTH9iS2KGJ2wFKDqkyed/Compound?node-id=559%3A120 */
 /* ******************** */
-$primary-content: #17191C;
-$secondary-content: #737D8C;
-$tertiary-content: #8D97A5;
-$quaternary-content: #c1c6cd;
-$quinary-content: #E3E8F0;
+$primary-content: #212121;
+$secondary-content: #757575;
+$tertiary-content: #808080;
+$quaternary-content: #bdbdbd;
+$quinary-content: #e0e0e0;
 
-$system: #F4F6FA;
+$system: #f5f5f5;
 $system-transparent: rgba($system, 0.0); /* XXX: workaround for Safari 15.3 linear-gradient bug */
 $background: #ffffff;
 $overlay-background: rgba($background, 0.85);
@@ -107,16 +107,16 @@ $event-selected-color: #f5f5f5;
 $topleftmenu-color: #212121;
 $roomtopic-color: #9e9e9e;
 $spacePanel-bg-color: rgba(232, 232, 232, 0.77);
-$panel-gradient: rgba(242, 245, 248, 0),
-    rgba(242, 245, 248, 1);
-$h3-color: #3d3b39;
-$event-highlight-bg-color: $yellow-background;
-$header-panel-text-primary-color: #91A1C0;
+$panel-gradient: rgba(248, 248, 248, 0),
+    rgba(248, 248, 248, 1);
+$h3-color: #424242;
+$event-highlight-bg-color: transparent;
+$header-panel-text-primary-color: #757575;
 /* ******************** */
 
 /* Blockquote */
 /* ******************** */
-$blockquote-bar-color: $focus-bg-color;
+$blockquote-bar-color: #bdbdbd;
 /* ******************** */
 
 /* Tooltip */
@@ -133,15 +133,15 @@ $widget-body-bg-color: $background;
 
 /* Menu */
 /* ******************** */
-$menu-border-color: #e7e7e7;
+$menu-border-color: #e0e0e0;
 $menu-bg-color: $background;
 $menu-box-shadow-color: rgba(118, 131, 156, 0.6);
-$menu-selected-color: #f5f8fa;
+$menu-selected-color: #f5f5f5;
 /* ******************** */
 
 /* Settings */
 /* ******************** */
-$settings-grey-fg-color: #a2a2a2;
+$settings-grey-fg-color: #9e9e9e;
 $settings-subsection-fg-color: $muted-fg-color;
 /* ******************** */
 
@@ -152,15 +152,15 @@ $room-icon-unread-color: $secondary-content;
 
 /* RoomHeader */
 /* ******************** */
-$roomheader-addroom-bg-color: rgba(92, 100, 112, 0.2);
-$roomheader-addroom-fg-color: #5c6470;
+$roomheader-addroom-bg-color: rgba(97, 97, 97, 0.2);
+$roomheader-addroom-fg-color: #616161;
 /* ******************** */
 
 /* Rich-text-editor */
 /* ******************** */
-$pill-bg-color: #aaa;
-$pill-hover-bg-color: #ccc;
-$rte-bg-color: #e9e9e9;
+$pill-bg-color: rgba(0, 0, 0, 0.13);
+$pill-hover-bg-color: rgba(0, 0, 0, 0.10);
+$rte-bg-color: #e0e0e0;
 $rte-code-bg-color: rgba(0, 0, 0, 0.04);
 /* ******************** */
 
@@ -183,8 +183,8 @@ $input-fg-color: rgba(74, 74, 74, 0.9);
 
 /* Dialog */
 /* ******************** */
-$dialog-title-fg-color: #45474a;
-$dialog-backdrop-color: rgba(46, 48, 51, 0.38);
+$dialog-title-fg-color: #424242;
+$dialog-backdrop-color: rgba(48, 48, 48, 0.38);
 $dialog-close-fg-color: #c1c1c1;
 $dialog-close-external-color: $background;
 $dialog-shadow-color: rgba(0, 0, 0, 0.48);
@@ -201,7 +201,7 @@ $imagebody-giflabel-color: $background;
 /* ******************** */
 $roomlist-bg-color: rgba(245, 245, 245, 0.90);
 $roomsublist-skeleton-ui-bg: linear-gradient(180deg, $background 0%, #ffffff00 100%);
-$roomtile-default-badge-bg-color: $muted-fg-color;
+$roomtile-default-badge-bg-color: #8BC34A;
 /* ******************** */
 
 /* e2e */
@@ -229,14 +229,14 @@ $button-danger-disabled-bg-color: #f5b6bb; /* TODO: Verify color */
 
 /* Toggle switch */
 /* ******************** */
-$togglesw-off-color: #c1c9d6;
+$togglesw-off-color: #bdbdbd;
 $togglesw-ball-color: $background;
 /* ******************** */
 
 /* Authpage */
 /* ******************** */
-$authpage-primary-color: #232f32;
-$authpage-bg-color: #2e3649;
+$authpage-primary-color: #212121;
+$authpage-bg-color: #424242;
 $authpage-modal-bg-color: $roomlist-bg-color;
 $authpage-focus-bg-color: $focus-bg-color;
 $authpage-lang-color: #424242;
@@ -254,15 +254,15 @@ $message-action-bar-hover-border-color: $focus-bg-color;
 /* Reaction row */
 /* ******************** */
 $reaction-row-button-hover-border-color: $focus-bg-color;
-$reaction-row-button-selected-bg-color: #e9fff9;
+$reaction-row-button-selected-bg-color: #DCEDC8;
 /* ******************** */
 
 /* Voice messages */
 /* ******************** */
 /* These two don't change between themes. They are the $alert, but we don't want */
 /* custom themes to affect them by accident. */
-$voice-record-stop-symbol-color: #ff5b55;
-$voice-record-live-circle-color: #ff5b55;
+$voice-record-stop-symbol-color: #E53935;
+$voice-record-live-circle-color: #E53935;
 $voice-record-stop-border-color: $quinary-content;
 $voice-record-icon-color: $tertiary-content;
 /* ******************** */
@@ -289,12 +289,12 @@ $call-view-button-off-foreground: $background;
 $call-view-button-off-background: $secondary-content;
 $call-view-content-background: #383838;
 
-$video-feed-secondary-background: #394049; /* XXX: Color from dark theme */
+$video-feed-secondary-background: #424242; /* XXX: Color from dark theme */
 $voipcall-plinth-color: $system;
 
 /* All of these are from dark theme */
-$video-lobby-system: #21262C;
-$video-lobby-background: #15191E;
+$video-lobby-system: #383838;
+$video-lobby-background: #212121;
 $video-lobby-primary-content: #FFFFFF;
 /* ******************** */
 
@@ -339,8 +339,8 @@ $copy-button-url: "$(res)/img/element-icons/copy.svg";
 /* Location sharing */
 /* ******************** */
 $location-marker-color: #ffffff;
-$location-live-color: #5c56f5;
-$location-live-secondary-color: #deddfd;
+$location-live-color: #8BC34A;
+$location-live-secondary-color: #e0e0e0;
 /* ******************** */
 
 /* Mixins */

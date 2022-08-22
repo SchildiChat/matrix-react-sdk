@@ -31,14 +31,14 @@ monospace,
 
 /* unified palette */
 /* try to use these colors when possible */
-$header-panel-bg-color: #f3f8fd;
+$header-panel-bg-color: #fafafa;
 
 /* typical text (dark-on-white in light skin) */
-$primary-fg-color: #2e2f32;
+$primary-fg-color: #212121;
 $secondary-fg-color: $primary-fg-color;
 $tertiary-fg-color: $primary-fg-color;
 $primary-bg-color: #ffffff;
-$muted-fg-color: #61708b; /* Commonly used in headings and relevant alt text */
+$muted-fg-color: #616161; /* Commonly used in headings and relevant alt text */
 
 /* used for dialog box text */
 $light-fg-color: #747474;
@@ -59,7 +59,7 @@ $info-plinth-bg-color: #f7f7f7;
 $info-plinth-fg-color: #888;
 
 /* left-panel style muted accent color */
-$secondary-accent-color: #f2f5f8;
+$secondary-accent-color: #f5f5f5;
 
 $spacePanel-bg-color: #212121;
 $inverted-bg-color: $spacePanel-bg-color;
@@ -77,10 +77,10 @@ $event-selected-color: $header-panel-bg-color;
 $primary-hairline-color: #e5e5e5;
 
 /* used for the border of input text fields */
-$input-border-color: #e7e7e7;
-$input-darker-bg-color: #e3e8f0;
-$input-darker-fg-color: #9fa9ba;
-$input-lighter-bg-color: #f2f5f8;
+$input-border-color: #e0e0e0;
+$input-darker-bg-color: #e0e0e0;
+$input-darker-fg-color: #aaaaaa;
+$input-lighter-bg-color: #f5f5f5;
 
 $resend-button-divider-color: $input-darker-bg-color;
 
@@ -95,7 +95,7 @@ $input-fg-color: rgba(74, 74, 74, 0.9);
 /* scrollbars */
 $scrollbar-thumb-color: rgba(0, 0, 0, 0.2);
 /* context menus */
-$menu-border-color: #e7e7e7;
+$menu-border-color: #e0e0e0;
 $menu-bg-color: #fff;
 $menu-box-shadow-color: rgba(118, 131, 156, 0.6);
 $menu-selected-color: #f5f5f5;
@@ -156,21 +156,21 @@ $presence-offline: #bdbdbd;
 $presence-busy: #E53935;
 
 /* Legacy theme backports */
-$accent: #0DBD8B;
-$alert: #FF5B55;
+$accent: #8BC34A;
+$alert: #E53935;
 $links: #0086e6;
 $primary-content: $primary-fg-color;
 $secondary-content: $secondary-fg-color;
 $tertiary-content: $tertiary-fg-color;
 $quaternary-content: #757575;
 $quinary-content: $quaternary-content;
-$system: #F4F6FA;
+$system: #f5f5f5;
 $system-transparent: rgba($system, 0.0); /* XXX: workaround for Safari 15.3 linear-gradient bug */
 $background: $primary-bg-color;
 $overlay-background: rgba($background, 0.85);
 
 $panels: rgba($system, 0.9);
-$panel-base: #8D97A5; /* This color is not intended for use in the app */
+$panel-base: #808080; /* This color is not intended for use in the app */
 $panel-selected: rgba($tertiary-content, 0.3);
 $panel-hover: rgba($tertiary-content, 0.1);
 $panel-actions: $roomtile-selected-bg-color;
@@ -192,11 +192,11 @@ $call-view-button-off-foreground: $background;
 $call-view-button-off-background: $secondary-content;
 $call-view-content-background: #383838;
 
-$video-feed-secondary-background: #394049; /* XXX: Color from dark theme */
+$video-feed-secondary-background: #424242; /* XXX: Color from dark theme */
 
 /* All of these are from dark theme */
-$video-lobby-system: #21262C;
-$video-lobby-background: #15191E;
+$video-lobby-system: #383838;
+$video-lobby-background: #212121;
 $video-lobby-primary-content: #FFFFFF;
 
 $username-variant1-color: #4189c9;
@@ -230,7 +230,7 @@ $yellow-background: #fff8e3;
 $event-highlight-bg-color: transparent;
 
 /* event timestamp */
-$event-timestamp-color: #acacac;
+$event-timestamp-color: #aaaaaa;
 
 $copy-button-url: "$(res)/img/element-icons/copy.svg";
 
@@ -246,7 +246,7 @@ $lightbox-fg-color: #ffffff;
 $lightbox-border-color: #ffffff;
 
 /* Tabbed views */
-$tab-label-fg-color: #45474a;
+$tab-label-fg-color: #424242;
 $tab-label-active-fg-color: #ffffff;
 
 /* Buttons */
@@ -259,11 +259,11 @@ $button-danger-disabled-bg-color: #f5b6bb; /* TODO: Verify color */
 $visual-bell-bg-color: #faa;
 
 /* Toggle switch */
-$togglesw-off-color: #c1c9d6;
+$togglesw-off-color: #bdbdbd;
 $togglesw-ball-color: #fff;
 
 /* Slider */
-$slider-background-color: #c1c9d6;
+$slider-background-color: #bdbdbd;
 
 $progressbar-bg-color: rgba(144, 144, 144, 0.2);
 
@@ -310,7 +310,7 @@ $codeblock-background-color: #00000010;
 $eventbubble-self-bg: #F0FBF8;
 $eventbubble-others-bg: $system;
 $eventbubble-bg-hover: #FAFBFD;
-$eventbubble-reply-color: #C1C6CD;
+$eventbubble-reply-color: #bdbdbd;
 
 /* pinned events indicator */
 $pinned-color: $tertiary-content;
@@ -320,8 +320,8 @@ $spacePanel-divider-color: $tertiary-content;
 /* Location sharing */
 /* ******************** */
 $location-marker-color: #ffffff;
-$location-live-color: #5c56f5;
-$location-live-secondary-color: #deddfd;
+$location-live-color: #8BC34A;
+$location-live-secondary-color: #e0e0e0;
 /* ******************** */
 
 /* ***** Mixins! ***** */
