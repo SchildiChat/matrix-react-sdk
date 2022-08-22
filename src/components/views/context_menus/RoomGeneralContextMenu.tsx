@@ -101,7 +101,6 @@ export const RoomGeneralContextMenu = ({
         ev.stopPropagation();
 
         setRoomMarkedAsUnread(room);
-        onFinished(); // hide the menu
     };
 
     const onMarkReadClick = (ev: ButtonEvent) => {
@@ -118,18 +117,16 @@ export const RoomGeneralContextMenu = ({
             // noinspection JSIgnoredPromiseFromCall
             MatrixClientPeg.get().sendReadReceipt(events[events.length - 1]);
         }
-        onFinished(); // hide the menu
     };
 
     const markUnreadEnabled = SettingsStore.getValue("feature_mark_unread");
     const isUnread = notification.isUnread ||
         (markUnreadEnabled && isRoomMarkedAsUnread(room));
-    const markUnreadOption: JSX.Element = markUnreadEnabled ? <IconizedContextMenuCheckbox
+    const markUnreadOption: JSX.Element = markUnreadEnabled ? <IconizedContextMenuOption
         onClick={wrapHandler((ev) =>
-            isUnread ? onMarkReadClick : onMarkUnreadClick, onPostMarkUnreadClick, true)}
-        active={true}
-        label={isUnread ? _t("Favourited") : _t("Favourite")}
-        iconClassName={isUnread ? "mx_RoomTile_markAsRead" : "mx_RoomTile_markAsUnread"}
+            isUnread ? onMarkReadClick : onMarkUnreadClick, onPostMarkUnreadClick)}
+        label={isUnread ? _t("Mark as read") : _t("Mark as unread")}
+        iconClassName={isUnread ? "mx_RoomGeneralContextMenu_markAsRead" : "mx_RoomGeneralContextMenu_markAsUnread"}
     /> : null;
 
     const isFavorite = roomTags.includes(DefaultTagID.Favourite);
@@ -137,7 +134,7 @@ export const RoomGeneralContextMenu = ({
         onClick={wrapHandler((ev) =>
             onTagRoom(ev, DefaultTagID.Favourite), onPostFavoriteClick, true)}
         active={isFavorite}
-        label={isFavorite ? _t("Mark as read") : _t("Mark as unread")}
+        label={isFavorite ? _t("Favourited") : _t("Favourite")}
         iconClassName="mx_RoomGeneralContextMenu_iconStar"
     />;
 
