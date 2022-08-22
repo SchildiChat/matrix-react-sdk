@@ -55,6 +55,7 @@ import { ButtonEvent } from '../elements/AccessibleButton';
 import { ViewRoomPayload } from "../../../dispatcher/payloads/ViewRoomPayload";
 import { IEmoji } from '../../../emoji';
 import { ICustomEmoji } from '../../../emojipicker/customemoji';
+import { isLocalRoom } from '../../../utils/localRoom/isLocalRoom';
 
 let instanceCount = 0;
 
@@ -373,6 +374,10 @@ export default class MessageComposer extends React.Component<IProps, IState> {
         });
     };
 
+    private get showStickersButton(): boolean {
+        return this.state.showStickersButton && !isLocalRoom(this.props.room);
+    }
+
     public render() {
         const controls = [
             this.props.e2eStatus ?
@@ -504,7 +509,7 @@ export default class MessageComposer extends React.Component<IProps, IState> {
                             setStickerPickerOpen={this.setStickerPickerOpen}
                             showLocationButton={!window.electron}
                             showPollsButton={this.state.showPollsButton}
-                            showStickersButton={this.state.showStickersButton}
+                            showStickersButton={this.showStickersButton}
                             collapseButtons={this.state.collapseButtons}
                             toggleButtonMenu={this.toggleButtonMenu}
                         /> }

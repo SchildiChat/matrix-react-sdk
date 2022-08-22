@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 import React from "react";
+
 import { _t } from "../../../languageHandler";
 
 interface IProps {
@@ -41,6 +42,7 @@ export default class InlineSpinner extends React.PureComponent<IProps> {
                 height={this.props.h}
                 className={this.props.className}
                 aria-label={_t("Loading...")}
+                role="progressbar"
             >
                 <circle transform="translate(8 0)" cx="0" cy="16" r="0">
                     <animate

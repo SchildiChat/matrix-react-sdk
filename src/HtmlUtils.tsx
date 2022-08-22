@@ -470,41 +470,39 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
     }
 
     let strippedBody: string;
-    let safeBody: string;
-    let isDisplayedWithHtml: boolean;
-    let isAllHtmlEmoji: boolean = false;
-    // XXX: We sanitize the HTML whilst also highlighting its text nodes, to avoid accidentally trying
-    // to highlight HTML tags themselves.  However, this does mean that we don't highlight textnodes which
-    // are interrupted by HTML tags (not that we did before) - e.g. foo<span/>bar won't get highlighted
-    // by an attempt to search for 'foobar'.  Then again, the search query probably wouldn't work either
+    let safeBody: string; // safe, sanitised HTML, preferred over `strippedBody` which is fully plaintext
+    let isAllHtmlEmoji = false;
+
     try {
-        if (highlights && highlights.length > 0) {
-            const highlighter = new HtmlHighlighter("mx_EventTile_searchHighlight", opts.highlightLink);
-            const safeHighlights = highlights
-                // sanitizeHtml can hang if an unclosed HTML tag is thrown at it
-                // A search for `<foo` will make the browser crash
-                // an alternative would be to escape HTML special characters
-                // but that would bring no additional benefit as the highlighter
-                // does not work with those special chars
-                .filter((highlight: string): boolean => !highlight.includes("<"))
-                .map((highlight: string): string => sanitizeHtml(highlight, sanitizeParams));
-            // XXX: hacky bodge to temporarily apply a textFilter to the sanitizeParams structure.
-            sanitizeParams.textFilter = function(safeText) {
-                return highlighter.applyHighlights(safeText, safeHighlights).join('');
-            };
-        }
+        // sanitizeHtml can hang if an unclosed HTML tag is thrown at it
+        // A search for `<foo` will make the browser crash an alternative would be to escape HTML special characters
+        // but that would bring no additional benefit as the highlighter does not work with those special chars
+        const safeHighlights = highlights
+            ?.filter((highlight: string): boolean => !highlight.includes("<"))
+            .map((highlight: string): string => sanitizeHtml(highlight, sanitizeParams));
 
         let formattedBody = typeof content.formatted_body === 'string' ? content.formatted_body : null;
         const plainBody = typeof content.body === 'string' ? content.body : "";
 
         if (opts.stripReplyFallback && formattedBody) formattedBody = stripHTMLReply(formattedBody);
         strippedBody = opts.stripReplyFallback ? stripPlainReply(plainBody) : plainBody;
-
         bodyHasEmoji = mightContainEmoji(isFormattedBody ? formattedBody : plainBody);
 
-        // Only generate safeBody if the message was sent as org.matrix.custom.html
+        const highlighter = safeHighlights?.length
+            ? new HtmlHighlighter("mx_EventTile_searchHighlight", opts.highlightLink)
+            : null;
+
         if (isFormattedBody) {
-            isDisplayedWithHtml = true;
+            if (highlighter) {
+                // XXX: We sanitize the HTML whilst also highlighting its text nodes, to avoid accidentally trying
+                // to highlight HTML tags themselves. However, this does mean that we don't highlight textnodes which
+                // are interrupted by HTML tags (not that we did before) - e.g. foo<span/>bar won't get highlighted
+                // by an attempt to search for 'foobar'.  Then again, the search query probably wouldn't work either
+                // XXX: hacky bodge to temporarily apply a textFilter to the sanitizeParams structure.
+                sanitizeParams.textFilter = function(safeText) {
+                    return highlighter.applyHighlights(safeText, safeHighlights).join('');
+                };
+            }
 
             safeBody = sanitizeHtml(formattedBody, sanitizeParams);
             const phtml = cheerio.load(safeBody, {
@@ -541,7 +539,7 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
                         // that emojis that are made up of multiple unicode characters are still
                         // presented as large.
                         elmText = elmText.replace(ZWJ_REGEX, '');
-                
+
                         const match = BIGEMOJI_REGEX.exec(elmText);
                         return match && match[0] && match[0].length === elmText.length;
                     } else if (elm.type == 'tag') {
@@ -553,12 +551,14 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
             if (bodyHasEmoji) {
                 safeBody = formatEmojis(safeBody, true).join('');
             }
+        } else if (highlighter) {
+            safeBody = highlighter.applyHighlights(plainBody, safeHighlights).join('');
         }
     } finally {
         delete sanitizeParams.textFilter;
     }
 
-    const contentBody = isDisplayedWithHtml ? safeBody : strippedBody;
+    const contentBody = safeBody ?? strippedBody;
     if (opts.returnString) {
         return contentBody;
     }
@@ -579,11 +579,11 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
         const match = BIGEMOJI_REGEX.exec(contentBodyTrimmed);
         const matched = match && match[0] && match[0].length === contentBodyTrimmed.length;
         emojiBody = (matched || isAllHtmlEmoji) && (
-                        strippedBody === safeBody || // replies have the html fallbacks, account for that here
-                        content.formatted_body === undefined ||
-                        (!content.formatted_body.includes("http:") &&
-                        !content.formatted_body.includes("https:"))
-                    );
+            strippedBody === safeBody || // replies have the html fallbacks, account for that here
+            content.formatted_body === undefined ||
+            (!content.formatted_body.includes("http:") &&
+            !content.formatted_body.includes("https:"))
+        );
     }
 
     const className = classNames({
@@ -593,11 +593,11 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
     });
 
     let emojiBodyElements: JSX.Element[];
-    if (!isDisplayedWithHtml && bodyHasEmoji) {
+    if (!safeBody && bodyHasEmoji) {
         emojiBodyElements = formatEmojis(strippedBody, false) as JSX.Element[];
     }
 
-    return isDisplayedWithHtml ?
+    return safeBody ?
         <span
             key="body"
             ref={opts.ref}
