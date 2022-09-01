@@ -62,7 +62,7 @@ class EmojiPicker extends React.Component<IProps, IState> {
     private readonly categories: ICategory[];
     private readonly shortcodes_to_custom_emoji: Record<string, ICustomEmoji> = {};
 
-    private scrollRef = React.createRef<AutoHideScrollbar>();
+    private scrollRef = React.createRef<AutoHideScrollbar<"div">>();
 
     constructor(props: IProps) {
         super(props);
@@ -291,7 +291,7 @@ class EmojiPicker extends React.Component<IProps, IState> {
     render() {
         let heightBefore = 0;
         return (
-            <div className="mx_EmojiPicker">
+            <div className="mx_EmojiPicker" data-testid='mx_EmojiPicker'>
                 <Header categories={this.categories} onAnchorClick={this.scrollToCategory} />
                 <Search query={this.state.filter} onChange={this.onChangeFilter} onEnter={this.onEnterFilter} />
                 <AutoHideScrollbar

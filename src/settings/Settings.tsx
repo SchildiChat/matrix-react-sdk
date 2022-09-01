@@ -422,13 +422,6 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         displayName: _td("Send read receipts"),
         default: true,
     },
-    "feature_message_right_click_context_menu": {
-        isFeature: true,
-        supportedLevels: LEVELS_FEATURE,
-        labsGroup: LabGroup.Rooms,
-        displayName: _td("Right-click message context menu"),
-        default: true,
-    },
     "feature_location_share_live": {
         isFeature: true,
         labsGroup: LabGroup.Messaging,
@@ -867,6 +860,11 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         displayName: _td("Show shortcuts to recently viewed rooms above the room list"),
         default: true,
         controller: new IncompatibleController("feature_breadcrumbs_v2", true),
+    },
+    "FTUE.userOnboardingButton": {
+        supportedLevels: LEVELS_ACCOUNT_SETTINGS,
+        displayName: _td("Show shortcut to welcome checklist above the room list"),
+        default: true,
     },
     "showHiddenEventsInTimeline": {
         displayName: _td("Show hidden events in timeline"),
