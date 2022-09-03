@@ -326,7 +326,6 @@ export default class RoomTile extends React.PureComponent<IProps, IState> {
                         {...contextMenuBelow(this.state.generalMenuPosition)}
                         onFinished={this.onCloseGeneralMenu}
                         room={this.props.room}
-                        notification={this.notificationState}
                         onPostFavoriteClick={(ev: ButtonEvent) => PosthogTrackers.trackInteraction(
                             "WebRoomListRoomTileContextMenuFavouriteToggle", ev,
                         )}

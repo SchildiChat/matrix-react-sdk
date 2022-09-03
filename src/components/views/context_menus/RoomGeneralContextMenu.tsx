@@ -28,7 +28,8 @@ import { _t } from "../../../languageHandler";
 import { MatrixClientPeg } from "../../../MatrixClientPeg";
 import { isRoomMarkedAsUnread, setRoomMarkedAsUnread } from "../../../Rooms";
 import SettingsStore from "../../../settings/SettingsStore";
-import { NotificationState } from "../../../stores/notifications/NotificationState";
+import { NotificationStateEvents } from "../../../stores/notifications/NotificationState";
+import { RoomNotificationStateStore } from "../../../stores/notifications/RoomNotificationStateStore";
 import { DefaultTagID, TagID } from "../../../stores/room-list/models";
 import RoomListStore, { LISTS_UPDATE_EVENT } from "../../../stores/room-list/RoomListStore";
 import DMRoomMap from "../../../utils/DMRoomMap";
@@ -42,7 +43,6 @@ import { ButtonEvent } from "../elements/AccessibleButton";
 
 interface IProps extends IContextMenuProps {
     room: Room;
-    notification: NotificationState;
     onPostMarkUnreadClick?: (event: ButtonEvent) => void;
     onPostFavoriteClick?: (event: ButtonEvent) => void;
     onPostLowPriorityClick?: (event: ButtonEvent) => void;
@@ -54,7 +54,7 @@ interface IProps extends IContextMenuProps {
 }
 
 export const RoomGeneralContextMenu = ({
-    room, notification, onFinished, onPostMarkUnreadClick,
+    room, onFinished, onPostMarkUnreadClick,
     onPostFavoriteClick, onPostLowPriorityClick, onPostInviteClick, onPostCopyLinkClick, onPostSettingsClick,
     onPostLeaveClick, onPostForgetClick, ...props
 }: IProps) => {
@@ -63,6 +63,16 @@ export const RoomGeneralContextMenu = ({
         RoomListStore.instance,
         LISTS_UPDATE_EVENT,
         () => RoomListStore.instance.getTagsForRoom(room),
+    );
+    const roomNotifications = useEventEmitterState(
+        RoomNotificationStateStore.instance,
+        NotificationStateEvents.Update,
+        () => RoomNotificationStateStore.instance.getRoomState(room),
+    );
+    const roomMarkedUnread = useEventEmitterState(
+        room,
+        "Room.accountData",
+        () => isRoomMarkedAsUnread(room),
     );
     const isDm = DMRoomMap.shared().getUserIdForRoomId(room.roomId);
     const wrapHandler = (
@@ -120,8 +130,7 @@ export const RoomGeneralContextMenu = ({
     };
 
     const markUnreadEnabled = SettingsStore.getValue("feature_mark_unread");
-    const isUnread = notification.isUnread ||
-        (markUnreadEnabled && isRoomMarkedAsUnread(room));
+    const isUnread = roomNotifications.isUnread || (markUnreadEnabled && roomMarkedUnread);
     const markUnreadOption: JSX.Element = markUnreadEnabled ? <IconizedContextMenuOption
         onClick={wrapHandler((ev) =>
             isUnread ? onMarkReadClick : onMarkUnreadClick, onPostMarkUnreadClick)}
