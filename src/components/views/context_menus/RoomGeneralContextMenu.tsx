@@ -107,15 +107,10 @@ export const RoomGeneralContextMenu = ({
     };
 
     const onMarkUnreadClick = (ev: ButtonEvent) => {
-        ev.preventDefault();
-        ev.stopPropagation();
-
         setRoomMarkedAsUnread(room);
     };
 
     const onMarkReadClick = (ev: ButtonEvent) => {
-        ev.preventDefault();
-        ev.stopPropagation();
         // Clear manually marked as unread
         const markUnreadEnabled = SettingsStore.getValue("feature_mark_unread");
         if (markUnreadEnabled) {
@@ -133,7 +128,7 @@ export const RoomGeneralContextMenu = ({
     const isUnread = roomNotifications.isUnread || (markUnreadEnabled && roomMarkedUnread);
     const markUnreadOption: JSX.Element = markUnreadEnabled ? <IconizedContextMenuOption
         onClick={wrapHandler((ev) =>
-            isUnread ? onMarkReadClick : onMarkUnreadClick, onPostMarkUnreadClick)}
+            isUnread ? onMarkReadClick(ev) : onMarkUnreadClick(ev), onPostMarkUnreadClick)}
         label={isUnread ? _t("Mark as read") : _t("Mark as unread")}
         iconClassName={isUnread ? "mx_RoomGeneralContextMenu_markAsRead" : "mx_RoomGeneralContextMenu_markAsUnread"}
     /> : null;
