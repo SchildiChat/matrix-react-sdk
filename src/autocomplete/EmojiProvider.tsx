@@ -103,7 +103,7 @@ export default class EmojiProvider extends AutocompleteProvider {
         }));
         this.customEmojiMatcher = new QueryMatcher<ISortedEmoji>(sortedCustomImages, {
             keys: [],
-            funcs: [o => o.emoji.shortcodes.map(s => `:${s}:`)],
+            funcs: [o => o.emoji?.shortcodes.map(s => `:${s}:`)],
             shouldMatchWordsOnly: true,
         });
 
