@@ -622,11 +622,13 @@ export default class RoomListStore {
     private static internalInstance: Interface;
 
     public static get instance(): Interface {
-        if (!RoomListStore.internalInstance) {
-            RoomListStore.internalInstance = new RoomListStoreClass();
+        if (!this.internalInstance) {
+            const instance = new RoomListStoreClass();
+            instance.start();
+            this.internalInstance = instance;
         }
 
-        return RoomListStore.internalInstance;
+        return this.internalInstance;
     }
 }
 
