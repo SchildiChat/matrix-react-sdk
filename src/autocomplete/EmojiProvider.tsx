@@ -22,6 +22,7 @@ import React from 'react';
 import { uniq, sortBy, ListIteratee } from 'lodash';
 import EMOTICON_REGEX from 'emojibase-regex/emoticon';
 import { Room } from 'matrix-js-sdk/src/models/room';
+import { logger } from 'matrix-js-sdk/src/logger';
 
 import { _t } from '../languageHandler';
 import AutocompleteProvider from './AutocompleteProvider';
@@ -178,7 +179,15 @@ export default class EmojiProvider extends AutocompleteProvider {
                         range,
                     };
                 } else {
-                    const mediaUrl = mediaFromMxc(c.emoji.url).getThumbnailOfSourceHttp(24, 24, 'scale');
+                    let mediaUrl;
+
+                    // SC: Might be no valid mxc url
+                    try {
+                        mediaUrl = mediaFromMxc(c.emoji.url).getThumbnailOfSourceHttp(24, 24, 'scale');
+                    } catch (e) {
+                        logger.error(e);
+                    }
+
                     return {
                         completion: c.emoji.shortcodes[0],
                         type: "customEmoji",

@@ -16,6 +16,7 @@ limitations under the License.
 */
 
 import React from 'react';
+import { logger } from 'matrix-js-sdk/src/logger';
 
 import { MenuItem } from "../../structures/ContextMenu";
 import { IEmoji } from "../../../emoji";
@@ -42,7 +43,15 @@ class Emoji extends React.PureComponent<IProps> {
                 { emoji.unicode }
             </div>;
         } else {
-            const mediaUrl = mediaFromMxc(emoji.url).getThumbnailOfSourceHttp(24, 24, 'scale');
+            let mediaUrl;
+
+            // SC: Might be no valid mxc url
+            try {
+                mediaUrl = mediaFromMxc(emoji.url).getThumbnailOfSourceHttp(24, 24, 'scale');
+            } catch (e) {
+                logger.error(e);
+            }
+
             emojiElement = <div className="mx_EmojiPicker_item">
                 <img
                     className="mx_customEmoji_image"

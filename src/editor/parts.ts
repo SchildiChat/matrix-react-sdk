@@ -20,6 +20,7 @@ import EMOJIBASE_REGEX from "emojibase-regex";
 import { MatrixClient } from "matrix-js-sdk/src/client";
 import { RoomMember } from "matrix-js-sdk/src/models/room-member";
 import { Room } from "matrix-js-sdk/src/models/room";
+import { logger } from "matrix-js-sdk/src/logger";
 
 import AutocompleteWrapperModel, {
     GetAutocompleterComponent,
@@ -417,7 +418,15 @@ class CustomEmojiPart extends PillPart implements IPillPart {
         return "mx_CustomEmojiPill mx_Pill";
     }
     protected setAvatar(node: HTMLElement): void {
-        const url = mediaFromMxc(this.resourceId).getThumbnailOfSourceHttp(24, 24, "crop");
+        let url;
+
+        // SC: Might be no valid mxc url
+        try {
+            url = mediaFromMxc(this.resourceId).getThumbnailOfSourceHttp(24, 24, "crop");
+        } catch (e) {
+            logger.error(e);
+        }
+
         this.setAvatarVars(node, url, this.text[0]);
     }
     constructor(shortCode: string, url: string) {

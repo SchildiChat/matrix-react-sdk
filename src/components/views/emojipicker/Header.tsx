@@ -17,6 +17,7 @@ limitations under the License.
 
 import React from 'react';
 import classNames from "classnames";
+import { logger } from 'matrix-js-sdk/src/logger';
 
 import { _t } from "../../../languageHandler";
 import { CategoryKey, ICategory } from "./Category";
@@ -83,7 +84,7 @@ class Header extends React.PureComponent<IProps> {
         }
     };
 
-    private onWheel = (evt : React.WheelEvent) => {
+    private onWheel = (evt: React.WheelEvent) => {
         evt.preventDefault();
         // annoying failfox hack
         if (evt.deltaMode === 1) {
@@ -91,7 +92,7 @@ class Header extends React.PureComponent<IProps> {
         } else {
             evt.currentTarget.scrollLeft += evt.deltaY;
         }
-    }
+    };
 
     render() {
         return (
@@ -103,14 +104,23 @@ class Header extends React.PureComponent<IProps> {
                 onWheel={this.onWheel}
             >
                 { this.props.categories.map(category => {
-                    let emojiElement : JSX.Element;
-                    let classes : string;
+                    let emojiElement: JSX.Element;
+                    let classes: string;
                     if (category.representativeEmoji) {
-                        const mediaUrl = mediaFromMxc(category.representativeEmoji.url).getThumbnailOfSourceHttp(24, 24, 'scale');
+                        let mediaUrl;
+
+                        // SC: Might be no valid mxc url
+                        try {
+                            mediaUrl = mediaFromMxc(category.representativeEmoji.url).
+                                getThumbnailOfSourceHttp(24, 24, 'scale');
+                        } catch (e) {
+                            logger.error(e);
+                        }
+
                         emojiElement = <img
-                                className="mx_customEmoji_image"
-                                src={mediaUrl}
-                                alt={category.representativeEmoji.shortcodes[0]} />
+                            className="mx_customEmoji_image"
+                            src={mediaUrl}
+                            alt={category.representativeEmoji.shortcodes[0]} />;
                         classes = classNames(`mx_EmojiPicker_anchor`, `mx_CustomEmojiCategory`, {
                             mx_EmojiPicker_anchor_visible: category.visible,
                         });
@@ -132,7 +142,7 @@ class Header extends React.PureComponent<IProps> {
                         aria-selected={category.visible}
                         aria-controls={`mx_EmojiPicker_category_${category.id}`}
                     >
-                        {emojiElement}
+                        { emojiElement }
                     </button>;
                 }) }
             </nav>
