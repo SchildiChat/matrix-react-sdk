@@ -47,6 +47,8 @@ import { JoinRoomErrorPayload } from "../dispatcher/payloads/JoinRoomErrorPayloa
 import { ViewRoomErrorPayload } from "../dispatcher/payloads/ViewRoomErrorPayload";
 import ErrorDialog from "../components/views/dialogs/ErrorDialog";
 import { ActiveRoomChangedPayload } from "../dispatcher/payloads/ActiveRoomChangedPayload";
+import SettingsStore from "../settings/SettingsStore";
+import { SlidingSyncManager } from "../SlidingSyncManager";
 import { awaitRoomDownSync } from "../utils/RoomUpgrade";
 
 const NUM_JOIN_RETRY = 5;
@@ -58,6 +60,8 @@ const INITIAL_STATE = {
     joinError: null as Error,
     // The room ID of the room currently being viewed
     roomId: null as string,
+    // The room ID being subscribed to (in Sliding Sync)
+    subscribingRoomId: null as string,
 
     // The event to scroll to when the room is first viewed
     initialEventId: null as string,
@@ -278,6 +282,39 @@ export class RoomViewStore extends Store<ActionPayload> {
                     activeSpace,
                 });
             }
+            if (SettingsStore.getValue("feature_sliding_sync") && this.state.roomId !== payload.room_id) {
+                if (this.state.roomId) {
+                    // unsubscribe from this room, but don't await it as we don't care when this gets done.
+                    SlidingSyncManager.instance.setRoomVisible(this.state.roomId, false);
+                }
+                this.setState({
+                    subscribingRoomId: payload.room_id,
+                    roomId: payload.room_id,
+                    initialEventId: null,
+                    initialEventPixelOffset: null,
+                    isInitialEventHighlighted: null,
+                    initialEventScrollIntoView: true,
+                    roomAlias: null,
+                    roomLoading: true,
+                    roomLoadError: null,
+                    viaServers: payload.via_servers,
+                    wasContextSwitch: payload.context_switch,
+                });
+                // set this room as the room subscription. We need to await for it as this will fetch
+                // all room state for this room, which is required before we get the state below.
+                await SlidingSyncManager.instance.setRoomVisible(payload.room_id, true);
+                // Whilst we were subscribing another room was viewed, so stop what we're doing and
+                // unsubscribe
+                if (this.state.subscribingRoomId !== payload.room_id) {
+                    SlidingSyncManager.instance.setRoomVisible(this.state.roomId, false);
+                    return;
+                }
+                // Re-fire the payload: we won't re-process it because the prev room ID == payload room ID now
+                dis.dispatch({
+                    ...payload,
+                });
+                return;
+            }
 
             const newState = {
                 roomId: payload.room_id,
@@ -300,8 +337,9 @@ export class RoomViewStore extends Store<ActionPayload> {
             // Allow being given an event to be replied to when switching rooms but sanity check its for this room
             if (payload.replyingToEvent?.getRoomId() === payload.room_id) {
                 newState.replyingToEvent = payload.replyingToEvent;
-            } else if (this.state.roomId === payload.room_id) {
-                // if the room isn't being changed, e.g visiting a permalink then maintain replyingToEvent
+            } else if (this.state.replyingToEvent?.getRoomId() === payload.room_id) {
+                // if the reply-to matches the desired room, e.g visiting a permalink then maintain replyingToEvent
+                // See https://github.com/vector-im/element-web/issues/21462
                 newState.replyingToEvent = this.state.replyingToEvent;
             }
 

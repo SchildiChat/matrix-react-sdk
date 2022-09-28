@@ -121,6 +121,8 @@ import { UserNameColorMode } from '../../settings/enums/UserNameColorMode';
 import DMRoomMap from '../../utils/DMRoomMap';
 import { RoomStatusBarUnsentMessages } from './RoomStatusBarUnsentMessages';
 import { LargeLoader } from './LargeLoader';
+import { VoiceBroadcastInfoEventType } from '../../voice-broadcast';
+import { isVideoRoom } from '../../utils/video-rooms';
 
 const DEBUG = false;
 let debuglog = function(msg: string) {};
@@ -201,6 +203,7 @@ export interface IRoomState {
     upgradeRecommendation?: IRecommendedVersion;
     canReact: boolean;
     canSendMessages: boolean;
+    canSendVoiceBroadcasts: boolean;
     tombstone?: MatrixEvent;
     resizing: boolean;
     layout: Layout;
@@ -407,6 +410,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             statusBarVisible: false,
             canReact: false,
             canSendMessages: false,
+            canSendVoiceBroadcasts: false,
             resizing: false,
             layout: SettingsStore.getValue("layout"),
             singleSideBubbles: SettingsStore.getValue("singleSideBubbles"),
@@ -546,7 +550,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
     };
 
     private getMainSplitContentType = (room: Room) => {
-        if (SettingsStore.getValue("feature_video_rooms") && room.isElementVideoRoom()) {
+        if (SettingsStore.getValue("feature_video_rooms") && isVideoRoom(room)) {
             return MainSplitContentType.Video;
         }
         if (WidgetLayoutStore.instance.hasMaximisedWidget(room)) {
@@ -907,6 +911,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         if (this.context) {
             this.context.removeListener(ClientEvent.Room, this.onRoom);
             this.context.removeListener(RoomEvent.Timeline, this.onRoomTimeline);
+            this.context.removeListener(RoomEvent.TimelineReset, this.onRoomTimelineReset);
             this.context.removeListener(RoomEvent.Name, this.onRoomName);
             this.context.removeListener(RoomStateEvent.Events, this.onRoomStateEvents);
             this.context.removeListener(RoomEvent.MyMembership, this.onMyMembership);
@@ -1432,8 +1437,14 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             );
             const canSendMessages = room.maySendMessage();
             const canSelfRedact = room.currentState.maySendEvent(EventType.RoomRedaction, me);
+            const canSendVoiceBroadcasts = room.currentState.maySendEvent(VoiceBroadcastInfoEventType, me);
 
-            this.setState({ canReact, canSendMessages, canSelfRedact });
+            this.setState({
+                canReact,
+                canSendMessages,
+                canSendVoiceBroadcasts,
+                canSelfRedact,
+            });
         }
     }
 
@@ -2126,8 +2137,8 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
 
         const myMembership = this.state.room.getMyMembership();
         if (
-            this.state.room.isElementVideoRoom() &&
-            !(SettingsStore.getValue("feature_video_rooms") && myMembership === "join")
+            isVideoRoom(this.state.room)
+            && !(SettingsStore.getValue("feature_video_rooms") && myMembership === "join")
         ) {
             return <ErrorBoundary>
                 <div className="mx_MainSplit">
@@ -2333,6 +2344,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
                     permalinkCreator={this.permalinkCreator}
                     layout={this.state.layout}
                     userNameColorMode={this.state.userNameColorMode}
+                    showVoiceBroadcastButton={this.state.canSendVoiceBroadcasts}
                 />;
         }
 

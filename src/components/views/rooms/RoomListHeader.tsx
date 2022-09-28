@@ -128,6 +128,7 @@ const RoomListHeader = ({ onVisibilityChange }: IProps) => {
         return SpaceStore.instance.allRoomsInHome;
     });
     const videoRoomsEnabled = useFeatureEnabled("feature_video_rooms");
+    const elementCallVideoRoomsEnabled = useFeatureEnabled("feature_element_call_video_rooms");
     const pendingActions = usePendingActions();
 
     const canShowMainMenu = activeSpace || spaceKey === MetaSpace.Home;
@@ -212,7 +213,10 @@ const RoomListHeader = ({ onVisibilityChange }: IProps) => {
                         onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            showCreateNewRoom(activeSpace, RoomType.ElementVideo);
+                            showCreateNewRoom(
+                                activeSpace,
+                                elementCallVideoRoomsEnabled ? RoomType.UnstableCall : RoomType.ElementVideo,
+                            );
                             closePlusMenu();
                         }}
                     >
@@ -312,7 +316,7 @@ const RoomListHeader = ({ onVisibilityChange }: IProps) => {
                             e.stopPropagation();
                             defaultDispatcher.dispatch({
                                 action: "view_create_room",
-                                type: RoomType.ElementVideo,
+                                type: elementCallVideoRoomsEnabled ? RoomType.UnstableCall : RoomType.ElementVideo,
                             });
                             closePlusMenu();
                         }}

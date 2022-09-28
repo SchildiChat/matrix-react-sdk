@@ -44,6 +44,7 @@ import { RoomListStyle } from './enums/RoomListStyle';
 import { ImageSize } from "./enums/ImageSize";
 import { MetaSpace } from "../stores/spaces";
 import SdkConfig from "../SdkConfig";
+import SlidingSyncController from './controllers/SlidingSyncController';
 import ThreadBetaController from './controllers/ThreadBetaController';
 import { FontWatcher } from "./watchers/FontWatcher";
 import { BorderRadius } from './enums/BorderRadius';
@@ -103,6 +104,10 @@ export enum LabGroup {
     Encryption,
     Experimental,
     Developer,
+}
+
+export enum Features {
+    VoiceBroadcast = "feature_voice_broadcast",
 }
 
 export const labGroupNames: Record<LabGroup, string> = {
@@ -422,6 +427,26 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         displayName: _td("Send read receipts"),
         default: true,
     },
+    "feature_sliding_sync": {
+        isFeature: true,
+        labsGroup: LabGroup.Developer,
+        supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS_WITH_CONFIG,
+        displayName: _td('Sliding Sync mode (under active development, cannot be disabled)'),
+        default: false,
+        controller: new SlidingSyncController(),
+    },
+    "feature_sliding_sync_proxy_url": {
+        supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS_WITH_CONFIG,
+        default: "",
+    },
+    "feature_element_call_video_rooms": {
+        isFeature: true,
+        supportedLevels: LEVELS_FEATURE,
+        labsGroup: LabGroup.Rooms,
+        displayName: _td("Element Call video rooms"),
+        controller: new ReloadOnChangeController(),
+        default: false,
+    },
     "feature_location_share_live": {
         isFeature: true,
         labsGroup: LabGroup.Messaging,
@@ -436,6 +461,13 @@ export const SETTINGS: {[setting: string]: ISetting} = {
         labsGroup: LabGroup.Messaging,
         supportedLevels: LEVELS_FEATURE,
         displayName: _td("Favourite Messages (under active development)"),
+        default: false,
+    },
+    [Features.VoiceBroadcast]: {
+        isFeature: true,
+        labsGroup: LabGroup.Messaging,
+        supportedLevels: LEVELS_FEATURE,
+        displayName: _td("Voice broadcast (under active development)"),
         default: false,
     },
     "feature_new_device_manager": {
