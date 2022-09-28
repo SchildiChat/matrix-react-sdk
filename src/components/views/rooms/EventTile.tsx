@@ -1482,7 +1482,7 @@ export class UnwrappedEventTile extends React.Component<IProps, IState> {
                 if (scBubbleEnabled) {
                     const infoBubble = isInfoMessage || isBubbleMessage;
 
-                    const mediaBodyTypes = ['m.image', /* 'm.file', */ /* 'm.audio', */ 'm.video'];
+                    const mediaBodyTypes = ['m.image']; // 'm.file', 'm.audio', 'm.video'
                     const mediaEvTypes = ['m.sticker'];
                     let mediaBody = false;
                     let stickerBody = false;

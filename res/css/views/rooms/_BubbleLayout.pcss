@@ -297,10 +297,6 @@ $left-gutter: 5.4rem;
             border-radius: $border-radius-8px;
             overflow: hidden;
         }
-        
-        .mx_MVideoBody_container {
-            border-color: $event-timestamp-color !important;
-        }
     }
 
     .mx_MNoticeBody {
@@ -387,7 +383,7 @@ $left-gutter: 5.4rem;
         border-radius: unset;
     }
 
-    .mx_MImageBody, .mx_MVideoBody_container {
+    .mx_MImageBody {
         box-sizing: border-box;
         border: 1px solid $message-bubble-background;
     }
@@ -398,15 +394,16 @@ $left-gutter: 5.4rem;
 
     span.mx_MVideoBody {
         display: block;
-        position: relative;
-        text-align: right;
-        overflow: visible;
+        margin: -4px -7px 0 -7px;
+
+        &:not(:first-child) {
+            margin-top: unset;
+        }
 
         video.mx_MVideoBody {
             display: block;
             width: auto;
             max-width: 100%;
-            border-radius: unset;
         }
 
         .mx_MFileBody {
@@ -421,28 +418,6 @@ $left-gutter: 5.4rem;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-
-        .sc_PlaceholderTimestamp {
-            display: none;
-        }
-
-        .sc_LinkedTimestamp {
-            margin-left: 1rem;
-
-            .mx_MessageTimestamp {
-                visibility: visible !important;
-                position: unset !important;
-                width: unset !important;
-                font-size: 1.2rem;
-                line-height: 1;
-            }
-        }
-    }
-
-    .mx_MVideoBody_container {
-        display: block;
-        border-radius: $border-radius-8px;
-        overflow: hidden;
     }
 
     .mx_MPollBody {
@@ -866,18 +841,6 @@ $left-gutter: 5.4rem;
                 background: $accent;
                 
                 .mx_MImageBody_thumbnail {
-                    opacity: 0.7;
-                }
-            }
-
-            > span.mx_MVideoBody {
-                .mx_MVideoBody_container {
-                    background: $accent;
-                    border-radius: $border-radius-8px;
-                    display: block;
-                }
-                
-                video.mx_MVideoBody {
                     opacity: 0.7;
                 }
             }
