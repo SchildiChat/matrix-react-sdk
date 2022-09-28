@@ -116,7 +116,7 @@ const QuickSettingsButton = ({ isPanelCollapsed = false }) => {
                 { _t("More options") }
             </AccessibleButton>
 
-            {/* <QuickThemeSwitcher requestClose={closeMenu} /> */}
+            { /* <QuickThemeSwitcher requestClose={closeMenu} /> */ }
         </ContextMenu>;
     }
 

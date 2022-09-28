@@ -70,7 +70,8 @@ const SidebarUserSettingsTab = () => {
                     { _t("Home") }
                 </StyledCheckbox>
                 <div className="mx_SidebarUserSettingsTab_checkboxMicrocopy">
-                    { _t("Home is useful for getting an overview of everything. Keep in mind that disabling it could leave you unable to see certain rooms.") }
+                    { _t("Home is useful for getting an overview of everything. " +
+                        "Keep in mind that disabling it could leave you unable to see certain rooms.") }
                 </div>
 
                 <StyledCheckbox

@@ -19,7 +19,7 @@ import SettingsStore from '../SettingsStore';
 import dis from '../../dispatcher/dispatcher';
 import { Action } from '../../dispatcher/actions';
 import ThemeController from "../controllers/ThemeController";
-import { setTheme, getCustomTheme, findHighContrastTheme } from "../../theme";
+import { setTheme, getCustomTheme } from "../../theme";
 import { ActionPayload } from '../../dispatcher/payloads';
 import { Theme } from '../enums/Theme';
 

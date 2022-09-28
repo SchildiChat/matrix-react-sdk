@@ -127,10 +127,12 @@ export default class HelpUserSettingsTab extends React.Component<IProps, IState>
                 <span className='mx_SettingsTab_subheading'>{ _t("Credits") }</span>
                 <ul className='mx_SettingsTab_subsectionText'>
                     <li>
-                        The <a href="themes/element/img/backgrounds/ocean.jpg" rel="noreferrer noopener"
+                        The <a href="themes/element/img/backgrounds/ocean.jpg"
+                            rel="noreferrer noopener"
                             target="_blank"> default cover photo</a> is from&nbsp;
                         <a href="https://pixabay.com/de/photos/unterwasser-blau-ozean-meer-802092/"
-                            rel="noreferrer noopener" target="_blank">here</a>{' '}
+                            rel="noreferrer noopener"
+                            target="_blank">here</a>{ ' ' }
                         used under the terms of the&nbsp;
                         <a href="https://pixabay.com/de/service/license/" rel="noreferrer noopener" target="_blank">
                         Pixabay License</a>.

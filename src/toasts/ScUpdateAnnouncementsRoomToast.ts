@@ -19,7 +19,6 @@ import dis from '../dispatcher/dispatcher';
 import GenericToast from "../components/views/toasts/GenericToast";
 import ToastStore from "../stores/ToastStore";
 import PlatformPeg from "../PlatformPeg";
-import SdkConfig from "../SdkConfig";
 import SettingsStore from "../settings/SettingsStore";
 import { SettingLevel } from "../settings/SettingLevel";
 

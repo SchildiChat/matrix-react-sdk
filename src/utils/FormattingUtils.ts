@@ -15,10 +15,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Room } from 'matrix-js-sdk/src';
+import { Room } from 'matrix-js-sdk/src/matrix';
+
 import { _t } from '../languageHandler';
 import { UserNameColorMode } from '../settings/enums/UserNameColorMode';
-import DMRoomMap from './DMRoomMap';
 import { jsxJoin } from './ReactUtils';
 
 /**
