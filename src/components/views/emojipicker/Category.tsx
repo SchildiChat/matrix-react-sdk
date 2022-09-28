@@ -53,7 +53,7 @@ interface IProps {
 class Category extends React.PureComponent<IProps> {
     private renderEmojiRow = (rowIndex: number) => {
         const { onClick, onMouseEnter, onMouseLeave, selectedEmojis, emojis } = this.props;
-        const emojisForRow = emojis.slice(rowIndex * 8, (rowIndex + 1) * 8);
+        const emojisForRow = emojis.slice(rowIndex * 8, (rowIndex + 1) * 8).filter((val) => val);
         return (<div key={rowIndex}>{
             emojisForRow.map(emoji => (
                 <Emoji

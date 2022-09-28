@@ -20,7 +20,7 @@ export function loadImageSet(imageSetEvent: MatrixEvent): ICustomEmoji[] {
     const loadedImages: ICustomEmoji[] = [];
     const images = imageSetEvent.getContent().images;
     if (!images) {
-        return;
+        return [];
     }
     for (const imageKey in images) {
         const imageData = images[imageKey];

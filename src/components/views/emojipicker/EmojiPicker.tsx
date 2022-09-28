@@ -84,7 +84,7 @@ class EmojiPicker extends React.Component<IProps, IState> {
 
         // populate the map of custom emojis from shortcodes
         loadedImages.forEach(image => {
-            image.shortcodes.forEach(shortCode => {
+            image?.shortcodes.forEach(shortCode => {
                 this.shortcodes_to_custom_emoji[`:${shortCode}:`] = image;
             });
         });
