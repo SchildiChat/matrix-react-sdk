@@ -147,7 +147,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                 />
             </div>
             <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_RoomListStyleSection">
-                <span className="mx_SettingsTab_subsectionText">{ _t("Room list style") }</span>
+                <span className="mx_SettingsTab_subheading">{ _t("Room list style") }</span>
                 { roomListStyleSection }
             </div>
         </>;
