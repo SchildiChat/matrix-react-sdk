@@ -1222,6 +1222,8 @@ export class UnwrappedEventTile extends React.Component<IProps, IState> {
             />;
         }
 
+        const e2ePadlock = this.renderE2EPadlock();
+
         const linkedTimestamp = <a className="sc_LinkedTimestamp"
             href={permalink}
             onClick={this.onPermalinkClicked}
@@ -1229,18 +1231,20 @@ export class UnwrappedEventTile extends React.Component<IProps, IState> {
             onContextMenu={this.onTimestampContextMenu}
         >
             { timestamp }
+            { scBubbleEnabled ? e2ePadlock : null }
         </a>;
 
         const placeholderTimestamp = <span className="sc_PlaceholderTimestamp">
             { timestamp }
+            { scBubbleEnabled ? e2ePadlock : null }
         </span>;
 
         const useIRCLayout = this.props.layout === Layout.IRC;
         const groupTimestamp = !useIRCLayout ? linkedTimestamp : null;
         const ircTimestamp = useIRCLayout ? linkedTimestamp : null;
         const bubbleTimestamp = this.props.layout === Layout.Bubble ? messageTimestamp : null;
-        const groupPadlock = !useIRCLayout && !isBubbleMessage && this.renderE2EPadlock();
-        const ircPadlock = useIRCLayout && !isBubbleMessage && this.renderE2EPadlock();
+        const groupPadlock = !useIRCLayout && !isBubbleMessage && e2ePadlock;
+        const ircPadlock = useIRCLayout && !isBubbleMessage && e2ePadlock;
 
         let msgOption;
         if (this.props.showReadReceipts) {
@@ -1551,7 +1555,6 @@ export class UnwrappedEventTile extends React.Component<IProps, IState> {
                         }, <>
                             <div className={`${lineClasses} ${bubbleLineClasses}`} key="mx_EventTile_line" onContextMenu={this.onContextMenu}>
                                 { this.renderContextMenu() }
-                                { groupPadlock }
                                 <div className={bubbleAreaClasses}>
                                     <div className={bubbleClasses}>
                                         { sender }
