@@ -451,9 +451,8 @@ $left-gutter: 5.4rem;
     }
 
     .mx_EventTile_e2eIcon {
-        display: inline-block;
-        vertical-align: middle;
-        margin-left: .2em;
+        position: absolute;
+        bottom: 4px;
     }
 
     /* .sc_EventTile_bubbleLine { */
@@ -615,6 +614,10 @@ $left-gutter: 5.4rem;
         &.sc_EventTile_bubble_tail::before {
             left: -8px;
         }
+
+        .mx_EventTile_e2eIcon {
+            right: -18px;
+        }
     }
 
     .sc_EventTile_bubbleArea_right {
@@ -648,6 +651,10 @@ $left-gutter: 5.4rem;
 
         &.sc_EventTile_bubble_tail::before {
             right: -8px;
+        }
+
+        .mx_EventTile_e2eIcon {
+            left: -18px;
         }
     }
 

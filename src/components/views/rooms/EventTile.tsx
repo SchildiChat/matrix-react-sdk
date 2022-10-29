@@ -1229,8 +1229,6 @@ export class UnwrappedEventTile extends React.Component<IProps, IState> {
             />;
         }
 
-        const e2ePadlock = this.renderE2EPadlock();
-
         const linkedTimestamp = <a className="sc_LinkedTimestamp"
             href={permalink}
             onClick={this.onPermalinkClicked}
@@ -1238,20 +1236,18 @@ export class UnwrappedEventTile extends React.Component<IProps, IState> {
             onContextMenu={this.onTimestampContextMenu}
         >
             { timestamp }
-            { scBubbleEnabled ? e2ePadlock : null }
         </a>;
 
         const placeholderTimestamp = <span className="sc_PlaceholderTimestamp">
             { timestamp }
-            { scBubbleEnabled ? e2ePadlock : null }
         </span>;
 
         const useIRCLayout = this.props.layout === Layout.IRC;
         const groupTimestamp = !useIRCLayout ? linkedTimestamp : null;
         const ircTimestamp = useIRCLayout ? linkedTimestamp : null;
         const bubbleTimestamp = this.props.layout === Layout.Bubble ? messageTimestamp : null;
-        const groupPadlock = !useIRCLayout && !isBubbleMessage && e2ePadlock;
-        const ircPadlock = useIRCLayout && !isBubbleMessage && e2ePadlock;
+        const groupPadlock = !useIRCLayout && !isBubbleMessage && this.renderE2EPadlock();
+        const ircPadlock = useIRCLayout && !isBubbleMessage && this.renderE2EPadlock();
 
         let msgOption;
         if (this.props.showReadReceipts) {
@@ -1586,6 +1582,7 @@ export class UnwrappedEventTile extends React.Component<IProps, IState> {
                                             permalinkCreator: this.props.permalinkCreator,
                                         }, this.context.showHiddenEvents) }
                                         { !mediaBody ? actionBar : null }
+                                        { groupPadlock }
                                     </div>
                                     { keyRequestInfo }
                                     { reactionsRow }
