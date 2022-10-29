@@ -70,7 +70,6 @@ import RightPanelStore from '../../stores/right-panel/RightPanelStore';
 import { TimelineRenderingType } from "../../contexts/RoomContext";
 import { KeyBindingAction } from "../../accessibility/KeyboardShortcuts";
 import { SwitchSpacePayload } from "../../dispatcher/payloads/SwitchSpacePayload";
-import LegacyGroupView from "./LegacyGroupView";
 import { IConfigOptions } from "../../IConfigOptions";
 import LeftPanelLiveShareWarning from '../views/beacon/LeftPanelLiveShareWarning';
 import { UserOnboardingPage } from '../views/user-onboarding/UserOnboardingPage';
@@ -106,8 +105,6 @@ interface IProps {
     justRegistered?: boolean;
     roomJustCreatedOpts?: IOpts;
     forceTimeline?: boolean; // see props on MatrixChat
-
-    currentGroupId?: string;
 }
 
 interface IState {
@@ -667,10 +664,6 @@ class LoggedInView extends React.Component<IProps, IState> {
 
             case PageTypes.UserView:
                 pageElement = <UserView userId={this.props.currentUserId} resizeNotifier={this.props.resizeNotifier} />;
-                break;
-
-            case PageTypes.LegacyGroupView:
-                pageElement = <LegacyGroupView groupId={this.props.currentGroupId} />;
                 break;
         }
 

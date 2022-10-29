@@ -224,7 +224,8 @@ export function ReadReceiptGroup(
                     onMouseOver={showTooltip}
                     onMouseLeave={hideTooltip}
                     onFocus={showTooltip}
-                    onBlur={hideTooltip}>
+                    onBlur={hideTooltip}
+                >
                     { remText }
                     <span
                         className="mx_ReadReceiptGroup_container"

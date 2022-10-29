@@ -84,6 +84,7 @@ import { useTooltip } from "../../../utils/useTooltip";
 import { ShowThreadPayload } from "../../../dispatcher/payloads/ShowThreadPayload";
 import { isLocalRoom } from '../../../utils/localRoom/isLocalRoom';
 import { UserNameColorMode } from '../../../settings/enums/UserNameColorMode';
+import { ElementCall } from "../../../models/Call";
 
 export type GetRelationsForEvent = (eventId: string, relationType: string, eventType: string) => Relations;
 
@@ -953,7 +954,7 @@ export class UnwrappedEventTile extends React.Component<IProps, IState> {
 
     public render() {
         const msgtype = this.props.mxEvent.getContent().msgtype;
-        const eventType = this.props.mxEvent.getType() as EventType;
+        const eventType = this.props.mxEvent.getType();
         const {
             hasRenderer,
             isBubbleMessage,
@@ -1013,7 +1014,7 @@ export class UnwrappedEventTile extends React.Component<IProps, IState> {
 
         const isEditing = !!this.props.editState;
         const classes = classNames({
-            mx_EventTile_bubbleContainer: isBubbleMessage && this.props.layout != Layout.Bubble,
+            mx_EventTile_bubbleContainer: isBubbleMessage && this.props.layout !== Layout.Bubble,
             mx_EventTile_leftAlignedBubble: isLeftAlignedBubbleMessage,
             mx_EventTile: true,
             mx_EventTile_isEditing: isEditing,
@@ -1023,7 +1024,8 @@ export class UnwrappedEventTile extends React.Component<IProps, IState> {
             mx_EventTile_sending: !isEditing && isSending,
             mx_EventTile_highlight: this.shouldHighlight(),
             mx_EventTile_selected: this.props.isSelectedEvent || this.state.contextMenu,
-            mx_EventTile_continuation: isContinuation,
+            mx_EventTile_continuation: isContinuation || (this.props.layout !== Layout.Bubble &&
+                (eventType === EventType.CallInvite || ElementCall.CALL_EVENT_TYPE.matches(eventType))),
             mx_EventTile_last: this.props.last,
             mx_EventTile_lastInSection: this.props.lastInSection,
             mx_EventTile_contextual: this.props.contextual,
@@ -1081,8 +1083,9 @@ export class UnwrappedEventTile extends React.Component<IProps, IState> {
             avatarSize = 14;
             needsSenderProfile = true;
         } else if (
-            (this.props.continuation && this.context.timelineRenderingType !== TimelineRenderingType.File) ||
-            eventType === EventType.CallInvite
+            (this.props.continuation && this.context.timelineRenderingType !== TimelineRenderingType.File)
+            || eventType === EventType.CallInvite
+            || ElementCall.CALL_EVENT_TYPE.matches(eventType)
         ) {
             // no avatar or sender profile for continuation messages and call tiles
             avatarSize = 0;
@@ -1102,13 +1105,15 @@ export class UnwrappedEventTile extends React.Component<IProps, IState> {
             } else {
                 member = this.props.mxEvent.sender;
             }
+            // In the ThreadsList view we use the entire EventTile as a click target to open the thread instead
+            const viewUserOnClick = this.context.timelineRenderingType !== TimelineRenderingType.ThreadsList;
             avatar = (
                 <div className="mx_EventTile_avatar">
                     <MemberAvatar
                         member={member}
                         width={avatarSize}
                         height={avatarSize}
-                        viewUserOnClick={true}
+                        viewUserOnClick={viewUserOnClick}
                         forceHistorical={this.props.mxEvent.getType() === EventType.RoomMember}
                     />
                 </div>
@@ -1375,6 +1380,7 @@ export class UnwrappedEventTile extends React.Component<IProps, IState> {
                         <a href={permalink} onClick={this.onPermalinkClicked}>
                             { timestamp }
                         </a>
+                        { msgOption }
                     </div>,
                     reactionsRow,
                 ]);
