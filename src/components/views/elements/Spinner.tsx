@@ -40,6 +40,7 @@ export default class Spinner extends React.PureComponent<IProps> {
                     w={this.props.w}
                     h={this.props.h}
                     className="mx_Spinner_icon"
+                    data-testid="spinner"
                 />
             </div>
         );

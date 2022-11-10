@@ -39,7 +39,6 @@ import { ITagMap } from "../../../stores/room-list/algorithms/models";
 import { DefaultTagID, TagID } from "../../../stores/room-list/models";
 import { UPDATE_EVENT } from "../../../stores/AsyncStore";
 import RoomListStore, { LISTS_UPDATE_EVENT } from "../../../stores/room-list/RoomListStore";
-import { RoomViewStore } from "../../../stores/RoomViewStore";
 import {
     isMetaSpace,
     ISuggestedRoom,
@@ -64,6 +63,7 @@ import IconizedContextMenu, {
 import AccessibleTooltipButton from "../elements/AccessibleTooltipButton";
 import ExtraTile from "./ExtraTile";
 import RoomSublist, { IAuxButtonProps } from "./RoomSublist";
+import { SdkContextClass } from "../../../contexts/SDKContext";
 
 interface IProps {
     onKeyDown: (ev: React.KeyboardEvent, state: IRovingTabIndexState) => void;
@@ -484,7 +484,7 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
 
     public componentDidMount(): void {
         this.dispatcherRef = defaultDispatcher.register(this.onAction);
-        RoomViewStore.instance.on(UPDATE_EVENT, this.onRoomViewStoreUpdate);
+        SdkContextClass.instance.roomViewStore.on(UPDATE_EVENT, this.onRoomViewStoreUpdate);
         SpaceStore.instance.on(UPDATE_SUGGESTED_ROOMS, this.updateSuggestedRooms);
         RoomListStore.instance.on(LISTS_UPDATE_EVENT, this.updateLists);
         this.favouriteMessageWatcher =
@@ -500,7 +500,7 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
         SettingsStore.unwatchSetting(this.favouriteMessageWatcher);
         defaultDispatcher.unregister(this.dispatcherRef);
         SettingsStore.unwatchSetting(this.unifiedRoomListWatcherRef);
-        RoomViewStore.instance.off(UPDATE_EVENT, this.onRoomViewStoreUpdate);
+        SdkContextClass.instance.roomViewStore.off(UPDATE_EVENT, this.onRoomViewStoreUpdate);
     }
 
     private onUnifiedRoomListChange = () => {
@@ -511,14 +511,14 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
 
     private onRoomViewStoreUpdate = () => {
         this.setState({
-            currentRoomId: RoomViewStore.instance.getRoomId(),
+            currentRoomId: SdkContextClass.instance.roomViewStore.getRoomId(),
         });
     };
 
     private onAction = (payload: ActionPayload) => {
         if (payload.action === Action.ViewRoomDelta) {
             const viewRoomDeltaPayload = payload as ViewRoomDeltaPayload;
-            const currentRoomId = RoomViewStore.instance.getRoomId();
+            const currentRoomId = SdkContextClass.instance.roomViewStore.getRoomId();
             const room = this.getRoomDelta(currentRoomId, viewRoomDeltaPayload.delta, viewRoomDeltaPayload.unread);
             if (room) {
                 defaultDispatcher.dispatch<ViewRoomPayload>({

@@ -17,7 +17,7 @@ limitations under the License.
 import classNames from 'classnames';
 import { IEventRelation } from "matrix-js-sdk/src/models/event";
 import { M_POLL_START } from "matrix-events-sdk";
-import React, { createContext, ReactElement, useContext, useRef } from 'react';
+import React, { createContext, MouseEventHandler, ReactElement, useContext, useRef } from 'react';
 import { Room } from 'matrix-js-sdk/src/models/room';
 import { MatrixClient } from 'matrix-js-sdk/src/client';
 import { THREAD_RELATION_TYPE } from 'matrix-js-sdk/src/models/thread';
@@ -58,6 +58,9 @@ interface IProps {
     toggleButtonMenu: () => void;
     showVoiceBroadcastButton: boolean;
     onStartVoiceBroadcastClick: () => void;
+    isRichTextEnabled: boolean;
+    showComposerModeButton: boolean;
+    onComposerModeClick: () => void;
 }
 
 type OverflowMenuCloser = () => void;
@@ -100,6 +103,8 @@ const MessageComposerButtons: React.FC<IProps> = (props: IProps) => {
     } else {
         mainButtons = [
             emojiButton(props, room),
+            props.showComposerModeButton &&
+                <ComposerModeButton key="composerModeButton" isRichTextEnabled={props.isRichTextEnabled} onClick={props.onComposerModeClick} />,
             uploadButton(), // props passed via UploadButtonContext
             showStickersButton(props),
             voiceRecordingButton(props, narrow),
@@ -411,6 +416,25 @@ function showLocationButton(
             />
             : null
     );
+}
+
+interface WysiwygToggleButtonProps {
+    isRichTextEnabled: boolean;
+    onClick: MouseEventHandler<HTMLDivElement>;
+}
+
+function ComposerModeButton({ isRichTextEnabled, onClick }: WysiwygToggleButtonProps) {
+    const title = isRichTextEnabled ? _t("Show plain text") : _t("Show formatting");
+
+    return <CollapsibleButton
+        className="mx_MessageComposer_button"
+        iconClassName={classNames({
+            "mx_MessageComposer_plain_text": isRichTextEnabled,
+            "mx_MessageComposer_rich_text": !isRichTextEnabled,
+        })}
+        onClick={onClick}
+        title={title}
+    />;
 }
 
 export default MessageComposerButtons;

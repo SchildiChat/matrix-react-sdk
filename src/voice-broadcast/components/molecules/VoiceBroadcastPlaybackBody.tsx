@@ -17,13 +17,17 @@ limitations under the License.
 import React from "react";
 
 import {
-    PlaybackControlButton,
+    VoiceBroadcastControl,
     VoiceBroadcastHeader,
     VoiceBroadcastPlayback,
     VoiceBroadcastPlaybackState,
 } from "../..";
 import Spinner from "../../../components/views/elements/Spinner";
 import { useVoiceBroadcastPlayback } from "../../hooks/useVoiceBroadcastPlayback";
+import { Icon as PlayIcon } from "../../../../res/img/element-icons/play.svg";
+import { Icon as PauseIcon } from "../../../../res/img/element-icons/pause.svg";
+import { _t } from "../../../languageHandler";
+import Clock from "../../../components/views/audio_messages/Clock";
 
 interface VoiceBroadcastPlaybackBodyProps {
     playback: VoiceBroadcastPlayback;
@@ -33,6 +37,7 @@ export const VoiceBroadcastPlaybackBody: React.FC<VoiceBroadcastPlaybackBodyProp
     playback,
 }) => {
     const {
+        length,
         live,
         room,
         sender,
@@ -40,20 +45,51 @@ export const VoiceBroadcastPlaybackBody: React.FC<VoiceBroadcastPlaybackBodyProp
         playbackState,
     } = useVoiceBroadcastPlayback(playback);
 
-    const control = playbackState === VoiceBroadcastPlaybackState.Buffering
-        ? <Spinner />
-        : <PlaybackControlButton onClick={toggle} state={playbackState} />;
+    let control: React.ReactNode;
+
+    if (playbackState === VoiceBroadcastPlaybackState.Buffering) {
+        control = <Spinner />;
+    } else {
+        let controlIcon: React.FC<React.SVGProps<SVGSVGElement>>;
+        let controlLabel: string;
+
+        switch (playbackState) {
+            case VoiceBroadcastPlaybackState.Stopped:
+                controlIcon = PlayIcon;
+                controlLabel = _t("play voice broadcast");
+                break;
+            case VoiceBroadcastPlaybackState.Paused:
+                controlIcon = PlayIcon;
+                controlLabel = _t("resume voice broadcast");
+                break;
+            case VoiceBroadcastPlaybackState.Playing:
+                controlIcon = PauseIcon;
+                controlLabel = _t("pause voice broadcast");
+                break;
+        }
+
+        control = <VoiceBroadcastControl
+            label={controlLabel}
+            icon={controlIcon}
+            onClick={toggle}
+        />;
+    }
+
+    const lengthSeconds = Math.round(length / 1000);
 
     return (
-        <div className="mx_VoiceBroadcastPlaybackBody">
+        <div className="mx_VoiceBroadcastBody">
             <VoiceBroadcastHeader
                 live={live}
                 sender={sender}
                 room={room}
                 showBroadcast={true}
             />
-            <div className="mx_VoiceBroadcastPlaybackBody_controls">
+            <div className="mx_VoiceBroadcastBody_controls">
                 { control }
+            </div>
+            <div className="mx_VoiceBroadcastBody_timerow">
+                <Clock seconds={lengthSeconds} />
             </div>
         </div>
     );

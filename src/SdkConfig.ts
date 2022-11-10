@@ -47,7 +47,7 @@ export const DEFAULTS: IConfigOptions = {
         url: "https://schildi.chat/desktop",
     },
     voice_broadcast: {
-        chunk_length: 60, // one minute
+        chunk_length: 120, // two minutes
     },
 };
 
