@@ -347,51 +347,75 @@ $left-gutter: 5.4rem;
         max-width: 100%;
     }
 
-    .sc_MImageBody_container {
-        position: relative;
-        display: flex;
-    }
 
-    .mx_MImageBody {
-        margin-right: 0;
-        position: relative;
-        overflow: hidden;
-        border-radius: $border-radius-8px;
-        display: inline-flex;
-        box-sizing: border-box;
-        border: 1px solid $message-bubble-background;
-
-        .mx_MFileBody_download {
-            display: none;
+    .sc_EventTile_bubble_sticker {
+        .sc_MImageBody_container {
+            position: relative;
+            display: flex;
         }
 
-        .sc_PlaceholderTimestamp {
-            display: none;
+        .mx_MImageBody {
+            margin-right: 0;
+            position: relative;
+            overflow: hidden;
+            border-radius: $border-radius-8px;
+            display: inline-flex;
+            box-sizing: border-box;
+            border: 1px solid $message-bubble-background;
+    
+            .mx_MFileBody_download {
+                display: none;
+            }
+    
+            .sc_PlaceholderTimestamp {
+                display: none;
+            }
+    
+            .mx_MessageTimestamp {
+                visibility: visible !important;
+                text-align: center;
+                background: rgba(0, 0, 0, 0.5);
+                color: white;
+                left: unset;
+                right: 0;
+                top: unset;
+                bottom: 0;
+                border-top-left-radius: $border-radius-8px;
+                font-size: 1.2rem;
+                padding: 6px 9px;
+                width: unset;
+                line-height: 1;
+            }
+        }
+    
+        .mx_MImageBody_thumbnail {
+            border-radius: unset;
         }
 
-        .mx_MessageTimestamp {
-            visibility: visible !important;
-            text-align: center;
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
-            left: unset;
-            right: 0;
-            top: unset;
-            bottom: 0;
-            border-top-left-radius: $border-radius-8px;
-            font-size: 1.2rem;
-            padding: 6px 9px;
-            width: unset;
-            line-height: 1;
+        &.sc_EventTile_bubble_self {
+            .mx_MImageBody {
+                border-color: $message-bubble-background-self;
+            }
         }
-    }
-
-    .mx_MImageBody_thumbnail {
-        border-radius: unset;
     }
 
     .mx_MStickerBody_wrapper {
         padding: 0;
+    }
+
+    .sc_EventTile_bubble {
+        .sc_MImageBody_container {
+            .mx_MImageBody_thumbnail_container {
+                display: block;
+                margin: -4px -7px 0 -7px;
+            }
+
+            &:not(:first-child) {
+                .mx_MImageBody_thumbnail_container {
+                    margin-top: unset;
+                }
+            }
+        }
     }
 
     span.mx_MVideoBody {
@@ -665,16 +689,12 @@ $left-gutter: 5.4rem;
     }
 
     .sc_EventTile_bubble_self {
-        &:not(.sc_EventTile_bubble_media) {
+        &:not(.sc_EventTile_bubble_sticker) {
             background-color: $message-bubble-background-self;
 
             &.sc_EventTile_bubble_tail::before {
                 border-top-color: $message-bubble-background-self;
             }
-        }
-
-        .mx_MImageBody, span.mx_MVideoBody video.mx_MVideoBody {
-            border-color: $message-bubble-background-self;
         }
     }
 
@@ -811,7 +831,7 @@ $left-gutter: 5.4rem;
         opacity: 0.6;
     }
 
-    .sc_EventTile_bubble_media {
+    .sc_EventTile_bubble_sticker {
         max-width: max-content;
         position: relative;
 
@@ -833,9 +853,7 @@ $left-gutter: 5.4rem;
         /*     margin-top: 0; */
         /*     margin-bottom: 0; */
         /* } */
-    }
-
-    .sc_EventTile_bubble_sticker {
+        
         .mx_MImageBody {
             border: none;
 
@@ -855,7 +873,7 @@ $left-gutter: 5.4rem;
             }
         }
 
-        .sc_EventTile_bubble_media {
+        .sc_EventTile_bubble_sticker {
             > .sc_MImageBody_container .mx_MImageBody {
                 background: $accent;
 
