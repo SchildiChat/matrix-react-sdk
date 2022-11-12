@@ -216,6 +216,8 @@ $left-gutter: 5.4rem;
 
     .mx_EventTile_content {
         /* Handled by bubble */
+        overflow-y: unset;
+        overflow-x: unset;
         margin-right: unset;
 
         .markdown-body {
@@ -404,6 +406,9 @@ $left-gutter: 5.4rem;
     }
 
     .sc_EventTile_bubble {
+        overflow-y: hidden;
+        overflow-x: hidden;
+
         .sc_MImageBody_container {
             .mx_MImageBody_thumbnail_container {
                 display: block;
@@ -834,6 +839,8 @@ $left-gutter: 5.4rem;
     .sc_EventTile_bubble_sticker {
         max-width: max-content;
         position: relative;
+        overflow-y: hidden;
+        overflow-x: hidden;
 
         &.sc_EventTile_bubble_right {
             margin-left: auto;

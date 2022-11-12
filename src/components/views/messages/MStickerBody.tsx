@@ -38,7 +38,10 @@ export default class MStickerBody extends MImageBody {
             onClick = this.onClick;
         }
         const wrapper = <div className="mx_MStickerBody_wrapper" onClick={onClick}> { children } </div>;
-        return [wrapper, this.props.scBubbleTimestamp];
+        return <>
+            { wrapper }
+            { this.props.scBubbleTimestamp }
+        </>;
     }
 
     // Placeholder to show in place of the sticker image if img onLoad hasn't fired yet.
