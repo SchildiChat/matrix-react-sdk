@@ -18,16 +18,15 @@ limitations under the License.
 import React from 'react';
 import { RoomMember } from 'matrix-js-sdk/src/models/room-member';
 import classNames from 'classnames';
-import { Room } from 'matrix-js-sdk/src/models/room';
 
 import { getUserNameColorClass } from '../../../utils/FormattingUtils';
 import UserIdentifier from "../../../customisations/UserIdentifier";
 import { UserNameColorMode } from '../../../settings/enums/UserNameColorMode';
+import { MatrixClientPeg } from '../../../MatrixClientPeg';
 
 interface IProps {
-    member?: RoomMember;
+    member?: RoomMember | null;
     fallbackName: string;
-    room?: Room;
     userNameColorMode?: UserNameColorMode;
     onClick?(): void;
     colored?: boolean;
@@ -36,13 +35,14 @@ interface IProps {
 
 export default class DisambiguatedProfile extends React.Component<IProps> {
     render() {
-        const { fallbackName, room, userNameColorMode, member, colored, emphasizeDisplayName, onClick } = this.props;
+        const { fallbackName, userNameColorMode, member, colored, emphasizeDisplayName, onClick } = this.props;
         const rawDisplayName = member?.rawDisplayName || fallbackName;
         const mxid = member?.userId;
 
         let colorClass;
         if (colored) {
-            colorClass = getUserNameColorClass(userNameColorMode, fallbackName, room);
+            colorClass = getUserNameColorClass(
+                userNameColorMode, fallbackName, MatrixClientPeg.get().getRoom(member.roomId));
         }
 
         let mxidElement;

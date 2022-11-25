@@ -25,9 +25,8 @@ import { THREAD_RELATION_TYPE } from 'matrix-js-sdk/src/models/thread';
 import { _t } from '../../../languageHandler';
 import AccessibleTooltipButton from "../elements/AccessibleTooltipButton";
 import { CollapsibleButton } from './CollapsibleButton';
-import ContextMenu, { aboveLeftOf, AboveLeftOf, useContextMenu } from '../../structures/ContextMenu';
+import { AboveLeftOf } from '../../structures/ContextMenu';
 import dis from '../../../dispatcher/dispatcher';
-import EmojiPicker from '../emojipicker/EmojiPicker';
 import ErrorDialog from "../dialogs/ErrorDialog";
 import LocationButton from '../location/LocationButton';
 import Modal from "../../../Modal";
@@ -41,6 +40,8 @@ import { chromeFileInputFix } from "../../../utils/BrowserWorkarounds";
 import IconizedContextMenu, { IconizedContextMenuOptionList } from '../context_menus/IconizedContextMenu';
 import { IEmoji } from '../../../emoji';
 import { ICustomEmoji } from '../../../emojipicker/customemoji';
+import { EmojiButton } from './EmojiButton';
+import { useSettingValue } from '../../../hooks/useSettings';
 
 interface IProps {
     addEmoji: (emoji: IEmoji | ICustomEmoji) => boolean;
@@ -59,7 +60,6 @@ interface IProps {
     showVoiceBroadcastButton: boolean;
     onStartVoiceBroadcastClick: () => void;
     isRichTextEnabled: boolean;
-    showComposerModeButton: boolean;
     onComposerModeClick: () => void;
 }
 
@@ -70,6 +70,8 @@ const MessageComposerButtons: React.FC<IProps> = (props: IProps) => {
     const matrixClient: MatrixClient = useContext(MatrixClientContext);
     const { room, roomId, narrow } = useContext(RoomContext);
 
+    const isWysiwygLabEnabled = useSettingValue<boolean>('feature_wysiwyg_composer');
+
     if (props.haveRecording) {
         return null;
     }
@@ -78,7 +80,9 @@ const MessageComposerButtons: React.FC<IProps> = (props: IProps) => {
     let moreButtons: ReactElement[];
     if (narrow) {
         mainButtons = [
-            emojiButton(props, room),
+            isWysiwygLabEnabled ?
+                <ComposerModeButton key="composerModeButton" isRichTextEnabled={props.isRichTextEnabled} onClick={props.onComposerModeClick} /> :
+                emojiButton(props, room),
         ];
         moreButtons = [
             uploadButton(), // props passed via UploadButtonContext
@@ -90,7 +94,9 @@ const MessageComposerButtons: React.FC<IProps> = (props: IProps) => {
         ];
     } else if (props.collapseButtons) {
         mainButtons = [
-            emojiButton(props, room),
+            isWysiwygLabEnabled ?
+                <ComposerModeButton key="composerModeButton" isRichTextEnabled={props.isRichTextEnabled} onClick={props.onComposerModeClick} /> :
+                emojiButton(props, room),
             uploadButton(), // props passed via UploadButtonContext
         ];
         moreButtons = [
@@ -102,9 +108,9 @@ const MessageComposerButtons: React.FC<IProps> = (props: IProps) => {
         ];
     } else {
         mainButtons = [
-            emojiButton(props, room),
-            props.showComposerModeButton &&
-                <ComposerModeButton key="composerModeButton" isRichTextEnabled={props.isRichTextEnabled} onClick={props.onComposerModeClick} />,
+            isWysiwygLabEnabled ?
+                <ComposerModeButton key="composerModeButton" isRichTextEnabled={props.isRichTextEnabled} onClick={props.onComposerModeClick} /> :
+                emojiButton(props, room),
             uploadButton(), // props passed via UploadButtonContext
             showStickersButton(props),
             voiceRecordingButton(props, narrow),
@@ -154,58 +160,9 @@ function emojiButton(props: IProps, room: Room): ReactElement {
         addEmoji={props.addEmoji}
         menuPosition={props.menuPosition}
         room={room}
+        className="mx_MessageComposer_button"
     />;
 }
-
-interface IEmojiButtonProps {
-    addEmoji: (emoji: ICustomEmoji | IEmoji) => boolean;
-    menuPosition: AboveLeftOf;
-    room: Room;
-}
-
-const EmojiButton: React.FC<IEmojiButtonProps> = ({ addEmoji, menuPosition, room }) => {
-    const overflowMenuCloser = useContext(OverflowMenuContext);
-    const [menuDisplayed, button, openMenu, closeMenu] = useContextMenu();
-
-    let contextMenu: React.ReactElement | null = null;
-    if (menuDisplayed) {
-        const position = (
-            menuPosition ?? aboveLeftOf(button.current.getBoundingClientRect())
-        );
-
-        contextMenu = <ContextMenu
-            {...position}
-            onFinished={() => {
-                closeMenu();
-                overflowMenuCloser?.();
-            }}
-            managed={false}
-        >
-            <EmojiPicker onChoose={addEmoji} showQuickReactions={true} room={room} />
-        </ContextMenu>;
-    }
-
-    const className = classNames(
-        "mx_MessageComposer_button",
-        {
-            "mx_MessageComposer_button_highlight": menuDisplayed,
-        },
-    );
-
-    // TODO: replace ContextMenuTooltipButton with a unified representation of
-    // the header buttons and the right panel buttons
-    return <React.Fragment>
-        <CollapsibleButton
-            className={className}
-            iconClassName="mx_MessageComposer_emoji"
-            onClick={openMenu}
-            title={_t("Emoji")}
-            inputRef={button}
-        />
-
-        { contextMenu }
-    </React.Fragment>;
-};
 
 function uploadButton(): ReactElement {
     return <UploadButton key="controls_upload" />;
@@ -424,7 +381,7 @@ interface WysiwygToggleButtonProps {
 }
 
 function ComposerModeButton({ isRichTextEnabled, onClick }: WysiwygToggleButtonProps) {
-    const title = isRichTextEnabled ? _t("Show plain text") : _t("Show formatting");
+    const title = isRichTextEnabled ? _t("Hide formatting") : _t("Show formatting");
 
     return <CollapsibleButton
         className="mx_MessageComposer_button"

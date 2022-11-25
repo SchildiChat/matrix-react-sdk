@@ -18,12 +18,9 @@ import React from 'react';
 import { MatrixEvent } from "matrix-js-sdk/src/models/event";
 import { MsgType } from "matrix-js-sdk/src/@types/event";
 
-import MatrixClientContext from "../../../contexts/MatrixClientContext";
 import { UserNameColorMode } from '../../../settings/enums/UserNameColorMode';
 import DisambiguatedProfile from "./DisambiguatedProfile";
-import RoomContext, { TimelineRenderingType } from '../../../contexts/RoomContext';
-import SettingsStore from "../../../settings/SettingsStore";
-import { MatrixClientPeg } from "../../../MatrixClientPeg";
+import { useRoomMemberProfile } from '../../../hooks/room/useRoomMemberProfile';
 
 interface IProps {
     mxEvent: MatrixEvent;
@@ -31,42 +28,20 @@ interface IProps {
     onClick?(): void;
 }
 
-export default class SenderProfile extends React.PureComponent<IProps> {
-    public static contextType = MatrixClientContext;
-    public context!: React.ContextType<typeof MatrixClientContext>;
+export default function SenderProfile({ mxEvent, userNameColorMode, onClick }: IProps) {
+    const member = useRoomMemberProfile({
+        userId: mxEvent.getSender(),
+        member: mxEvent.sender,
+    });
 
-    render() {
-        const { mxEvent, onClick } = this.props;
-        const msgtype = mxEvent.getContent().msgtype;
-
-        let member = mxEvent.sender;
-        if (SettingsStore.getValue("useOnlyCurrentProfiles")) {
-            const room = MatrixClientPeg.get().getRoom(mxEvent.getRoomId());
-            if (room) {
-                member = room.getMember(mxEvent.getSender());
-            }
-        }
-
-        return <RoomContext.Consumer>
-            { roomContext => {
-                if (msgtype === MsgType.Emote &&
-                    roomContext.timelineRenderingType !== TimelineRenderingType.ThreadsList
-                ) {
-                    return null; // emote message must include the name so don't duplicate it
-                }
-
-                return (
-                    <DisambiguatedProfile
-                        fallbackName={mxEvent.getSender() || ""}
-                        room={this.context.getRoom(mxEvent.getRoomId())}
-                        userNameColorMode={this.props.userNameColorMode}
-                        onClick={onClick}
-                        member={member}
-                        colored={true}
-                        emphasizeDisplayName={true}
-                    />
-                );
-            } }
-        </RoomContext.Consumer>;
-    }
+    return mxEvent.getContent().msgtype !== MsgType.Emote
+        ? <DisambiguatedProfile
+            fallbackName={mxEvent.getSender() ?? ""}
+            userNameColorMode={userNameColorMode}
+            onClick={onClick}
+            member={member}
+            colored={true}
+            emphasizeDisplayName={true}
+        />
+        : null;
 }
