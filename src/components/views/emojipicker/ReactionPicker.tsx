@@ -30,7 +30,7 @@ import { IEmoji } from '../../../emoji';
 
 interface IProps {
     mxEvent: MatrixEvent;
-    reactions?: Relations;
+    reactions?: Relations | null | undefined;
     onFinished(): void;
 }
 

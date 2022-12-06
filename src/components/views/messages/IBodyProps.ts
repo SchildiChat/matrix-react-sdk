@@ -16,12 +16,12 @@ limitations under the License.
 
 import React, { LegacyRef } from "react";
 import { MatrixEvent } from "matrix-js-sdk/src/models/event";
-import { Relations } from "matrix-js-sdk/src/models/relations";
 
 import { MediaEventHelper } from "../../../utils/MediaEventHelper";
 import EditorStateTransfer from "../../../utils/EditorStateTransfer";
 import { RoomPermalinkCreator } from "../../../utils/permalinks/Permalinks";
 import { Layout } from "../../../settings/enums/Layout";
+import { GetRelationsForEvent } from "../rooms/EventTile";
 
 export interface IBodyProps {
     mxEvent: MatrixEvent;
@@ -58,7 +58,7 @@ export interface IBodyProps {
     isSeeingThroughMessageHiddenForModeration?: boolean;
 
     // helper function to access relations for this event
-    getRelationsForEvent?: (eventId: string, relationType: string, eventType: string) => Relations;
+    getRelationsForEvent?: GetRelationsForEvent;
 
     ref?: React.RefObject<any> | LegacyRef<any>;
 }

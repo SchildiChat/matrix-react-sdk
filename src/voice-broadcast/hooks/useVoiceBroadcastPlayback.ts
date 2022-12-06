@@ -19,7 +19,6 @@ import { useState } from "react";
 import { useTypedEventEmitter } from "../../hooks/useEventEmitter";
 import { MatrixClientPeg } from "../../MatrixClientPeg";
 import {
-    VoiceBroadcastInfoState,
     VoiceBroadcastPlayback,
     VoiceBroadcastPlaybackEvent,
     VoiceBroadcastPlaybackState,
@@ -28,6 +27,13 @@ import {
 export const useVoiceBroadcastPlayback = (playback: VoiceBroadcastPlayback) => {
     const client = MatrixClientPeg.get();
     const room = client.getRoom(playback.infoEvent.getRoomId());
+
+    if (!room) {
+        throw new Error(
+            `Voice Broadcast room not found (event ${playback.infoEvent.getId()})`,
+        );
+    }
+
     const playbackToggle = () => {
         playback.toggle();
     };
@@ -41,13 +47,6 @@ export const useVoiceBroadcastPlayback = (playback: VoiceBroadcastPlayback) => {
         },
     );
 
-    const [playbackInfoState, setPlaybackInfoState] = useState(playback.getInfoState());
-    useTypedEventEmitter(
-        playback,
-        VoiceBroadcastPlaybackEvent.InfoStateChanged,
-        setPlaybackInfoState,
-    );
-
     const [duration, setDuration] = useState(playback.durationSeconds);
     useTypedEventEmitter(
         playback,
@@ -55,12 +54,27 @@ export const useVoiceBroadcastPlayback = (playback: VoiceBroadcastPlayback) => {
         d => setDuration(d / 1000),
     );
 
+    const [position, setPosition] = useState(playback.timeSeconds);
+    useTypedEventEmitter(
+        playback,
+        VoiceBroadcastPlaybackEvent.PositionChanged,
+        p => setPosition(p / 1000),
+    );
+
+    const [liveness, setLiveness] = useState(playback.getLiveness());
+    useTypedEventEmitter(
+        playback,
+        VoiceBroadcastPlaybackEvent.LivenessChanged,
+        l => setLiveness(l),
+    );
+
     return {
         duration,
-        live: playbackInfoState !== VoiceBroadcastInfoState.Stopped,
+        liveness: liveness,
+        playbackState,
+        position,
         room: room,
         sender: playback.infoEvent.sender,
         toggle: playbackToggle,
-        playbackState,
     };
 };

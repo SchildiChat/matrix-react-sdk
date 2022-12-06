@@ -481,6 +481,7 @@ export class MessageComposer extends React.Component<IProps, IState> {
                         initialContent={this.state.initialComposerContent}
                         e2eStatus={this.props.e2eStatus}
                         menuPosition={menuPosition}
+                        placeholder={this.renderPlaceholderText()}
                     />;
             } else {
                 composer =
@@ -613,6 +614,7 @@ export class MessageComposer extends React.Component<IProps, IState> {
                                     setUpVoiceBroadcastPreRecording(
                                         this.props.room,
                                         MatrixClientPeg.get(),
+                                        SdkContextClass.instance.voiceBroadcastPlaybacksStore,
                                         VoiceBroadcastRecordingsStore.instance(),
                                         SdkContextClass.instance.voiceBroadcastPreRecordingStore,
                                     );

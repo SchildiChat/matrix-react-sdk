@@ -65,21 +65,12 @@ export default class MessageComposerFormatBar extends React.PureComponent<IProps
 
         this.setState({ visible: true });
         const parentRect = this.formatBarRef.current.parentElement.getBoundingClientRect();
-
-        // don't overflow the parent box on the right
-        // 6 is an offset that felt ok.
-        let left;
-        const width = this.formatBarRef.current.clientWidth;
-        const rightOffset = 6;
-        if (selectionRect.left + width + rightOffset < parentRect.right) {
-            left = selectionRect.left - parentRect.left;
-        } else {
-            left = parentRect.right - parentRect.left - width - rightOffset;
-        }
-        this.formatBarRef.current.style.left = `${left}px`;
-
-        // 16 is half the height of the bar (e.g. to center it) and 20 is an offset that felt ok.
-        this.formatBarRef.current.style.top = `${selectionRect.top - parentRect.top - 20 - 16}px`;
+        this.formatBarRef.current.style.left = `${selectionRect.left - parentRect.left}px`;
+        const halfBarHeight = this.formatBarRef.current.clientHeight / 2; // used to center the bar
+        const offset = halfBarHeight + 2; // makes sure the bar won't cover selected text
+        const offsetLimit = halfBarHeight + offset;
+        const position = Math.max(selectionRect.top - parentRect.top - offsetLimit, -offsetLimit);
+        this.formatBarRef.current.style.top = `${position}px`;
     }
 
     public hide(): void {

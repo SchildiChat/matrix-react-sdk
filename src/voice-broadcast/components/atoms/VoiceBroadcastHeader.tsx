@@ -15,7 +15,7 @@ import React from "react";
 import { Room } from "matrix-js-sdk/src/matrix";
 import classNames from "classnames";
 
-import { LiveBadge } from "../..";
+import { LiveBadge, VoiceBroadcastLiveness } from "../..";
 import { Icon as LiveIcon } from "../../../../res/img/element-icons/live.svg";
 import { Icon as MicrophoneIcon } from "../../../../res/img/voip/call-view/mic-on.svg";
 import { Icon as TimerIcon } from "../../../../res/img/element-icons/Timer.svg";
@@ -25,64 +25,76 @@ import AccessibleButton from "../../../components/views/elements/AccessibleButto
 import { Icon as XIcon } from "../../../../res/img/element-icons/cancel-rounded.svg";
 import Clock from "../../../components/views/audio_messages/Clock";
 import { formatTimeLeft } from "../../../DateUtils";
+import Spinner from "../../../components/views/elements/Spinner";
 
 interface VoiceBroadcastHeaderProps {
-    live?: boolean;
+    live?: VoiceBroadcastLiveness;
     onCloseClick?: () => void;
     onMicrophoneLineClick?: () => void;
     room: Room;
     microphoneLabel?: string;
     showBroadcast?: boolean;
+    showBuffering?: boolean;
     timeLeft?: number;
     showClose?: boolean;
 }
 
 export const VoiceBroadcastHeader: React.FC<VoiceBroadcastHeaderProps> = ({
-    live = false,
+    live = "not-live",
     onCloseClick = () => {},
     onMicrophoneLineClick,
     room,
     microphoneLabel,
     showBroadcast = false,
+    showBuffering = false,
     showClose = false,
     timeLeft,
 }) => {
-    const broadcast = showBroadcast
-        ? <div className="mx_VoiceBroadcastHeader_line">
+    const broadcast = showBroadcast && (
+        <div className="mx_VoiceBroadcastHeader_line">
             <LiveIcon className="mx_Icon mx_Icon_16" />
             { _t("Voice broadcast") }
         </div>
-        : null;
+    );
 
-    const liveBadge = live ? <LiveBadge /> : null;
+    const liveBadge = live !== "not-live" && (
+        <LiveBadge grey={live === "grey"} />
+    );
 
-    const closeButton = showClose
-        ? <AccessibleButton onClick={onCloseClick}>
+    const closeButton = showClose && (
+        <AccessibleButton onClick={onCloseClick}>
             <XIcon className="mx_Icon mx_Icon_16" />
         </AccessibleButton>
-        : null;
+    );
 
-    const timeLeftLine = timeLeft
-        ? <div className="mx_VoiceBroadcastHeader_line">
+    const timeLeftLine = timeLeft && (
+        <div className="mx_VoiceBroadcastHeader_line">
             <TimerIcon className="mx_Icon mx_Icon_16" />
             <Clock formatFn={formatTimeLeft} seconds={timeLeft} />
         </div>
-        : null;
+    );
+
+    const buffering = showBuffering && (
+        <div className="mx_VoiceBroadcastHeader_line">
+            <Spinner w={14} h={14} />
+            { _t("Buffering…") }
+        </div>
+    );
 
     const microphoneLineClasses = classNames({
         mx_VoiceBroadcastHeader_line: true,
         ["mx_VoiceBroadcastHeader_mic--clickable"]: onMicrophoneLineClick,
     });
 
-    const microphoneLine = microphoneLabel
-        ? <div
+    const microphoneLine = microphoneLabel && (
+        <div
             className={microphoneLineClasses}
             onClick={onMicrophoneLineClick}
         >
             <MicrophoneIcon className="mx_Icon mx_Icon_16" />
             <span>{ microphoneLabel }</span>
         </div>
-        : null;
+    );
 
     return <div className="mx_VoiceBroadcastHeader">
         <RoomAvatar room={room} width={32} height={32} />
@@ -93,6 +105,7 @@ export const VoiceBroadcastHeader: React.FC<VoiceBroadcastHeaderProps> = ({
             { microphoneLine }
             { timeLeftLine }
             { broadcast }
+            { buffering }
         </div>
         { liveBadge }
         { closeButton }
