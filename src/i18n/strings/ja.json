@@ -3000,7 +3000,7 @@
     "What projects are your team working on?": "あなたのチームはどのようなプロジェクトに取り組みますか？",
     "Jump to date (adds /jumptodate and jump to date headers)": "日付に移動（/jumptodateを追加すると、日付のヘッダーに移動します）",
     "Pick a date to jump to": "日付を選択して移動",
-    "If you know what you're doing, Element is open-source, be sure to check out our GitHub (https://github.com/vector-im/element-web/) and contribute!": "もし開発者の方であれば、Elementはオープンソースですので、ぜひ私たちのGitHub（https://github.com/vector-im/element-web/）をご覧いただき、開発にご参加ください！",
+    "If you know what you're doing, Element is open-source, be sure to check out our GitHub (https://github.com/vector-im/element-web/) and contribute!": "もし開発者の方であれば、SchildiChatはオープンソースですので、ぜひ私たちのGitHub（https://github.com/vector-im/element-web/）をご覧いただき、開発にご参加ください！",
     "You are not allowed to view this server's rooms list": "このルームの一覧を表示する許可がありません",
     "This version of %(brand)s does not support viewing some encrypted files": "この%(brand)sのバージョンは、暗号化されたファイルの表示をサポートしていません",
     "This version of %(brand)s does not support searching encrypted messages": "この%(brand)sのバージョンは、暗号化されたメッセージの検索をサポートしていません",
@@ -3180,7 +3180,7 @@
     "Favourite Messages (under active development)": "お気に入りのメッセージ（開発中）",
     "Live Location Sharing (temporary implementation: locations persist in room history)": "位置情報（ライブ）の共有（一時的な実装です。位置情報がルームの履歴に残ります）",
     "New group call experience": "グループ通話の新しい経験",
-    "Element Call video rooms": "Element Callのビデオ通話ルーム",
+    "Element Call video rooms": "SchildiChat Callのビデオ通話ルーム",
     "Send read receipts": "開封確認メッセージを送信",
     "Try out the rich text editor (plain text mode coming soon)": "リッチテキストエディターを試してみる（プレーンテキストモードは近日公開）",
     "Explore public spaces in the new search dialog": "新しい検索ダイアログで公開スペースを探索",
@@ -3393,5 +3393,6 @@
     "Mobile session": "モバイル端末セッション",
     "Desktop session": "デスクトップセッション",
     "Unverified": "未認証",
-    "Verified": "認証済み"
+    "Verified": "認証済み",
+    "Normal priority": "常優先度"
 }
