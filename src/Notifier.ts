@@ -52,6 +52,7 @@ import ToastStore from "./stores/ToastStore";
 import { ElementCall } from "./models/Call";
 import { VoiceBroadcastChunkEventType, VoiceBroadcastInfoEventType } from "./voice-broadcast";
 import { getSenderName } from "./utils/event/getSenderName";
+import { MessageEventPreview } from "./stores/room-list/previews/MessageEventPreview";
 
 /*
  * Dispatches:
@@ -113,6 +114,15 @@ class NotifierClass {
         return TextForEvent.textForEvent(ev);
     }
 
+    private _getEventTextRepresentation(ev: MatrixEvent) {
+        const previewer = new MessageEventPreview();
+        const msg = previewer.getTextFor(ev);
+        if (msg == null) {
+            return "";
+        }
+        return msg;
+    }
+
     // XXX: exported for tests
     public displayPopupNotification(ev: MatrixEvent, room: Room): void {
         const plaf = PlatformPeg.get();
@@ -137,7 +147,7 @@ class NotifierClass {
             // notificationMessageForEvent includes sender,
             // but we already have the sender here
             if (ev.getContent().body && !msgTypeHandlers.hasOwnProperty(ev.getContent().msgtype)) {
-                msg = ev.getContent().body;
+                msg = this._getEventTextRepresentation(ev);
             }
         } else if (ev.getType() === "m.room.member") {
             // context is all in the message here, we don't need
@@ -148,7 +158,7 @@ class NotifierClass {
             // notificationMessageForEvent includes sender,
             // but we've just out sender in the title
             if (ev.getContent().body && !msgTypeHandlers.hasOwnProperty(ev.getContent().msgtype)) {
-                msg = ev.getContent().body;
+                msg = this._getEventTextRepresentation(ev);
             }
         }
 
