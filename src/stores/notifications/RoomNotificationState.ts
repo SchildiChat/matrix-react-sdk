@@ -143,10 +143,17 @@ export class RoomNotificationState extends NotificationState implements IDestroy
             this.room.client, this.room.roomId,
         ) === RoomNotifs.RoomNotifState.Mute &&
         !markedUnread) {
+            if (Unread.doesRoomHaveUnreadMessages(this.room)) {
+                // SchildiChat: muted can still show unread counter
+                this._color = NotificationColor.Bold;
+                this._symbol = null;
+                this._count = 0;
+            } else {
             // When muted we suppress all notification states, even if we have context on them.
             this._color = NotificationColor.None;
             this._symbol = null;
             this._count = 0;
+            }
         } else if (this.roomIsInvite) {
             this._color = NotificationColor.Red;
             this._symbol = "!";
