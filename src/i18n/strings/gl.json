@@ -2996,7 +2996,7 @@
     "Room members": "Membros da sala",
     "Back to chat": "Volver ao chat",
     "Failed to load list of rooms.": "Fallou a carga da lista de salas.",
-    "If you know what you're doing, Element is open-source, be sure to check out our GitHub (https://github.com/vector-im/element-web/) and contribute!": "Se sabes o que estás a facer, o código de SchildiChat é aberto, podes comprobalo en GitHub (https://github.com/vector-im/element-web/) e colaborar!",
+    "If you know what you're doing, Element is open-source, be sure to check out our GitHub (https://github.com/vector-im/element-web/) and contribute!": "Se sabes o que estás a facer, o código de Element é aberto, podes comprobalo en GitHub (https://github.com/vector-im/element-web/) e colaborar!",
     "If someone told you to copy/paste something here, there is a high likelihood you're being scammed!": "Se alguén che dixo que copies/pegues algo aquí, entón probablemente están intentando estafarte!",
     "Wait!": "Agarda!",
     "Unable to check if username has been taken. Try again later.": "Non se puido comprobar se o nome de usuaria xa está en uso. Inténtao máis tarde.",
@@ -3388,7 +3388,7 @@
     "You don't have permission to share locations": "Non tes permiso para compartir localizacións",
     "Favourite Messages (under active development)": "Mensaxes Favoritas (en desenvolvemento activo)",
     "Messages in this chat will be end-to-end encrypted.": "As mensaxes deste chat van estar cifrados de extremo-a-extremo.",
-    "Saved Items": "SchildiChatos gardados",
+    "Saved Items": "Elementos gardados",
     "Send your first message to invite <displayName/> to chat": "Envía a túa primeira mensaxe para convidar a <displayName/> ao chat",
     "Choose a locale": "Elixe o idioma",
     "Help": "Axuda",
@@ -3504,5 +3504,5 @@
     "Rename session": "Renomear sesión",
     "Voice broadcasts": "Emisións de voz",
     "Voice broadcast (under active development)": "Emisión de voz (en desenvolvemento)",
-    "Element Call video rooms": "Salas de chamadas de vídeo SchildiChat"
+    "Element Call video rooms": "Salas de chamadas de vídeo Element"
 }
