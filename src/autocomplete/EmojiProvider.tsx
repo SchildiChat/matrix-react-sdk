@@ -35,6 +35,7 @@ import { TimelineRenderingType } from "../contexts/RoomContext";
 import { mediaFromMxc } from '../customisations/Media';
 import { ICustomEmoji, loadImageSet } from '../emojipicker/customemoji';
 import * as recent from "../emojipicker/recent";
+import { MatrixClientPeg } from "../MatrixClientPeg";
 
 const LIMIT = 20;
 
@@ -96,7 +97,19 @@ export default class EmojiProvider extends AutocompleteProvider {
 
         // Load this room's image sets.
         const imageSetEvents = room.currentState.getStateEvents('im.ponies.room_emotes');
-        const loadedImages: ICustomEmoji[] = imageSetEvents.flatMap(imageSetEvent => loadImageSet(imageSetEvent));
+        let loadedImages: ICustomEmoji[] = imageSetEvents.flatMap(imageSetEvent => loadImageSet(imageSetEvent));
+
+        // Global emotes from rooms
+        const cli = MatrixClientPeg.get();
+        const globalPacks = cli.getAccountData("im.ponies.emote_rooms")?.getContent()?.rooms;
+        for (const key in globalPacks) {
+            const packRoom = cli.getRoom(key);
+            const packRoomImageSetEvents = packRoom.currentState.getStateEvents('im.ponies.room_emotes');
+            const moreLoadedImages: ICustomEmoji[] =
+                packRoomImageSetEvents.flatMap(packRoomImageSetEvents => loadImageSet(packRoomImageSetEvents));
+            loadedImages = [...loadedImages, ...moreLoadedImages];
+        }
+
         const sortedCustomImages = loadedImages.map((emoji, index) => ({
             emoji,
             // Include the index so that we can preserve the original order
