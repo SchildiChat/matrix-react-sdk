@@ -1575,7 +1575,7 @@
     "Show %(count)s more|one": "Näytä %(count)s lisää",
     "Show %(count)s more|other": "Näytä %(count)s lisää",
     "Mod": "Valvoja",
-    "Read Marker off-screen lifetime (ms)": "Viestin luetuksi merkkaamisen kesto, kun Element ei ole näkyvissä (ms)",
+    "Read Marker off-screen lifetime (ms)": "Viestin luetuksi merkkaamisen kesto, kun SchildiChat ei ole näkyvissä (ms)",
     "Add widgets, bridges & bots": "Lisää sovelmia, siltoja ja botteja",
     "Edit widgets, bridges & bots": "Muokkaa sovelmia, siltoja ja botteja",
     "Widgets": "Sovelmat",
