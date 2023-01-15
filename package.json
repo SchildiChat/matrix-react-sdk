@@ -107,6 +107,7 @@
         "react-blurhash": "^0.2.0",
         "react-dom": "17.0.2",
         "react-focus-lock": "^2.5.1",
+        "react-lite-youtube-embed": "^2.3.52",
         "react-transition-group": "^4.4.1",
         "rfc4648": "^1.4.0",
         "sanitize-filename": "^1.6.3",

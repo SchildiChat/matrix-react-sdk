@@ -200,7 +200,7 @@ const DmAuxButton = ({ tabIndex, dispatcher = defaultDispatcher }: IAuxButtonPro
                 {contextMenu}
             </>
         );
-    } else if (!activeSpace && showCreateRooms) {
+    } else if ((true || !activeSpace) && showCreateRooms) {
         return <>
             <AccessibleTooltipButton
                 tabIndex={tabIndex}
@@ -213,21 +213,7 @@ const DmAuxButton = ({ tabIndex, dispatcher = defaultDispatcher }: IAuxButtonPro
                 aria-label={_t("Start chat")}
                 title={_t("Start chat")}
             />
-
-            { contextMenu }
         </>;
-    } else if ((true || !activeSpace) && showCreateRooms) {
-        return <AccessibleTooltipButton
-            tabIndex={tabIndex}
-            onClick={(e) => {
-                dispatcher.dispatch({ action: 'view_create_chat' });
-                PosthogTrackers.trackInteraction("WebRoomListRoomsSublistPlusMenuCreateChatItem", e);
-            }}
-            className="mx_RoomSublist_auxButton"
-            tooltipClassName="mx_RoomSublist_addRoomTooltip"
-            aria-label={_t("Start chat")}
-            title={_t("Start chat")}
-        />;
     }
 
     return null;

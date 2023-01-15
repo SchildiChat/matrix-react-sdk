@@ -608,8 +608,8 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
     }
 
     let emojiBody = false;
-    if (!opts.disableBigEmoji && bodyHasEmoji) {
-        let contentBodyTrimmed = contentBody !== undefined ? contentBody.trim() : "";
+    if (!opts.disableBigEmoji) {
+        let contentBodyTrimmed = (bodyHasEmoji && contentBody !== undefined) ? contentBody.trim() : "";
 
         // Ignore spaces in body text. Emojis with spaces in between should
         // still be counted as purely emoji messages.
@@ -621,16 +621,13 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
         contentBodyTrimmed = contentBodyTrimmed.replace(ZWJ_REGEX, "");
 
         const match = BIGEMOJI_REGEX.exec(contentBodyTrimmed);
-        emojiBody =
-            match &&
-            match[0] &&
-            match[0].length === contentBodyTrimmed.length &&
-            // Prevent user pills expanding for users with only emoji in
-            // their username. Permalinks (links in pills) can be any URL
-            // now, so we just check for an HTTP-looking thing.
-            (strippedBody === safeBody || // replies have the html fallbacks, account for that here
-                content.formatted_body === undefined ||
-                (!content.formatted_body.includes("http:") && !content.formatted_body.includes("https:")));
+        const matched = match && match[0] && match[0].length === contentBodyTrimmed.length;
+        emojiBody = (matched || isAllHtmlEmoji) && (
+            strippedBody === safeBody || // replies have the html fallbacks, account for that here
+            content.formatted_body === undefined ||
+            (!content.formatted_body.includes("http:") &&
+            !content.formatted_body.includes("https:"))
+        );
     }
 
     const className = classNames({
