@@ -7327,11 +7327,6 @@ react-is@^17.0.0, react-is@^17.0.1, react-is@^17.0.2:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
-react-lite-youtube-embed@^2.2.1-a:
-  version "2.2.1-a"
-  resolved "https://registry.yarnpkg.com/react-lite-youtube-embed/-/react-lite-youtube-embed-2.2.1-a.tgz#ec56269349ced080a9bb7e70ef3cc6c9cb8b8a5a"
-  integrity sha512-Gi/MKquU8e6J1oMnF1/RzrNEymjdgZLfcCGq4OM3cNKAB3G4YmAvc0moFMc0yhKU6hn43aRowAyn4K2wgjrbIg==
-
 react-redux@^7.2.0:
   version "7.2.9"
   resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-7.2.9.tgz#09488fbb9416a4efe3735b7235055442b042481d"
