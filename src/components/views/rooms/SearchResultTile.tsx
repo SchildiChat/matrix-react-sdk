@@ -21,7 +21,7 @@ import { MatrixEvent } from "matrix-js-sdk/src/models/event";
 
 import RoomContext, { TimelineRenderingType } from "../../../contexts/RoomContext";
 import SettingsStore from "../../../settings/SettingsStore";
-import { RoomPermalinkCreator } from '../../../utils/permalinks/Permalinks';
+import { RoomPermalinkCreator } from "../../../utils/permalinks/Permalinks";
 import DateSeparator from "../messages/DateSeparator";
 import { Layout } from "../../../settings/enums/Layout";
 import { UserNameColorMode } from "../../../settings/enums/UserNameColorMode";
@@ -71,13 +71,13 @@ export default class SearchResultTile extends React.Component<IProps> {
         const ret = [<DateSeparator key={ts1 + "-search"} roomId={resultEvent.getRoomId()} ts={ts1} />];
         const isTwelveHour = SettingsStore.getValue("showTwelveHourTimestamps");
         const alwaysShowTimestamps = SettingsStore.getValue("alwaysShowTimestamps");
-        const threadsEnabled = SettingsStore.getValue("feature_thread");
+        const threadsEnabled = SettingsStore.getValue("feature_threadstable");
 
         const timeline = result.context.getTimeline();
         for (let j = 0; j < timeline.length; j++) {
             const mxEv = timeline[j];
             let highlights;
-            const contextual = (j != result.context.getOurEventIndex());
+            const contextual = j != result.context.getOurEventIndex();
             if (!contextual) {
                 highlights = this.props.searchHighlights;
             }
@@ -86,7 +86,8 @@ export default class SearchResultTile extends React.Component<IProps> {
                 // do we need a date separator since the last event?
                 const prevEv = timeline[j - 1];
                 // is this a continuation of the previous message?
-                const continuation = prevEv &&
+                const continuation =
+                    prevEv &&
                     !wantsDateSeparator(prevEv.getDate(), mxEv.getDate()) &&
                     shouldFormContinuation(
                         prevEv,
@@ -100,7 +101,7 @@ export default class SearchResultTile extends React.Component<IProps> {
                 const nextEv = timeline[j + 1];
                 if (nextEv) {
                     const willWantDateSeparator = wantsDateSeparator(mxEv.getDate(), nextEv.getDate());
-                    lastInSection = (
+                    lastInSection =
                         willWantDateSeparator ||
                         mxEv.getSender() !== nextEv.getSender() ||
                         !shouldFormContinuation(
@@ -109,8 +110,7 @@ export default class SearchResultTile extends React.Component<IProps> {
                             this.context?.showHiddenEvents,
                             threadsEnabled,
                             TimelineRenderingType.Search,
-                        )
-                    );
+                        );
                 }
 
                 ret.push(
@@ -135,8 +135,10 @@ export default class SearchResultTile extends React.Component<IProps> {
             }
         }
 
-        return <li data-scroll-tokens={eventId}>
-            <ol>{ ret }</ol>
-        </li>;
+        return (
+            <li data-scroll-tokens={eventId}>
+                <ol>{ret}</ol>
+            </li>
+        );
     }
 }

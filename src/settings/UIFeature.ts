@@ -32,6 +32,7 @@ export enum UIFeature {
     RoomHistorySettings = "UIFeature.roomHistorySettings",
     TimelineEnableRelativeDates = "UIFeature.timelineEnableRelativeDates",
     YoutubeEmbedPlayer = "UIFeature.YoutubeEmbedPlayer",
+    BulkUnverifiedSessionsReminder = "UIFeature.BulkUnverifiedSessionsReminder",
 }
 
 export enum UIComponent {

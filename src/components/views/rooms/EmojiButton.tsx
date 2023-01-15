@@ -39,41 +39,39 @@ export function EmojiButton({ addEmoji, menuPosition, room, className }: IEmojiB
 
     let contextMenu: React.ReactElement | null = null;
     if (menuDisplayed && button.current) {
-        const position = (
-            menuPosition ?? aboveLeftOf(button.current.getBoundingClientRect())
-        );
+        const position = menuPosition ?? aboveLeftOf(button.current.getBoundingClientRect());
 
-        contextMenu = <ContextMenu
-            {...position}
-            onFinished={() => {
-                closeMenu();
-                overflowMenuCloser?.();
-            }}
-            managed={false}
-        >
-            <EmojiPicker onChoose={addEmoji} showQuickReactions={true} room={room} />
-        </ContextMenu>;
+        contextMenu = (
+            <ContextMenu
+                {...position}
+                onFinished={() => {
+                    closeMenu();
+                    overflowMenuCloser?.();
+                }}
+                managed={false}
+            >
+                <EmojiPicker onChoose={addEmoji} showQuickReactions={true} room={room} />
+            </ContextMenu>
+        );
     }
 
-    const computedClassName = classNames(
-        "mx_EmojiButton",
-        className,
-        {
-            "mx_EmojiButton_highlight": menuDisplayed,
-        },
-    );
+    const computedClassName = classNames("mx_EmojiButton", className, {
+        mx_EmojiButton_highlight: menuDisplayed,
+    });
 
     // TODO: replace ContextMenuTooltipButton with a unified representation of
     // the header buttons and the right panel buttons
-    return <>
-        <CollapsibleButton
-            className={computedClassName}
-            iconClassName="mx_EmojiButton_icon"
-            onClick={openMenu}
-            title={_t("Emoji")}
-            inputRef={button}
-        />
+    return (
+        <>
+            <CollapsibleButton
+                className={computedClassName}
+                iconClassName="mx_EmojiButton_icon"
+                onClick={openMenu}
+                title={_t("Emoji")}
+                inputRef={button}
+            />
 
-        { contextMenu }
-    </>;
+            {contextMenu}
+        </>
+    );
 }

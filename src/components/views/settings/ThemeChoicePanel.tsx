@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import React from 'react';
+import React from "react";
 import { logger } from "matrix-js-sdk/src/logger";
 
 import { _t } from "../../../languageHandler";
@@ -35,8 +35,7 @@ import { Theme } from '../../../settings/enums/Theme';
 import { UserNameColorMode } from '../../../settings/enums/UserNameColorMode';
 import { BorderRadius } from '../../../settings/enums/BorderRadius';
 
-interface IProps {
-}
+interface IProps {}
 
 interface IThemeState {
     lightTheme: string;
@@ -131,7 +130,7 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
     private onAddCustomTheme = async (): Promise<void> => {
         let currentThemes: string[] = SettingsStore.getValue("custom_themes");
         if (!currentThemes) currentThemes = [];
-        currentThemes = currentThemes.map(c => c); // cheap clone
+        currentThemes = currentThemes.map((c) => c); // cheap clone
 
         if (this.themeTimer) {
             clearTimeout(this.themeTimer);
@@ -141,7 +140,7 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
             const r = await fetch(this.state.customThemeUrl);
             // XXX: need some schema for this
             const themeInfo = await r.json();
-            if (!themeInfo || typeof(themeInfo['name']) !== 'string' || typeof(themeInfo['colors']) !== 'object') {
+            if (!themeInfo || typeof themeInfo["name"] !== "string" || typeof themeInfo["colors"] !== "object") {
                 this.setState({ customThemeMessage: { text: _t("Invalid theme schema."), isError: true } });
                 return;
             }
@@ -155,7 +154,7 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
         await SettingsStore.setValue("custom_themes", null, SettingLevel.ACCOUNT, currentThemes);
         this.setState({ customThemeUrl: "", customThemeMessage: { text: _t("Theme added!"), isError: false } });
 
-        this.themeTimer = setTimeout(() => {
+        this.themeTimer = window.setTimeout(() => {
             this.setState({ customThemeMessage: { text: "", isError: false } });
         }, 3000);
     };
@@ -327,9 +326,9 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
             let messageElement = null;
             if (this.state.customThemeMessage.text) {
                 if (this.state.customThemeMessage.isError) {
-                    messageElement = <div className='text-error'>{ this.state.customThemeMessage.text }</div>;
+                    messageElement = <div className="text-error">{this.state.customThemeMessage.text}</div>;
                 } else {
-                    messageElement = <div className='text-success'>{ this.state.customThemeMessage.text }</div>;
+                    messageElement = <div className="text-success">{this.state.customThemeMessage.text}</div>;
                 }
             }
             customThemeForm = (
@@ -338,8 +337,8 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
                     <form onSubmit={this.onAddCustomTheme}>
                         <Field
                             label={_t("Custom theme URL")}
-                            type='text'
-                            id='mx_GeneralUserSettingsTab_customThemeInput'
+                            type="text"
+                            id="mx_GeneralUserSettingsTab_customThemeInput"
                             autoComplete="off"
                             onChange={this.onCustomThemeChange}
                             value={this.state.customThemeUrl}
@@ -350,9 +349,9 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
                             kind="primary_sm"
                             disabled={!this.state.customThemeUrl.trim()}
                         >
-                            { _t("Add theme") }
+                            {_t("Add theme")}
                         </AccessibleButton>
-                        { messageElement }
+                        {messageElement}
                     </form>
                 </div>
             );

@@ -14,13 +14,13 @@
  limitations under the License.
  */
 
-import React from 'react';
+import React from "react";
 import { MatrixEvent } from "matrix-js-sdk/src/models/event";
 import { MsgType } from "matrix-js-sdk/src/@types/event";
 
 import { UserNameColorMode } from '../../../settings/enums/UserNameColorMode';
 import DisambiguatedProfile from "./DisambiguatedProfile";
-import { useRoomMemberProfile } from '../../../hooks/room/useRoomMemberProfile';
+import { useRoomMemberProfile } from "../../../hooks/room/useRoomMemberProfile";
 
 interface IProps {
     mxEvent: MatrixEvent;
@@ -34,8 +34,8 @@ export default function SenderProfile({ mxEvent, userNameColorMode, onClick }: I
         member: mxEvent.sender,
     });
 
-    return mxEvent.getContent().msgtype !== MsgType.Emote
-        ? <DisambiguatedProfile
+    return mxEvent.getContent().msgtype !== MsgType.Emote ? (
+        <DisambiguatedProfile
             fallbackName={mxEvent.getSender() ?? ""}
             userNameColorMode={userNameColorMode}
             onClick={onClick}
@@ -43,5 +43,5 @@ export default function SenderProfile({ mxEvent, userNameColorMode, onClick }: I
             colored={true}
             emphasizeDisplayName={true}
         />
-        : null;
+    ) : null;
 }

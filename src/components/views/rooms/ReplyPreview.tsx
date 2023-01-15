@@ -14,20 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import React from 'react';
-import { MatrixEvent } from 'matrix-js-sdk/src/models/event';
+import React from "react";
+import { MatrixEvent } from "matrix-js-sdk/src/models/event";
 
-import dis from '../../../dispatcher/dispatcher';
-import { _t } from '../../../languageHandler';
+import dis from "../../../dispatcher/dispatcher";
+import { _t } from "../../../languageHandler";
 import { RoomPermalinkCreator } from "../../../utils/permalinks/Permalinks";
-import ReplyTile from './ReplyTile';
-import { UserNameColorMode } from '../../../settings/enums/UserNameColorMode';
-import RoomContext, { TimelineRenderingType } from '../../../contexts/RoomContext';
+import ReplyTile from "./ReplyTile";
+import { UserNameColorMode } from "../../../settings/enums/UserNameColorMode";
+import RoomContext, { TimelineRenderingType } from "../../../contexts/RoomContext";
 import AccessibleButton from "../elements/AccessibleButton";
 
 function cancelQuoting(context: TimelineRenderingType) {
     dis.dispatch({
-        action: 'reply_to_event',
+        action: "reply_to_event",
         event: null,
         context,
     });
@@ -45,21 +45,23 @@ export default class ReplyPreview extends React.Component<IProps> {
     public render(): JSX.Element | null {
         if (!this.props.replyToEvent) return null;
 
-        return <div className="mx_ReplyPreview">
-            <div className="mx_ReplyPreview_section">
-                <div className="mx_ReplyPreview_header">
-                    <span>{ _t('Replying') }</span>
-                    <AccessibleButton
-                        className="mx_ReplyPreview_header_cancel"
-                        onClick={() => cancelQuoting(this.context.timelineRenderingType)}
+        return (
+            <div className="mx_ReplyPreview">
+                <div className="mx_ReplyPreview_section">
+                    <div className="mx_ReplyPreview_header">
+                        <span>{_t("Replying")}</span>
+                        <AccessibleButton
+                            className="mx_ReplyPreview_header_cancel"
+                            onClick={() => cancelQuoting(this.context.timelineRenderingType)}
+                        />
+                    </div>
+                    <ReplyTile
+                        mxEvent={this.props.replyToEvent}
+                        permalinkCreator={this.props.permalinkCreator}
+                        userNameColorMode={this.props.userNameColorMode}
                     />
                 </div>
-                <ReplyTile
-                    mxEvent={this.props.replyToEvent}
-                    permalinkCreator={this.props.permalinkCreator}
-                    userNameColorMode={this.props.userNameColorMode}
-                />
             </div>
-        </div>;
+        );
     }
 }

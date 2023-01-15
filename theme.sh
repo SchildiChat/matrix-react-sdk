@@ -31,12 +31,18 @@ replace_colors() {
         PILL_COLOR="rgba(255, 255, 255, 0.15)"
         PILL_HOVER_COLOR="rgba(255, 255, 255, 0.18)"
         PRESENCE_OFFLINE="#e0e0e0" # not applied because not existing specifically for dark
+        MESSAGE_BUBBLE_BACKGROUND="#424242"
+        MESSAGE_BUBBLE_BACKGROUND_SELF="#303030"
+        MESSAGE_BUBBLE_BACKGROUND_SELECTED="#3F4931"
     else
         BG_ACCENT="$M_ACCENT_LIGHT"
         CODEBLOCK_BACKGROUND_COLOR="#00000010"
         PILL_COLOR="rgba(0, 0, 0, 0.13)"
         PILL_HOVER_COLOR="rgba(0, 0, 0, 0.10)"
         PRESENCE_OFFLINE="#bdbdbd" # for light this should actually be darker
+        MESSAGE_BUBBLE_BACKGROUND="#eeeeee"
+        MESSAGE_BUBBLE_BACKGROUND_SELF="#F1F8E9"
+        MESSAGE_BUBBLE_BACKGROUND_SELECTED="#DBEDC6"
     fi
     # Neutral colors
     sed -i 's|#15171b|#212121|gi' "$f"
@@ -133,6 +139,12 @@ replace_colors() {
     sed -i "s|\\(\$roomtile-default-badge-bg-color: \\).*;|\\1$M_ACCENT;|gi" "$f"
     #sed -i "s|\\(\$input-focused-border-color: \\).*;|\\1\$accent;|gi" "$f" # not existing anymore, need replacement?
     sed -i "s|\\(\$reaction-row-button-selected-bg-color: \\).*;|\\1$BG_ACCENT;|gi" "$f"
+
+    # Message bubbles
+    sed -i "s|\\(\$eventbubble-self-bg: \\).*;|\$message-bubble-background-self: $MESSAGE_BUBBLE_BACKGROUND_SELF;|gi" "$f"
+    sed -i "s|\\(\$eventbubble-others-bg: \\).*;|\$message-bubble-background: $MESSAGE_BUBBLE_BACKGROUND;|gi" "$f"
+    sed -i "s|\\(\$eventbubble-bg-hover: \\).*;|\$message-bubble-background-selected: $MESSAGE_BUBBLE_BACKGROUND_SELECTED;|gi" "$f"
+    sed -i "s|\\(\$eventbubble-reply-color: \\).*;$||gi" "$f"
 }
 
 replace_colors res/themes/dark/css/_dark.pcss

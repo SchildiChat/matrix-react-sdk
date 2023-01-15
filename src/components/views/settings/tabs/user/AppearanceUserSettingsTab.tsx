@@ -15,11 +15,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import React from 'react';
+import React from "react";
 
 import { _t } from "../../../../../languageHandler";
 import SdkConfig from "../../../../../SdkConfig";
-import { MatrixClientPeg } from '../../../../../MatrixClientPeg';
+import { MatrixClientPeg } from "../../../../../MatrixClientPeg";
 import SettingsStore from "../../../../../settings/SettingsStore";
 import SettingsFlag from '../../../elements/SettingsFlag';
 import { SettingLevel } from "../../../../../settings/SettingLevel";
@@ -32,8 +32,7 @@ import FontScalingPanel from '../../FontScalingPanel';
 import ThemeChoicePanel from '../../ThemeChoicePanel';
 import ImageSizePanel from "../../ImageSizePanel";
 
-interface IProps {
-}
+interface IProps {}
 
 interface IThemeState {
     lightTheme: string;
@@ -158,9 +157,9 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
 
         return (
             <div className="mx_SettingsTab mx_AppearanceUserSettingsTab">
-                <div className="mx_SettingsTab_heading">{ _t("Customise your appearance") }</div>
+                <div className="mx_SettingsTab_heading">{_t("Customise your appearance")}</div>
                 <div className="mx_SettingsTab_subsectionText">
-                    { _t("Appearance Settings only affect this %(brand)s session.", { brand }) }
+                    {_t("Appearance Settings only affect this %(brand)s session.", { brand })}
                 </div>
                 <ThemeChoicePanel />
                 { this.renderRoomListSection() }

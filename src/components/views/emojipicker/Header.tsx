@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import React from 'react';
+import React from "react";
 import classNames from "classnames";
 import { logger } from 'matrix-js-sdk/src/logger';
 
@@ -42,11 +42,11 @@ class Header extends React.PureComponent<IProps> {
     }
 
     private changeCategoryRelative(delta: number) {
-        const current = this.props.categories.findIndex(c => c.visible);
+        const current = this.props.categories.findIndex((c) => c.visible);
         this.changeCategoryAbsolute(current + delta, delta);
     }
 
-    private changeCategoryAbsolute(index: number, delta=1) {
+    private changeCategoryAbsolute(index: number, delta = 1) {
         const category = this.props.categories[this.findNearestEnabled(index, delta)];
         if (category) {
             this.props.onAnchorClick(category.id);

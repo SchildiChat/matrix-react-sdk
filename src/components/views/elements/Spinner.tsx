@@ -33,9 +33,9 @@ export default class Spinner extends React.PureComponent<IProps> {
     public render() {
         return (
             <div className="mx_Spinner">
-                { this.props.message &&
-                    <React.Fragment><div className="mx_Spinner_Msg">{ this.props.message }</div>&nbsp;</React.Fragment>
-                }
+                {this.props.message && (
+                    <React.Fragment><div className="mx_Spinner_Msg">{this.props.message}</div>&nbsp;</React.Fragment>
+                )}
                 <SvgSpinner
                     w={this.props.w}
                     h={this.props.h}

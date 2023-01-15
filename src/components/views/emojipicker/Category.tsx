@@ -15,17 +15,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import React, { RefObject } from 'react';
+import React, { RefObject } from "react";
 
 import { CATEGORY_HEADER_HEIGHT, EMOJI_HEIGHT, EMOJIS_PER_ROW } from "./EmojiPicker";
 import LazyRenderList from "../elements/LazyRenderList";
 import { DATA_BY_CATEGORY, IEmoji } from "../../../emoji";
-import Emoji from './Emoji';
-import { ICustomEmoji } from '../../../emojipicker/customemoji';
+import Emoji from "./Emoji";
+import { ICustomEmoji } from "../../../emojipicker/customemoji";
 
 const OVERFLOW_ROWS = 3;
 
-export type CategoryKey = (keyof typeof DATA_BY_CATEGORY) | "recent" | "room";
+export type CategoryKey = keyof typeof DATA_BY_CATEGORY | "recent" | "room";
 
 export interface ICategory {
     id: CategoryKey;
@@ -54,19 +54,21 @@ class Category extends React.PureComponent<IProps> {
     private renderEmojiRow = (rowIndex: number) => {
         const { onClick, onMouseEnter, onMouseLeave, selectedEmojis, emojis } = this.props;
         const emojisForRow = emojis.slice(rowIndex * 8, (rowIndex + 1) * 8).filter((val) => val);
-        return (<div key={rowIndex}>{
-            emojisForRow.map(emoji => (
-                <Emoji
-                    key={'hexcode' in emoji ? emoji.hexcode : emoji.shortcodes[0]}
-                    emoji={emoji}
-                    selectedEmojis={selectedEmojis}
-                    onClick={onClick}
-                    onMouseEnter={onMouseEnter}
-                    onMouseLeave={onMouseLeave}
-                    disabled={this.props.isEmojiDisabled?.('unicode' in emoji ? emoji.unicode : emoji.shortcodes[0])}
-                />
-            ))
-        }</div>);
+        return (
+            <div key={rowIndex}>
+                {emojisForRow.map((emoji) => (
+                    <Emoji
+                        key={'hexcode' in emoji ? emoji.hexcode : emoji.shortcodes[0]}
+                        emoji={emoji}
+                        selectedEmojis={selectedEmojis}
+                        onClick={onClick}
+                        onMouseEnter={onMouseEnter}
+                        onMouseLeave={onMouseLeave}
+                        disabled={this.props.isEmojiDisabled?.('unicode' in emoji ? emoji.unicode : emoji.shortcodes[0])}
+                    />
+                ))}
+            </div>
+        );
     };
 
     render() {
@@ -82,7 +84,7 @@ class Category extends React.PureComponent<IProps> {
         const viewportTop = scrollTop;
         const viewportBottom = viewportTop + viewportHeight;
         const listTop = heightBefore + CATEGORY_HEADER_HEIGHT;
-        const listBottom = listTop + (rows.length * EMOJI_HEIGHT);
+        const listBottom = listTop + rows.length * EMOJI_HEIGHT;
         const top = Math.max(viewportTop, listTop);
         const bottom = Math.min(viewportBottom, listBottom);
         // the viewport height and scrollTop passed to the LazyRenderList
@@ -99,9 +101,7 @@ class Category extends React.PureComponent<IProps> {
                 role="tabpanel"
                 aria-label={name}
             >
-                <h2 className="mx_EmojiPicker_category_label">
-                    { name }
-                </h2>
+                <h2 className="mx_EmojiPicker_category_label">{name}</h2>
                 <LazyRenderList
                     element="ul"
                     className="mx_EmojiPicker_list"

@@ -50,8 +50,7 @@ interface IComposerInsertEmojiPayload extends IBaseComposerInsertPayload {
 }
 
 export type ComposerInsertPayload =
-    IComposerInsertMentionPayload |
-    IComposerInsertQuotePayload |
-    IComposerInsertPlaintextPayload |
-    IComposerInsertEmojiPayload;
-
+    | IComposerInsertMentionPayload
+    | IComposerInsertQuotePayload
+    | IComposerInsertPlaintextPayload
+    | IComposerInsertEmojiPayload;
