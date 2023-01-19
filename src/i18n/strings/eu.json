@@ -1627,10 +1627,5 @@
     "Identity server (%(server)s)": "Identitate-zerbitzaria (%(server)s)",
     "Could not connect to identity server": "Ezin izan da identitate-zerbitzarira konektatu",
     "Not a valid identity server (status code %(code)s)": "Ez da identitate zerbitzari baliogarria (egoera-mezua %(code)s)",
-    "Identity server URL must be HTTPS": "Identitate zerbitzariaren URL-a HTTPS motakoa izan behar du",
-    "Show message bubbles on one side only": "Erakutsi mezu burbuilak alde batetik bakarrik",
-    "Message bubbles": "Mezu burbuilak",
-    "Normal priority": "Normala lehentasuna",
-    "Enable layout with message bubbles": "Gaitu diseinua batera mezua burbuilak",
-    "Show message bubbles depending on the width either on both sides or only on one side": "Erakutsi mezu burbuilak arabera zabalera bai, bi aldeetatik edo alde batetik bakarrik"
+    "Identity server URL must be HTTPS": "Identitate zerbitzariaren URL-a HTTPS motakoa izan behar du"
 }
