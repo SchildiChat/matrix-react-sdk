@@ -34,7 +34,7 @@ interface IProps {
 }
 
 export default class DisambiguatedProfile extends React.Component<IProps> {
-    render() {
+    public render() {
         const { fallbackName, userNameColorMode, member, colored, emphasizeDisplayName, onClick } = this.props;
         const rawDisplayName = member?.rawDisplayName || fallbackName;
         const mxid = member?.userId;

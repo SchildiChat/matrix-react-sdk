@@ -71,7 +71,7 @@ export default class PinnedEventTile extends React.Component<IProps> {
         }
     };
 
-    async componentDidMount() {
+    public async componentDidMount() {
         // Fetch poll responses
         if (M_POLL_START.matches(this.props.event.getType())) {
             const eventId = this.props.event.getId();
@@ -112,7 +112,7 @@ export default class PinnedEventTile extends React.Component<IProps> {
         }
     }
 
-    render() {
+    public render() {
         const sender = this.props.event.getSender();
 
         // SC: required for userNameColorMode

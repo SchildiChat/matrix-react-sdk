@@ -141,7 +141,7 @@ export default class BasicMessageEditor extends React.Component<IProps, IState> 
     private readonly surroundWithHandle: string;
     private readonly historyManager = new HistoryManager();
 
-    constructor(props) {
+    public constructor(props) {
         super(props);
         this.state = {
             showPillAvatar: SettingsStore.getValue("Pill.shouldShowPillAvatar"),
@@ -687,7 +687,7 @@ export default class BasicMessageEditor extends React.Component<IProps, IState> 
         if (shouldReplace) this.replaceEmoticon(documentPosition, REGEX_EMOTICON_WHITESPACE);
     };
 
-    componentWillUnmount() {
+    public componentWillUnmount() {
         document.removeEventListener("selectionchange", this.onSelectionChange);
         this.editorRef.current.removeEventListener("input", this.onInput, true);
         this.editorRef.current.removeEventListener("compositionstart", this.onCompositionStart, true);
@@ -698,7 +698,7 @@ export default class BasicMessageEditor extends React.Component<IProps, IState> 
         SettingsStore.unwatchSetting(this.surroundWithHandle);
     }
 
-    componentDidMount() {
+    public componentDidMount() {
         const model = this.props.model;
         model.setUpdateCallback(this.updateEditorState);
         const partCreator = model.partCreator;
@@ -747,7 +747,7 @@ export default class BasicMessageEditor extends React.Component<IProps, IState> 
         formatRange(range, action);
     };
 
-    render() {
+    public render() {
         let autoComplete;
         if (this.state.autoComplete) {
             const query = this.state.query;

@@ -50,17 +50,17 @@ interface IProps {
 export default class ReplyTile extends React.PureComponent<IProps> {
     private anchorElement = createRef<HTMLAnchorElement>();
 
-    static defaultProps = {
+    public static defaultProps = {
         onHeightChanged: () => {},
     };
 
-    componentDidMount() {
+    public componentDidMount() {
         this.props.mxEvent.on(MatrixEventEvent.Decrypted, this.onDecrypted);
         this.props.mxEvent.on(MatrixEventEvent.BeforeRedaction, this.onEventRequiresUpdate);
         this.props.mxEvent.on(MatrixEventEvent.Replaced, this.onEventRequiresUpdate);
     }
 
-    componentWillUnmount() {
+    public componentWillUnmount() {
         this.props.mxEvent.removeListener(MatrixEventEvent.Decrypted, this.onDecrypted);
         this.props.mxEvent.removeListener(MatrixEventEvent.BeforeRedaction, this.onEventRequiresUpdate);
         this.props.mxEvent.removeListener(MatrixEventEvent.Replaced, this.onEventRequiresUpdate);
@@ -106,7 +106,7 @@ export default class ReplyTile extends React.PureComponent<IProps> {
         }
     };
 
-    render() {
+    public render() {
         const mxEvent = this.props.mxEvent;
         const msgType = mxEvent.getContent().msgtype;
         const evType = mxEvent.getType();

@@ -33,7 +33,7 @@ export class ListLayout {
     private _previews = true;
     private _collapsed = false;
 
-    constructor(public readonly tagId: TagID) {
+    public constructor(public readonly tagId: TagID) {
         const serialized = localStorage.getItem(this.key);
         if (serialized) {
             // We don't use the setters as they cause writes.

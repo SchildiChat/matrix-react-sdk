@@ -146,7 +146,7 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
     private _showSpaceDMBadges = false;
     private _enabledMetaSpaces: MetaSpace[] = [];
 
-    constructor() {
+    public constructor() {
         super(defaultDispatcher, {});
 
         SettingsStore.monitorSetting("Spaces.allRoomsInHome", null);

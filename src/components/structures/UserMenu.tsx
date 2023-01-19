@@ -50,11 +50,8 @@ import UserIdentifierCustomisations from "../../customisations/UserIdentifier";
 import PosthogTrackers from "../../PosthogTrackers";
 import { ViewHomePagePayload } from "../../dispatcher/payloads/ViewHomePagePayload";
 import { Icon as LiveIcon } from "../../../res/img/element-icons/live.svg";
-import {
-    VoiceBroadcastRecording,
-    VoiceBroadcastRecordingsStore,
-    VoiceBroadcastRecordingsStoreEvent,
-} from "../../voice-broadcast";
+import { VoiceBroadcastRecording, VoiceBroadcastRecordingsStoreEvent } from "../../voice-broadcast";
+import { SDKContext } from "../../contexts/SDKContext";
 
 interface IProps {
     isPanelCollapsed: boolean;
@@ -86,20 +83,23 @@ const below = (rect: PartialDOMRect) => {
 };
 
 export default class UserMenu extends React.Component<IProps, IState> {
+    public static contextType = SDKContext;
+    public context!: React.ContextType<typeof SDKContext>;
+
     private dispatcherRef: string;
     private themeInUseWatcherRef: string;
     private readonly dndWatcherRef: string;
     private buttonRef: React.RefObject<HTMLButtonElement> = createRef();
-    private voiceBroadcastRecordingStore = VoiceBroadcastRecordingsStore.instance();
 
-    constructor(props: IProps) {
-        super(props);
+    public constructor(props: IProps, context: React.ContextType<typeof SDKContext>) {
+        super(props, context);
 
+        this.context = context;
         this.state = {
             contextMenuPosition: null,
             themeInUse: SettingsStore.getValue("theme_in_use"),
             selectedSpace: SpaceStore.instance.activeSpaceRoom,
-            showLiveAvatarAddon: this.voiceBroadcastRecordingStore.hasCurrent(),
+            showLiveAvatarAddon: this.context.voiceBroadcastRecordingsStore.hasCurrent(),
         };
 
         OwnProfileStore.instance.on(UPDATE_EVENT, this.onProfileUpdate);
@@ -117,7 +117,7 @@ export default class UserMenu extends React.Component<IProps, IState> {
     };
 
     public componentDidMount() {
-        this.voiceBroadcastRecordingStore.on(
+        this.context.voiceBroadcastRecordingsStore.on(
             VoiceBroadcastRecordingsStoreEvent.CurrentChanged,
             this.onCurrentVoiceBroadcastRecordingChanged,
         );
@@ -131,7 +131,7 @@ export default class UserMenu extends React.Component<IProps, IState> {
         if (this.dispatcherRef) defaultDispatcher.unregister(this.dispatcherRef);
         OwnProfileStore.instance.off(UPDATE_EVENT, this.onProfileUpdate);
         SpaceStore.instance.off(UPDATE_SELECTED_SPACE, this.onSelectedSpaceUpdate);
-        this.voiceBroadcastRecordingStore.off(
+        this.context.voiceBroadcastRecordingsStore.off(
             VoiceBroadcastRecordingsStoreEvent.CurrentChanged,
             this.onCurrentVoiceBroadcastRecordingChanged,
         );

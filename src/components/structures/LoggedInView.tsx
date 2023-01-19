@@ -41,7 +41,6 @@ import { DefaultTagID } from "../../stores/room-list/models";
 import { hideToast as hideServerLimitToast, showToast as showServerLimitToast } from "../../toasts/ServerLimitToast";
 import { Action } from "../../dispatcher/actions";
 import LeftPanel from "./LeftPanel";
-import PipContainer from "../views/voip/PipContainer";
 import { ViewRoomDeltaPayload } from "../../dispatcher/payloads/ViewRoomDeltaPayload";
 import RoomListStore from "../../stores/room-list/RoomListStore";
 import NonUrgentToastContainer from "./NonUrgentToastContainer";
@@ -74,6 +73,7 @@ import { SwitchSpacePayload } from "../../dispatcher/payloads/SwitchSpacePayload
 import { IConfigOptions } from "../../IConfigOptions";
 import LeftPanelLiveShareWarning from "../views/beacon/LeftPanelLiveShareWarning";
 import { UserOnboardingPage } from "../views/user-onboarding/UserOnboardingPage";
+import { PipContainer } from "./PipContainer";
 
 // We need to fetch each pinned message individually (if we don't already have it)
 // so each pinned message may trigger a request. Limit the number per room for sanity.
@@ -129,7 +129,7 @@ interface IState {
  * Components mounted below us can access the matrix client via the react context.
  */
 class LoggedInView extends React.Component<IProps, IState> {
-    static displayName = "LoggedInView";
+    public static displayName = "LoggedInView";
 
     protected readonly _matrixClient: MatrixClient;
     protected readonly _roomView: React.RefObject<RoomViewType>;
@@ -141,7 +141,7 @@ class LoggedInView extends React.Component<IProps, IState> {
     protected backgroundImageWatcherRef: string;
     protected resizer: Resizer;
 
-    constructor(props, context) {
+    public constructor(props, context) {
         super(props, context);
 
         this.state = {
@@ -167,7 +167,7 @@ class LoggedInView extends React.Component<IProps, IState> {
         this.resizeHandler = React.createRef();
     }
 
-    componentDidMount() {
+    public componentDidMount() {
         document.addEventListener("keydown", this.onNativeKeyDown, false);
         LegacyCallHandler.instance.addListener(LegacyCallHandlerEvent.CallState, this.onCallState);
 
@@ -207,7 +207,7 @@ class LoggedInView extends React.Component<IProps, IState> {
         this.onBorderRadiusChanged();
     }
 
-    componentWillUnmount() {
+    public componentWillUnmount() {
         document.removeEventListener("keydown", this.onNativeKeyDown, false);
         LegacyCallHandler.instance.removeListener(LegacyCallHandlerEvent.CallState, this.onCallState);
         this._matrixClient.removeListener(ClientEvent.AccountData, this.onAccountData);
@@ -648,7 +648,7 @@ class LoggedInView extends React.Component<IProps, IState> {
         }
     };
 
-    render() {
+    public render() {
         let pageElement;
 
         switch (this.props.page_type) {

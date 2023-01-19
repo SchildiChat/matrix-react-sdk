@@ -106,7 +106,7 @@ export default class PreferencesUserSettingsTab extends React.Component<IProps, 
         // Autocomplete delay (niche text box)
     ];
 
-    constructor(props) {
+    public constructor(props) {
         super(props);
 
         this.state = {
@@ -162,7 +162,7 @@ export default class PreferencesUserSettingsTab extends React.Component<IProps, 
         });
     };
 
-    render() {
+    public render() {
         const useCase = SettingsStore.getValue<UseCase | null>("FTUE.useCaseSelection");
         const roomListSettings = PreferencesUserSettingsTab.ROOM_LIST_SETTINGS
             // Only show the breadcrumbs setting if breadcrumbs v2 is disabled

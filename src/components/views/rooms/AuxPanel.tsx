@@ -56,11 +56,11 @@ interface IState {
 }
 
 export default class AuxPanel extends React.Component<IProps, IState> {
-    static defaultProps = {
+    public static defaultProps = {
         showApps: true,
     };
 
-    constructor(props) {
+    public constructor(props) {
         super(props);
 
         this.state = {
@@ -68,20 +68,20 @@ export default class AuxPanel extends React.Component<IProps, IState> {
         };
     }
 
-    componentDidMount() {
+    public componentDidMount() {
         const cli = MatrixClientPeg.get();
         if (SettingsStore.getValue("feature_state_counters")) {
             cli.on(RoomStateEvent.Events, this.onRoomStateEvents);
         }
     }
 
-    componentWillUnmount() {
+    public componentWillUnmount() {
         if (SettingsStore.getValue("feature_state_counters")) {
             MatrixClientPeg.get()?.removeListener(RoomStateEvent.Events, this.onRoomStateEvents);
         }
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    public shouldComponentUpdate(nextProps, nextState) {
         return objectHasDiff(this.props, nextProps) || objectHasDiff(this.state, nextState);
     }
 
@@ -137,7 +137,7 @@ export default class AuxPanel extends React.Component<IProps, IState> {
         return counters;
     }
 
-    render() {
+    public render() {
         const callView = (
             <LegacyCallViewForRoom
                 roomId={this.props.room.roomId}

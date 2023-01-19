@@ -61,6 +61,7 @@ import RoomPreviewBar from "../views/rooms/RoomPreviewBar";
 import RoomPreviewCard from "../views/rooms/RoomPreviewCard";
 import SearchBar, { SearchScope } from "../views/rooms/SearchBar";
 import RoomUpgradeWarningBar from "../views/rooms/RoomUpgradeWarningBar";
+import { DecryptionFailureBar } from "../views/rooms/DecryptionFailureBar";
 import AuxPanel from "../views/rooms/AuxPanel";
 import RoomHeader, { ISearchInfo } from "../views/rooms/RoomHeader";
 import { IOOBData, IThreepidInvite } from "../../stores/ThreepidInviteStore";
@@ -226,6 +227,8 @@ export interface IRoomState {
     threadId?: string;
     liveTimeline?: EventTimeline;
     narrow: boolean;
+    // List of undecryptable events currently visible on-screen
+    visibleDecryptionFailures?: MatrixEvent[];
 }
 
 interface LocalRoomViewProps {
@@ -374,10 +377,10 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
     private messagePanel: TimelinePanel;
     private roomViewBody = createRef<HTMLDivElement>();
 
-    static contextType = SDKContext;
+    public static contextType = SDKContext;
     public context!: React.ContextType<typeof SDKContext>;
 
-    constructor(props: IRoomProps, context: React.ContextType<typeof SDKContext>) {
+    public constructor(props: IRoomProps, context: React.ContextType<typeof SDKContext>) {
         super(props, context);
 
         const llMembers = context.client.hasLazyLoadMembersEnabled();
@@ -422,6 +425,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             timelineRenderingType: TimelineRenderingType.Room,
             liveTimeline: undefined,
             narrow: false,
+            visibleDecryptionFailures: [],
         };
 
         this.dispatcherRef = dis.register(this.onAction);
@@ -866,7 +870,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         return isManuallyShown && widgets.length > 0;
     }
 
-    componentDidMount() {
+    public componentDidMount() {
         this.onRoomViewStoreUpdate(true);
 
         const call = this.getCallForRoom();
@@ -887,7 +891,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         this.recalculateUserNameColorMode();
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    public shouldComponentUpdate(nextProps, nextState) {
         const hasPropsDiff = objectHasDiff(this.props, nextProps);
 
         const { upgradeRecommendation, ...state } = this.state;
@@ -900,7 +904,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         return hasPropsDiff || hasStateDiff;
     }
 
-    componentDidUpdate() {
+    public componentDidUpdate() {
         // Note: We check the ref here with a flag because componentDidMount, despite
         // documentation, does not define our messagePanel ref. It looks like our spinner
         // in render() prevents the ref from being set on first mount, so we try and
@@ -916,7 +920,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         this.recalculateUserNameColorMode();
     }
 
-    componentWillUnmount() {
+    public componentWillUnmount() {
         // set a boolean to say we've been unmounted, which any pending
         // promises can use to throw away their results.
         //
@@ -1218,6 +1222,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
     private onEventDecrypted = (ev: MatrixEvent) => {
         if (!this.state.room || !this.state.matrixClientIsReady) return; // not ready at all
         if (ev.getRoomId() !== this.state.room.roomId) return; // not for us
+        this.updateVisibleDecryptionFailures();
         if (ev.isDecryptionFailure()) return;
         this.handleEffects(ev);
     };
@@ -1229,7 +1234,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         CHAT_EFFECTS.forEach((effect) => {
             if (containsEmoji(ev.getContent(), effect.emojis) || ev.getContent().msgtype === effect.msgType) {
                 // For initial threads launch, chat effects are disabled see #19731
-                if (!SettingsStore.getValue("feature_threadstable") || !ev.isRelation(THREAD_RELATION_TYPE.name)) {
+                if (!SettingsStore.getValue("feature_threadenabled") || !ev.isRelation(THREAD_RELATION_TYPE.name)) {
                     dis.dispatch({ action: `effects.${effect.command}` });
                 }
             }
@@ -1559,7 +1564,21 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         }
     };
 
-    private onMessageListScroll = (ev) => {
+    private updateVisibleDecryptionFailures = throttle(
+        () =>
+            this.setState((prevState) => ({
+                visibleDecryptionFailures:
+                    this.messagePanel?.getVisibleDecryptionFailures(
+                        // If there were visible failures last time we checked,
+                        // add a margin to provide hysteresis and prevent flickering
+                        (prevState.visibleDecryptionFailures?.length ?? 0) > 0,
+                    ) ?? [],
+            })),
+        500,
+        { leading: false, trailing: true },
+    );
+
+    private onMessageListScroll = () => {
         if (this.messagePanel.isAtEndOfLiveTimeline()) {
             this.setState({
                 numUnreadMessages: 0,
@@ -1571,6 +1590,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             });
         }
         this.updateTopUnreadMessagesBar();
+        this.updateVisibleDecryptionFailures();
     };
 
     private resetJumpToEvent = (eventId?: string) => {
@@ -1892,13 +1912,13 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         return this.context.client.getRoom(createEvent.getContent()["predecessor"]["room_id"]);
     }
 
-    getHiddenHighlightCount() {
+    public getHiddenHighlightCount() {
         const oldRoom = this.getOldRoom();
         if (!oldRoom) return 0;
         return oldRoom.getUnreadNotificationCount(NotificationCountType.Highlight);
     }
 
-    onHiddenHighlightsClick = () => {
+    public onHiddenHighlightsClick = () => {
         const oldRoom = this.getOldRoom();
         if (!oldRoom) return;
         dis.dispatch<ViewRoomPayload>({
@@ -1959,7 +1979,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         );
     }
 
-    render() {
+    public render() {
         if (this.state.room instanceof LocalRoom) {
             if (this.state.room.state === LocalRoomState.CREATING) {
                 return this.renderLocalRoomCreateLoader();
@@ -2138,7 +2158,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
 
         const hiddenHighlightCount = this.getHiddenHighlightCount();
 
-        let aux = null;
+        let aux: JSX.Element | undefined;
         let previewBar;
         if (this.state.timelineRenderingType === TimelineRenderingType.Search) {
             aux = (
@@ -2189,6 +2209,11 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             );
         }
 
+        let decryptionFailureBar: JSX.Element | undefined;
+        if (this.state.visibleDecryptionFailures && this.state.visibleDecryptionFailures.length > 0) {
+            decryptionFailureBar = <DecryptionFailureBar failures={this.state.visibleDecryptionFailures} />;
+        }
+
         if (this.state.room?.isSpaceRoom() && !this.props.forceTimeline) {
             return (
                 <SpaceRoomView
@@ -2214,6 +2239,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
                 resizeNotifier={this.props.resizeNotifier}
             >
                 {aux}
+                {decryptionFailureBar}
             </AuxPanel>
         );
 

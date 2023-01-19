@@ -25,12 +25,12 @@ interface IProps {
 }
 
 export default class InlineSpinner extends React.PureComponent<IProps> {
-    static defaultProps = {
+    public static defaultProps = {
         w: 32,
         h: 32,
     };
 
-    render() {
+    public render() {
         return (
             <div className="mx_InlineSpinner">
                 <SvgSpinner

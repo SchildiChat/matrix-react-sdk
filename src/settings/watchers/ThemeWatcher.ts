@@ -35,7 +35,7 @@ export default class ThemeWatcher {
 
     private static currentTheme: string;
 
-    constructor() {
+    public constructor() {
         this.lightThemeWatchRef = null;
         this.darkThemeWatchRef = null;
         this.themeInUseWatchRef = null;

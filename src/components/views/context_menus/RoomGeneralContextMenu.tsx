@@ -25,7 +25,6 @@ import dis from "../../../dispatcher/dispatcher";
 import { useEventEmitterState } from "../../../hooks/useEventEmitter";
 import { getKeyBindingsManager } from "../../../KeyBindingsManager";
 import { _t } from "../../../languageHandler";
-import { MatrixClientPeg } from "../../../MatrixClientPeg";
 import { isRoomMarkedAsUnread, setRoomMarkedAsUnread } from "../../../Rooms";
 import SettingsStore from "../../../settings/SettingsStore";
 import { NotificationStateEvents } from "../../../stores/notifications/NotificationState";
@@ -33,6 +32,7 @@ import { RoomNotificationStateStore } from "../../../stores/notifications/RoomNo
 import { DefaultTagID, TagID } from "../../../stores/room-list/models";
 import RoomListStore, { LISTS_UPDATE_EVENT } from "../../../stores/room-list/RoomListStore";
 import DMRoomMap from "../../../utils/DMRoomMap";
+import { clearRoomNotification } from "../../../utils/notifications";
 import { IProps as IContextMenuProps } from "../../structures/ContextMenu";
 import IconizedContextMenu, {
     IconizedContextMenuCheckbox,
@@ -41,7 +41,7 @@ import IconizedContextMenu, {
 } from "../context_menus/IconizedContextMenu";
 import { ButtonEvent } from "../elements/AccessibleButton";
 
-interface IProps extends IContextMenuProps {
+export interface RoomGeneralContextMenuProps extends IContextMenuProps {
     room: Room;
     onPostMarkUnreadClick?: (event: ButtonEvent) => void;
     onPostFavoriteClick?: (event: ButtonEvent) => void;
@@ -65,7 +65,7 @@ export const RoomGeneralContextMenu = ({
     onPostLeaveClick,
     onPostForgetClick,
     ...props
-}: IProps) => {
+}: RoomGeneralContextMenuProps) => {
     const cli = useContext(MatrixClientContext);
     const roomTags = useEventEmitterState(RoomListStore.instance, LISTS_UPDATE_EVENT, () =>
         RoomListStore.instance.getTagsForRoom(room),
@@ -122,12 +122,9 @@ export const RoomGeneralContextMenu = ({
         if (markUnreadEnabled) {
             setRoomMarkedAsUnread(room, false);
         }
+        
         // Update read receipt
-        const events = room.getLiveTimeline().getEvents();
-        if (events.length) {
-            // noinspection JSIgnoredPromiseFromCall
-            MatrixClientPeg.get().sendReadReceipt(events[events.length - 1]);
-        }
+        clearRoomNotification(room, cli);
     };
 
     const markUnreadEnabled = SettingsStore.getValue("feature_mark_unread");
@@ -159,8 +156,8 @@ export const RoomGeneralContextMenu = ({
         />
     );
 
-    let inviteOption: JSX.Element;
-    if (room.canInvite(cli.getUserId()) && !isDm) {
+    let inviteOption: JSX.Element | null = null;
+    if (room.canInvite(cli.getUserId()!) && !isDm) {
         inviteOption = (
             <IconizedContextMenuOption
                 onClick={wrapHandler(
@@ -177,7 +174,7 @@ export const RoomGeneralContextMenu = ({
         );
     }
 
-    let copyLinkOption: JSX.Element;
+    let copyLinkOption: JSX.Element | null = null;
     if (!isDm) {
         copyLinkOption = (
             <IconizedContextMenuOption
@@ -244,6 +241,20 @@ export const RoomGeneralContextMenu = ({
             />
         );
     }
+
+    // const { color } = useUnreadNotifications(room);
+    // const markAsReadOption: JSX.Element | null =
+    //     color > NotificationColor.None ? (
+    //         <IconizedContextMenuCheckbox
+    //             onClick={() => {
+    //                 clearRoomNotification(room, cli);
+    //                 onFinished?.();
+    //             }}
+    //             active={false}
+    //             label={_t("Mark as read")}
+    //             iconClassName="mx_RoomGeneralContextMenu_iconMarkAsRead"
+    //         />
+    //     ) : null;
 
     return (
         <IconizedContextMenu {...props} onFinished={onFinished} className="mx_RoomGeneralContextMenu" compact>

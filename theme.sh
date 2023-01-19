@@ -140,6 +140,12 @@ replace_colors() {
     #sed -i "s|\\(\$input-focused-border-color: \\).*;|\\1\$accent;|gi" "$f" # not existing anymore, need replacement?
     sed -i "s|\\(\$reaction-row-button-selected-bg-color: \\).*;|\\1$BG_ACCENT;|gi" "$f"
 
+    # e2e colors
+    sed -i "s|\\(\$e2e-verified-color: \\).*;|\\1$M_ACCENT;|gi" "$f"
+    sed -i "s|\\(\$e2e-unknown-color: \\).*;|\\1#FFC107;|gi" "$f"
+    sed -i "s|\\(\$e2e-unverified-color: \\).*;|\\1#FFC107;|gi" "$f"
+    sed -i "s|\\(\$e2e-warning-color: \\).*;|\\1$M_ALERT;|gi" "$f"
+
     # Message bubbles
     sed -i "s|\\(\$eventbubble-self-bg: \\).*;|\$message-bubble-background-self: $MESSAGE_BUBBLE_BACKGROUND_SELF;|gi" "$f"
     sed -i "s|\\(\$eventbubble-others-bg: \\).*;|\$message-bubble-background: $MESSAGE_BUBBLE_BACKGROUND;|gi" "$f"

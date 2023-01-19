@@ -18,7 +18,6 @@ import React, { createRef, SyntheticEvent, MouseEvent, ReactNode } from "react";
 import ReactDOM from "react-dom";
 import highlight from "highlight.js";
 import { MsgType } from "matrix-js-sdk/src/@types/event";
-import { isEventLike, LegacyMsgType, M_MESSAGE, MessageEvent } from "matrix-events-sdk";
 
 import * as HtmlUtils from "../../../HtmlUtils";
 import { formatDate } from "../../../DateUtils";
@@ -67,10 +66,10 @@ export default class TextualBody extends React.Component<IBodyProps, IState> {
     private pills: Element[] = [];
     private tooltips: Element[] = [];
 
-    static contextType = RoomContext;
+    public static contextType = RoomContext;
     public context!: React.ContextType<typeof RoomContext>;
 
-    constructor(props) {
+    public constructor(props) {
         super(props);
 
         this.state = {
@@ -79,7 +78,7 @@ export default class TextualBody extends React.Component<IBodyProps, IState> {
         };
     }
 
-    componentDidMount() {
+    public componentDidMount() {
         if (!this.props.editState) {
             this.applyFormatting();
         }
@@ -282,7 +281,7 @@ export default class TextualBody extends React.Component<IBodyProps, IState> {
         }
     }
 
-    componentDidUpdate(prevProps) {
+    public componentDidUpdate(prevProps) {
         if (!this.props.editState) {
             const stoppedEditing = prevProps.editState && !this.props.editState;
             const messageWasEdited = prevProps.replacingEventId !== this.props.replacingEventId;
@@ -292,13 +291,13 @@ export default class TextualBody extends React.Component<IBodyProps, IState> {
         }
     }
 
-    componentWillUnmount() {
+    public componentWillUnmount() {
         this.unmounted = true;
         unmountPills(this.pills);
         unmountTooltips(this.tooltips);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    public shouldComponentUpdate(nextProps, nextState) {
         //console.info("shouldComponentUpdate: ShowUrlPreview for %s is %s", this.props.mxEvent.getId(), this.props.showUrlPreview);
 
         // exploit that events are immutable :)
@@ -564,7 +563,7 @@ export default class TextualBody extends React.Component<IBodyProps, IState> {
         return <span className="mx_EventTile_pendingModeration">{`(${text})`}</span>;
     }
 
-    render() {
+    public render() {
         if (this.props.editState) {
             const isWysiwygComposerEnabled = SettingsStore.getValue("feature_wysiwyg_composer");
             return isWysiwygComposerEnabled ? (
@@ -581,29 +580,6 @@ export default class TextualBody extends React.Component<IBodyProps, IState> {
         // only strip reply if this is the original replying event, edits thereafter do not have the fallback
         const stripReply = !mxEvent.replacingEvent() && !!getParentEventId(mxEvent);
         let body: ReactNode;
-        if (SettingsStore.isEnabled("feature_extensible_events")) {
-            const extev = this.props.mxEvent.unstableExtensibleEvent as MessageEvent;
-            if (extev?.isEquivalentTo(M_MESSAGE)) {
-                isEmote = isEventLike(extev.wireFormat, LegacyMsgType.Emote);
-                isNotice = isEventLike(extev.wireFormat, LegacyMsgType.Notice);
-                body = HtmlUtils.bodyToHtml(
-                    {
-                        body: extev.text,
-                        format: extev.html ? "org.matrix.custom.html" : undefined,
-                        formatted_body: extev.html,
-                        msgtype: MsgType.Text,
-                    },
-                    this.props.highlights,
-                    {
-                        disableBigEmoji: isEmote || !SettingsStore.getValue<boolean>("TextualBody.enableBigEmoji"),
-                        // Part of Replies fallback support
-                        stripReplyFallback: stripReply,
-                        ref: this.contentRef,
-                        returnString: false,
-                    },
-                );
-            }
-        }
         if (!body) {
             isEmote = content.msgtype === MsgType.Emote;
             isNotice = content.msgtype === MsgType.Notice;

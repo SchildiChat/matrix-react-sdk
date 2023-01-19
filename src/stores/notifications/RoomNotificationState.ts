@@ -34,7 +34,7 @@ import { ThreadsRoomNotificationState } from "./ThreadsRoomNotificationState";
 
 export class RoomNotificationState extends NotificationState implements IDestroyable {
     private featureMarkedUnreadWatcherRef = null;
-    constructor(public readonly room: Room, private readonly threadsState?: ThreadsRoomNotificationState) {
+    public constructor(public readonly room: Room, private readonly threadsState?: ThreadsRoomNotificationState) {
         super();
         const cli = this.room.client;
         this.room.on(RoomEvent.Receipt, this.handleReadReceipt);

@@ -39,10 +39,10 @@ interface IState {
 }
 
 class ReactionPicker extends React.Component<IProps, IState> {
-    static contextType = RoomContext;
+    public static contextType = RoomContext;
     public context!: React.ContextType<typeof RoomContext>;
 
-    constructor(props: IProps, context: React.ContextType<typeof RoomContext>) {
+    public constructor(props: IProps, context: React.ContextType<typeof RoomContext>) {
         super(props, context);
 
         this.state = {
@@ -51,7 +51,7 @@ class ReactionPicker extends React.Component<IProps, IState> {
         this.addListeners();
     }
 
-    componentDidUpdate(prevProps) {
+    public componentDidUpdate(prevProps) {
         if (prevProps.reactions !== this.props.reactions) {
             this.addListeners();
             this.onReactionsChange();
@@ -66,7 +66,7 @@ class ReactionPicker extends React.Component<IProps, IState> {
         }
     }
 
-    componentWillUnmount() {
+    public componentWillUnmount() {
         if (this.props.reactions) {
             this.props.reactions.removeListener(RelationsEvent.Add, this.onReactionsChange);
             this.props.reactions.removeListener(RelationsEvent.Remove, this.onReactionsChange);
@@ -132,7 +132,7 @@ class ReactionPicker extends React.Component<IProps, IState> {
         return true;
     };
 
-    render() {
+    public render() {
         return (
             <EmojiPicker
                 allowUnlisted={true}
