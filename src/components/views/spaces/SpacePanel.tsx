@@ -94,6 +94,7 @@ export const HomeButtonContextMenu = ({
     ...props
 }: ComponentProps<typeof SpaceContextMenu>) => {
     const allRoomsInHome = useSettingValue<boolean>("Spaces.allRoomsInHome");
+    const allPeopleInHome = useSettingValue<boolean>("Spaces.allPeopleInHome");
 
     return (
         <IconizedContextMenu {...props} onFinished={onFinished} className="mx_SpacePanel_contextMenu" compact>
@@ -105,6 +106,14 @@ export const HomeButtonContextMenu = ({
                     active={allRoomsInHome}
                     onClick={() => {
                         SettingsStore.setValue("Spaces.allRoomsInHome", null, SettingLevel.ACCOUNT, !allRoomsInHome);
+                    }}
+                />
+                <IconizedContextMenuCheckbox
+                    iconClassName="mx_SpacePanel_noIcon"
+                    label={_t("Show all people")}
+                    active={allPeopleInHome}
+                    onClick={() => {
+                        SettingsStore.setValue("Spaces.allPeopleInHome", null, SettingLevel.ACCOUNT, !allPeopleInHome);
                     }}
                 />
             </IconizedContextMenuOptionList>
@@ -134,20 +143,20 @@ const MetaSpaceButton = ({ selected, isPanelCollapsed, ...props }: IMetaSpaceBut
 };
 
 const getHomeNotificationState = (): NotificationState => {
-    return SpaceStore.instance.allRoomsInHome
+    return SpaceStore.instance.allRoomsInHome && SpaceStore.instance.allPeopleInHome
         ? RoomNotificationStateStore.instance.globalState
         : SpaceStore.instance.getNotificationState(MetaSpace.Home);
 };
 
 const HomeButton = ({ selected, isPanelCollapsed }: MetaSpaceButtonProps) => {
-    const allRoomsInHome = useEventEmitterState(SpaceStore.instance, UPDATE_HOME_BEHAVIOUR, () => {
-        return SpaceStore.instance.allRoomsInHome;
+    const [allRoomsInHome, allPeopleInHome] = useEventEmitterState(SpaceStore.instance, UPDATE_HOME_BEHAVIOUR, () => {
+        return [SpaceStore.instance.allRoomsInHome, SpaceStore.instance.allPeopleInHome];
     });
     const [notificationState, setNotificationState] = useState(getHomeNotificationState());
     const updateNotificationState = useCallback(() => {
         setNotificationState(getHomeNotificationState());
     }, []);
-    useEffect(updateNotificationState, [updateNotificationState, allRoomsInHome]);
+    useEffect(updateNotificationState, [updateNotificationState, allRoomsInHome, allPeopleInHome]);
     useEventEmitter(RoomNotificationStateStore.instance, UPDATE_STATUS_INDICATOR, updateNotificationState);
 
     return (

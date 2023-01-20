@@ -49,6 +49,7 @@ const SidebarUserSettingsTab = () => {
         [MetaSpace.Orphans]: orphansEnabled,
     } = useSettingValue<Record<MetaSpace, boolean>>("Spaces.enabledMetaSpaces");
     const allRoomsInHome = useSettingValue<boolean>("Spaces.allRoomsInHome");
+    const allPeopleInHome = useSettingValue<boolean>("Spaces.allPeopleInHome");
 
     return (
         <div className="mx_SettingsTab mx_SidebarUserSettingsTab">
@@ -87,6 +88,26 @@ const SidebarUserSettingsTab = () => {
                 </StyledCheckbox>
                 <div className="mx_SidebarUserSettingsTab_checkboxMicrocopy">
                     {_t("Show all your rooms in Home, even if they're in a space.")}
+                </div>
+
+                <StyledCheckbox
+                    checked={allPeopleInHome}
+                    disabled={!homeEnabled}
+                    onChange={e => {
+                        SettingsStore.setValue(
+                            "Spaces.allPeopleInHome",
+                            null,
+                            SettingLevel.ACCOUNT,
+                            e.target.checked,
+                        );
+                        PosthogTrackers.trackInteraction("WebSettingsSidebarTabSpacesCheckbox", e, 1);
+                    }}
+                    className="mx_SidebarUserSettingsTab_homeAllPeopleCheckbox"
+                >
+                    { _t("Show all people") }
+                </StyledCheckbox>
+                <div className="mx_SidebarUserSettingsTab_checkboxMicrocopy">
+                    { _t("Show all your people in Home, even if they're in a space.") }
                 </div>
 
                 <StyledCheckbox

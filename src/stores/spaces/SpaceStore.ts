@@ -143,6 +143,7 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
     private spaceOrderLocalEchoMap = new Map<string, string>();
     // The following properties are set by onReady as they live in account_data
     private _allRoomsInHome = false;
+    private _allPeopleInHome = false;
     private _showSpaceDMBadges = false;
     private _enabledMetaSpaces: MetaSpace[] = [];
 
@@ -150,6 +151,7 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
         super(defaultDispatcher, {});
 
         SettingsStore.monitorSetting("Spaces.allRoomsInHome", null);
+        SettingsStore.monitorSetting("Spaces.allPeopleInHome", null);
         SettingsStore.monitorSetting("Spaces.showSpaceDMBadges", null);
         SettingsStore.monitorSetting("Spaces.enabledMetaSpaces", null);
         SettingsStore.monitorSetting("Spaces.showPeopleInSpace", null);
@@ -182,6 +184,10 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
 
     public get allRoomsInHome(): boolean {
         return this._allRoomsInHome;
+    }
+
+    public get allPeopleInHome(): boolean {
+        return this._allPeopleInHome;
     }
 
     public get showSpaceDMBadges(): boolean {
@@ -420,7 +426,7 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
     }
 
     public isRoomInSpace(space: SpaceKey, roomId: string, includeDescendantSpaces = true): boolean {
-        if (space === MetaSpace.Home && this.allRoomsInHome) {
+        if (space === MetaSpace.Home && this.allRoomsInHome && this.allPeopleInHome) {
             return true;
         }
 
@@ -434,8 +440,10 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
         }
         // beyond this point we know this is a DM
 
-        if (space === MetaSpace.Home || space === MetaSpace.People) {
-            // these spaces contain all DMs
+	if (space === MetaSpace.Home && this.allPeopleInHome) {
+            return true;
+	}
+        if (space === MetaSpace.People) {
             return true;
         }
 
@@ -700,11 +708,12 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
     };
 
     private showInHomeSpace = (room: Room): boolean => {
-        if (this.allRoomsInHome) return true;
+        const isDM = !!DMRoomMap.shared().getUserIdForRoomId(room.roomId);
+        if (this.allRoomsInHome && !isDM) return true;
+        if (this.allPeopleInHome && isDM) return true;
         if (room.isSpaceRoom()) return false;
         return (
             !this.parentMap.get(room.roomId)?.size || // put all orphaned rooms in the Home Space
-            !!DMRoomMap.shared().getUserIdForRoomId(room.roomId) || // put all DMs in the Home Space
             room.getMyMembership() === "invite"
         ); // put all invites in the Home Space
     };
@@ -1052,7 +1061,7 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
     private onRoomDmChange(room: Room, isDm: boolean): void {
         const enabledMetaSpaces = new Set(this.enabledMetaSpaces);
 
-        if (!this.allRoomsInHome && enabledMetaSpaces.has(MetaSpace.Home)) {
+        if (!(this.allRoomsInHome && this.allPeopleInHome) && enabledMetaSpaces.has(MetaSpace.Home)) {
             const homeRooms = this.roomIdsBySpace.get(MetaSpace.Home);
             if (this.showInHomeSpace(room)) {
                 homeRooms?.add(room.roomId);
@@ -1133,6 +1142,7 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
         this._enabledMetaSpaces = metaSpaceOrder.filter((k) => enabledMetaSpaces[k]);
 
         this._allRoomsInHome = SettingsStore.getValue("Spaces.allRoomsInHome");
+        this._allPeopleInHome = SettingsStore.getValue("Spaces.allPeopleInHome");
         this._showSpaceDMBadges = SettingsStore.getValue("Spaces.showSpaceDMBadges");
 
         this.sendUserProperties();
@@ -1236,7 +1246,20 @@ export class SpaceStoreClass extends AsyncStoreWithClient<IState> {
                         const newValue = SettingsStore.getValue("Spaces.allRoomsInHome");
                         if (this.allRoomsInHome !== newValue) {
                             this._allRoomsInHome = newValue;
-                            this.emit(UPDATE_HOME_BEHAVIOUR, this.allRoomsInHome);
+                            this.emit(UPDATE_HOME_BEHAVIOUR, this.allRoomsInHome, this.allPeopleInHome);
+                            if (this.enabledMetaSpaces.includes(MetaSpace.Home)) {
+                                this.rebuildHomeSpace();
+                            }
+                            this.sendUserProperties();
+                        }
+                        break;
+                    }
+
+                    case "Spaces.allPeopleInHome": {
+                        const newValue = SettingsStore.getValue("Spaces.allPeopleInHome");
+                        if (this.allPeopleInHome !== newValue) {
+                            this._allPeopleInHome = newValue;
+                            this.emit(UPDATE_HOME_BEHAVIOUR, this.allRoomsInHome, this.allPeopleInHome);
                             if (this.enabledMetaSpaces.includes(MetaSpace.Home)) {
                                 this.rebuildHomeSpace();
                             }

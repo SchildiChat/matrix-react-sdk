@@ -1073,6 +1073,12 @@ export const SETTINGS: { [setting: string]: ISetting } = {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
         default: true,
     },
+    "Spaces.allPeopleInHome": {
+        displayName: _td("Show all people in Home"),
+        description: _td("All people will appear in Home."),
+        supportedLevels: LEVELS_ACCOUNT_SETTINGS,
+        default: true,
+    },
     "Spaces.showSpaceDMBadges": {
         displayName: _td("Show notification badges for People in Spaces"),
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,

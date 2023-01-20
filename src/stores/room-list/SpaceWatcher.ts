@@ -27,9 +27,10 @@ export class SpaceWatcher {
     // we track these separately to the SpaceStore as we need to observe transitions
     private activeSpace: SpaceKey = SpaceStore.instance.activeSpace;
     private allRoomsInHome: boolean = SpaceStore.instance.allRoomsInHome;
+    private allPeopleInHome: boolean = SpaceStore.instance.allPeopleInHome;
 
     public constructor(private store: Interface) {
-        if (SpaceWatcher.needsFilter(this.activeSpace, this.allRoomsInHome)) {
+        if (SpaceWatcher.needsFilter(this.activeSpace, this.allRoomsInHome, this.allPeopleInHome)) {
             this.updateFilter();
             store.addFilter(this.filter);
         }
@@ -37,18 +38,19 @@ export class SpaceWatcher {
         SpaceStore.instance.on(UPDATE_HOME_BEHAVIOUR, this.onHomeBehaviourUpdated);
     }
 
-    private static needsFilter(spaceKey: SpaceKey, allRoomsInHome: boolean): boolean {
-        return !(spaceKey === MetaSpace.Home && allRoomsInHome);
+    private static needsFilter(spaceKey: SpaceKey, allRoomsInHome: boolean, allPeopleInHome: boolean): boolean {
+        return !(spaceKey === MetaSpace.Home && allRoomsInHome && allPeopleInHome);
     }
 
-    private onSelectedSpaceUpdated = (activeSpace: SpaceKey, allRoomsInHome = this.allRoomsInHome) => {
-        if (activeSpace === this.activeSpace && allRoomsInHome === this.allRoomsInHome) return; // nop
+    private onSelectedSpaceUpdated = (activeSpace: SpaceKey, allRoomsInHome = this.allRoomsInHome, allPeopleInHome = this.allPeopleInHome) => {
+        if (activeSpace === this.activeSpace && allRoomsInHome === this.allRoomsInHome && allPeopleInHome === this.allPeopleInHome) return; // nop
 
-        const neededFilter = SpaceWatcher.needsFilter(this.activeSpace, this.allRoomsInHome);
-        const needsFilter = SpaceWatcher.needsFilter(activeSpace, allRoomsInHome);
+        const neededFilter = SpaceWatcher.needsFilter(this.activeSpace, this.allRoomsInHome, this.allPeopleInHome);
+        const needsFilter = SpaceWatcher.needsFilter(activeSpace, allRoomsInHome, allPeopleInHome);
 
         this.activeSpace = activeSpace;
         this.allRoomsInHome = allRoomsInHome;
+        this.allPeopleInHome = allPeopleInHome;
 
         if (needsFilter) {
             this.updateFilter();
@@ -61,8 +63,8 @@ export class SpaceWatcher {
         }
     };
 
-    private onHomeBehaviourUpdated = (allRoomsInHome: boolean) => {
-        this.onSelectedSpaceUpdated(this.activeSpace, allRoomsInHome);
+    private onHomeBehaviourUpdated = (allRoomsInHome: boolean, allPeopleInHome: boolean) => {
+        this.onSelectedSpaceUpdated(this.activeSpace, allRoomsInHome, allPeopleInHome);
     };
 
     private updateFilter = () => {
