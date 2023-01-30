@@ -1,6 +1,6 @@
 {
     "name": "matrix-react-sdk",
-    "version": "3.64.1",
+    "version": "3.64.2",
     "description": "SDK for matrix.org using React",
     "author": "matrix.org",
     "repository": {
@@ -92,7 +92,7 @@
         "maplibre-gl": "^2.0.0",
         "matrix-encrypt-attachment": "^1.0.3",
         "matrix-events-sdk": "0.0.1",
-        "matrix-js-sdk": "23.1.0",
+        "matrix-js-sdk": "23.1.1",
         "matrix-widget-api": "^1.1.1",
         "minimist": "^1.2.5",
         "opus-recorder": "^8.0.3",
