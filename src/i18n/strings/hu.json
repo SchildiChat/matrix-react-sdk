@@ -3025,7 +3025,7 @@
     "Group all your rooms that aren't part of a space in one place.": "Téren kívüli szobák csoportosítása egy helyre.",
     "Spaces are ways to group rooms and people. Alongside the spaces you're in, you can use some pre-built ones too.": "Tér használható szobák és emberek csoportosítására. Azokon kívül amikben benne van használhat előre definiáltakat is.",
     "Jump to date (adds /jumptodate and jump to date headers)": "Időpontra ugrás („/jumptodate”-et és ugrás időpontra fejlécet ad hozzá)",
-    "If you know what you're doing, Element is open-source, be sure to check out our GitHub (https://github.com/vector-im/element-web/) and contribute!": "Ha tudja mit csinál, Element egy nyílt forráskódú szoftver, nézze meg a GitHubon (https://github.com/vector-im/element-web/) és segítsen!",
+    "If you know what you're doing, Element is open-source, be sure to check out our GitHub (https://github.com/vector-im/element-web/) and contribute!": "Ha tudja mit csinál, SchildiChat egy nyílt forráskódú szoftver, nézze meg a GitHubon (https://github.com/vector-im/element-web/) és segítsen!",
     "If someone told you to copy/paste something here, there is a high likelihood you're being scammed!": "Ha valaki azt kéri hogy másoljon/illesszen be itt valamit, nagy esély van rá hogy valaki becsapja!",
     "Wait!": "Várjon!",
     "This address does not point at this room": "Ez a cím nem erre a szobára mutat",
@@ -3475,7 +3475,7 @@
     "Voice broadcast": "Hang közvetítés",
     "Sign out of this session": "Kijelentkezés ebből a munkamenetből",
     "Rename session": "Munkamenet átnevezése",
-    "Element Call video rooms": "Element Call videó szoba",
+    "Element Call video rooms": "SchildiChat Call videó szoba",
     "You need to be able to kick users to do that.": "Ahhoz, hogy ezt megtedd tudnod kell kirúgni felhasználókat.",
     "Voice broadcasts": "Videó közvetítés",
     "Video call ended": "Videó hívás befejeződött",
@@ -3703,5 +3703,9 @@
     "Unfortunately we're unable to start a recording right now. Please try again later.": "Sajnos most nem lehet elindítani a felvételt. Próbálja meg később.",
     "Connection error": "Kapcsolat hiba",
     "You can't start a voice message as you are currently recording a live broadcast. Please end your live broadcast in order to start recording a voice message.": "Nem lehet hang üzenetet indítani élő közvetítés felvétele közben. Az élő közvetítés bejezése szükséges a hang üzenet indításához.",
-    "Can't start voice message": "Hang üzenetet nem lehet elindítani"
+    "Can't start voice message": "Hang üzenetet nem lehet elindítani",
+    "Enable layout with message bubbles": "Üzenetbuborékos elrendezés engedélyezése",
+    "Show message bubbles on one side only": "Üzenetbuborékok megjelenítése csak az egyik oldalon",
+    "Show message bubbles depending on the width either on both sides or only on one side": "Üzenetbuborékok megjelenítése a szélességtől függően mindkét oldalon vagy csak az egyik oldalon",
+    "Normal priority": "Normál prioritás"
 }
