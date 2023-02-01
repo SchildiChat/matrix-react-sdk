@@ -27,6 +27,7 @@ replace_colors() {
     local f="$1"
     if [[ "$f" =~ "dark" ]]; then
         BG_ACCENT="$M_ACCENT_DARK"
+        CODEBLOCK_BORDER_COLOR="#121212"
         CODEBLOCK_BACKGROUND_COLOR="#121212"
         PILL_COLOR="rgba(255, 255, 255, 0.15)"
         PILL_HOVER_COLOR="rgba(255, 255, 255, 0.18)"
@@ -36,6 +37,7 @@ replace_colors() {
         MESSAGE_BUBBLE_BACKGROUND_SELECTED="#3F4931"
     else
         BG_ACCENT="$M_ACCENT_LIGHT"
+        CODEBLOCK_BORDER_COLOR="#00000010"
         CODEBLOCK_BACKGROUND_COLOR="#00000010"
         PILL_COLOR="rgba(0, 0, 0, 0.13)"
         PILL_HOVER_COLOR="rgba(0, 0, 0, 0.10)"
@@ -116,7 +118,7 @@ replace_colors() {
     sed -i "s|\\(\$pill-bg-color: \\).*;|\\1$PILL_COLOR;|gi" "$f"
     sed -i "s|\\(\$pill-hover-bg-color: \\).*;|\\1$PILL_HOVER_COLOR;|gi" "$f"
 
-    sed -i "s|\\(\$inlinecode-border-color: \\).*;|\\1$CODEBLOCK_BACKGROUND_COLOR;|gi" "$f"
+    sed -i "s|\\(\$inlinecode-border-color: \\).*;|\\1$CODEBLOCK_BORDER_COLOR;|gi" "$f"
     sed -i "s|\\(\$inlinecode-background-color: \\).*;|\\1$CODEBLOCK_BACKGROUND_COLOR;|gi" "$f"
     sed -i "s|\\(\$codeblock-background-color: \\).*;|\\1$CODEBLOCK_BACKGROUND_COLOR;|gi" "$f"
 
