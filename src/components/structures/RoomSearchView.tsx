@@ -39,7 +39,7 @@ import { UserNameColorMode } from '../../settings/enums/UserNameColorMode';
 import SettingsStore from "../../settings/SettingsStore";
 
 const DEBUG = false;
-let debuglog = function (msg: string) {};
+let debuglog = function (msg: string): void {};
 
 /* istanbul ignore next */
 if (DEBUG) {
@@ -81,7 +81,7 @@ export const RoomSearchView = forwardRef<ScrollPanel, Props>(
 
                 return searchPromise
                     .then(
-                        async (results) => {
+                        async (results): Promise<boolean> => {
                             debuglog("search complete");
                             if (aborted.current) {
                                 logger.error("Discarding stale search results");
@@ -214,7 +214,7 @@ export const RoomSearchView = forwardRef<ScrollPanel, Props>(
 
         // once dynamic content in the search results load, make the scrollPanel check
         // the scroll offsets.
-        const onHeightChanged = () => {
+        const onHeightChanged = (): void => {
             const scrollPanel = ref.current;
             scrollPanel?.checkScroll();
         };

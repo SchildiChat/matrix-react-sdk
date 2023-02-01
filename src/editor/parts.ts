@@ -465,7 +465,7 @@ class RoomPillPart extends PillPart {
         return Type.RoomPill;
     }
 
-    protected get className() {
+    protected get className(): string {
         return "mx_Pill " + (this.room?.isSpaceRoom() ? "mx_SpacePill" : "mx_RoomPill");
     }
 }
@@ -496,7 +496,7 @@ class UserPillPart extends PillPart {
         return Type.UserPill;
     }
 
-    protected get className() {
+    protected get className(): string {
         return "mx_UserPill mx_Pill";
     }
 

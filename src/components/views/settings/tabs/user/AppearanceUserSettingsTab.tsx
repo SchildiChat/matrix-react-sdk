@@ -74,7 +74,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
         };
     }
 
-    public async componentDidMount() {
+    public async componentDidMount(): Promise<void> {
         // Fetch the current user profile for the message preview
         const client = MatrixClientPeg.get();
         const userId = client.getUserId();
@@ -88,7 +88,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
         });
     }
 
-    public componentWillUnmount() {
+    public componentWillUnmount(): void {
         this.unmounted = true;
     }
 
@@ -102,7 +102,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
         this.setState({ layout: layout });
     };
 
-    private renderRoomListSection() {
+    private renderRoomListSection(): JSX.Element {
         const roomListStyleSection = <div className="mx_SettingsTab_multilineRadioSelectors">
             <label>
                 <StyledRadioButton
@@ -152,7 +152,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
         </>;
     }
 
-    public render() {
+    public render(): JSX.Element {
         const brand = SdkConfig.get().brand;
 
         return (

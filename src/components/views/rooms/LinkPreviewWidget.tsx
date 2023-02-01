@@ -43,7 +43,7 @@ export default class LinkPreviewWidget extends React.Component<IProps> {
     private image = createRef<HTMLImageElement>();
     protected sizeWatcher: string;
 
-    public componentDidMount() {
+    public componentDidMount(): void {
         this.sizeWatcher = SettingsStore.watchSetting("Images.size", null, () => {
             this.forceUpdate(); // we don't really have a reliable thing to update, so just update the whole thing
         });
@@ -53,13 +53,13 @@ export default class LinkPreviewWidget extends React.Component<IProps> {
         }
     }
 
-    public componentDidUpdate() {
+    public componentDidUpdate(): void {
         if (this.description.current) {
             linkifyElement(this.description.current);
         }
     }
 
-    private onImageClick = (ev) => {
+    private onImageClick = (ev): void => {
         const p = this.props.preview;
         if (ev.button != 0 || ev.metaKey) return;
         ev.preventDefault();
@@ -92,7 +92,7 @@ export default class LinkPreviewWidget extends React.Component<IProps> {
         Modal.createDialog(ImageView, params, "mx_Dialog_lightbox", null, true);
     };
 
-    public render() {
+    public render(): JSX.Element {
         const p = this.props.preview;
         if (!p || Object.keys(p).length === 0) {
             return <div />;

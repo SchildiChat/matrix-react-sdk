@@ -202,8 +202,8 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
         SettingsStore.setValue(setting, null, SettingLevel.DEVICE, mode);
     };
 
-    private renderUserNameColorModeSection() {
-        const makeRadio = (setting: string, mode: UserNameColorMode) => (
+    private renderUserNameColorModeSection(): JSX.Element {
+        const makeRadio = (setting: string, mode: UserNameColorMode): JSX.Element => (
             // console.log("asdf" + this.state[setting]),
             <StyledRadioButton
                 name={setting}
@@ -213,7 +213,7 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
             />
         );
 
-        const makeRow = (description: string, setting: string) => (<tr>
+        const makeRow = (description: string, setting: string): JSX.Element => (<tr>
             <td>{ description }</td>
             <td>{ makeRadio(setting, UserNameColorMode.Uniform) }</td>
             <td>{ makeRadio(setting, UserNameColorMode.PowerLevel) }</td>
@@ -457,7 +457,7 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
         // );
     }
 
-    // public apparentSelectedThemeId() {
+    // public apparentSelectedThemeId(): string {
     //     if (this.state.useSystemTheme) {
     //         return undefined;
     //     }

@@ -51,14 +51,14 @@ class ReactionPicker extends React.Component<IProps, IState> {
         this.addListeners();
     }
 
-    public componentDidUpdate(prevProps) {
+    public componentDidUpdate(prevProps): void {
         if (prevProps.reactions !== this.props.reactions) {
             this.addListeners();
             this.onReactionsChange();
         }
     }
 
-    private addListeners() {
+    private addListeners(): void {
         if (this.props.reactions) {
             this.props.reactions.on(RelationsEvent.Add, this.onReactionsChange);
             this.props.reactions.on(RelationsEvent.Remove, this.onReactionsChange);
@@ -66,7 +66,7 @@ class ReactionPicker extends React.Component<IProps, IState> {
         }
     }
 
-    public componentWillUnmount() {
+    public componentWillUnmount(): void {
         if (this.props.reactions) {
             this.props.reactions.removeListener(RelationsEvent.Add, this.onReactionsChange);
             this.props.reactions.removeListener(RelationsEvent.Remove, this.onReactionsChange);
@@ -87,13 +87,13 @@ class ReactionPicker extends React.Component<IProps, IState> {
         );
     }
 
-    private onReactionsChange = () => {
+    private onReactionsChange = (): void => {
         this.setState({
             selectedEmojis: new Set(Object.keys(this.getReactions())),
         });
     };
 
-    private onChoose = (reactionEmoji: IEmoji) => {
+    private onChoose = (reactionEmoji: IEmoji): boolean => {
         const reaction = reactionEmoji.unicode;
         this.componentWillUnmount();
         this.props.onFinished();
@@ -132,7 +132,7 @@ class ReactionPicker extends React.Component<IProps, IState> {
         return true;
     };
 
-    public render() {
+    public render(): JSX.Element {
         return (
             <EmojiPicker
                 allowUnlisted={true}

@@ -51,7 +51,7 @@ interface IProps {
 }
 
 class Category extends React.PureComponent<IProps> {
-    private renderEmojiRow = (rowIndex: number) => {
+    private renderEmojiRow = (rowIndex: number): JSX.Element => {
         const { onClick, onMouseEnter, onMouseLeave, selectedEmojis, emojis } = this.props;
         const emojisForRow = emojis.slice(rowIndex * 8, (rowIndex + 1) * 8).filter((val) => val);
         return (
@@ -71,7 +71,7 @@ class Category extends React.PureComponent<IProps> {
         );
     };
 
-    public render() {
+    public render(): JSX.Element {
         const { emojis, name, heightBefore, viewportHeight, scrollTop } = this.props;
         if (!emojis || emojis.length === 0) {
             return null;

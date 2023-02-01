@@ -116,6 +116,8 @@ replace_colors() {
     sed -i "s|\\(\$pill-bg-color: \\).*;|\\1$PILL_COLOR;|gi" "$f"
     sed -i "s|\\(\$pill-hover-bg-color: \\).*;|\\1$PILL_HOVER_COLOR;|gi" "$f"
 
+    sed -i "s|\\(\$inlinecode-border-color: \\).*;|\\1$CODEBLOCK_BACKGROUND_COLOR;|gi" "$f"
+    sed -i "s|\\(\$inlinecode-background-color: \\).*;|\\1$CODEBLOCK_BACKGROUND_COLOR;|gi" "$f"
     sed -i "s|\\(\$codeblock-background-color: \\).*;|\\1$CODEBLOCK_BACKGROUND_COLOR;|gi" "$f"
 
     sed -i "s|\\(\$presence-offline: \\).*;|\\1$PRESENCE_OFFLINE;|gi" "$f"

@@ -177,7 +177,7 @@ class EmojiPicker extends React.Component<IProps, IState> {
         }
     }
 
-    private onScroll = () => {
+    private onScroll = (): void => {
         const body = this.scrollRef.current?.containerRef.current;
         this.setState({
             scrollTop: body.scrollTop,
@@ -186,7 +186,7 @@ class EmojiPicker extends React.Component<IProps, IState> {
         this.updateVisibility();
     };
 
-    private updateVisibility = () => {
+    private updateVisibility = (): void => {
         const body = this.scrollRef.current?.containerRef.current;
         const rect = body.getBoundingClientRect();
         for (const cat of this.categories) {
@@ -214,7 +214,7 @@ class EmojiPicker extends React.Component<IProps, IState> {
         }
     };
 
-    private scrollToCategory = (category: string) => {
+    private scrollToCategory = (category: string): void => {
         this.scrollRef.current?.containerRef.current
             ?.querySelector(`[data-category-id="${category}"]`)
             .scrollIntoView();
@@ -257,7 +257,7 @@ class EmojiPicker extends React.Component<IProps, IState> {
         }
     };
 
-    private onEnterFilter = () => {
+    private onEnterFilter = (): void => {
         const btn =
             this.scrollRef.current?.containerRef.current?.querySelector<HTMLButtonElement>(".mx_EmojiPicker_item");
         if (btn) {
@@ -271,7 +271,7 @@ class EmojiPicker extends React.Component<IProps, IState> {
         });
     };
 
-    private onHoverEmojiEnd = (_emoji: IEmoji): void => {
+    private onHoverEmojiEnd = (emoji: IEmoji): void => {
         this.setState({
             previewEmoji: null,
         });
@@ -299,7 +299,7 @@ class EmojiPicker extends React.Component<IProps, IState> {
         return CATEGORY_HEADER_HEIGHT + Math.ceil(count / EMOJIS_PER_ROW) * EMOJI_HEIGHT;
     }
 
-    public render() {
+    public render(): JSX.Element {
         let heightBefore = 0;
         return (
             <div className="mx_EmojiPicker" data-testid="mx_EmojiPicker">

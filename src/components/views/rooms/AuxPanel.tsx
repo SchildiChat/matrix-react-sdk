@@ -68,31 +68,31 @@ export default class AuxPanel extends React.Component<IProps, IState> {
         };
     }
 
-    public componentDidMount() {
+    public componentDidMount(): void {
         const cli = MatrixClientPeg.get();
         if (SettingsStore.getValue("feature_state_counters")) {
             cli.on(RoomStateEvent.Events, this.onRoomStateEvents);
         }
     }
 
-    public componentWillUnmount() {
+    public componentWillUnmount(): void {
         if (SettingsStore.getValue("feature_state_counters")) {
             MatrixClientPeg.get()?.removeListener(RoomStateEvent.Events, this.onRoomStateEvents);
         }
     }
 
-    public shouldComponentUpdate(nextProps, nextState) {
+    public shouldComponentUpdate(nextProps, nextState): boolean {
         return objectHasDiff(this.props, nextProps) || objectHasDiff(this.state, nextState);
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    public componentDidUpdate(prevProps, prevState): void {
         // most changes are likely to cause a resize
         if (this.props.onResize) {
             this.props.onResize();
         }
     }
 
-    private onRoomStateEvents = (ev: MatrixEvent) => {
+    private onRoomStateEvents = (ev: MatrixEvent): void => {
         if (ev.getType() === "re.jki.counter") {
             this.updateCounters();
         }
@@ -106,8 +106,8 @@ export default class AuxPanel extends React.Component<IProps, IState> {
         { leading: true, trailing: true },
     );
 
-    private computeCounters() {
-        const counters = [];
+    private computeCounters(): Counter[] {
+        const counters: Counter[] = [];
 
         if (this.props.room && SettingsStore.getValue("feature_state_counters")) {
             const stateEvs = this.props.room.currentState.getStateEvents("re.jki.counter");
@@ -137,7 +137,7 @@ export default class AuxPanel extends React.Component<IProps, IState> {
         return counters;
     }
 
-    public render() {
+    public render(): JSX.Element {
         const callView = (
             <LegacyCallViewForRoom
                 roomId={this.props.room.roomId}

@@ -161,13 +161,13 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
         return this.state.masterPushRule?.enabled;
     }
 
-    public componentDidMount() {
+    public componentDidMount(): void {
         // noinspection JSIgnoredPromiseFromCall
         this.refreshFromServer();
         this.refreshFromAccountData();
     }
 
-    public componentWillUnmount() {
+    public componentWillUnmount(): void {
         this.settingWatchers.forEach((watcher) => SettingsStore.unwatchSetting(watcher));
     }
 
@@ -177,7 +177,7 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
         }
     }
 
-    private async refreshFromServer() {
+    private async refreshFromServer(): Promise<void> {
         try {
             const newState = (
                 await Promise.all([this.refreshRules(), this.refreshPushers(), this.refreshThreepids()])
@@ -202,7 +202,7 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
         }
     }
 
-    private async refreshFromAccountData() {
+    private async refreshFromAccountData(): Promise<void> {
         const cli = MatrixClientPeg.get();
         const settingsEvent = cli.getAccountData(getLocalNotificationAccountDataEventType(cli.deviceId));
         if (settingsEvent) {
@@ -323,14 +323,14 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
         return MatrixClientPeg.get().getThreePids();
     }
 
-    private showSaveError() {
+    private showSaveError(): void {
         Modal.createDialog(ErrorDialog, {
             title: _t("Error saving notification preferences"),
             description: _t("An error occurred whilst saving your notification preferences."),
         });
     }
 
-    private onMasterRuleChanged = async (checked: boolean) => {
+    private onMasterRuleChanged = async (checked: boolean): Promise<void> => {
         this.setState({ phase: Phase.Persisting });
 
         try {
@@ -344,11 +344,11 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
         }
     };
 
-    private updateDeviceNotifications = async (checked: boolean) => {
+    private updateDeviceNotifications = async (checked: boolean): Promise<void> => {
         await SettingsStore.setValue("deviceNotificationsEnabled", null, SettingLevel.DEVICE, checked);
     };
 
-    private onEmailNotificationsChanged = async (email: string, checked: boolean) => {
+    private onEmailNotificationsChanged = async (email: string, checked: boolean): Promise<void> => {
         this.setState({ phase: Phase.Persisting });
 
         try {
@@ -382,25 +382,25 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
         }
     };
 
-    private onDesktopNotificationsChanged = async (checked: boolean) => {
+    private onDesktopNotificationsChanged = async (checked: boolean): Promise<void> => {
         await SettingsStore.setValue("notificationsEnabled", null, SettingLevel.DEVICE, checked);
     };
 
-    private onDesktopShowBodyChanged = async (checked: boolean) => {
+    private onDesktopShowBodyChanged = async (checked: boolean): Promise<void> => {
         await SettingsStore.setValue("notificationBodyEnabled", null, SettingLevel.DEVICE, checked);
     };
 
-    private onAudioNotificationsChanged = async (checked: boolean) => {
+    private onAudioNotificationsChanged = async (checked: boolean): Promise<void> => {
         await SettingsStore.setValue("audioNotificationsEnabled", null, SettingLevel.DEVICE, checked);
     };
 
-    private onSoundPackChanged = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    private onSoundPackChanged = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
         const value = e.target.value as SoundPack;
         this.setState({ soundPack: value });
         await SettingsStore.setValue("soundPack", null, SettingLevel.DEVICE, value);
     };
 
-    private onRadioChecked = async (rule: IVectorPushRule, checkedState: VectorState) => {
+    private onRadioChecked = async (rule: IVectorPushRule, checkedState: VectorState): Promise<void> => {
         this.setState({ phase: Phase.Persisting });
 
         try {
@@ -466,7 +466,7 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
         }
     };
 
-    private async setKeywords(keywords: string[], originalRules: IAnnotatedPushRule[]) {
+    private async setKeywords(keywords: string[], originalRules: IAnnotatedPushRule[]): Promise<void> {
         try {
             // De-duplicate and remove empties
             keywords = Array.from(new Set(keywords)).filter((k) => !!k);
@@ -514,7 +514,7 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
         }
     }
 
-    private onKeywordAdd = (keyword: string) => {
+    private onKeywordAdd = (keyword: string): void => {
         const originalRules = objectClone(this.state.vectorKeywordRuleInfo.rules);
 
         // We add the keyword immediately as a sort of local echo effect
@@ -531,7 +531,7 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
                     ],
                 },
             },
-            async () => {
+            async (): Promise<void> => {
                 await this.setKeywords(
                     this.state.vectorKeywordRuleInfo.rules.map((r) => r.pattern),
                     originalRules,
@@ -540,7 +540,7 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
         );
     };
 
-    private onKeywordRemove = (keyword: string) => {
+    private onKeywordRemove = (keyword: string): void => {
         const originalRules = objectClone(this.state.vectorKeywordRuleInfo.rules);
 
         // We remove the keyword immediately as a sort of local echo effect
@@ -552,7 +552,7 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
                     rules: this.state.vectorKeywordRuleInfo.rules.filter((r) => r.pattern !== keyword),
                 },
             },
-            async () => {
+            async (): Promise<void> => {
                 await this.setKeywords(
                     this.state.vectorKeywordRuleInfo.rules.map((r) => r.pattern),
                     originalRules,
@@ -561,7 +561,7 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
         );
     };
 
-    private renderTopSection() {
+    private renderTopSection(): JSX.Element {
         const masterSwitch = (
             <LabelledToggleSwitch
                 data-testid="notif-master-switch"
@@ -660,7 +660,7 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
         );
     }
 
-    private renderCategory(category: RuleClass) {
+    private renderCategory(category: RuleClass): JSX.Element {
         if (category !== RuleClass.VectorOther && this.isInhibited) {
             return null; // nothing to show for the section
         }
@@ -718,7 +718,7 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
             [VectorState.Loud]: _t("Noisy"),
         };
 
-        const makeRadio = (r: IVectorPushRule, s: VectorState) => (
+        const makeRadio = (r: IVectorPushRule, s: VectorState): JSX.Element => (
             <StyledRadioButton
                 key={r.ruleId + s}
                 name={r.ruleId}
@@ -774,7 +774,7 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
         );
     }
 
-    private renderTargets() {
+    private renderTargets(): JSX.Element {
         if (this.isInhibited) return null; // no targets if there's no notifications
 
         const rows = this.state.pushers.map((p) => (
@@ -796,7 +796,7 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
         );
     }
 
-    public render() {
+    public render(): JSX.Element {
         if (this.state.phase === Phase.Loading) {
             // Ends up default centered
             return <Spinner />;

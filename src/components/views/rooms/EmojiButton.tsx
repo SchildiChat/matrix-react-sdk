@@ -21,19 +21,19 @@ import React, { useContext } from "react";
 import { IEmoji } from "../../../emoji";
 import { ICustomEmoji } from "../../../emojipicker/customemoji";
 import { _t } from "../../../languageHandler";
-import ContextMenu, { aboveLeftOf, AboveLeftOf, useContextMenu } from "../../structures/ContextMenu";
+import ContextMenu, { aboveLeftOf, MenuProps, useContextMenu } from "../../structures/ContextMenu";
 import EmojiPicker from "../emojipicker/EmojiPicker";
 import { CollapsibleButton } from "./CollapsibleButton";
 import { OverflowMenuContext } from "./MessageComposerButtons";
 
 interface IEmojiButtonProps {
     addEmoji: (emoji: ICustomEmoji | IEmoji) => boolean;
-    menuPosition: AboveLeftOf;
+    menuPosition: MenuProps;
     room: Room;
     className?: string;
 }
 
-export function EmojiButton({ addEmoji, menuPosition, room, className }: IEmojiButtonProps) {
+export function EmojiButton({ addEmoji, menuPosition, room, className }: IEmojiButtonProps): JSX.Element {
     const overflowMenuCloser = useContext(OverflowMenuContext);
     const [menuDisplayed, button, openMenu, closeMenu] = useContextMenu();
 

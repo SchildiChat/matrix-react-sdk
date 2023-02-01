@@ -97,7 +97,7 @@ export function ReadReceiptGroup({
     maxReadAvatarsPlusN,
     maxReadAvatars,
     layout,
-}: Props) {
+}: Props): JSX.Element {
     const [menuDisplayed, button, openMenu, closeMenu] = useContextMenu();
 
     // SC: Passed this as props, restore names
@@ -247,7 +247,13 @@ interface ReadReceiptPersonProps extends IReadReceiptProps {
     onAfterClick?: () => void;
 }
 
-function ReadReceiptPerson({ userId, roomMember, ts, isTwelveHour, onAfterClick }: ReadReceiptPersonProps) {
+function ReadReceiptPerson({
+    userId,
+    roomMember,
+    ts,
+    isTwelveHour,
+    onAfterClick,
+}: ReadReceiptPersonProps): JSX.Element {
     const [{ showTooltip, hideTooltip }, tooltip] = useTooltip({
         alignment: Alignment.Top,
         tooltipClassName: "mx_ReadReceiptGroup_person--tooltip",
@@ -303,7 +309,7 @@ interface ISectionHeaderProps {
     className?: string;
 }
 
-function SectionHeader({ className, children }: PropsWithChildren<ISectionHeaderProps>) {
+function SectionHeader({ className, children }: PropsWithChildren<ISectionHeaderProps>): JSX.Element {
     const ref = useRef<HTMLHeadingElement>();
     const [onFocus] = useRovingTabIndex(ref);
 

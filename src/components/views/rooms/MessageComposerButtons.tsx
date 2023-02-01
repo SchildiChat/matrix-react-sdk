@@ -16,7 +16,7 @@ limitations under the License.
 
 import classNames from "classnames";
 import { IEventRelation } from "matrix-js-sdk/src/models/event";
-import { M_POLL_START } from "matrix-events-sdk";
+import { M_POLL_START } from "matrix-js-sdk/src/@types/polls";
 import React, { createContext, MouseEventHandler, ReactElement, useContext, useRef } from "react";
 import { Room } from "matrix-js-sdk/src/models/room";
 import { MatrixClient } from "matrix-js-sdk/src/client";
@@ -25,7 +25,7 @@ import { THREAD_RELATION_TYPE } from "matrix-js-sdk/src/models/thread";
 import { _t } from "../../../languageHandler";
 import AccessibleTooltipButton from "../elements/AccessibleTooltipButton";
 import { CollapsibleButton } from "./CollapsibleButton";
-import { AboveLeftOf } from "../../structures/ContextMenu";
+import { MenuProps } from "../../structures/ContextMenu";
 import dis from "../../../dispatcher/dispatcher";
 import ErrorDialog from "../dialogs/ErrorDialog";
 import LocationButton from "../location/LocationButton";
@@ -48,7 +48,7 @@ interface IProps {
     haveRecording: boolean;
     isMenuOpen: boolean;
     isStickerPickerOpen: boolean;
-    menuPosition?: AboveLeftOf;
+    menuPosition?: MenuProps;
     onRecordStartEndClick: () => void;
     relation?: IEventRelation;
     setStickerPickerOpen: (isStickerPickerOpen: boolean) => void;
@@ -198,7 +198,7 @@ const UploadButtonContextProvider: React.FC<IUploadButtonProps> = ({ roomId, rel
     const roomContext = useContext(RoomContext);
     const uploadInput = useRef<HTMLInputElement>();
 
-    const onUploadClick = () => {
+    const onUploadClick = (): void => {
         if (cli.isGuest()) {
             dis.dispatch({ action: "require_registration" });
             return;
@@ -212,7 +212,7 @@ const UploadButtonContextProvider: React.FC<IUploadButtonProps> = ({ roomId, rel
         }
     });
 
-    const onUploadFileInputChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
+    const onUploadFileInputChange = (ev: React.ChangeEvent<HTMLInputElement>): void => {
         if (ev.target.files.length === 0) return;
 
         // Take a copy, so we can safely reset the value of the form control
@@ -249,11 +249,11 @@ const UploadButtonContextProvider: React.FC<IUploadButtonProps> = ({ roomId, rel
 };
 
 // Must be rendered within an UploadButtonContextProvider
-const UploadButton = () => {
+const UploadButton: React.FC = () => {
     const overflowMenuCloser = useContext(OverflowMenuContext);
     const uploadButtonFn = useContext(UploadButtonContext);
 
-    const onClick = () => {
+    const onClick = (): void => {
         uploadButtonFn?.();
         overflowMenuCloser?.(); // close overflow menu
     };
@@ -319,7 +319,7 @@ class PollButton extends React.PureComponent<IPollButtonProps> {
     public static contextType = OverflowMenuContext;
     public context!: React.ContextType<typeof OverflowMenuContext>;
 
-    private onCreateClick = () => {
+    private onCreateClick = (): void => {
         this.context?.(); // close overflow menu
         const canSend = this.props.room.currentState.maySendEvent(
             M_POLL_START.name,
@@ -347,7 +347,7 @@ class PollButton extends React.PureComponent<IPollButtonProps> {
         }
     };
 
-    public render() {
+    public render(): JSX.Element {
         // do not allow sending polls within threads at this time
         if (this.props.relation?.rel_type === THREAD_RELATION_TYPE.name) return null;
 
@@ -386,7 +386,7 @@ interface WysiwygToggleButtonProps {
     onClick: MouseEventHandler<HTMLDivElement>;
 }
 
-function ComposerModeButton({ isRichTextEnabled, onClick }: WysiwygToggleButtonProps) {
+function ComposerModeButton({ isRichTextEnabled, onClick }: WysiwygToggleButtonProps): JSX.Element {
     const title = isRichTextEnabled ? _t("Hide formatting") : _t("Show formatting");
 
     return (

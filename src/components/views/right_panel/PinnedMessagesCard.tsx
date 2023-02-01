@@ -93,7 +93,7 @@ export const useReadPinnedEvents = (room: Room): Set<string> => {
     return readPinnedEvents;
 };
 
-const PinnedMessagesCard = ({ room, onClose, userNameColorMode, permalinkCreator }: IProps) => {
+const PinnedMessagesCard: React.FC<IProps> = ({ room, onClose, userNameColorMode, permalinkCreator }: IProps) => {
     const cli = useContext(MatrixClientContext);
     const roomContext = useContext(RoomContext);
     const canUnpin = useRoomState(room, (state) => state.mayClientSendStateEvent(EventType.RoomPinnedEvents, cli));
@@ -112,7 +112,7 @@ const PinnedMessagesCard = ({ room, onClose, userNameColorMode, permalinkCreator
 
     const pinnedEvents = useAsyncMemo(
         () => {
-            const promises = pinnedEventIds.map(async (eventId) => {
+            const promises = pinnedEventIds.map(async (eventId): Promise<MatrixEvent | null> => {
                 const timelineSet = room.getUnfilteredTimelineSet();
                 const localEvent = timelineSet
                     ?.getTimelineForEvent(eventId)
@@ -161,7 +161,7 @@ const PinnedMessagesCard = ({ room, onClose, userNameColorMode, permalinkCreator
     if (!pinnedEvents) {
         content = <Spinner />;
     } else if (pinnedEvents.length > 0) {
-        const onUnpinClicked = async (event: MatrixEvent) => {
+        const onUnpinClicked = async (event: MatrixEvent): Promise<void> => {
             const pinnedEvents = room.currentState.getStateEvents(EventType.RoomPinnedEvents, "");
             if (pinnedEvents?.getContent()?.pinned) {
                 const pinned = pinnedEvents.getContent().pinned;

@@ -50,7 +50,7 @@ export default class ThemeWatcher {
         ThemeWatcher.currentTheme = this.getEffectiveTheme();
     }
 
-    public start() {
+    public start(): void {
         this.lightThemeWatchRef = SettingsStore.watchSetting("light_theme", null, this.onChange);
         this.darkThemeWatchRef = SettingsStore.watchSetting("dark_theme", null, this.onChange);
         this.themeInUseWatchRef = SettingsStore.watchSetting("theme_in_use", null, this.onChange);
@@ -62,7 +62,7 @@ export default class ThemeWatcher {
         this.dispatcherRef = dis.register(this.onAction);
     }
 
-    public stop() {
+    public stop(): void {
         if (this.preferDark.addEventListener) {
             this.preferDark.removeEventListener("change", this.onChange);
             this.preferLight.removeEventListener("change", this.onChange);
@@ -74,11 +74,11 @@ export default class ThemeWatcher {
         dis.unregister(this.dispatcherRef);
     }
 
-    private onChange = () => {
+    private onChange = (): void => {
         this.recheck();
     };
 
-    private onAction = (payload: ActionPayload) => {
+    private onAction = (payload: ActionPayload): void => {
         if (payload.action === Action.RecheckTheme) {
             // XXX forceTheme
             this.recheck(payload.forceTheme);
@@ -87,7 +87,7 @@ export default class ThemeWatcher {
 
     // XXX: forceTheme param added here as local echo appears to be unreliable
     // https://github.com/vector-im/element-web/issues/11443
-    public recheck(forceTheme?: string) {
+    public recheck(forceTheme?: string): void {
         const oldTheme = ThemeWatcher.currentTheme;
         ThemeWatcher.currentTheme = forceTheme === undefined ? this.getEffectiveTheme() : forceTheme;
         if (oldTheme !== ThemeWatcher.currentTheme) {
@@ -114,7 +114,7 @@ export default class ThemeWatcher {
         }
     }
 
-    public isSystemThemeSupported() {
+    public isSystemThemeSupported(): boolean {
         return this.preferDark.matches || this.preferLight.matches;
     }
 
