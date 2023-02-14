@@ -2982,7 +2982,7 @@
     "What projects are your team working on?": "あなたのチームはどのようなプロジェクトに取り組みますか？",
     "Jump to date (adds /jumptodate and jump to date headers)": "日付に移動（/jumptodateを追加すると、日付のヘッダーに移動します）",
     "Pick a date to jump to": "日付を選択して移動",
-    "If you know what you're doing, Element is open-source, be sure to check out our GitHub (https://github.com/vector-im/element-web/) and contribute!": "もし開発者の方であれば、SchildiChatはオープンソースですので、ぜひ私たちのGitHub（https://github.com/vector-im/element-web/）をご覧いただき、開発にご参加ください！",
+    "If you know what you're doing, Element is open-source, be sure to check out our GitHub (https://github.com/vector-im/element-web/) and contribute!": "もし開発者の方であれば、Elementはオープンソースですので、ぜひ私たちのGitHub（https://github.com/vector-im/element-web/）をご覧いただき、開発にご参加ください！",
     "You are not allowed to view this server's rooms list": "このルームの一覧を表示する許可がありません",
     "This version of %(brand)s does not support viewing some encrypted files": "この%(brand)sのバージョンは、暗号化されたファイルの表示をサポートしていません",
     "This version of %(brand)s does not support searching encrypted messages": "この%(brand)sのバージョンは、暗号化されたメッセージの検索をサポートしていません",
@@ -3157,7 +3157,7 @@
     "Toggle Code Block": "コードブロックを切り替える",
     "Toggle Link": "リンクを切り替える",
     "New group call experience": "グループ通話の新しい経験",
-    "Element Call video rooms": "SchildiChat Callのビデオ通話ルーム",
+    "Element Call video rooms": "Element Callのビデオ通話ルーム",
     "Send read receipts": "開封確認メッセージを送信",
     "Explore public spaces in the new search dialog": "新しい検索ダイアログで公開スペースを探索",
     "Yes, the chat timeline is displayed alongside the video.": "はい、会話のタイムラインが動画と並んで表示されます。",
@@ -3519,6 +3519,5 @@
     "No one will be able to reuse your username (MXID), including you: this username will remain unavailable": "あなたのユーザー名（MXID）は、あなた自身を含めて誰も再利用することができなくなります",
     "You will leave all rooms and DMs that you are in": "全てのルームとダイレクトメッセージから退出します",
     "Confirm that you would like to deactivate your account. If you proceed:": "アカウントを非アクティブ化したいことを確認してください。継続すると、",
-    "You will not be able to reactivate your account": "アカウントを再開できなくなります",
-    "Normal priority": "常優先度"
+    "You will not be able to reactivate your account": "アカウントを再開できなくなります"
 }
