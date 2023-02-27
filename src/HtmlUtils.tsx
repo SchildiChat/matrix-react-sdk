@@ -575,12 +575,12 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
                 isAllHtmlEmoji = (phtml.root()[0] as cheerio.TagElement).children.every(elm => {
                     if (elm.type === 'text') {
                         let elmText = elm.data;
-                        elmText = elmText.replace(WHITESPACE_REGEX, '');
 
-                        // Remove zero width joiner characters from emoji messages. This ensures
-                        // that emojis that are made up of multiple unicode characters are still
-                        // presented as large.
-                        elmText = elmText.replace(ZWJ_REGEX, '');
+                        // Remove zero width joiner, zero width spaces and other spaces in body
+                        // text. This ensures that emojis with spaces in between or that are made
+                        // up of multiple unicode characters are still counted as purely emoji
+                        // messages.
+                        elmText = elmText.replace(EMOJI_SEPARATOR_REGEX, '');
 
                         const match = BIGEMOJI_REGEX.exec(elmText);
                         return match && match[0] && match[0].length === elmText.length;
