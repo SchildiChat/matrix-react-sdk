@@ -30,6 +30,8 @@ import { Action } from "../dispatcher/actions";
 import SettingsStore from "../settings/SettingsStore";
 import { mediaFromMxc } from "../customisations/Media";
 
+const REGIONAL_EMOJI_SEPARATOR = String.fromCodePoint(0x200b);
+
 interface ISerializedPart {
     type: Type.Plain | Type.Newline | Type.Emoji | Type.Command | Type.PillCandidate;
     text: string;
@@ -213,9 +215,13 @@ abstract class PlainBasePart extends BasePart {
                 return false;
             }
 
-            // or split if the previous character is a space
+            // or split if the previous character is a space or regional emoji separator
             // or if it is a + and this is a :
-            return this._text[offset - 1] !== " " && (this._text[offset - 1] !== "+" || chr !== ":");
+            return (
+                this._text[offset - 1] !== " " &&
+                this._text[offset - 1] !== REGIONAL_EMOJI_SEPARATOR &&
+                (this._text[offset - 1] !== "+" || chr !== ":")
+            );
         }
         return true;
     }
@@ -488,7 +494,7 @@ class AtRoomPillPart extends RoomPillPart {
 }
 
 class UserPillPart extends PillPart {
-    public constructor(userId, displayName, private member: RoomMember) {
+    public constructor(userId, displayName, private member?: RoomMember) {
         super(userId, displayName);
     }
 
@@ -660,11 +666,16 @@ export class PartCreator {
 
     public userPill(displayName: string, userId: string): UserPillPart {
         const member = this.room.getMember(userId);
-        return new UserPillPart(userId, displayName, member);
+        return new UserPillPart(userId, displayName, member || undefined);
+    }
+
+    private static isRegionalIndicator(c: string): boolean {
+        const codePoint = c.codePointAt(0) ?? 0;
+        return codePoint != 0 && c.length == 2 && 0x1f1e6 <= codePoint && codePoint <= 0x1f1ff;
     }
 
     public plainWithEmoji(text: string): (PlainPart | EmojiPart)[] {
-        const parts = [];
+        const parts: (PlainPart | EmojiPart)[] = [];
         let plainText = "";
 
         // We use lodash's grapheme splitter to avoid breaking apart compound emojis
@@ -675,6 +686,9 @@ export class PartCreator {
                     plainText = "";
                 }
                 parts.push(this.emoji(char));
+                if (PartCreator.isRegionalIndicator(text)) {
+                    parts.push(this.plain(REGIONAL_EMOJI_SEPARATOR));
+                }
             } else {
                 plainText += char;
             }

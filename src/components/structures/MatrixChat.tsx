@@ -137,8 +137,10 @@ import { SdkContextClass, SDKContext } from "../../contexts/SDKContext";
 import { viewUserDeviceSettings } from "../../actions/handlers/viewUserDeviceSettings";
 import { cleanUpBroadcasts, VoiceBroadcastResumer } from "../../voice-broadcast";
 import GenericToast from "../views/toasts/GenericToast";
-import { Linkify } from "../views/elements/Linkify";
 import RovingSpotlightDialog, { Filter } from "../views/dialogs/spotlight/SpotlightDialog";
+import { findDMForUser } from "../../utils/dm/findDMForUser";
+import { Linkify } from "../../HtmlUtils";
+import { NotificationColor } from "../../stores/notifications/NotificationColor";
 
 // legacy export
 export { default as Views } from "../../Views";
@@ -648,7 +650,7 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
                     onFinished: (confirm) => {
                         if (confirm) {
                             // FIXME: controller shouldn't be loading a view :(
-                            const modal = Modal.createDialog(Spinner, null, "mx_Dialog_spinner");
+                            const modal = Modal.createDialog(Spinner, undefined, "mx_Dialog_spinner");
 
                             MatrixClientPeg.get()
                                 .leave(payload.room_id)
@@ -1102,13 +1104,12 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
         // TODO: Immutable DMs replaces this
 
         const client = MatrixClientPeg.get();
-        const dmRoomMap = new DMRoomMap(client);
-        const dmRooms = dmRoomMap.getDMRoomsForUserId(userId);
+        const dmRoom = findDMForUser(client, userId);
 
-        if (dmRooms.length > 0) {
+        if (dmRoom) {
             dis.dispatch<ViewRoomPayload>({
                 action: Action.ViewRoom,
-                room_id: dmRooms[0],
+                room_id: dmRoom.roomId,
                 metricsTrigger: "MessageUser",
             });
         } else {
@@ -1979,6 +1980,8 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
         }
         if (numUnreadRooms > 0) {
             this.subTitleStatus += `[${numUnreadRooms}]`;
+        } else if (notificationState.color >= NotificationColor.Bold) {
+            this.subTitleStatus += `*`;
         }
 
         this.setPageSubtitle();

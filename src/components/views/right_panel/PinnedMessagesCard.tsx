@@ -135,6 +135,7 @@ const PinnedMessagesCard: React.FC<IProps> = ({ room, onClose, userNameColorMode
                     if (event.isEncrypted()) {
                         await cli.decryptEventIfNeeded(event); // TODO await?
                     }
+                    await room.processPollEvents([event]);
 
                     if (event && PinningUtils.isPinnable(event)) {
                         // Inject sender information

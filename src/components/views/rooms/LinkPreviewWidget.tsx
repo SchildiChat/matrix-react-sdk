@@ -21,7 +21,7 @@ import { IPreviewUrlResponse } from "matrix-js-sdk/src/client";
 import LiteYouTubeEmbed from "react-lite-youtube-embed";
 import "react-lite-youtube-embed/dist/LiteYouTubeEmbed.css";
 
-import { linkifyElement } from "../../../HtmlUtils";
+import { Linkify } from "../../../HtmlUtils";
 import SettingsStore from "../../../settings/SettingsStore";
 import Modal from "../../../Modal";
 import * as ImageUtils from "../../../ImageUtils";
@@ -39,7 +39,6 @@ interface IProps {
 }
 
 export default class LinkPreviewWidget extends React.Component<IProps> {
-    private readonly description = createRef<HTMLDivElement>();
     private image = createRef<HTMLImageElement>();
     protected sizeWatcher: string;
 
@@ -47,16 +46,6 @@ export default class LinkPreviewWidget extends React.Component<IProps> {
         this.sizeWatcher = SettingsStore.watchSetting("Images.size", null, () => {
             this.forceUpdate(); // we don't really have a reliable thing to update, so just update the whole thing
         });
-
-        if (this.description.current) {
-            linkifyElement(this.description.current);
-        }
-    }
-
-    public componentDidUpdate(): void {
-        if (this.description.current) {
-            linkifyElement(this.description.current);
-        }
     }
 
     private onImageClick = (ev): void => {
@@ -185,8 +174,8 @@ export default class LinkPreviewWidget extends React.Component<IProps> {
                                     { (" - " + p["og:site_name"]) }
                                 </span> }
                             </div>
-                            <div className="mx_LinkPreviewWidget_description" ref={this.description}>
-                                { description }
+                            <div className="mx_LinkPreviewWidget_description">
+                                <Linkify>{description}</Linkify>
                             </div>
                         </div>
                     </div>
@@ -211,8 +200,8 @@ export default class LinkPreviewWidget extends React.Component<IProps> {
                                 <span className="mx_LinkPreviewWidget_siteName">{" - " + p["og:site_name"]}</span>
                             )}
                         </div>
-                        <div className="mx_LinkPreviewWidget_description" ref={this.description}>
-                            {description}
+                        <div className="mx_LinkPreviewWidget_description">
+                            <Linkify>{description}</Linkify>
                         </div>
                     </div>
                 </div>
