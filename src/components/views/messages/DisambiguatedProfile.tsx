@@ -44,7 +44,7 @@ export default class DisambiguatedProfile extends React.Component<IProps> {
         let colorClass: string | undefined;
         if (colored) {
             colorClass = getUserNameColorClass(
-                userNameColorMode, fallbackName, MatrixClientPeg.get().getRoom(member.roomId));
+                userNameColorMode, fallbackName, MatrixClientPeg.get().getRoom(member?.roomId));
         }
 
         let mxidElement;

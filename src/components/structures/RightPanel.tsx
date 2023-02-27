@@ -205,7 +205,10 @@ export default class RightPanel extends React.Component<IProps, IState> {
                 break;
 
             case RightPanelPhases.NotificationPanel:
-                card = <NotificationPanel onClose={this.onClose} />;
+                card = <NotificationPanel
+                    onClose={this.onClose}
+                    userNameColorMode={this.props.userNameColorMode}
+                />;
                 break;
 
             case RightPanelPhases.PinnedMessages:

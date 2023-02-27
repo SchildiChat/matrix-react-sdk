@@ -1073,7 +1073,11 @@ export class UnwrappedEventTile extends React.Component<EventTileProps, IState> 
                     userNameColorMode={this.props.userNameColorMode}
                 />;
             } else if (this.context.timelineRenderingType === TimelineRenderingType.ThreadsList) {
-                sender = <SenderProfile mxEvent={this.props.mxEvent} withTooltip />;
+                sender = <SenderProfile
+                    mxEvent={this.props.mxEvent}
+                    userNameColorMode={this.props.userNameColorMode}
+                    withTooltip
+                />;
             } else {
                 sender = <SenderProfile
                     mxEvent={this.props.mxEvent}

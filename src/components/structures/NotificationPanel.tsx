@@ -26,9 +26,11 @@ import { Layout } from "../../settings/enums/Layout";
 import RoomContext, { TimelineRenderingType } from "../../contexts/RoomContext";
 import Measured from "../views/elements/Measured";
 import Heading from "../views/typography/Heading";
+import { UserNameColorMode } from "../../settings/enums/UserNameColorMode";
 
 interface IProps {
     onClose(): void;
+    userNameColorMode?: UserNameColorMode;
 }
 
 interface IState {
@@ -75,6 +77,7 @@ export default class NotificationPanel extends React.PureComponent<IProps, IStat
                     showUrlPreview={false}
                     empty={emptyState}
                     alwaysShowTimestamps={true}
+                    userNameColorMode={this.props.userNameColorMode}
                     layout={Layout.Group}
                 />
             );
