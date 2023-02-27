@@ -26,6 +26,7 @@ import { NotificationColor } from "./stores/notifications/NotificationColor";
 import { getUnsentMessages } from "./components/structures/RoomStatusBar";
 import { doesRoomHaveUnreadMessages, doesRoomOrThreadHaveUnreadMessages } from "./Unread";
 import { EffectiveMembership, getEffectiveMembership } from "./utils/membership";
+import * as Unread from "./Unread";
 import SettingsStore from "./settings/SettingsStore";
 import { isRoomMarkedAsUnread } from "./Rooms";
 
