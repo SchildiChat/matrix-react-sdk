@@ -33,11 +33,7 @@ export default class InlineSpinner extends React.PureComponent<IProps> {
     public render(): JSX.Element {
         return (
             <div className="mx_InlineSpinner">
-                <SvgSpinner
-                    w={this.props.w}
-                    h={this.props.h}
-                    className="mx_InlineSpinner_icon mx_Spinner_icon"
-                />
+                <SvgSpinner w={this.props.w} h={this.props.h} className="mx_InlineSpinner_icon mx_Spinner_icon" />
             </div>
         );
     }

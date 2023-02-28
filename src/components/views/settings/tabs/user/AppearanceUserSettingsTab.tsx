@@ -21,15 +21,15 @@ import { _t } from "../../../../../languageHandler";
 import SdkConfig from "../../../../../SdkConfig";
 import { MatrixClientPeg } from "../../../../../MatrixClientPeg";
 import SettingsStore from "../../../../../settings/SettingsStore";
-import SettingsFlag from '../../../elements/SettingsFlag';
+import SettingsFlag from "../../../elements/SettingsFlag";
 import { SettingLevel } from "../../../../../settings/SettingLevel";
 import { Layout } from "../../../../../settings/enums/Layout";
 import LayoutSwitcher from "../../LayoutSwitcher";
-import StyledRadioButton from '../../../elements/StyledRadioButton';
-import { Theme } from '../../../../../settings/enums/Theme';
-import { RoomListStyle } from '../../../../../settings/enums/RoomListStyle';
-import FontScalingPanel from '../../FontScalingPanel';
-import ThemeChoicePanel from '../../ThemeChoicePanel';
+import StyledRadioButton from "../../../elements/StyledRadioButton";
+import { Theme } from "../../../../../settings/enums/Theme";
+import { RoomListStyle } from "../../../../../settings/enums/RoomListStyle";
+import FontScalingPanel from "../../FontScalingPanel";
+import ThemeChoicePanel from "../../ThemeChoicePanel";
 import ImageSizePanel from "../../ImageSizePanel";
 
 interface IProps {}
@@ -103,53 +103,53 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
     };
 
     private renderRoomListSection(): JSX.Element {
-        const roomListStyleSection = <div className="mx_SettingsTab_multilineRadioSelectors">
-            <label>
-                <StyledRadioButton
-                    name="room_list_style"
-                    value={RoomListStyle.Compact}
-                    checked={this.state.roomListStyle === RoomListStyle.Compact}
-                    onChange={this.onRoomListStyleChange}
-                >
-                    { _t("Compact: tiny avatar together with name and preview in one line") }
-                </StyledRadioButton>
-            </label>
-            <label>
-                <StyledRadioButton
-                    name="room_list_style"
-                    value={RoomListStyle.Intermediate}
-                    checked={this.state.roomListStyle === RoomListStyle.Intermediate}
-                    onChange={this.onRoomListStyleChange}
-                >
-                    { _t("Intermediate: medium sized avatar with single-line preview") }
-                </StyledRadioButton>
-            </label>
-            <label>
-                <StyledRadioButton
-                    name="room_list_style"
-                    value={RoomListStyle.Roomy}
-                    checked={this.state.roomListStyle === RoomListStyle.Roomy}
-                    onChange={this.onRoomListStyleChange}
-                >
-                    { _t("Roomy: big avatar with two-line preview") }
-                </StyledRadioButton>
-            </label>
-        </div>;
+        const roomListStyleSection = (
+            <div className="mx_SettingsTab_multilineRadioSelectors">
+                <label>
+                    <StyledRadioButton
+                        name="room_list_style"
+                        value={RoomListStyle.Compact}
+                        checked={this.state.roomListStyle === RoomListStyle.Compact}
+                        onChange={this.onRoomListStyleChange}
+                    >
+                        {_t("Compact: tiny avatar together with name and preview in one line")}
+                    </StyledRadioButton>
+                </label>
+                <label>
+                    <StyledRadioButton
+                        name="room_list_style"
+                        value={RoomListStyle.Intermediate}
+                        checked={this.state.roomListStyle === RoomListStyle.Intermediate}
+                        onChange={this.onRoomListStyleChange}
+                    >
+                        {_t("Intermediate: medium sized avatar with single-line preview")}
+                    </StyledRadioButton>
+                </label>
+                <label>
+                    <StyledRadioButton
+                        name="room_list_style"
+                        value={RoomListStyle.Roomy}
+                        checked={this.state.roomListStyle === RoomListStyle.Roomy}
+                        onChange={this.onRoomListStyleChange}
+                    >
+                        {_t("Roomy: big avatar with two-line preview")}
+                    </StyledRadioButton>
+                </label>
+            </div>
+        );
 
-        return <>
-            <div className="mx_SettingsTab_heading">{ _t("Room list") }</div>
-            <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_fontScaling">
-                <SettingsFlag
-                    name="unifiedRoomList"
-                    level={SettingLevel.DEVICE}
-                    useCheckbox={true}
-                />
-            </div>
-            <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_RoomListStyleSection">
-                <span className="mx_SettingsTab_subheading">{ _t("Room list style") }</span>
-                { roomListStyleSection }
-            </div>
-        </>;
+        return (
+            <>
+                <div className="mx_SettingsTab_heading">{_t("Room list")}</div>
+                <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_fontScaling">
+                    <SettingsFlag name="unifiedRoomList" level={SettingLevel.DEVICE} useCheckbox={true} />
+                </div>
+                <div className="mx_SettingsTab_section mx_AppearanceUserSettingsTab_RoomListStyleSection">
+                    <span className="mx_SettingsTab_subheading">{_t("Room list style")}</span>
+                    {roomListStyleSection}
+                </div>
+            </>
+        );
     }
 
     public render(): JSX.Element {
@@ -162,7 +162,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
                     {_t("Appearance Settings only affect this %(brand)s session.", { brand })}
                 </div>
                 <ThemeChoicePanel />
-                { this.renderRoomListSection() }
+                {this.renderRoomListSection()}
                 <LayoutSwitcher
                     userId={this.state.userId}
                     displayName={this.state.displayName}

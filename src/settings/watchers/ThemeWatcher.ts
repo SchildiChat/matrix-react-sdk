@@ -15,13 +15,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import SettingsStore from '../SettingsStore';
-import dis from '../../dispatcher/dispatcher';
-import { Action } from '../../dispatcher/actions';
+import SettingsStore from "../SettingsStore";
+import dis from "../../dispatcher/dispatcher";
+import { Action } from "../../dispatcher/actions";
 import ThemeController from "../controllers/ThemeController";
 import { setTheme, getCustomTheme } from "../../theme";
-import { ActionPayload } from '../../dispatcher/payloads';
-import { Theme } from '../enums/Theme';
+import { ActionPayload } from "../../dispatcher/payloads";
+import { Theme } from "../enums/Theme";
 
 export default class ThemeWatcher {
     private lightThemeWatchRef: string;
@@ -99,7 +99,7 @@ export default class ThemeWatcher {
         let themeToUse = Theme.Light;
 
         if (!ThemeController.isLogin) {
-            themeToUse = SettingsStore.getValue('theme_in_use');
+            themeToUse = SettingsStore.getValue("theme_in_use");
 
             if (themeToUse === Theme.System) {
                 if (this.preferDark.matches) themeToUse = Theme.Dark;
@@ -108,9 +108,9 @@ export default class ThemeWatcher {
         }
 
         if (themeToUse === Theme.Dark) {
-            return SettingsStore.getValue('dark_theme');
+            return SettingsStore.getValue("dark_theme");
         } else {
-            return SettingsStore.getValue('light_theme');
+            return SettingsStore.getValue("light_theme");
         }
     }
 
@@ -125,7 +125,7 @@ export default class ThemeWatcher {
     /**
      * For widgets/stickers/... who only support light/dark
      * @returns "light" or "dark"
-    */
+     */
     public static getCurrentThemeSimplified(): string {
         let theme = ThemeWatcher.currentTheme;
         if (theme.startsWith("custom-")) {

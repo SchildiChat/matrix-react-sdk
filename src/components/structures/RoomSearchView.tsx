@@ -34,8 +34,8 @@ import ResizeNotifier from "../../utils/ResizeNotifier";
 import MatrixClientContext from "../../contexts/MatrixClientContext";
 import { RoomPermalinkCreator } from "../../utils/permalinks/Permalinks";
 import RoomContext from "../../contexts/RoomContext";
-import { Layout } from '../../settings/enums/Layout';
-import { UserNameColorMode } from '../../settings/enums/UserNameColorMode';
+import { Layout } from "../../settings/enums/Layout";
+import { UserNameColorMode } from "../../settings/enums/UserNameColorMode";
 import SettingsStore from "../../settings/SettingsStore";
 
 const DEBUG = false;
@@ -65,7 +65,19 @@ interface Props {
 // XXX: why doesn't searching on name work?
 export const RoomSearchView = forwardRef<ScrollPanel, Props>(
     (
-        { term, scope, promise, abortController, resizeNotifier, permalinkCreator, className, layout, singleSideBubbles, userNameColorMode, onUpdate }: Props,
+        {
+            term,
+            scope,
+            promise,
+            abortController,
+            resizeNotifier,
+            permalinkCreator,
+            className,
+            layout,
+            singleSideBubbles,
+            userNameColorMode,
+            onUpdate,
+        }: Props,
         ref: RefObject<ScrollPanel>,
     ) => {
         const client = useContext(MatrixClientContext);

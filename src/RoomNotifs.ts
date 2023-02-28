@@ -244,7 +244,7 @@ export function determineUnreadState(
         return { symbol: null, count: trueCount, color: NotificationColor.Grey };
     }
 
-    // SC: Render marked-as-unread badge as green exclamation mark 
+    // SC: Render marked-as-unread badge as green exclamation mark
     if (markedUnread) {
         return { symbol: "!", count: 1, color: NotificationColor.Grey };
     }

@@ -199,9 +199,11 @@ export default class ReplyChain extends React.Component<IProps, IState> {
     };
 
     private getReplyChainColorClass(ev: MatrixEvent): string {
-        return getUserNameColorClass(this.props.userNameColorMode,
-            ev.getSender(), this.matrixClient.getRoom(ev.getRoomId()))
-            .replace("Username", "ReplyChain");
+        return getUserNameColorClass(
+            this.props.userNameColorMode,
+            ev.getSender(),
+            this.matrixClient.getRoom(ev.getRoomId()),
+        ).replace("Username", "ReplyChain");
     }
 
     public render(): JSX.Element {

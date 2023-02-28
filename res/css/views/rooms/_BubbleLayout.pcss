@@ -77,14 +77,16 @@ $left-gutter: 5.4rem;
         > .mx_EventTile_avatar {
             position: absolute;
 
-            .mx_BaseAvatar_image, .mx_BaseAvatar_initial {
+            .mx_BaseAvatar_image,
+            .mx_BaseAvatar_initial {
                 width: 3rem !important;
                 height: 3rem !important;
                 line-height: 3rem !important;
             }
         }
 
-        .mx_EventTile_line, .mx_EventTile_reply {
+        .mx_EventTile_line,
+        .mx_EventTile_reply {
             padding-top: 3px;
             padding-bottom: 3px;
             padding-left: $left-gutter;
@@ -102,11 +104,13 @@ $left-gutter: 5.4rem;
         padding-top: 0 !important;
     }
 
-    .mx_EventTile_line, .mx_EventTile_reply {
+    .mx_EventTile_line,
+    .mx_EventTile_reply {
         padding-left: $left-gutter;
     }
 
-    .mx_GenericEventListSummary, .mx_EventTile_tileError {
+    .mx_GenericEventListSummary,
+    .mx_EventTile_tileError {
         /* For toggle */
         position: relative;
 
@@ -219,7 +223,13 @@ $left-gutter: 5.4rem;
         margin-right: unset;
 
         .markdown-body {
-            p, ul, ol, dl, blockquote, pre, table {
+            p,
+            ul,
+            ol,
+            dl,
+            blockquote,
+            pre,
+            table {
                 margin-bottom: 8px;
             }
 
@@ -287,7 +297,8 @@ $left-gutter: 5.4rem;
     /*     margin-bottom: 10px; */
     /* } */
 
-    .mx_ReplyChain, .mx_ReplyPreview {
+    .mx_ReplyChain,
+    .mx_ReplyPreview {
         /* padding-top: 2px; */
 
         .mx_EventTile_avatar {
@@ -347,7 +358,6 @@ $left-gutter: 5.4rem;
         max-width: 100%;
     }
 
-
     .sc_EventTile_bubble_sticker {
         .sc_MImageBody_container {
             position: relative;
@@ -362,15 +372,15 @@ $left-gutter: 5.4rem;
             display: inline-flex;
             box-sizing: border-box;
             border: 1px solid $message-bubble-background;
-    
+
             .mx_MFileBody_download {
                 display: none;
             }
-    
+
             .sc_PlaceholderTimestamp {
                 display: none;
             }
-    
+
             .mx_MessageTimestamp {
                 visibility: visible !important;
                 text-align: center;
@@ -387,7 +397,7 @@ $left-gutter: 5.4rem;
                 line-height: 1;
             }
         }
-    
+
         .mx_MImageBody_thumbnail {
             border-radius: unset;
         }
@@ -526,7 +536,7 @@ $left-gutter: 5.4rem;
 
         /* ToDo: make the tail some sort of absolutely positioned rotated cutout */
         &.sc_EventTile_bubble_tail::before {
-            content: '';
+            content: "";
             border: 16px solid transparent;
             border-top-color: $message-bubble-background;
             border-bottom: 0;
@@ -569,7 +579,7 @@ $left-gutter: 5.4rem;
 
             .sc_PlaceholderTimestamp {
                 display: inline-flex;
-                margin-inline-start: .7em;
+                margin-inline-start: 0.7em;
 
                 /* don't add additional height */
                 height: 0;
@@ -614,7 +624,8 @@ $left-gutter: 5.4rem;
             }
 
             /* ToDo: These break on small width */
-            .mx_MFileBody_info, .mx_MediaBody.mx_AudioPlayer_container {
+            .mx_MFileBody_info,
+            .mx_MediaBody.mx_AudioPlayer_container {
                 display: inline-block;
                 padding: 0;
                 padding-top: 6px;
@@ -713,7 +724,7 @@ $left-gutter: 5.4rem;
 
     .sc_EventTile_bubble_info {
         &::before {
-            content: '';
+            content: "";
             position: absolute;
             inset: 0;
             box-shadow: inset 0px 0px 0px 1px $roomtopic-color;
@@ -731,7 +742,8 @@ $left-gutter: 5.4rem;
             max-width: unset;
             text-align: start;
 
-            &::before, &::after {
+            &::before,
+            &::after {
                 margin-top: 1px;
             }
 
@@ -763,7 +775,8 @@ $left-gutter: 5.4rem;
             padding-top: unset;
         }
 
-        .mx_TextualEvent, .mx_RoomAvatarEvent {
+        .mx_TextualEvent,
+        .mx_RoomAvatarEvent {
             display: inline;
             opacity: 0.8;
         }
@@ -852,7 +865,7 @@ $left-gutter: 5.4rem;
         /*     margin-top: 0; */
         /*     margin-bottom: 0; */
         /* } */
-        
+
         .mx_MImageBody {
             border: none;
 
@@ -900,7 +913,8 @@ $left-gutter: 5.4rem;
             box-shadow: inset 0px 0px 0px 1px rgba($roomtopic-color, 0.15);
             margin-bottom: 3rem;
 
-            &::before, &::after {
+            &::before,
+            &::after {
                 margin-top: 1px;
             }
 
@@ -934,7 +948,9 @@ $left-gutter: 5.4rem;
             max-width: calc(104rem - $left-gutter);
         }
 
-        .sc_EventTile_bubbleLine_info, .mx_DateSeparator, .mx_GenericEventListSummary,
+        .sc_EventTile_bubbleLine_info,
+        .mx_DateSeparator,
+        .mx_GenericEventListSummary,
         .mx_RoomView_MessageList > li > .mx_Spinner {
             max-width: calc($left-gutter + 104rem);
         }

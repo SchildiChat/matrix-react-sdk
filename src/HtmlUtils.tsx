@@ -572,20 +572,20 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
                 safeBody = phtml.html();
             }
             if (isHtmlMessage) {
-                isAllHtmlEmoji = (phtml.root()[0] as cheerio.TagElement).children.every(elm => {
-                    if (elm.type === 'text') {
+                isAllHtmlEmoji = (phtml.root()[0] as cheerio.TagElement).children.every((elm) => {
+                    if (elm.type === "text") {
                         let elmText = elm.data;
 
                         // Remove zero width joiner, zero width spaces and other spaces in body
                         // text. This ensures that emojis with spaces in between or that are made
                         // up of multiple unicode characters are still counted as purely emoji
                         // messages.
-                        elmText = elmText.replace(EMOJI_SEPARATOR_REGEX, '');
+                        elmText = elmText.replace(EMOJI_SEPARATOR_REGEX, "");
 
                         const match = BIGEMOJI_REGEX.exec(elmText);
                         return match && match[0] && match[0].length === elmText.length;
-                    } else if (elm.type == 'tag') {
-                        return elm.name === 'img' && 'data-mx-emoticon' in elm.attribs;
+                    } else if (elm.type == "tag") {
+                        return elm.name === "img" && "data-mx-emoticon" in elm.attribs;
                     }
                     return true;
                 });
@@ -607,7 +607,7 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
 
     let emojiBody = false;
     if (!opts.disableBigEmoji) {
-        let contentBodyTrimmed = (bodyHasEmoji && contentBody !== undefined) ? contentBody.trim() : "";
+        let contentBodyTrimmed = bodyHasEmoji && contentBody !== undefined ? contentBody.trim() : "";
 
         // Remove zero width joiner, zero width spaces and other spaces in body
         // text. This ensures that emojis with spaces in between or that are made
@@ -617,12 +617,11 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
 
         const match = BIGEMOJI_REGEX.exec(contentBodyTrimmed);
         const matched = match && match[0] && match[0].length === contentBodyTrimmed.length;
-        emojiBody = (matched || isAllHtmlEmoji) && (
-            strippedBody === safeBody || // replies have the html fallbacks, account for that here
-            content.formatted_body === undefined ||
-            (!content.formatted_body.includes("http:") &&
-            !content.formatted_body.includes("https:"))
-        );
+        emojiBody =
+            (matched || isAllHtmlEmoji) &&
+            (strippedBody === safeBody || // replies have the html fallbacks, account for that here
+                content.formatted_body === undefined ||
+                (!content.formatted_body.includes("http:") && !content.formatted_body.includes("https:")));
     }
 
     const className = classNames({
@@ -637,12 +636,7 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
     }
 
     return safeBody ? (
-        <span
-            key="body"
-            ref={opts.ref}
-            className={className}
-            dangerouslySetInnerHTML={{ __html: safeBody }}
-        />
+        <span key="body" ref={opts.ref} className={className} dangerouslySetInnerHTML={{ __html: safeBody }} />
     ) : (
         <span key="body" ref={opts.ref} className={className}>
             {emojiBodyElements || strippedBody}

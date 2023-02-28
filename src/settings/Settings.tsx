@@ -38,17 +38,17 @@ import { OrderedMultiController } from "./controllers/OrderedMultiController";
 import { Layout } from "./enums/Layout";
 import ReducedMotionController from "./controllers/ReducedMotionController";
 import IncompatibleController from "./controllers/IncompatibleController";
-import { Theme } from './enums/Theme';
-import { UserNameColorMode } from './enums/UserNameColorMode';
-import { RoomListStyle } from './enums/RoomListStyle';
+import { Theme } from "./enums/Theme";
+import { UserNameColorMode } from "./enums/UserNameColorMode";
+import { RoomListStyle } from "./enums/RoomListStyle";
 import { ImageSize } from "./enums/ImageSize";
 import { MetaSpace } from "../stores/spaces";
 import SdkConfig from "../SdkConfig";
 import SlidingSyncController from "./controllers/SlidingSyncController";
 import ThreadBetaController from "./controllers/ThreadBetaController";
 import { FontWatcher } from "./watchers/FontWatcher";
-import { BorderRadius } from './enums/BorderRadius';
-import { SoundPack } from './enums/SoundPack';
+import { BorderRadius } from "./enums/BorderRadius";
+import { SoundPack } from "./enums/SoundPack";
 import RustCryptoSdkController from "./controllers/RustCryptoSdkController";
 
 // These are just a bunch of helper arrays to avoid copy/pasting a bunch of times
@@ -559,7 +559,7 @@ export const SETTINGS: { [setting: string]: ISetting } = {
     },
     "MessageComposerInput.collapseButtons": {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
-        displayName: _td('Collapse additional buttons'),
+        displayName: _td("Collapse additional buttons"),
         default: false,
         controller: new UIFeatureController(UIFeature.Widgets, false),
     },
@@ -905,7 +905,7 @@ export const SETTINGS: { [setting: string]: ISetting } = {
     },
     "youtubeEmbedPlayer": {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
-        displayName: _td('Enable YouTube embed player'),
+        displayName: _td("Enable YouTube embed player"),
         default: true,
         controller: new UIFeatureController(UIFeature.YoutubeEmbedPlayer),
     },

@@ -241,7 +241,7 @@ const RoomListHeader: React.FC<IProps> = ({ onVisibilityChange }) => {
                 <IconizedContextMenuOptionList first>
                     {inviteOption}
                     {newRoomOptions}
-                    { /* SC: Added beneath search all spaces */ }
+                    {/* SC: Added beneath search all spaces */}
                     {/* <IconizedContextMenuOption
                         label={_t("Explore rooms")}
                         iconClassName="mx_RoomListHeader_iconExplore"
@@ -411,18 +411,20 @@ const RoomListHeader: React.FC<IProps> = ({ onVisibilityChange }) => {
         const client = MatrixClientPeg.get();
         const userId = client.getUserId();
         const canAddRooms = activeSpace.currentState.maySendStateEvent(EventType.SpaceChild, userId);
-        spaceExploreButton = <AccessibleTooltipButton
-            onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                defaultDispatcher.dispatch({
-                    action: "view_room",
-                    room_id: activeSpace?.roomId,
-                });
-            }}
-            className="mx_RoomListHeader_plusButton sc_RoomListHeader_exploreButton"
-            title={canAddRooms ? _t("Manage & explore rooms") : _t("Explore rooms")}
-        />;
+        spaceExploreButton = (
+            <AccessibleTooltipButton
+                onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    defaultDispatcher.dispatch({
+                        action: "view_room",
+                        room_id: activeSpace?.roomId,
+                    });
+                }}
+                className="mx_RoomListHeader_plusButton sc_RoomListHeader_exploreButton"
+                title={canAddRooms ? _t("Manage & explore rooms") : _t("Explore rooms")}
+            />
+        );
     }
 
     return (

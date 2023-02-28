@@ -20,8 +20,8 @@ import { logger } from "matrix-js-sdk/src/logger";
 
 import { MenuItem } from "../../structures/ContextMenu";
 import { IEmoji } from "../../../emoji";
-import { ICustomEmoji } from '../../../emojipicker/customemoji';
-import { mediaFromMxc } from '../../../customisations/Media';
+import { ICustomEmoji } from "../../../emojipicker/customemoji";
+import { mediaFromMxc } from "../../../customisations/Media";
 
 interface IProps {
     emoji: IEmoji | ICustomEmoji;
@@ -37,27 +37,28 @@ class Emoji extends React.PureComponent<IProps> {
         const { onClick, onMouseEnter, onMouseLeave, emoji, selectedEmojis } = this.props;
 
         let emojiElement: JSX.Element;
-        if ('unicode' in emoji) {
+        if ("unicode" in emoji) {
             const isSelected = selectedEmojis && selectedEmojis.has(emoji.unicode);
-            emojiElement = <div className={`mx_EmojiPicker_item ${isSelected ? 'mx_EmojiPicker_item_selected' : ''}`}>
-                { emoji.unicode }
-            </div>;
+            emojiElement = (
+                <div className={`mx_EmojiPicker_item ${isSelected ? "mx_EmojiPicker_item_selected" : ""}`}>
+                    {emoji.unicode}
+                </div>
+            );
         } else {
             let mediaUrl;
 
             // SC: Might be no valid mxc url
             try {
-                mediaUrl = mediaFromMxc(emoji.url).getThumbnailOfSourceHttp(24, 24, 'scale');
+                mediaUrl = mediaFromMxc(emoji.url).getThumbnailOfSourceHttp(24, 24, "scale");
             } catch (e) {
                 logger.error(e);
             }
 
-            emojiElement = <div className="mx_EmojiPicker_item">
-                <img
-                    className="mx_customEmoji_image"
-                    src={mediaUrl}
-                    alt={emoji.shortcodes[0]} />
-            </div>;
+            emojiElement = (
+                <div className="mx_EmojiPicker_item">
+                    <img className="mx_customEmoji_image" src={mediaUrl} alt={emoji.shortcodes[0]} />
+                </div>
+            );
         }
         emojiElement;
 
@@ -68,10 +69,10 @@ class Emoji extends React.PureComponent<IProps> {
                 onMouseEnter={() => onMouseEnter(emoji)}
                 onMouseLeave={() => onMouseLeave(emoji)}
                 className="mx_EmojiPicker_item_wrapper"
-                label={'unicode' in emoji ? emoji.unicode : emoji.shortcodes[0]}
+                label={"unicode" in emoji ? emoji.unicode : emoji.shortcodes[0]}
                 disabled={this.props.disabled}
             >
-                { emojiElement }
+                {emojiElement}
             </MenuItem>
         );
     }

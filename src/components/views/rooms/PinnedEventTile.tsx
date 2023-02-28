@@ -97,7 +97,11 @@ export default class PinnedEventTile extends React.Component<IProps> {
                     fallbackUserId={sender}
                 />
 
-                <span className={"mx_PinnedEventTile_sender " + getUserNameColorClass(this.props.userNameColorMode, sender, room)}>
+                <span
+                    className={
+                        "mx_PinnedEventTile_sender " + getUserNameColorClass(this.props.userNameColorMode, sender, room)
+                    }
+                >
                     {this.props.event.sender?.name || sender}
                 </span>
 

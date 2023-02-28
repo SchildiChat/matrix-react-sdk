@@ -40,7 +40,7 @@ import { OwnProfileStore } from "../../../stores/OwnProfileStore";
 import { arrayFastClone } from "../../../utils/arrays";
 import { ElementWidget } from "../../../stores/widgets/StopGapWidget";
 import { ELEMENT_CLIENT_ID } from "../../../identifiers";
-import ThemeWatcher from '../../../settings/watchers/ThemeWatcher';
+import ThemeWatcher from "../../../settings/watchers/ThemeWatcher";
 
 interface IProps {
     widgetDefinition: IModalWidgetOpenRequestData;

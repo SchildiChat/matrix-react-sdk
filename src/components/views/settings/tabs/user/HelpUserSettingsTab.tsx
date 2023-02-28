@@ -137,22 +137,28 @@ export default class HelpUserSettingsTab extends React.Component<IProps, IState>
                 <span className="mx_SettingsTab_subheading">{_t("Credits")}</span>
                 <ul className="mx_SettingsTab_subsectionText">
                     <li>
-                        The <a href="themes/element/img/backgrounds/ocean.jpg"
-                            rel="noreferrer noopener"
-                            target="_blank"> default cover photo</a> is from&nbsp;
-                        <a href="https://pixabay.com/de/photos/unterwasser-blau-ozean-meer-802092/"
-                            rel="noreferrer noopener"
-                            target="_blank">here</a>{ ' ' }
-                        used under the terms of the&nbsp;
-                        <a href="https://pixabay.com/de/service/license/" rel="noreferrer noopener" target="_blank">
-                        Pixabay License</a>.
-                    </li>
-                    <li>
-                        The <a
-                            href="https://github.com/matrix-org/twemoji-colr"
+                        The{" "}
+                        <a href="themes/element/img/backgrounds/ocean.jpg" rel="noreferrer noopener" target="_blank">
+                            {" "}
+                            default cover photo
+                        </a>{" "}
+                        is from&nbsp;
+                        <a
+                            href="https://pixabay.com/de/photos/unterwasser-blau-ozean-meer-802092/"
                             rel="noreferrer noopener"
                             target="_blank"
                         >
+                            here
+                        </a>{" "}
+                        used under the terms of the&nbsp;
+                        <a href="https://pixabay.com/de/service/license/" rel="noreferrer noopener" target="_blank">
+                            Pixabay License
+                        </a>
+                        .
+                    </li>
+                    <li>
+                        The{" "}
+                        <a href="https://github.com/matrix-org/twemoji-colr" rel="noreferrer noopener" target="_blank">
                             CC-BY-SA 4.0
                         </a>
                         .
@@ -192,14 +198,22 @@ export default class HelpUserSettingsTab extends React.Component<IProps, IState>
                         .
                     </li>
                     <li>
-                        The "schildi" ring sound is ©&nbsp;Ana&nbsp;Gelez
-                        used under the terms of&nbsp;
-                        <a href="https://www.apache.org/licenses/LICENSE-2.0" rel="noreferrer noopener" target="_blank">Apache 2.0</a>.
+                        The "schildi" ring sound is ©&nbsp;Ana&nbsp;Gelez used under the terms of&nbsp;
+                        <a href="https://www.apache.org/licenses/LICENSE-2.0" rel="noreferrer noopener" target="_blank">
+                            Apache 2.0
+                        </a>
+                        .
                     </li>
                     <li>
-                        The "schildi" message sound is created by Ash&nbsp;Logan and
-                        used under the terms of&nbsp;
-                        <a href="https://creativecommons.org/publicdomain/zero/1.0/" rel="noreferrer noopener" target="_blank">CC0</a>.
+                        The "schildi" message sound is created by Ash&nbsp;Logan and used under the terms of&nbsp;
+                        <a
+                            href="https://creativecommons.org/publicdomain/zero/1.0/"
+                            rel="noreferrer noopener"
+                            target="_blank"
+                        >
+                            CC0
+                        </a>
+                        .
                     </li>
                 </ul>
             </div>

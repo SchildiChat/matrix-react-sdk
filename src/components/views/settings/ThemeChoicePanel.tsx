@@ -23,17 +23,17 @@ import { getOrderedThemes } from "../../../theme";
 import ThemeWatcher from "../../../settings/watchers/ThemeWatcher";
 import AccessibleButton from "../elements/AccessibleButton";
 import dis from "../../../dispatcher/dispatcher";
-import { RecheckThemePayload } from '../../../dispatcher/payloads/RecheckThemePayload';
-import { Action } from '../../../dispatcher/actions';
+import { RecheckThemePayload } from "../../../dispatcher/payloads/RecheckThemePayload";
+import { Action } from "../../../dispatcher/actions";
 // import StyledCheckbox from '../elements/StyledCheckbox';
-import Field from '../elements/Field';
+import Field from "../elements/Field";
 import StyledRadioGroup from "../elements/StyledRadioGroup";
 import { SettingLevel } from "../../../settings/SettingLevel";
 import PosthogTrackers from "../../../PosthogTrackers";
-import StyledRadioButton from '../elements/StyledRadioButton';
-import { Theme } from '../../../settings/enums/Theme';
-import { UserNameColorMode } from '../../../settings/enums/UserNameColorMode';
-import { BorderRadius } from '../../../settings/enums/BorderRadius';
+import StyledRadioButton from "../elements/StyledRadioButton";
+import { Theme } from "../../../settings/enums/Theme";
+import { UserNameColorMode } from "../../../settings/enums/UserNameColorMode";
+import { BorderRadius } from "../../../settings/enums/BorderRadius";
 
 interface IProps {}
 
@@ -85,7 +85,7 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
 
         // doing getValue in the .catch will still return the value we failed to set,
         // so remember what the value was before we tried to set it so we can revert
-        const oldTheme: string = SettingsStore.getValue('light_theme');
+        const oldTheme: string = SettingsStore.getValue("light_theme");
         SettingsStore.setValue("light_theme", null, SettingLevel.DEVICE, newTheme).catch(() => {
             dis.dispatch<RecheckThemePayload>({ action: Action.RecheckTheme });
             this.setState({ lightTheme: oldTheme });
@@ -102,7 +102,7 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
 
         // doing getValue in the .catch will still return the value we failed to set,
         // so remember what the value was before we tried to set it so we can revert
-        const oldTheme: string = SettingsStore.getValue('dark_theme');
+        const oldTheme: string = SettingsStore.getValue("dark_theme");
         SettingsStore.setValue("dark_theme", null, SettingLevel.DEVICE, newTheme).catch(() => {
             dis.dispatch<RecheckThemePayload>({ action: Action.RecheckTheme });
             this.setState({ darkTheme: oldTheme });
@@ -213,113 +213,123 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
             />
         );
 
-        const makeRow = (description: string, setting: string): JSX.Element => (<tr>
-            <td>{ description }</td>
-            <td>{ makeRadio(setting, UserNameColorMode.Uniform) }</td>
-            <td>{ makeRadio(setting, UserNameColorMode.PowerLevel) }</td>
-            <td>{ makeRadio(setting, UserNameColorMode.MXID) }</td>
-        </tr>);
+        const makeRow = (description: string, setting: string): JSX.Element => (
+            <tr>
+                <td>{description}</td>
+                <td>{makeRadio(setting, UserNameColorMode.Uniform)}</td>
+                <td>{makeRadio(setting, UserNameColorMode.PowerLevel)}</td>
+                <td>{makeRadio(setting, UserNameColorMode.MXID)}</td>
+            </tr>
+        );
 
-        return <>
-            <div className="mx_SettingsTab_section mx_ThemeChoicePanel_userNameColorModeSection">
-                <table className='mx_SettingsTab_settingsTable'>
-                    <thead>
-                        <tr>
-                            <th><span className="mx_SettingsTab_subheading">{ _t("User name color mode") }</span></th>
-                            <th>{ _t("Uniform") }</th>
-                            <th>{ _t("PowerLevel") }</th>
-                            <th>{ _t("MXID") }</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        { makeRow(_t("For people"), "userNameColorModeDM") }
-                        { makeRow(_t("In group chats"), "userNameColorModeGroup") }
-                        { makeRow(_t("In public rooms"), "userNameColorModePublic") }
-                    </tbody>
-                </table>
-            </div>
-        </>;
+        return (
+            <>
+                <div className="mx_SettingsTab_section mx_ThemeChoicePanel_userNameColorModeSection">
+                    <table className="mx_SettingsTab_settingsTable">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <span className="mx_SettingsTab_subheading">{_t("User name color mode")}</span>
+                                </th>
+                                <th>{_t("Uniform")}</th>
+                                <th>{_t("PowerLevel")}</th>
+                                <th>{_t("MXID")}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {makeRow(_t("For people"), "userNameColorModeDM")}
+                            {makeRow(_t("In group chats"), "userNameColorModeGroup")}
+                            {makeRow(_t("In public rooms"), "userNameColorModePublic")}
+                        </tbody>
+                    </table>
+                </div>
+            </>
+        );
     }
 
     public render(): React.ReactElement<HTMLDivElement> {
         const themeWatcher = new ThemeWatcher();
-        const themeInUseSection = <div className="mx_SettingsTab_inlineRadioSelectors">
-            <label>
-                <StyledRadioButton
-                    name="theme_in_use"
-                    value={Theme.Light}
-                    checked={this.state.themeInUse === Theme.Light}
-                    onChange={this.onThemeInUseChange}
-                >
-                    { _t("Light") }
-                </StyledRadioButton>
-            </label>
-            <label>
-                <StyledRadioButton
-                    name="theme_in_use"
-                    value={Theme.Dark}
-                    checked={this.state.themeInUse === Theme.Dark}
-                    onChange={this.onThemeInUseChange}
-                >
-                    { _t("Dark") }
-                </StyledRadioButton>
-            </label>
-            { themeWatcher.isSystemThemeSupported() ?
+        const themeInUseSection = (
+            <div className="mx_SettingsTab_inlineRadioSelectors">
                 <label>
                     <StyledRadioButton
                         name="theme_in_use"
-                        value={Theme.System}
-                        checked={this.state.themeInUse === Theme.System}
+                        value={Theme.Light}
+                        checked={this.state.themeInUse === Theme.Light}
                         onChange={this.onThemeInUseChange}
                     >
-                        { _t("System") }
+                        {_t("Light")}
                     </StyledRadioButton>
-                </label> : null
-            }
-        </div>;
+                </label>
+                <label>
+                    <StyledRadioButton
+                        name="theme_in_use"
+                        value={Theme.Dark}
+                        checked={this.state.themeInUse === Theme.Dark}
+                        onChange={this.onThemeInUseChange}
+                    >
+                        {_t("Dark")}
+                    </StyledRadioButton>
+                </label>
+                {themeWatcher.isSystemThemeSupported() ? (
+                    <label>
+                        <StyledRadioButton
+                            name="theme_in_use"
+                            value={Theme.System}
+                            checked={this.state.themeInUse === Theme.System}
+                            onChange={this.onThemeInUseChange}
+                        >
+                            {_t("System")}
+                        </StyledRadioButton>
+                    </label>
+                ) : null}
+            </div>
+        );
 
-        const borderRadiusSection = <div className="mx_SettingsTab_inlineRadioSelectors">
-            <label>
-                <StyledRadioButton
-                    name="border_radius"
-                    value={BorderRadius.Default}
-                    checked={this.state.borderRadius === BorderRadius.Default}
-                    onChange={this.onBorderRadiusChange}
-                >
-                    { _t("Default") }
-                </StyledRadioButton>
-            </label>
-            <label>
-                <StyledRadioButton
-                    name="border_radius"
-                    value={BorderRadius.Round}
-                    checked={this.state.borderRadius === BorderRadius.Round}
-                    onChange={this.onBorderRadiusChange}
-                >
-                    { _t("Round") }
-                </StyledRadioButton>
-            </label>
-            <label>
-                <StyledRadioButton
-                    name="border_radius"
-                    value={BorderRadius.ExtraRound}
-                    checked={this.state.borderRadius === BorderRadius.ExtraRound}
-                    onChange={this.onBorderRadiusChange}
-                >
-                    { _t("Extra round") }
-                </StyledRadioButton>
-            </label>
-            <label>
-                <StyledRadioButton
-                    name="border_radius"
-                    value={BorderRadius.Mixed}
-                    checked={this.state.borderRadius === BorderRadius.Mixed}
-                    onChange={this.onBorderRadiusChange}
-                >
-                    { _t("Mixed") }
-                </StyledRadioButton>
-            </label>
-        </div>;
+        const borderRadiusSection = (
+            <div className="mx_SettingsTab_inlineRadioSelectors">
+                <label>
+                    <StyledRadioButton
+                        name="border_radius"
+                        value={BorderRadius.Default}
+                        checked={this.state.borderRadius === BorderRadius.Default}
+                        onChange={this.onBorderRadiusChange}
+                    >
+                        {_t("Default")}
+                    </StyledRadioButton>
+                </label>
+                <label>
+                    <StyledRadioButton
+                        name="border_radius"
+                        value={BorderRadius.Round}
+                        checked={this.state.borderRadius === BorderRadius.Round}
+                        onChange={this.onBorderRadiusChange}
+                    >
+                        {_t("Round")}
+                    </StyledRadioButton>
+                </label>
+                <label>
+                    <StyledRadioButton
+                        name="border_radius"
+                        value={BorderRadius.ExtraRound}
+                        checked={this.state.borderRadius === BorderRadius.ExtraRound}
+                        onChange={this.onBorderRadiusChange}
+                    >
+                        {_t("Extra round")}
+                    </StyledRadioButton>
+                </label>
+                <label>
+                    <StyledRadioButton
+                        name="border_radius"
+                        value={BorderRadius.Mixed}
+                        checked={this.state.borderRadius === BorderRadius.Mixed}
+                        onChange={this.onBorderRadiusChange}
+                    >
+                        {_t("Mixed")}
+                    </StyledRadioButton>
+                </label>
+            </div>
+        );
 
         let customThemeForm: JSX.Element;
         if (SettingsStore.getValue("feature_custom_themes")) {
@@ -332,8 +342,8 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
                 }
             }
             customThemeForm = (
-                <div className='mx_SettingsTab_section mx_ThemeChoicePanel_addCustomThemeSection'>
-                    <span className="mx_SettingsTab_subheading">{ _t("Add custom theme") }</span>
+                <div className="mx_SettingsTab_section mx_ThemeChoicePanel_addCustomThemeSection">
+                    <span className="mx_SettingsTab_subheading">{_t("Add custom theme")}</span>
                     <form onSubmit={this.onAddCustomTheme}>
                         <Field
                             label={_t("Custom theme URL")}
@@ -357,73 +367,80 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
             );
         }
 
-        const toggle = <AccessibleButton
-            kind="link"
-            className="mx_ThemeChoicePanel_AdvancedToggle"
-            onClick={() => this.setState({ showAdvancedThemeSettings: !this.state.showAdvancedThemeSettings })}
-        >
-            { this.state.showAdvancedThemeSettings ?
-                _t("Hide advanced theme settings") : _t("Show advanced theme settings") }
-        </AccessibleButton>;
+        const toggle = (
+            <AccessibleButton
+                kind="link"
+                className="mx_ThemeChoicePanel_AdvancedToggle"
+                onClick={() => this.setState({ showAdvancedThemeSettings: !this.state.showAdvancedThemeSettings })}
+            >
+                {this.state.showAdvancedThemeSettings
+                    ? _t("Hide advanced theme settings")
+                    : _t("Show advanced theme settings")}
+            </AccessibleButton>
+        );
 
         let advanced: React.ReactNode;
 
         if (this.state.showAdvancedThemeSettings) {
             const orderedThemes = getOrderedThemes();
 
-            advanced = <>
-                <div className="mx_SettingsTab_section mx_ThemeChoicePanel">
-                    <span className="mx_SettingsTab_subheading">{ _t("Light theme") }</span>
-                    <div className="mx_ThemeSelectors">
-                        <StyledRadioGroup
-                            name="light_theme"
-                            definitions={orderedThemes.map(t => ({
-                                value: t.id,
-                                label: t.name,
-                                className: "mx_ThemeSelector_" + t.id,
-                            }))}
-                            onChange={this.onLightThemeChange}
-                            value={this.state.lightTheme}
-                            outlined
-                        />
+            advanced = (
+                <>
+                    <div className="mx_SettingsTab_section mx_ThemeChoicePanel">
+                        <span className="mx_SettingsTab_subheading">{_t("Light theme")}</span>
+                        <div className="mx_ThemeSelectors">
+                            <StyledRadioGroup
+                                name="light_theme"
+                                definitions={orderedThemes.map((t) => ({
+                                    value: t.id,
+                                    label: t.name,
+                                    className: "mx_ThemeSelector_" + t.id,
+                                }))}
+                                onChange={this.onLightThemeChange}
+                                value={this.state.lightTheme}
+                                outlined
+                            />
+                        </div>
                     </div>
-                </div>
-                <div className="mx_SettingsTab_section mx_ThemeChoicePanel">
-                    <span className="mx_SettingsTab_subheading">{ _t("Dark theme") }</span>
-                    <div className="mx_ThemeSelectors">
-                        <StyledRadioGroup
-                            name="dark_theme"
-                            definitions={orderedThemes.map(t => ({
-                                value: t.id,
-                                label: t.name,
-                                className: "mx_ThemeSelector_" + t.id,
-                            }))}
-                            onChange={this.onDarkThemeChange}
-                            value={this.state.darkTheme}
-                            outlined
-                        />
+                    <div className="mx_SettingsTab_section mx_ThemeChoicePanel">
+                        <span className="mx_SettingsTab_subheading">{_t("Dark theme")}</span>
+                        <div className="mx_ThemeSelectors">
+                            <StyledRadioGroup
+                                name="dark_theme"
+                                definitions={orderedThemes.map((t) => ({
+                                    value: t.id,
+                                    label: t.name,
+                                    className: "mx_ThemeSelector_" + t.id,
+                                }))}
+                                onChange={this.onDarkThemeChange}
+                                value={this.state.darkTheme}
+                                outlined
+                            />
+                        </div>
                     </div>
-                </div>
-                { customThemeForm }
-                { this.renderUserNameColorModeSection() }
-            </>;
+                    {customThemeForm}
+                    {this.renderUserNameColorModeSection()}
+                </>
+            );
         }
 
-        return <>
-            <div className="mx_SettingsTab_heading">{ _t("Theme") }</div>
-            <div className="mx_SettingsTab_section mx_ThemeChoicePanel_themeInUseSection">
-                <span className="mx_SettingsTab_subheading">{ _t("Theme in use") }</span>
-                { themeInUseSection }
-            </div>
-            <div className="mx_SettingsTab_section mx_ThemeChoicePanel_borderRadiusSection">
-                <span className="mx_SettingsTab_subheading">{ _t("Corners") }</span>
-                { borderRadiusSection }
-            </div>
-            <div className="mx_SettingsTab_section mx_ThemeChoicePanel_Advanced">
-                { toggle }
-                { advanced }
-            </div>
-        </>;
+        return (
+            <>
+                <div className="mx_SettingsTab_heading">{_t("Theme")}</div>
+                <div className="mx_SettingsTab_section mx_ThemeChoicePanel_themeInUseSection">
+                    <span className="mx_SettingsTab_subheading">{_t("Theme in use")}</span>
+                    {themeInUseSection}
+                </div>
+                <div className="mx_SettingsTab_section mx_ThemeChoicePanel_borderRadiusSection">
+                    <span className="mx_SettingsTab_subheading">{_t("Corners")}</span>
+                    {borderRadiusSection}
+                </div>
+                <div className="mx_SettingsTab_section mx_ThemeChoicePanel_Advanced">
+                    {toggle}
+                    {advanced}
+                </div>
+            </>
+        );
 
         // // XXX: replace any type here
         // const themes = Object.entries<any>(enumerateThemes())

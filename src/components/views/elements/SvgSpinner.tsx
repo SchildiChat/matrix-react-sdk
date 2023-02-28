@@ -25,13 +25,13 @@ interface IProps {
 }
 
 export default class InlineSpinner extends React.PureComponent<IProps> {
-    static defaultProps = {
+    public static defaultProps = {
         w: 32,
         h: 32,
         className: "mx_Spinner_icon",
     };
 
-    render() {
+    public render(): JSX.Element {
         return (
             // loading-bubbles.svg from https://github.com/jxnblk/loading
             <svg

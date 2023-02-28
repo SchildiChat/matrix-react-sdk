@@ -16,8 +16,8 @@ limitations under the License.
 
 import React, { ChangeEvent } from "react";
 
-import Field from '../elements/Field';
-import SettingsFlag from '../elements/SettingsFlag';
+import Field from "../elements/Field";
+import SettingsFlag from "../elements/SettingsFlag";
 import SettingsStore from "../../../settings/SettingsStore";
 import Slider from "../elements/Slider";
 import { FontWatcher } from "../../../settings/watchers/FontWatcher";
@@ -26,7 +26,7 @@ import { Layout } from "../../../settings/enums/Layout";
 import { MatrixClientPeg } from "../../../MatrixClientPeg";
 import { SettingLevel } from "../../../settings/SettingLevel";
 import { _t } from "../../../languageHandler";
-import SdkConfig from '../../../SdkConfig';
+import SdkConfig from "../../../SdkConfig";
 
 interface IProps {}
 
@@ -116,71 +116,72 @@ export default class FontScalingPanel extends React.Component<IProps, IState> {
             { brand },
         );
 
-        return <>
-            <div className="mx_SettingsTab_heading">{ _t("Font size and typeface") }</div>
-            <div className="mx_SettingsTab_section mx_FontScalingPanel_fontScaling">
-                <div className="mx_FontScalingPanel_fontSlider">
-                    <div className="mx_FontScalingPanel_fontSlider_smallText">Aa</div>
-                    <Slider
-                        values={[13, 14, 15, 16, 18]}
-                        value={parseInt(this.state.fontSize, 10)}
-                        onSelectionChange={this.onFontSizeChanged}
-                        displayFunc={(_) => ""}
-                        disabled={this.state.useCustomFontSize}
-                    />
-                    <div className="mx_FontScalingPanel_fontSlider_largeText">Aa</div>
-                </div>
-
-                <div className="mx_FontScalingPanel_inlineCustomValues">
-                    <div>
-                        <SettingsFlag
-                            name="useCustomFontSize"
-                            level={SettingLevel.ACCOUNT}
-                            onChange={(checked) => this.setState({ useCustomFontSize: checked })}
-                            useCheckbox={true}
+        return (
+            <>
+                <div className="mx_SettingsTab_heading">{_t("Font size and typeface")}</div>
+                <div className="mx_SettingsTab_section mx_FontScalingPanel_fontScaling">
+                    <div className="mx_FontScalingPanel_fontSlider">
+                        <div className="mx_FontScalingPanel_fontSlider_smallText">Aa</div>
+                        <Slider
+                            values={[13, 14, 15, 16, 18]}
+                            value={parseInt(this.state.fontSize, 10)}
+                            onSelectionChange={this.onFontSizeChanged}
+                            displayFunc={(_) => ""}
+                            disabled={this.state.useCustomFontSize}
                         />
+                        <div className="mx_FontScalingPanel_fontSlider_largeText">Aa</div>
+                    </div>
 
-                        <Field
-                            type="number"
-                            label={_t("Font size")}
-                            autoComplete="off"
-                            placeholder={this.state.fontSize.toString()}
-                            value={this.state.fontSize.toString()}
-                            id="font_size_field"
-                            onValidate={this.onValidateFontSize}
-                            onChange={
-                                (value: ChangeEvent<HTMLInputElement>) =>
+                    <div className="mx_FontScalingPanel_inlineCustomValues">
+                        <div>
+                            <SettingsFlag
+                                name="useCustomFontSize"
+                                level={SettingLevel.ACCOUNT}
+                                onChange={(checked) => this.setState({ useCustomFontSize: checked })}
+                                useCheckbox={true}
+                            />
+
+                            <Field
+                                type="number"
+                                label={_t("Font size")}
+                                autoComplete="off"
+                                placeholder={this.state.fontSize.toString()}
+                                value={this.state.fontSize.toString()}
+                                id="font_size_field"
+                                onValidate={this.onValidateFontSize}
+                                onChange={(value: ChangeEvent<HTMLInputElement>) =>
                                     this.setState({ fontSize: value.target.value })
-                            }
-                            disabled={!this.state.useCustomFontSize}
-                            className="mx_FontScalingPanel_customFontSizeField"
-                        />
-                    </div>
-                    <div>
-                        <SettingsFlag
-                            name="useSystemFont"
-                            level={SettingLevel.DEVICE}
-                            useCheckbox={true}
-                            onChange={(checked) => this.setState({ useSystemFont: checked })}
-                        />
-                        <Field
-                            className="mx_FontScalingPanel_systemFont"
-                            label={SettingsStore.getDisplayName("systemFont")}
-                            onChange={(value) => {
-                                this.setState({
-                                    systemFont: value.target.value,
-                                });
+                                }
+                                disabled={!this.state.useCustomFontSize}
+                                className="mx_FontScalingPanel_customFontSizeField"
+                            />
+                        </div>
+                        <div>
+                            <SettingsFlag
+                                name="useSystemFont"
+                                level={SettingLevel.DEVICE}
+                                useCheckbox={true}
+                                onChange={(checked) => this.setState({ useSystemFont: checked })}
+                            />
+                            <Field
+                                className="mx_FontScalingPanel_systemFont"
+                                label={SettingsStore.getDisplayName("systemFont")}
+                                onChange={(value) => {
+                                    this.setState({
+                                        systemFont: value.target.value,
+                                    });
 
-                                SettingsStore.setValue("systemFont", null, SettingLevel.DEVICE, value.target.value);
-                            }}
-                            tooltipContent={systemFontTooltipContent}
-                            forceTooltipVisible={true}
-                            disabled={!this.state.useSystemFont}
-                            value={this.state.systemFont}
-                        />
+                                    SettingsStore.setValue("systemFont", null, SettingLevel.DEVICE, value.target.value);
+                                }}
+                                tooltipContent={systemFontTooltipContent}
+                                forceTooltipVisible={true}
+                                disabled={!this.state.useSystemFont}
+                                value={this.state.systemFont}
+                            />
+                        </div>
                     </div>
                 </div>
-            </div>
-        </>;
+            </>
+        );
     }
 }

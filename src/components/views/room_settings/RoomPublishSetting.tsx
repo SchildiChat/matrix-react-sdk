@@ -77,7 +77,7 @@ export default class RoomPublishSetting extends React.PureComponent<IProps, ISta
             <LabelledToggleSwitch
                 value={this.state.isRoomPublished}
                 onChange={this.onRoomPublishChange}
-                // disabled={!enabled}
+                disabled={false && !enabled} // SC: Show always since server (at least synapse) doesn't check
                 label={_t("Publish this room to the public in %(domain)s's room directory?", {
                     domain: client.getDomain(),
                 })}

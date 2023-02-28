@@ -32,8 +32,8 @@ import { ICompletion, ISelectionRange } from "./Autocompleter";
 import SettingsStore from "../settings/SettingsStore";
 import { EMOJI, IEmoji, getEmojiFromUnicode } from "../emoji";
 import { TimelineRenderingType } from "../contexts/RoomContext";
-import { mediaFromMxc } from '../customisations/Media';
-import { ICustomEmoji, loadImageSet } from '../emojipicker/customemoji';
+import { mediaFromMxc } from "../customisations/Media";
+import { ICustomEmoji, loadImageSet } from "../emojipicker/customemoji";
 import * as recent from "../emojipicker/recent";
 import { MatrixClientPeg } from "../MatrixClientPeg";
 
@@ -96,17 +96,18 @@ export default class EmojiProvider extends AutocompleteProvider {
         });
 
         // Load this room's image sets.
-        const imageSetEvents = room.currentState.getStateEvents('im.ponies.room_emotes');
-        let loadedImages: ICustomEmoji[] = imageSetEvents.flatMap(imageSetEvent => loadImageSet(imageSetEvent));
+        const imageSetEvents = room.currentState.getStateEvents("im.ponies.room_emotes");
+        let loadedImages: ICustomEmoji[] = imageSetEvents.flatMap((imageSetEvent) => loadImageSet(imageSetEvent));
 
         // Global emotes from rooms
         const cli = MatrixClientPeg.get();
         const globalPacks = cli.getAccountData("im.ponies.emote_rooms")?.getContent()?.rooms;
         for (const key in globalPacks) {
             const packRoom = cli.getRoom(key);
-            const packRoomImageSetEvents = packRoom.currentState.getStateEvents('im.ponies.room_emotes');
-            const moreLoadedImages: ICustomEmoji[] =
-                packRoomImageSetEvents.flatMap(packRoomImageSetEvents => loadImageSet(packRoomImageSetEvents));
+            const packRoomImageSetEvents = packRoom.currentState.getStateEvents("im.ponies.room_emotes");
+            const moreLoadedImages: ICustomEmoji[] = packRoomImageSetEvents.flatMap((packRoomImageSetEvents) =>
+                loadImageSet(packRoomImageSetEvents),
+            );
             loadedImages = [...loadedImages, ...moreLoadedImages];
         }
 
@@ -117,7 +118,7 @@ export default class EmojiProvider extends AutocompleteProvider {
         }));
         this.customEmojiMatcher = new QueryMatcher<ISortedEmoji>(sortedCustomImages, {
             keys: [],
-            funcs: [o => o.emoji?.shortcodes.map(s => `:${s}:`)],
+            funcs: [(o) => o.emoji?.shortcodes.map((s) => `:${s}:`)],
             shouldMatchWordsOnly: true,
         });
 
@@ -178,43 +179,42 @@ export default class EmojiProvider extends AutocompleteProvider {
             });
             completions = sortBy<ISortedEmoji>(uniq(completions), sorters);
 
-            completionResult = completions.map(c => {
-                if ('unicode' in c.emoji) {
-                    return {
-                        completion: c.emoji.unicode,
-                        component: (
-                            <PillCompletion title={`:${c.emoji.shortcodes[0]}:`} aria-label={c.emoji.unicode}>
-                                <span>{ c.emoji.unicode }</span>
-                            </PillCompletion>
-                        ),
-                        range,
-                    };
-                } else {
-                    let mediaUrl;
+            completionResult = completions
+                .map((c) => {
+                    if ("unicode" in c.emoji) {
+                        return {
+                            completion: c.emoji.unicode,
+                            component: (
+                                <PillCompletion title={`:${c.emoji.shortcodes[0]}:`} aria-label={c.emoji.unicode}>
+                                    <span>{c.emoji.unicode}</span>
+                                </PillCompletion>
+                            ),
+                            range,
+                        };
+                    } else {
+                        let mediaUrl;
 
-                    // SC: Might be no valid mxc url
-                    try {
-                        mediaUrl = mediaFromMxc(c.emoji.url).getThumbnailOfSourceHttp(24, 24, 'scale');
-                    } catch (e) {
-                        logger.error(e);
+                        // SC: Might be no valid mxc url
+                        try {
+                            mediaUrl = mediaFromMxc(c.emoji.url).getThumbnailOfSourceHttp(24, 24, "scale");
+                        } catch (e) {
+                            logger.error(e);
+                        }
+
+                        return {
+                            completion: c.emoji.shortcodes[0],
+                            type: "customEmoji",
+                            completionId: c.emoji.url,
+                            component: (
+                                <PillCompletion title={`:${c.emoji.shortcodes[0]}:`}>
+                                    <img className="mx_customEmoji_image" src={mediaUrl} alt={c.emoji.shortcodes[0]} />
+                                </PillCompletion>
+                            ),
+                            range,
+                        } as const;
                     }
-
-                    return {
-                        completion: c.emoji.shortcodes[0],
-                        type: "customEmoji",
-                        completionId: c.emoji.url,
-                        component: (
-                            <PillCompletion title={`:${c.emoji.shortcodes[0]}:`}>
-                                <img
-                                    className="mx_customEmoji_image"
-                                    src={mediaUrl}
-                                    alt={c.emoji.shortcodes[0]} />
-                            </PillCompletion>
-                        ),
-                        range,
-                    } as const;
-                }
-            }).slice(0, LIMIT);
+                })
+                .slice(0, LIMIT);
         }
         return completionResult;
     }

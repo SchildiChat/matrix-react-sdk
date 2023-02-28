@@ -15,16 +15,16 @@ limitations under the License.
 */
 
 import { _t } from "../languageHandler";
-import dis from '../dispatcher/dispatcher';
+import dis from "../dispatcher/dispatcher";
 import GenericToast from "../components/views/toasts/GenericToast";
 import ToastStore from "../stores/ToastStore";
 import PlatformPeg from "../PlatformPeg";
 import SettingsStore from "../settings/SettingsStore";
 import { SettingLevel } from "../settings/SettingLevel";
 
-const onAccept = () => {
+const onAccept = (): void => {
     dis.dispatch({
-        action: 'view_room',
+        action: "view_room",
         room_alias: "#web-announcements:schildi.chat",
     });
 
@@ -35,7 +35,7 @@ const onAccept = () => {
     hideToast();
 };
 
-const onReject = () => {
+const onReject = (): void => {
     // Don't show again
     SettingsStore.setValue("scShowUpdateAnnouncementRoomToast", null, SettingLevel.DEVICE, false);
 
@@ -44,32 +44,35 @@ const onReject = () => {
 
 const TOAST_KEY = "scupdateannouncementroom";
 
-export const showToast = () => {
-    PlatformPeg.get().canSelfUpdate().then((b) => {
-        if (b) return;
+export const showToast = (): void => {
+    PlatformPeg.get()
+        .canSelfUpdate()
+        .then((b) => {
+            if (b) return;
 
-        ToastStore.sharedInstance().addOrReplaceToast({
-            key: TOAST_KEY,
-            title: _t("Update notifications"),
-            props: {
-                description: _t(
-                    "Do you want to join a room notifying you about new releases? " +
-                    "This is especially useful if your platform doesn't support " +
-                    "automatic updates for SchildiChat (e.g. Windows and macOS).",
-                ),
-                acceptLabel: _t("Show preview"),
-                onAccept,
-                rejectLabel: _t("No"),
-                onReject,
-            },
-            component: GenericToast,
-            priority: 20,
+            ToastStore.sharedInstance().addOrReplaceToast({
+                key: TOAST_KEY,
+                title: _t("Update notifications"),
+                props: {
+                    description: _t(
+                        "Do you want to join a room notifying you about new releases? " +
+                            "This is especially useful if your platform doesn't support " +
+                            "automatic updates for SchildiChat (e.g. Windows and macOS).",
+                    ),
+                    acceptLabel: _t("Show preview"),
+                    onAccept,
+                    rejectLabel: _t("No"),
+                    onReject,
+                },
+                component: GenericToast,
+                priority: 20,
+            });
+        })
+        .catch((e) => {
+            console.error("Error getting vector version: ", e);
         });
-    }).catch((e) => {
-        console.error("Error getting vector version: ", e);
-    });
 };
 
-export const hideToast = () => {
+export const hideToast = (): void => {
     ToastStore.sharedInstance().dismissToast(TOAST_KEY);
 };

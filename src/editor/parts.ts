@@ -432,7 +432,7 @@ class CustomEmojiPart extends PillPart implements IPillPart {
 
         this.setAvatarVars(node, url, this.text[0]);
     }
-    constructor(shortCode: string, url: string) {
+    public constructor(shortCode: string, url: string) {
         super(url, shortCode);
     }
     protected acceptsInsertion(chr: string): boolean {
@@ -699,7 +699,7 @@ export class PartCreator {
         return parts;
     }
 
-    public customEmoji(shortcode: string, url: string) {
+    public customEmoji(shortcode: string, url: string): CustomEmojiPart {
         return new CustomEmojiPart(shortcode, url);
     }
 

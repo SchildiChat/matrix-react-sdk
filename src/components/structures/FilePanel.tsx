@@ -33,7 +33,7 @@ import ResizeNotifier from "../../utils/ResizeNotifier";
 import TimelinePanel from "./TimelinePanel";
 import Spinner from "../views/elements/Spinner";
 import { Layout } from "../../settings/enums/Layout";
-import { UserNameColorMode } from '../../settings/enums/UserNameColorMode';
+import { UserNameColorMode } from "../../settings/enums/UserNameColorMode";
 import RoomContext, { TimelineRenderingType } from "../../contexts/RoomContext";
 import Measured from "../views/elements/Measured";
 

@@ -100,9 +100,15 @@ const MessageComposerButtons: React.FC<IProps> = (props: IProps) => {
         ];
     } else if (props.collapseButtons) {
         mainButtons = [
-            isWysiwygLabEnabled ?
-                <ComposerModeButton key="composerModeButton" isRichTextEnabled={props.isRichTextEnabled} onClick={props.onComposerModeClick} /> :
-                emojiButton(props, room),
+            isWysiwygLabEnabled ? (
+                <ComposerModeButton
+                    key="composerModeButton"
+                    isRichTextEnabled={props.isRichTextEnabled}
+                    onClick={props.onComposerModeClick}
+                />
+            ) : (
+                emojiButton(props, room)
+            ),
             uploadButton(), // props passed via UploadButtonContext
         ];
         moreButtons = [

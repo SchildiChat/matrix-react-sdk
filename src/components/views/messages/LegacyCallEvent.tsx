@@ -30,7 +30,7 @@ import InfoTooltip, { InfoTooltipKind } from "../elements/InfoTooltip";
 import AccessibleTooltipButton from "../elements/AccessibleTooltipButton";
 import { formatPreciseDuration } from "../../../DateUtils";
 import Clock from "../audio_messages/Clock";
-import { Layout } from '../../../settings/enums/Layout';
+import { Layout } from "../../../settings/enums/Layout";
 
 const MAX_NON_NARROW_WIDTH = (450 / 70) * 100;
 

@@ -29,7 +29,8 @@ import { submitFeedback } from "../../../rageshake/submit-rageshake";
 import { useStateToggle } from "../../../hooks/useStateToggle";
 import StyledCheckbox from "../elements/StyledCheckbox";
 
-const existingIssuesUrl = "https://github.com/SchildiChat/schildichat-desktop/issues?q=is%3Aopen+is%3Aissue+sort%3Areactions-%2B1-desc";
+const existingIssuesUrl =
+    "https://github.com/SchildiChat/schildichat-desktop/issues?q=is%3Aopen+is%3Aissue+sort%3Areactions-%2B1-desc";
 const newIssueUrl = "https://github.com/SchildiChat/schildichat-desktop/issues/new/choose";
 
 interface IProps extends IDialogProps {

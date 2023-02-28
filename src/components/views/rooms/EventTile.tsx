@@ -933,7 +933,8 @@ export class UnwrappedEventTile extends React.Component<EventTileProps, IState> 
         // Use `getSender()` because searched events might not have a proper `sender`.
         const isOwnEvent = this.props.mxEvent?.getSender() === MatrixClientPeg.get().getUserId();
 
-        const scBubbleEnabled = this.props.layout === Layout.Bubble &&
+        const scBubbleEnabled =
+            this.props.layout === Layout.Bubble &&
             this.context.timelineRenderingType !== TimelineRenderingType.Notification &&
             this.context.timelineRenderingType !== TimelineRenderingType.File;
         const showRight = isOwnEvent && !this.props.singleSideBubbles;
@@ -943,7 +944,8 @@ export class UnwrappedEventTile extends React.Component<EventTileProps, IState> 
         if (
             this.context.timelineRenderingType !== TimelineRenderingType.Room &&
             this.context.timelineRenderingType !== TimelineRenderingType.Search &&
-            !isInfoMessage && !isBubbleMessage
+            !isInfoMessage &&
+            !isBubbleMessage
         ) {
             isContinuation = false;
         }
@@ -962,8 +964,10 @@ export class UnwrappedEventTile extends React.Component<EventTileProps, IState> 
             mx_EventTile_sending: !isEditing && isSending,
             mx_EventTile_highlight: this.shouldHighlight(),
             mx_EventTile_selected: this.props.isSelectedEvent || this.state.contextMenu,
-            mx_EventTile_continuation: isContinuation || (this.props.layout !== Layout.Bubble &&
-                (eventType === EventType.CallInvite || ElementCall.CALL_EVENT_TYPE.matches(eventType))),
+            mx_EventTile_continuation:
+                isContinuation ||
+                (this.props.layout !== Layout.Bubble &&
+                    (eventType === EventType.CallInvite || ElementCall.CALL_EVENT_TYPE.matches(eventType))),
             mx_EventTile_last: this.props.last,
             mx_EventTile_lastInSection: this.props.lastInSection,
             mx_EventTile_contextual: this.props.contextual,
@@ -1067,22 +1071,25 @@ export class UnwrappedEventTile extends React.Component<EventTileProps, IState> 
                 this.context.timelineRenderingType === TimelineRenderingType.Pinned ||
                 this.context.timelineRenderingType === TimelineRenderingType.Thread
             ) {
-                sender = <SenderProfile
-                    onClick={this.onSenderProfileClick}
-                    mxEvent={this.props.mxEvent}
-                    userNameColorMode={this.props.userNameColorMode}
-                />;
+                sender = (
+                    <SenderProfile
+                        onClick={this.onSenderProfileClick}
+                        mxEvent={this.props.mxEvent}
+                        userNameColorMode={this.props.userNameColorMode}
+                    />
+                );
             } else if (this.context.timelineRenderingType === TimelineRenderingType.ThreadsList) {
-                sender = <SenderProfile
-                    mxEvent={this.props.mxEvent}
-                    userNameColorMode={this.props.userNameColorMode}
-                    withTooltip
-                />;
+                sender = (
+                    <SenderProfile
+                        mxEvent={this.props.mxEvent}
+                        userNameColorMode={this.props.userNameColorMode}
+                        withTooltip
+                    />
+                );
             } else {
-                sender = <SenderProfile
-                    mxEvent={this.props.mxEvent}
-                    userNameColorMode={this.props.userNameColorMode}
-                />;
+                sender = (
+                    <SenderProfile mxEvent={this.props.mxEvent} userNameColorMode={this.props.userNameColorMode} />
+                );
             }
         }
 
@@ -1142,7 +1149,8 @@ export class UnwrappedEventTile extends React.Component<EventTileProps, IState> 
         }
 
         const linkedTimestamp = (
-            <a className="sc_LinkedTimestamp"
+            <a
+                className="sc_LinkedTimestamp"
                 href={permalink}
                 onClick={this.onPermalinkClicked}
                 aria-label={formatTime(new Date(this.props.mxEvent.getTs()), this.props.isTwelveHour)}
@@ -1152,9 +1160,7 @@ export class UnwrappedEventTile extends React.Component<EventTileProps, IState> 
             </a>
         );
 
-        const placeholderTimestamp = <span className="sc_PlaceholderTimestamp">
-            { timestamp }
-        </span>;
+        const placeholderTimestamp = <span className="sc_PlaceholderTimestamp">{timestamp}</span>;
 
         const useIRCLayout = this.props.layout === Layout.IRC;
         const groupTimestamp = !useIRCLayout ? linkedTimestamp : null;
@@ -1388,12 +1394,13 @@ export class UnwrappedEventTile extends React.Component<EventTileProps, IState> 
                 );
             }
 
-            default: { // Pinned, Room, Search
+            default: {
+                // Pinned, Room, Search
                 if (scBubbleEnabled) {
                     const infoBubble = isInfoMessage || isBubbleMessage;
 
                     const mediaBodyTypes = []; // 'm.image', 'm.file', 'm.audio', 'm.video'
-                    const mediaEvTypes = ['m.sticker'];
+                    const mediaEvTypes = ["m.sticker"];
                     let mediaBody = false;
                     let stickerBody = false;
                     let noticeBody = false;
@@ -1411,41 +1418,34 @@ export class UnwrappedEventTile extends React.Component<EventTileProps, IState> 
                         stickerBody = true;
                     }
 
-                    if (msgtype && msgtype == 'm.notice') noticeBody = true;
+                    if (msgtype && msgtype == "m.notice") noticeBody = true;
 
-                    const bubbleLineClasses = classNames(
-                        "sc_EventTile_bubbleLine",
-                        {
-                            "sc_EventTile_bubbleLine_info": infoBubble,
-                        },
-                    );
-                    const bubbleAreaClasses = classNames(
-                        "sc_EventTile_bubbleArea",
-                        {
-                            "sc_EventTile_bubbleArea_right": !infoBubble && showRight,
-                            "sc_EventTile_bubbleArea_left": !infoBubble && showLeft,
-                            "sc_EventTile_bubbleArea_center": infoBubble,
-                            "sc_EventTile_bubbleArea_info": infoBubble,
-                        },
-                    );
-                    const bubbleClasses = classNames(
-                        {
-                            "sc_EventTile_bubble": !mediaBody,
-                            "sc_EventTile_bubble_media": mediaBody,
-                            "sc_EventTile_bubble_info": infoBubble,
-                            "sc_EventTile_bubble_self": !infoBubble && isOwnEvent,
-                            "sc_EventTile_bubble_right": !infoBubble && showRight,
-                            "sc_EventTile_bubble_left": !infoBubble && showLeft,
-                            "sc_EventTile_bubble_center": infoBubble,
-                            "sc_EventTile_bubble_tail": !infoBubble && !this.props.continuation,
-                            "sc_EventTile_bubble_notice": noticeBody,
-                            "sc_EventTile_bubble_sticker": stickerBody,
-                        },
-                    );
+                    const bubbleLineClasses = classNames("sc_EventTile_bubbleLine", {
+                        sc_EventTile_bubbleLine_info: infoBubble,
+                    });
+                    const bubbleAreaClasses = classNames("sc_EventTile_bubbleArea", {
+                        sc_EventTile_bubbleArea_right: !infoBubble && showRight,
+                        sc_EventTile_bubbleArea_left: !infoBubble && showLeft,
+                        sc_EventTile_bubbleArea_center: infoBubble,
+                        sc_EventTile_bubbleArea_info: infoBubble,
+                    });
+                    const bubbleClasses = classNames({
+                        sc_EventTile_bubble: !mediaBody,
+                        sc_EventTile_bubble_media: mediaBody,
+                        sc_EventTile_bubble_info: infoBubble,
+                        sc_EventTile_bubble_self: !infoBubble && isOwnEvent,
+                        sc_EventTile_bubble_right: !infoBubble && showRight,
+                        sc_EventTile_bubble_left: !infoBubble && showLeft,
+                        sc_EventTile_bubble_center: infoBubble,
+                        sc_EventTile_bubble_tail: !infoBubble && !this.props.continuation,
+                        sc_EventTile_bubble_notice: noticeBody,
+                        sc_EventTile_bubble_sticker: stickerBody,
+                    });
 
                     // tab-index=-1 to allow it to be focusable but do not add tab stop for it, primarily for screen readers
-                    return (
-                        React.createElement(this.props.as || "li", {
+                    return React.createElement(
+                        this.props.as || "li",
+                        {
                             "ref": this.ref,
                             "className": classes,
                             "tabIndex": -1,
@@ -1458,46 +1458,61 @@ export class UnwrappedEventTile extends React.Component<EventTileProps, IState> 
                             "data-has-reply": !!replyChain,
                             "onMouseEnter": () => this.setState({ hover: true }),
                             "onMouseLeave": () => this.setState({ hover: false }),
-                        }, <>
-                            <div className={`${lineClasses} ${bubbleLineClasses}`} key="mx_EventTile_line" onContextMenu={this.onContextMenu}>
-                                { this.renderContextMenu() }
+                        },
+                        <>
+                            <div
+                                className={`${lineClasses} ${bubbleLineClasses}`}
+                                key="mx_EventTile_line"
+                                onContextMenu={this.onContextMenu}
+                            >
+                                {this.renderContextMenu()}
                                 <div className={bubbleAreaClasses}>
                                     <div className={bubbleClasses}>
-                                        { sender }
-                                        { replyChain }
-                                        { infoBubble ? avatar : null }
-                                        { renderTile(this.context.timelineRenderingType, {
-                                            ...this.props,
+                                        {sender}
+                                        {replyChain}
+                                        {infoBubble ? avatar : null}
+                                        {renderTile(
+                                            this.context.timelineRenderingType,
+                                            {
+                                                ...this.props,
 
-                                            // overrides
-                                            ref: this.tile,
-                                            isSeeingThroughMessageHiddenForModeration,
-                                            timestamp: null,
-                                            scBubble: true,
-                                            scBubbleActionBar: mediaBody ? actionBar : null,
-                                            scBubbleTimestamp: <>{ placeholderTimestamp }{ linkedTimestamp }</>,
+                                                // overrides
+                                                ref: this.tile,
+                                                isSeeingThroughMessageHiddenForModeration,
+                                                timestamp: null,
+                                                scBubble: true,
+                                                scBubbleActionBar: mediaBody ? actionBar : null,
+                                                scBubbleTimestamp: (
+                                                    <>
+                                                        {placeholderTimestamp}
+                                                        {linkedTimestamp}
+                                                    </>
+                                                ),
 
-                                            // appease TS
-                                            highlights: this.props.highlights,
-                                            highlightLink: this.props.highlightLink,
-                                            onHeightChanged: this.props.onHeightChanged,
-                                            permalinkCreator: this.props.permalinkCreator,
-                                        }, this.context.showHiddenEvents) }
-                                        { !mediaBody ? actionBar : null }
-                                        { groupPadlock }
+                                                // appease TS
+                                                highlights: this.props.highlights,
+                                                highlightLink: this.props.highlightLink,
+                                                onHeightChanged: this.props.onHeightChanged,
+                                                permalinkCreator: this.props.permalinkCreator,
+                                            },
+                                            this.context.showHiddenEvents,
+                                        )}
+                                        {!mediaBody ? actionBar : null}
+                                        {groupPadlock}
                                     </div>
-                                    { reactionsRow }
-                                    { this.renderThreadInfo() }
+                                    {reactionsRow}
+                                    {this.renderThreadInfo()}
                                 </div>
                             </div>
-                            { !infoBubble ? avatar : null }
-                            { msgOption }
-                        </>)
+                            {!infoBubble ? avatar : null}
+                            {msgOption}
+                        </>,
                     );
                 } else {
                     // tab-index=-1 to allow it to be focusable but do not add tab stop for it, primarily for screen readers
-                    return (
-                        React.createElement(this.props.as || "li", {
+                    return React.createElement(
+                        this.props.as || "li",
+                        {
                             "ref": this.ref,
                             "className": classes,
                             "tabIndex": -1,
@@ -1510,42 +1525,51 @@ export class UnwrappedEventTile extends React.Component<EventTileProps, IState> 
                             "data-has-reply": !!replyChain,
                             "onMouseEnter": () => this.setState({ hover: true }),
                             "onMouseLeave": () => this.setState({ hover: false }),
-                        }, <>
-                            { ircTimestamp }
-                            { sender }
-                            { ircPadlock }
-                            { avatar }
+                        },
+                        <>
+                            {ircTimestamp}
+                            {sender}
+                            {ircPadlock}
+                            {avatar}
                             <div className={lineClasses} key="mx_EventTile_line" onContextMenu={this.onContextMenu}>
-                                { this.renderContextMenu() }
-                                { groupTimestamp }
-                                { groupPadlock }
-                                { replyChain }
-                                { renderTile(this.context.timelineRenderingType, {
-                                    ...this.props,
+                                {this.renderContextMenu()}
+                                {groupTimestamp}
+                                {groupPadlock}
+                                {replyChain}
+                                {renderTile(
+                                    this.context.timelineRenderingType,
+                                    {
+                                        ...this.props,
 
-                                    // overrides
-                                    ref: this.tile,
-                                    isSeeingThroughMessageHiddenForModeration,
-                                    timestamp: bubbleTimestamp,
+                                        // overrides
+                                        ref: this.tile,
+                                        isSeeingThroughMessageHiddenForModeration,
+                                        timestamp: bubbleTimestamp,
 
-                                    // appease TS
-                                    highlights: this.props.highlights,
-                                    highlightLink: this.props.highlightLink,
-                                    onHeightChanged: this.props.onHeightChanged,
-                                    permalinkCreator: this.props.permalinkCreator,
-                                }, this.context.showHiddenEvents) }
-                                { actionBar }
-                                { this.props.layout === Layout.IRC && <>
-                                    { reactionsRow }
-                                    { this.renderThreadInfo() }
-                                </> }
+                                        // appease TS
+                                        highlights: this.props.highlights,
+                                        highlightLink: this.props.highlightLink,
+                                        onHeightChanged: this.props.onHeightChanged,
+                                        permalinkCreator: this.props.permalinkCreator,
+                                    },
+                                    this.context.showHiddenEvents,
+                                )}
+                                {actionBar}
+                                {this.props.layout === Layout.IRC && (
+                                    <>
+                                        {reactionsRow}
+                                        {this.renderThreadInfo()}
+                                    </>
+                                )}
                             </div>
-                            { this.props.layout !== Layout.IRC && <>
-                                { reactionsRow }
-                                { this.renderThreadInfo() }
-                            </> }
-                            { msgOption }
-                        </>)
+                            {this.props.layout !== Layout.IRC && (
+                                <>
+                                    {reactionsRow}
+                                    {this.renderThreadInfo()}
+                                </>
+                            )}
+                            {msgOption}
+                        </>,
                     );
                 }
             }

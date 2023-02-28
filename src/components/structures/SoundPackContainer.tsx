@@ -24,8 +24,7 @@ import SettingsStore from "../../settings/SettingsStore";
  * Sound packs are implemented by setting the sources to different sources.
  */
 
-interface IProps {
-}
+interface IProps {}
 
 interface IState {
     soundPack?: SoundPack;
@@ -35,7 +34,7 @@ export default class SoundPackContainer extends React.Component<IProps, IState> 
     private watcher: string;
     private containerRef: React.RefObject<HTMLDivElement>;
 
-    constructor(props: IProps) {
+    public constructor(props: IProps) {
         super(props);
 
         this.containerRef = React.createRef();
@@ -44,16 +43,16 @@ export default class SoundPackContainer extends React.Component<IProps, IState> 
             soundPack: SettingsStore.getValue("soundPack"),
         };
 
-        this.watcher = SettingsStore.watchSetting("soundPack", null, (...[,,,, value]) =>
+        this.watcher = SettingsStore.watchSetting("soundPack", null, (...[, , , , value]) =>
             this.setState({ soundPack: value as SoundPack }),
         );
     }
 
-    public componentWillUnmount() {
+    public componentWillUnmount(): void {
         SettingsStore.unwatchSetting(this.watcher);
     }
 
-    public render() {
+    public render(): JSX.Element {
         return (
             <div className="mx_SoundPackContainer" ref={this.containerRef}>
                 <audio id="messageAudio">
@@ -85,7 +84,7 @@ export default class SoundPackContainer extends React.Component<IProps, IState> 
      * Because the audio stays the same, the browser won't load the new sources until we call .load() on the audio element.
      * This function called .load() after the sources are updated.
      */
-    componentDidUpdate() {
-        this.containerRef.current.querySelectorAll("audio").forEach(a => a.load());
+    public componentDidUpdate(): void {
+        this.containerRef.current.querySelectorAll("audio").forEach((a) => a.load());
     }
 }

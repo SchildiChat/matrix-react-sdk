@@ -18,7 +18,7 @@ limitations under the License.
 import { encode } from "html-entities";
 import cheerio from "cheerio";
 import escapeHtml from "escape-html";
-import _ from 'lodash';
+import _ from "lodash";
 
 import Markdown from "../Markdown";
 import { makeGenericPermalink } from "../utils/permalinks/Permalinks";
@@ -55,8 +55,8 @@ export function mdSerialize(model: EditorModel): string {
             case Type.CustomEmoji:
                 return (
                     html +
-                    `<img data-mx-emoticon height="18" src="${encodeURI(part.resourceId)}"`
-                    + ` title=":${_.escape(part.text)}:" alt=":${_.escape(part.text)}:">`
+                    `<img data-mx-emoticon height="18" src="${encodeURI(part.resourceId)}"` +
+                    ` title=":${_.escape(part.text)}:" alt=":${_.escape(part.text)}:">`
                 );
         }
     }, "");

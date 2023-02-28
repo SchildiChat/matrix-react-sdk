@@ -573,13 +573,15 @@ export default class MImageBody extends React.Component<IBodyProps, IState> {
                 errorText = _t("Error downloading image");
             }
 
-            return <div className="sc_MImageBody_container">
-                <MediaProcessingError className="mx_MImageBody">
-                    { errorText }
-                    { this.props.scBubbleTimestamp }
-                </MediaProcessingError>
-                { this.props.scBubbleActionBar }
-            </div>;
+            return (
+                <div className="sc_MImageBody_container">
+                    <MediaProcessingError className="mx_MImageBody">
+                        {errorText}
+                        {this.props.scBubbleTimestamp}
+                    </MediaProcessingError>
+                    {this.props.scBubbleActionBar}
+                </div>
+            );
         }
 
         let contentUrl = this.state.contentUrl;
@@ -596,14 +598,16 @@ export default class MImageBody extends React.Component<IBodyProps, IState> {
         const thumbnail = this.messageContent(contentUrl, thumbUrl, content);
         const fileBody = this.getFileBody();
 
-        return <div className="sc_MImageBody_container">
-            <div className="mx_MImageBody">
-                {thumbnail}
-                {fileBody}
-                {this.props.scBubbleTimestamp}
+        return (
+            <div className="sc_MImageBody_container">
+                <div className="mx_MImageBody">
+                    {thumbnail}
+                    {fileBody}
+                    {this.props.scBubbleTimestamp}
+                </div>
+                {this.props.scBubbleActionBar}
             </div>
-            { this.props.scBubbleActionBar }
-        </div>;
+        );
     }
 }
 

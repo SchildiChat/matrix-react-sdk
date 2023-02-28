@@ -145,8 +145,10 @@ export class RoomTile extends React.PureComponent<ClassProps, State> {
         }
 
         // SC: Remove focus from room tile after hiding menu
-        if ((!!prevState.generalMenuPosition && !this.state.generalMenuPosition) ||
-            (!!prevState.notificationsMenuPosition && this.state.notificationsMenuPosition)) {
+        if (
+            (!!prevState.generalMenuPosition && !this.state.generalMenuPosition) ||
+            (!!prevState.notificationsMenuPosition && this.state.notificationsMenuPosition)
+        ) {
             this.roomTileRef?.current?.focus();
             this.roomTileRef?.current?.blur();
         }

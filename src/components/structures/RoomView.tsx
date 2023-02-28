@@ -458,25 +458,25 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             SettingsStore.watchSetting("layout", null, (...[, , , value]) =>
                 this.setState({ layout: value as Layout }),
             ),
-            SettingsStore.watchSetting("singleSideBubbles", null, (...[,,, value]) =>
+            SettingsStore.watchSetting("singleSideBubbles", null, (...[, , , value]) =>
                 this.setState({ singleSideBubbles: value as boolean }),
             ),
-            SettingsStore.watchSetting("adaptiveSideBubbles", null, (...[,,, value]) =>
+            SettingsStore.watchSetting("adaptiveSideBubbles", null, (...[, , , value]) =>
                 this.setState({
                     adaptiveSideBubbles: value as boolean,
                     singleSideBubbles: SettingsStore.getValue("singleSideBubbles"), // restore default
                 }),
             ),
-            SettingsStore.watchSetting("userNameColorModeDM", null, (...[,,, value]) =>
+            SettingsStore.watchSetting("userNameColorModeDM", null, (...[, , , value]) =>
                 this.recalculateUserNameColorMode(),
             ),
-            SettingsStore.watchSetting("userNameColorModeGroup", null, (...[,,, value]) =>
+            SettingsStore.watchSetting("userNameColorModeGroup", null, (...[, , , value]) =>
                 this.recalculateUserNameColorMode(),
             ),
-            SettingsStore.watchSetting("userNameColorModePublic", null, (...[,,, value]) =>
+            SettingsStore.watchSetting("userNameColorModePublic", null, (...[, , , value]) =>
                 this.recalculateUserNameColorMode(),
             ),
-            SettingsStore.watchSetting("youtubeEmbedPlayer", null, (...[,,, value]) =>
+            SettingsStore.watchSetting("youtubeEmbedPlayer", null, (...[, , , value]) =>
                 this.setState({ youtubeEmbedPlayer: value as boolean }),
             ),
             SettingsStore.watchSetting("lowBandwidth", null, (...[, , , value]) =>
@@ -1214,7 +1214,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         }
 
         // SC: userNameColorMode can change dependent on if room is public
-        if (ev.getType() === 'm.room.join_rules') {
+        if (ev.getType() === "m.room.join_rules") {
             this.recalculateUserNameColorMode();
         }
     };
@@ -1248,7 +1248,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
 
         const joinRules = room.currentState.getStateEvents("m.room.join_rules", "");
         const joinRule = joinRules && joinRules.getContent().join_rule;
-        const isPublic = joinRule === 'public';
+        const isPublic = joinRule === "public";
 
         const isDm = !!DMRoomMap.shared().getUserIdForRoomId(room.roomId);
 
@@ -1930,9 +1930,9 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
 
     private get messagePanelClassNames(): string {
         return classNames("mx_RoomView_messagePanel", {
-            "mx_IRCLayout": this.state.layout === Layout.IRC,
-            "sc_BubbleLayout": this.state.layout === Layout.Bubble,
-            "sc_BubbleLayout_singleSide": this.state.layout === Layout.Bubble && this.state.singleSideBubbles,
+            mx_IRCLayout: this.state.layout === Layout.IRC,
+            sc_BubbleLayout: this.state.layout === Layout.Bubble,
+            sc_BubbleLayout_singleSide: this.state.layout === Layout.Bubble && this.state.singleSideBubbles,
         });
     }
 

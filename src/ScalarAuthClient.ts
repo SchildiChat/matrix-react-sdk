@@ -24,7 +24,7 @@ import { Service, startTermsFlow, TermsInteractionCallback, TermsNotSignedError 
 import { MatrixClientPeg } from "./MatrixClientPeg";
 import SdkConfig from "./SdkConfig";
 import { WidgetType } from "./widgets/WidgetType";
-import ThemeWatcher from './settings/watchers/ThemeWatcher';
+import ThemeWatcher from "./settings/watchers/ThemeWatcher";
 
 // The version of the integration manager API we're intending to work with
 const imApiVersion = "1.1";

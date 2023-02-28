@@ -375,7 +375,11 @@ export default class UserMenu extends React.Component<IProps, IState> {
                     <RovingAccessibleTooltipButton
                         className="mx_UserMenu_contextMenu_themeButton"
                         onClick={this.onSwitchThemeClick}
-                        title={this.state.themeInUse === Theme.Dark ? _t("Switch to light mode") : _t("Switch to dark mode")}
+                        title={
+                            this.state.themeInUse === Theme.Dark
+                                ? _t("Switch to light mode")
+                                : _t("Switch to dark mode")
+                        }
                     >
                         <img
                             src={require("../../../res/img/element-icons/roomlist/dark-light-mode.svg").default}

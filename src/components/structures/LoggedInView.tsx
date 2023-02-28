@@ -62,8 +62,8 @@ import ToastContainer from "./ToastContainer";
 import UserView from "./UserView";
 import BackdropPanel from "./BackdropPanel";
 import { mediaFromMxc } from "../../customisations/Media";
-import { RecheckThemePayload } from '../../dispatcher/payloads/RecheckThemePayload';
-import { Layout } from '../../settings/enums/Layout';
+import { RecheckThemePayload } from "../../dispatcher/payloads/RecheckThemePayload";
+import { Layout } from "../../settings/enums/Layout";
 import { UserTab } from "../views/dialogs/UserTab";
 import { OpenToTabPayload } from "../../dispatcher/payloads/OpenToTabPayload";
 import RightPanelStore from "../../stores/right-panel/RightPanelStore";
@@ -146,7 +146,7 @@ class LoggedInView extends React.Component<IProps, IState> {
 
         this.state = {
             syncErrorData: undefined,
-            layout: SettingsStore.getValue('layout'),
+            layout: SettingsStore.getValue("layout"),
             // use compact timeline view
             useCompactLayout: SettingsStore.getValue("useCompactLayout"),
             usageLimitDismissed: false,
@@ -179,17 +179,13 @@ class LoggedInView extends React.Component<IProps, IState> {
         this.onSync(this._matrixClient.getSyncState(), null, this._matrixClient.getSyncStateData());
         this._matrixClient.on(RoomStateEvent.Events, this.onRoomStateEvents);
 
-        this.layoutWatcherRef = SettingsStore.watchSetting(
-            "layout", null, this.onLayoutChanged,
-        );
+        this.layoutWatcherRef = SettingsStore.watchSetting("layout", null, this.onLayoutChanged);
         this.compactLayoutWatcherRef = SettingsStore.watchSetting(
             "useCompactLayout",
             null,
             this.onCompactLayoutChanged,
         );
-        this.borderRadiusWatcherRef = SettingsStore.watchSetting(
-            "borderRadius", null, this.onBorderRadiusChanged,
-        );
+        this.borderRadiusWatcherRef = SettingsStore.watchSetting("borderRadius", null, this.onBorderRadiusChanged);
         this.backgroundImageWatcherRef = SettingsStore.watchSetting(
             "RoomList.backgroundImage",
             null,

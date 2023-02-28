@@ -35,7 +35,7 @@ import { aboveLeftOf, MenuProps } from "../../structures/ContextMenu";
 import AccessibleTooltipButton from "../elements/AccessibleTooltipButton";
 import ReplyPreview from "./ReplyPreview";
 import { UPDATE_EVENT } from "../../../stores/AsyncStore";
-import { Layout } from '../../../settings/enums/Layout';
+import { Layout } from "../../../settings/enums/Layout";
 import VoiceRecordComposerTile from "./VoiceRecordComposerTile";
 import { VoiceRecordingStore } from "../../../stores/VoiceRecordingStore";
 import { RecordingState } from "../../../audio/VoiceRecording";
@@ -74,12 +74,9 @@ interface ISendButtonProps {
 }
 
 function SendButton(props: ISendButtonProps): JSX.Element {
-    const classes = classNames(
-        "mx_MessageComposer_sendMessage",
-        {
-            "mx_MessageComposer_sendMessage_enabled": props.enabled,
-        },
-    );
+    const classes = classNames("mx_MessageComposer_sendMessage", {
+        mx_MessageComposer_sendMessage_enabled: props.enabled,
+    });
     return (
         <AccessibleTooltipButton
             className={classes}

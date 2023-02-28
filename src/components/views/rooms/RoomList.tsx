@@ -96,13 +96,8 @@ export const TAG_ORDER: TagID[] = [
     DefaultTagID.Suggested,
     DefaultTagID.Archived,
 ];
-const ALWAYS_VISIBLE_SPLIT_TAGS: TagID[] = [
-    DefaultTagID.DM,
-    DefaultTagID.Untagged,
-];
-const ALWAYS_VISIBLE_UNIFIED_TAGS: TagID[] = [
-    DefaultTagID.Unified,
-];
+const ALWAYS_VISIBLE_SPLIT_TAGS: TagID[] = [DefaultTagID.DM, DefaultTagID.Untagged];
+const ALWAYS_VISIBLE_UNIFIED_TAGS: TagID[] = [DefaultTagID.Unified];
 
 interface ITagAesthetics {
     sectionLabel: string;
@@ -201,19 +196,21 @@ const DmAuxButton: React.FC<IAuxButtonProps> = ({ tabIndex, dispatcher = default
             </>
         );
     } else if ((true || !activeSpace) && showCreateRooms) {
-        return <>
-            <AccessibleTooltipButton
-                tabIndex={tabIndex}
-                onClick={(e) => {
-                    dispatcher.dispatch({ action: "view_create_chat" });
-                    PosthogTrackers.trackInteraction("WebRoomListRoomsSublistPlusMenuCreateChatItem", e);
-                }}
-                className="mx_RoomSublist_auxButton"
-                tooltipClassName="mx_RoomSublist_addRoomTooltip"
-                aria-label={_t("Start chat")}
-                title={_t("Start chat")}
-            />
-        </>;
+        return (
+            <>
+                <AccessibleTooltipButton
+                    tabIndex={tabIndex}
+                    onClick={(e) => {
+                        dispatcher.dispatch({ action: "view_create_chat" });
+                        PosthogTrackers.trackInteraction("WebRoomListRoomsSublistPlusMenuCreateChatItem", e);
+                    }}
+                    className="mx_RoomSublist_auxButton"
+                    tooltipClassName="mx_RoomSublist_addRoomTooltip"
+                    aria-label={_t("Start chat")}
+                    title={_t("Start chat")}
+                />
+            </>
+        );
     }
 
     return null;
@@ -310,32 +307,69 @@ const UntaggedAuxButton: React.FC<IAuxButtonProps> = ({ tabIndex }) => {
                                 canAddRooms ? undefined : _t("You do not have permissions to add rooms to this space")
                             }
                         />
-                    </>)
-                    : null
-                }
+                    </>
+                ) : null}
             </IconizedContextMenuOptionList>
         );
 
         // SC: Just show the button, no menu
-        scAddRoomButton = <AccessibleTooltipButton
-            tabIndex={tabIndex}
-            onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                showCreateNewRoom(activeSpace);
-            }}
-            className="mx_RoomSublist_auxButton mx_RoomSublist_auxGroupButton"
-            tooltipClassName="mx_RoomSublist_addRoomTooltip"
-            disabled={!canAddRooms}
-            aria-label={canAddRooms ? _t("Create new room")
-                : _t("You do not have permissions to add rooms to this space")}
-            title={canAddRooms ? _t("Create new room")
-                : _t("You do not have permissions to add rooms to this space")}
-        />;
-    // eslint-disable-next-line no-constant-condition
+        scAddRoomButton = (
+            <AccessibleTooltipButton
+                tabIndex={tabIndex}
+                onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    showCreateNewRoom(activeSpace);
+                }}
+                className="mx_RoomSublist_auxButton mx_RoomSublist_auxGroupButton"
+                tooltipClassName="mx_RoomSublist_addRoomTooltip"
+                disabled={!canAddRooms}
+                aria-label={
+                    canAddRooms ? _t("Create new room") : _t("You do not have permissions to add rooms to this space")
+                }
+                title={
+                    canAddRooms ? _t("Create new room") : _t("You do not have permissions to add rooms to this space")
+                }
+            />
+        );
+        // eslint-disable-next-line no-constant-condition
     } else if (true || menuDisplayed) {
-        contextMenuContent = <IconizedContextMenuOptionList first>
-            { showCreateRoom && <>
+        contextMenuContent = (
+            <IconizedContextMenuOptionList first>
+                {showCreateRoom && (
+                    <>
+                        <IconizedContextMenuOption
+                            label={_t("Explore public rooms")}
+                            iconClassName="mx_RoomList_iconExplore"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                closeMenu();
+                                PosthogTrackers.trackInteraction("WebRoomListRoomsSublistPlusMenuExploreRoomsItem", e);
+                                defaultDispatcher.fire(Action.ViewRoomDirectory);
+                            }}
+                        />
+                        {videoRoomsEnabled && (
+                            <IconizedContextMenuOption
+                                label={_t("New video room")}
+                                iconClassName="mx_RoomList_iconNewVideoRoom"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    closeMenu();
+                                    defaultDispatcher.dispatch({
+                                        action: "view_create_room",
+                                        type: elementCallVideoRoomsEnabled
+                                            ? RoomType.UnstableCall
+                                            : RoomType.ElementVideo,
+                                    });
+                                }}
+                            >
+                                <BetaPill />
+                            </IconizedContextMenuOption>
+                        )}
+                    </>
+                )}
                 <IconizedContextMenuOption
                     label={_t("Explore public rooms")}
                     iconClassName="mx_RoomList_iconExplore"
@@ -347,50 +381,24 @@ const UntaggedAuxButton: React.FC<IAuxButtonProps> = ({ tabIndex }) => {
                         defaultDispatcher.fire(Action.ViewRoomDirectory);
                     }}
                 />
-                { videoRoomsEnabled && (
-                    <IconizedContextMenuOption
-                        label={_t("New video room")}
-                        iconClassName="mx_RoomList_iconNewVideoRoom"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            closeMenu();
-                            defaultDispatcher.dispatch({
-                                action: "view_create_room",
-                                type: elementCallVideoRoomsEnabled ? RoomType.UnstableCall : RoomType.ElementVideo,
-                            });
-                        }}
-                    >
-                        <BetaPill />
-                    </IconizedContextMenuOption>
-                ) }
-            </> }
-            <IconizedContextMenuOption
-                label={_t("Explore public rooms")}
-                iconClassName="mx_RoomList_iconExplore"
+            </IconizedContextMenuOptionList>
+        );
+
+        // SC: Just show the button, no menu
+        scAddRoomButton = (
+            <AccessibleTooltipButton
+                tabIndex={tabIndex}
                 onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    closeMenu();
-                    PosthogTrackers.trackInteraction("WebRoomListRoomsSublistPlusMenuExploreRoomsItem", e);
-                    defaultDispatcher.fire(Action.ViewRoomDirectory);
+                    defaultDispatcher.dispatch({ action: "view_create_room" });
                 }}
+                className="mx_RoomSublist_auxButton mx_RoomSublist_auxGroupButton"
+                tooltipClassName="mx_RoomSublist_addRoomTooltip"
+                aria-label={_t("Create new room")}
+                title={_t("Create new room")}
             />
-        </IconizedContextMenuOptionList>;
-
-        // SC: Just show the button, no menu
-        scAddRoomButton = <AccessibleTooltipButton
-            tabIndex={tabIndex}
-            onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                defaultDispatcher.dispatch({ action: "view_create_room" });
-            }}
-            className="mx_RoomSublist_auxButton mx_RoomSublist_auxGroupButton"
-            tooltipClassName="mx_RoomSublist_addRoomTooltip"
-            aria-label={_t("Create new room")}
-            title={_t("Create new room")}
-        />;
+        );
     }
 
     // SC: Just show the button, no menu
@@ -423,11 +431,15 @@ const UntaggedAuxButton: React.FC<IAuxButtonProps> = ({ tabIndex }) => {
     );
 };
 
-const UnifiedAuxButton = (iAuxButtonProps: IAuxButtonProps) => {
-    return <>
-        { DmAuxButton(iAuxButtonProps) }
-        { UntaggedAuxButton(iAuxButtonProps) }
-    </>;
+const UnifiedAuxButton: React.FC<IAuxButtonProps> = (iAuxButtonProps: IAuxButtonProps) => {
+    return (
+        <>
+            {/* eslint-disable-next-line new-cap */}
+            {DmAuxButton(iAuxButtonProps)}
+            {/* eslint-disable-next-line new-cap */}
+            {UntaggedAuxButton(iAuxButtonProps)}
+        </>
+    );
 };
 
 const TAG_AESTHETICS: ITagAestheticsMap = {
@@ -508,8 +520,11 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
             feature_favourite_messages: SettingsStore.getValue("feature_favourite_messages"),
         };
 
-        this.unifiedRoomListWatcherRef = SettingsStore.watchSetting("unifiedRoomList", null,
-            this.onUnifiedRoomListChange);
+        this.unifiedRoomListWatcherRef = SettingsStore.watchSetting(
+            "unifiedRoomList",
+            null,
+            this.onUnifiedRoomListChange,
+        );
     }
 
     public componentDidMount(): void {
@@ -708,21 +723,19 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
             const aesthetics = TAG_AESTHETICS[orderedTagId];
             if (!aesthetics) throw new Error(`Tag ${orderedTagId} does not have aesthetics`);
 
-                let alwaysVisible =
-                    (this.state.unifiedRoomList ? ALWAYS_VISIBLE_UNIFIED_TAGS : ALWAYS_VISIBLE_SPLIT_TAGS)
-                        .includes(orderedTagId);
-                if (
-                    (this.props.activeSpace === MetaSpace.Favourites && orderedTagId !== DefaultTagID.Favourite) ||
-                    (this.props.activeSpace === MetaSpace.People && orderedTagId !== DefaultTagID.DM) ||
-                    (this.props.activeSpace === MetaSpace.Orphans && orderedTagId === DefaultTagID.DM) ||
-                    (
-                        !isMetaSpace(this.props.activeSpace) &&
-                        orderedTagId === DefaultTagID.DM &&
-                        !SettingsStore.getValue("Spaces.showPeopleInSpace", this.props.activeSpace)
-                    )
-                ) {
-                    alwaysVisible = false;
-                }
+            let alwaysVisible = (
+                this.state.unifiedRoomList ? ALWAYS_VISIBLE_UNIFIED_TAGS : ALWAYS_VISIBLE_SPLIT_TAGS
+            ).includes(orderedTagId);
+            if (
+                (this.props.activeSpace === MetaSpace.Favourites && orderedTagId !== DefaultTagID.Favourite) ||
+                (this.props.activeSpace === MetaSpace.People && orderedTagId !== DefaultTagID.DM) ||
+                (this.props.activeSpace === MetaSpace.Orphans && orderedTagId === DefaultTagID.DM) ||
+                (!isMetaSpace(this.props.activeSpace) &&
+                    orderedTagId === DefaultTagID.DM &&
+                    !SettingsStore.getValue("Spaces.showPeopleInSpace", this.props.activeSpace))
+            ) {
+                alwaysVisible = false;
+            }
 
             let forceExpanded = false;
             if (
@@ -763,10 +776,10 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
     public render(): JSX.Element {
         const roomListStyle = SettingsStore.getValue("roomListStyle");
         const roomListClassNames = classNames({
-            "mx_RoomList": true,
-            "mx_RoomList_Compact": roomListStyle === RoomListStyle.Compact,
-            "mx_RoomList_Intermediate": roomListStyle === RoomListStyle.Intermediate,
-            "mx_RoomList_Roomy": roomListStyle === RoomListStyle.Roomy,
+            mx_RoomList: true,
+            mx_RoomList_Compact: roomListStyle === RoomListStyle.Compact,
+            mx_RoomList_Intermediate: roomListStyle === RoomListStyle.Intermediate,
+            mx_RoomList_Roomy: roomListStyle === RoomListStyle.Roomy,
         });
         const sublists = this.renderSublists();
         return (

@@ -205,10 +205,7 @@ export default class RightPanel extends React.Component<IProps, IState> {
                 break;
 
             case RightPanelPhases.NotificationPanel:
-                card = <NotificationPanel
-                    onClose={this.onClose}
-                    userNameColorMode={this.props.userNameColorMode}
-                />;
+                card = <NotificationPanel onClose={this.onClose} userNameColorMode={this.props.userNameColorMode} />;
                 break;
 
             case RightPanelPhases.PinnedMessages:
@@ -237,12 +234,14 @@ export default class RightPanel extends React.Component<IProps, IState> {
                 );
                 break;
             case RightPanelPhases.FilePanel:
-                card = <FilePanel
-                    roomId={roomId}
-                    resizeNotifier={this.props.resizeNotifier}
-                    onClose={this.onClose}
-                    userNameColorMode={this.props.userNameColorMode}
-                />;
+                card = (
+                    <FilePanel
+                        roomId={roomId}
+                        resizeNotifier={this.props.resizeNotifier}
+                        onClose={this.onClose}
+                        userNameColorMode={this.props.userNameColorMode}
+                    />
+                );
                 break;
 
             case RightPanelPhases.ThreadView:

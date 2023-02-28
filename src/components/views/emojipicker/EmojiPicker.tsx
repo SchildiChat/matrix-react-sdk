@@ -27,8 +27,8 @@ import Search from "./Search";
 import Preview from "./Preview";
 import QuickReactions from "./QuickReactions";
 import Category, { ICategory, CategoryKey } from "./Category";
-import AccessibleButton from '../elements/AccessibleButton';
-import { ICustomEmoji, loadImageSet } from '../../../emojipicker/customemoji';
+import AccessibleButton from "../elements/AccessibleButton";
+import { ICustomEmoji, loadImageSet } from "../../../emojipicker/customemoji";
 
 export const CATEGORY_HEADER_HEIGHT = 20;
 export const EMOJI_HEIGHT = 35;
@@ -76,23 +76,30 @@ class EmojiPicker extends React.Component<IProps, IState> {
 
         let loadedImages: ICustomEmoji[];
         if (props.room) {
-            const imageSetEvents = props.room.currentState.getStateEvents('im.ponies.room_emotes');
-            loadedImages = imageSetEvents.flatMap(imageSetEvent => loadImageSet(imageSetEvent));
+            const imageSetEvents = props.room.currentState.getStateEvents("im.ponies.room_emotes");
+            loadedImages = imageSetEvents.flatMap((imageSetEvent) => loadImageSet(imageSetEvent));
         } else {
             loadedImages = [];
         }
 
         // populate the map of custom emojis from shortcodes
-        loadedImages.forEach(image => {
-            image?.shortcodes.forEach(shortCode => {
+        loadedImages.forEach((image) => {
+            image?.shortcodes.forEach((shortCode) => {
                 this.shortcodes_to_custom_emoji[`:${shortCode}:`] = image;
             });
         });
 
         // Convert recent emoji characters to emoji data, removing unknowns and duplicates
-        this.recentlyUsed = Array.from(new Set(recent.get().map(recentKey => {
-            return getEmojiFromUnicode(recentKey) || this.shortcodes_to_custom_emoji[recentKey];
-        }).filter(Boolean)));
+        this.recentlyUsed = Array.from(
+            new Set(
+                recent
+                    .get()
+                    .map((recentKey) => {
+                        return getEmojiFromUnicode(recentKey) || this.shortcodes_to_custom_emoji[recentKey];
+                    })
+                    .filter(Boolean),
+            ),
+        );
         this.allEmojis = {
             recent: this.recentlyUsed,
             room: loadedImages,
@@ -243,7 +250,7 @@ class EmojiPicker extends React.Component<IProps, IState> {
     };
 
     private emojiMatchesFilter = (emoji: IEmoji | ICustomEmoji, filter: string): boolean => {
-        if ('label' in emoji) {
+        if ("label" in emoji) {
             return (
                 emoji.label.toLowerCase().includes(filter) ||
                 (Array.isArray(emoji.emoticon)
@@ -253,7 +260,7 @@ class EmojiPicker extends React.Component<IProps, IState> {
                 emoji.unicode.split(ZERO_WIDTH_JOINER).includes(filter)
             );
         } else {
-            return emoji.shortcodes.some(x => x.toLowerCase().includes(filter));
+            return emoji.shortcodes.some((x) => x.toLowerCase().includes(filter));
         }
     };
 
@@ -279,7 +286,7 @@ class EmojiPicker extends React.Component<IProps, IState> {
 
     private onClickEmoji = (emoji: IEmoji | ICustomEmoji): void => {
         if (this.props.onChoose(emoji) !== false) {
-            recent.add('unicode' in emoji ? emoji.unicode : `:${emoji.shortcodes[0]}:`);
+            recent.add("unicode" in emoji ? emoji.unicode : `:${emoji.shortcodes[0]}:`);
         }
     };
 
@@ -329,15 +336,11 @@ class EmojiPicker extends React.Component<IProps, IState> {
                         return categoryElement;
                     })}
                 </AutoHideScrollbar>
-                {
-                    (this.props.allowUnlisted && this.state.filter) &&
-                        <AccessibleButton
-                            kind="link"
-                            onClick={() => this.reactWith(this.state.filter)}
-                        >
-                            { _t('React with "%(reaction)s"', { reaction: this.state.filter }) }
-                        </AccessibleButton>
-                }
+                {this.props.allowUnlisted && this.state.filter && (
+                    <AccessibleButton kind="link" onClick={() => this.reactWith(this.state.filter)}>
+                        {_t('React with "%(reaction)s"', { reaction: this.state.filter })}
+                    </AccessibleButton>
+                )}
                 {this.state.previewEmoji || !this.props.showQuickReactions ? (
                     <Preview emoji={this.state.previewEmoji} />
                 ) : (

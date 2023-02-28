@@ -111,11 +111,9 @@ const GenericEventListSummary: React.FC<IProps> = ({
                     <div className="sc_EventTile_bubbleArea sc_EventTile_bubbleArea_center sc_EventTile_bubbleArea_info">
                         <div className="sc_EventTile_bubble sc_EventTile_bubble_info sc_EventTile_bubble_center">
                             <span className="mx_GenericEventListSummary_avatars" onClick={toggleExpanded}>
-                                { avatars }
+                                {avatars}
                             </span>
-                            <span className="mx_TextualEvent mx_GenericEventListSummary_summary">
-                                { summaryText }
-                            </span>
+                            <span className="mx_TextualEvent mx_GenericEventListSummary_summary">{summaryText}</span>
                         </div>
                     </div>
                 </div>
@@ -125,11 +123,9 @@ const GenericEventListSummary: React.FC<IProps> = ({
                 <div className="mx_EventTile_line">
                     <div className="mx_EventTile_info">
                         <span className="mx_GenericEventListSummary_avatars" onClick={toggleExpanded}>
-                            { avatars }
+                            {avatars}
                         </span>
-                        <span className="mx_TextualEvent mx_GenericEventListSummary_summary">
-                            { summaryText }
-                        </span>
+                        <span className="mx_TextualEvent mx_GenericEventListSummary_summary">{summaryText}</span>
                     </div>
                 </div>
             );

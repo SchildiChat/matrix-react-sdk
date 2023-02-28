@@ -146,15 +146,18 @@ export default class LinkPreviewWidget extends React.Component<IProps> {
                 videoID = this.props.link.split("youtu.be/")[1].split("&")[0];
             }
 
-            const restrictedDims = suggestedVideoSize(
-                SettingsStore.getValue("Images.size") as ImageSize,
-                { w: p["og:image:width"], h: p["og:image:height"] },
-            );
+            const restrictedDims = suggestedVideoSize(SettingsStore.getValue("Images.size") as ImageSize, {
+                w: p["og:image:width"],
+                h: p["og:image:height"],
+            });
 
             return (
                 <div className="mx_LinkPreviewWidget sc_LinkPreviewWidget_youtubeEmbed">
                     <div className="mx_LinkPreviewWidget_wrapImageCaption">
-                        <div className="mx_LinkPreviewWidget_image sc_LinkPreviewWidget_youtubePlayer" style={{ flexBasis: restrictedDims.w, maxHeight: restrictedDims.h }}>
+                        <div
+                            className="mx_LinkPreviewWidget_image sc_LinkPreviewWidget_youtubePlayer"
+                            style={{ flexBasis: restrictedDims.w, maxHeight: restrictedDims.h }}
+                        >
                             <LiteYouTubeEmbed
                                 id={videoID}
                                 title={title}
@@ -165,14 +168,18 @@ export default class LinkPreviewWidget extends React.Component<IProps> {
                         </div>
                         <div className="mx_LinkPreviewWidget_caption sc_LinkPreviewWidget_youtubeCaption">
                             <div className="mx_LinkPreviewWidget_title">
-                                { needsTooltip ? <LinkWithTooltip
-                                    tooltip={new URL(this.props.link, window.location.href).toString()}
-                                >
-                                    { anchor }
-                                </LinkWithTooltip> : anchor }
-                                { p["og:site_name"] && <span className="mx_LinkPreviewWidget_siteName">
-                                    { (" - " + p["og:site_name"]) }
-                                </span> }
+                                {needsTooltip ? (
+                                    <LinkWithTooltip
+                                        tooltip={new URL(this.props.link, window.location.href).toString()}
+                                    >
+                                        {anchor}
+                                    </LinkWithTooltip>
+                                ) : (
+                                    anchor
+                                )}
+                                {p["og:site_name"] && (
+                                    <span className="mx_LinkPreviewWidget_siteName">{" - " + p["og:site_name"]}</span>
+                                )}
                             </div>
                             <div className="mx_LinkPreviewWidget_description">
                                 <Linkify>{description}</Linkify>

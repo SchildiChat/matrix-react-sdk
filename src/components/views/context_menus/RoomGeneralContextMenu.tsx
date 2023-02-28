@@ -75,11 +75,7 @@ export const RoomGeneralContextMenu: React.FC<RoomGeneralContextMenuProps> = ({
         NotificationStateEvents.Update,
         () => RoomNotificationStateStore.instance.getRoomState(room),
     );
-    const roomMarkedUnread = useEventEmitterState(
-        room,
-        "Room.accountData",
-        () => isRoomMarkedAsUnread(room),
-    );
+    const roomMarkedUnread = useEventEmitterState(room, "Room.accountData", () => isRoomMarkedAsUnread(room));
     const isDm = DMRoomMap.shared().getUserIdForRoomId(room.roomId);
     const wrapHandler = (
         handler: (ev: ButtonEvent) => void,
@@ -112,29 +108,33 @@ export const RoomGeneralContextMenu: React.FC<RoomGeneralContextMenuProps> = ({
         }
     };
 
-    const onMarkUnreadClick = (ev: ButtonEvent) => {
+    const onMarkUnreadClick = (ev: ButtonEvent): void => {
         setRoomMarkedAsUnread(room);
     };
 
-    const onMarkReadClick = (ev: ButtonEvent) => {
+    const onMarkReadClick = (ev: ButtonEvent): void => {
         // Clear manually marked as unread
         const markUnreadEnabled = SettingsStore.getValue("feature_mark_unread");
         if (markUnreadEnabled) {
             setRoomMarkedAsUnread(room, false);
         }
-        
+
         // Update read receipt
         clearRoomNotification(room, cli);
     };
 
     const markUnreadEnabled = SettingsStore.getValue("feature_mark_unread");
     const isUnread = roomNotifications.isUnread || (markUnreadEnabled && roomMarkedUnread);
-    const markUnreadOption: JSX.Element = markUnreadEnabled ? <IconizedContextMenuOption
-        onClick={wrapHandler((ev) =>
-            isUnread ? onMarkReadClick(ev) : onMarkUnreadClick(ev), onPostMarkUnreadClick)}
-        label={isUnread ? _t("Mark as read") : _t("Mark as unread")}
-        iconClassName={isUnread ? "mx_RoomGeneralContextMenu_markAsRead" : "mx_RoomGeneralContextMenu_markAsUnread"}
-    /> : null;
+    const markUnreadOption: JSX.Element = markUnreadEnabled ? (
+        <IconizedContextMenuOption
+            onClick={wrapHandler(
+                (ev) => (isUnread ? onMarkReadClick(ev) : onMarkUnreadClick(ev)),
+                onPostMarkUnreadClick,
+            )}
+            label={isUnread ? _t("Mark as read") : _t("Mark as unread")}
+            iconClassName={isUnread ? "mx_RoomGeneralContextMenu_markAsRead" : "mx_RoomGeneralContextMenu_markAsUnread"}
+        />
+    ) : null;
 
     const isFavorite = roomTags.includes(DefaultTagID.Favourite);
     const favoriteOption: JSX.Element = (

@@ -17,13 +17,13 @@ limitations under the License.
 
 import React from "react";
 import classNames from "classnames";
-import { logger } from 'matrix-js-sdk/src/logger';
+import { logger } from "matrix-js-sdk/src/logger";
 
 import { _t } from "../../../languageHandler";
 import { CategoryKey, ICategory } from "./Category";
 import { getKeyBindingsManager } from "../../../KeyBindingsManager";
 import { KeyBindingAction } from "../../../accessibility/KeyboardShortcuts";
-import { mediaFromMxc } from '../../../customisations/Media';
+import { mediaFromMxc } from "../../../customisations/Media";
 
 interface IProps {
     categories: ICategory[];
@@ -103,7 +103,7 @@ class Header extends React.PureComponent<IProps> {
                 onKeyDown={this.onKeyDown}
                 onWheel={this.onWheel}
             >
-                { this.props.categories.map(category => {
+                {this.props.categories.map((category) => {
                     let emojiElement: JSX.Element;
                     let classes: string;
                     if (category.representativeEmoji) {
@@ -111,16 +111,22 @@ class Header extends React.PureComponent<IProps> {
 
                         // SC: Might be no valid mxc url
                         try {
-                            mediaUrl = mediaFromMxc(category.representativeEmoji.url).
-                                getThumbnailOfSourceHttp(24, 24, 'scale');
+                            mediaUrl = mediaFromMxc(category.representativeEmoji.url).getThumbnailOfSourceHttp(
+                                24,
+                                24,
+                                "scale",
+                            );
                         } catch (e) {
                             logger.error(e);
                         }
 
-                        emojiElement = <img
-                            className="mx_customEmoji_image"
-                            src={mediaUrl}
-                            alt={category.representativeEmoji.shortcodes[0]} />;
+                        emojiElement = (
+                            <img
+                                className="mx_customEmoji_image"
+                                src={mediaUrl}
+                                alt={category.representativeEmoji.shortcodes[0]}
+                            />
+                        );
                         classes = classNames(`mx_EmojiPicker_anchor`, `mx_CustomEmojiCategory`, {
                             mx_EmojiPicker_anchor_visible: category.visible,
                         });
@@ -130,21 +136,23 @@ class Header extends React.PureComponent<IProps> {
                         });
                     }
                     // Properties of this button are also modified by EmojiPicker's updateVisibility in DOM.
-                    return <button
-                        disabled={!category.enabled}
-                        key={category.id}
-                        ref={category.ref}
-                        className={classes}
-                        onClick={() => this.props.onAnchorClick(category.id)}
-                        title={category.name}
-                        role="tab"
-                        tabIndex={category.visible ? 0 : -1} // roving
-                        aria-selected={category.visible}
-                        aria-controls={`mx_EmojiPicker_category_${category.id}`}
-                    >
-                        { emojiElement }
-                    </button>;
-                }) }
+                    return (
+                        <button
+                            disabled={!category.enabled}
+                            key={category.id}
+                            ref={category.ref}
+                            className={classes}
+                            onClick={() => this.props.onAnchorClick(category.id)}
+                            title={category.name}
+                            role="tab"
+                            tabIndex={category.visible ? 0 : -1} // roving
+                            aria-selected={category.visible}
+                            aria-controls={`mx_EmojiPicker_category_${category.id}`}
+                        >
+                            {emojiElement}
+                        </button>
+                    );
+                })}
             </nav>
         );
     }

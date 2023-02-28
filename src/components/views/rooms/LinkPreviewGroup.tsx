@@ -69,7 +69,13 @@ const LinkPreviewGroup: React.FC<IProps> = ({ links, mxEvent, onCancelClick, onH
     return (
         <div className="mx_LinkPreviewGroup">
             {showPreviews.map(([link, preview], i) => (
-                <LinkPreviewWidget youtubeEmbedPlayer={youtubeEmbedPlayer} key={link} link={link} preview={preview} mxEvent={mxEvent}>
+                <LinkPreviewWidget
+                    youtubeEmbedPlayer={youtubeEmbedPlayer}
+                    key={link}
+                    link={link}
+                    preview={preview}
+                    mxEvent={mxEvent}
+                >
                     {i === 0 ? (
                         <AccessibleButton
                             className="mx_LinkPreviewGroup_hide"

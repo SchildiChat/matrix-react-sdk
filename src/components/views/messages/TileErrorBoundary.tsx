@@ -102,29 +102,33 @@ export default class TileErrorBoundary extends React.Component<IProps, IState> {
                 );
             }
 
-            const snippet = (<span>
-                { _t("Can't load this message") }
-                { mxEvent && ` (${mxEvent.getType()})` }
-                { submitLogsButton }
-                { viewSourceButton }
-            </span>);
+            const snippet = (
+                <span>
+                    {_t("Can't load this message")}
+                    {mxEvent && ` (${mxEvent.getType()})`}
+                    {submitLogsButton}
+                    {viewSourceButton}
+                </span>
+            );
 
             if (this.props.layout === Layout.Bubble) {
-                return (<li className={classNames(classes)} data-layout={this.props.layout}>
-                    <div className="mx_EventTile_line sc_EventTile_bubbleLine sc_EventTile_bubbleLine_info">
-                        <div className="sc_EventTile_bubbleArea sc_EventTile_bubbleArea_center sc_EventTile_bubbleArea_info">
-                            <div className="sc_EventTile_bubble sc_EventTile_bubble_info sc_EventTile_bubble_center">
-                                { snippet }
+                return (
+                    <li className={classNames(classes)} data-layout={this.props.layout}>
+                        <div className="mx_EventTile_line sc_EventTile_bubbleLine sc_EventTile_bubbleLine_info">
+                            <div className="sc_EventTile_bubbleArea sc_EventTile_bubbleArea_center sc_EventTile_bubbleArea_info">
+                                <div className="sc_EventTile_bubble sc_EventTile_bubble_info sc_EventTile_bubble_center">
+                                    {snippet}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </li>);
+                    </li>
+                );
             } else {
-                return (<li className={classNames(classes)} data-layout={this.props.layout}>
-                    <div className="mx_EventTile_line">
-                        { snippet }
-                    </div>
-                </li>);
+                return (
+                    <li className={classNames(classes)} data-layout={this.props.layout}>
+                        <div className="mx_EventTile_line">{snippet}</div>
+                    </li>
+                );
             }
         }
 

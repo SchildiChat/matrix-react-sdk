@@ -137,7 +137,7 @@ export default class RoomSublist extends React.Component<IProps, IState> {
         this.state = Object.assign(this.state, { height: this.calculateInitialHeight() });
 
         this.settingWatchers = [
-            SettingsStore.watchSetting("baseFontSize", null, (...[,,, value]) =>
+            SettingsStore.watchSetting("baseFontSize", null, (...[, , , value]) =>
                 this.setState({ baseFontSize: value as number }),
             ),
         ];
@@ -867,11 +867,11 @@ export default class RoomSublist extends React.Component<IProps, IState> {
 
             content = (
                 <React.Fragment>
-                    { /* fucking resizeable doesn't like rem */ }
+                    {/* fucking resizeable doesn't like rem */}
                     <Resizable
-                        size={{ height: (this.state.height/10)*this.state.baseFontSize } as any}
-                        minHeight={(minTilesPx/10)*this.state.baseFontSize}
-                        maxHeight={(maxTilesPx/10)*this.state.baseFontSize}
+                        size={{ height: (this.state.height / 10) * this.state.baseFontSize } as any}
+                        minHeight={(minTilesPx / 10) * this.state.baseFontSize}
+                        maxHeight={(maxTilesPx / 10) * this.state.baseFontSize}
                         onResizeStart={this.onResizeStart}
                         onResizeStop={this.onResizeStop}
                         onResize={this.onResize}

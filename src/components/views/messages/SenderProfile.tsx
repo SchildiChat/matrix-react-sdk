@@ -19,7 +19,7 @@ import React from "react";
 import { MatrixEvent } from "matrix-js-sdk/src/models/event";
 import { MsgType } from "matrix-js-sdk/src/@types/event";
 
-import { UserNameColorMode } from '../../../settings/enums/UserNameColorMode';
+import { UserNameColorMode } from "../../../settings/enums/UserNameColorMode";
 import DisambiguatedProfile from "./DisambiguatedProfile";
 import { useRoomMemberProfile } from "../../../hooks/room/useRoomMemberProfile";
 

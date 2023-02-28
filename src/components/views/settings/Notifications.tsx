@@ -147,7 +147,7 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
             SettingsStore.watchSetting("audioNotificationsEnabled", null, (...[, , , , value]) =>
                 this.setState({ audioNotifications: value as boolean }),
             ),
-            SettingsStore.watchSetting("soundPack", null, (...[,,,, value]) =>
+            SettingsStore.watchSetting("soundPack", null, (...[, , , , value]) =>
                 this.setState({ soundPack: value as SoundPack }),
             ),
         ];
@@ -631,8 +631,8 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
 
                 {emailSwitches}
 
-                <div className='mx_UserNotifSettings_floatingSection'>
-                    <div className="mx_SettingsTab_subheading">{ _t("Sound pack") }</div>
+                <div className="mx_UserNotifSettings_floatingSection">
+                    <div className="mx_SettingsTab_subheading">{_t("Sound pack")}</div>
                     <div className="mx_SettingsTab_multilineRadioSelectors">
                         <label>
                             <StyledRadioButton
@@ -641,7 +641,7 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
                                 checked={this.state.soundPack === SoundPack.Schildi}
                                 onChange={this.onSoundPackChanged}
                             >
-                                { _t("Schildi: Softer sounds for reduced anxiety") }
+                                {_t("Schildi: Softer sounds for reduced anxiety")}
                             </StyledRadioButton>
                         </label>
                         <label>
@@ -651,7 +651,7 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
                                 checked={this.state.soundPack === SoundPack.Classic}
                                 onChange={this.onSoundPackChanged}
                             >
-                                { _t("Classic: The same sharp sounds as Element") }
+                                {_t("Classic: The same sharp sounds as Element")}
                             </StyledRadioButton>
                         </label>
                     </div>

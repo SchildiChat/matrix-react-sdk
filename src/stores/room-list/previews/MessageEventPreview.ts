@@ -75,7 +75,7 @@ export class MessageEventPreview implements IPreview {
         if (isThread || isSelf(event) || !shouldPrefixMessagesIn(event.getRoomId(), tagId)) {
             return body;
         } else {
-            return _t("%(senderName)s: %(message)s", { senderName: getSenderName(event), message: '\u2068' + body });
+            return _t("%(senderName)s: %(message)s", { senderName: getSenderName(event), message: "\u2068" + body });
         }
     }
 }

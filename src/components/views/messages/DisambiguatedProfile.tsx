@@ -22,8 +22,8 @@ import classNames from "classnames";
 import { _t } from "../../../languageHandler";
 import { getUserNameColorClass } from "../../../utils/FormattingUtils";
 import UserIdentifier from "../../../customisations/UserIdentifier";
-import { UserNameColorMode } from '../../../settings/enums/UserNameColorMode';
-import { MatrixClientPeg } from '../../../MatrixClientPeg';
+import { UserNameColorMode } from "../../../settings/enums/UserNameColorMode";
+import { MatrixClientPeg } from "../../../MatrixClientPeg";
 
 interface IProps {
     member?: RoomMember | null;
@@ -37,14 +37,18 @@ interface IProps {
 
 export default class DisambiguatedProfile extends React.Component<IProps> {
     public render(): JSX.Element {
-        const { fallbackName, userNameColorMode, member, colored, emphasizeDisplayName, withTooltip, onClick } = this.props;
+        const { fallbackName, userNameColorMode, member, colored, emphasizeDisplayName, withTooltip, onClick } =
+            this.props;
         const rawDisplayName = member?.rawDisplayName || fallbackName;
         const mxid = member?.userId;
 
         let colorClass: string | undefined;
         if (colored) {
             colorClass = getUserNameColorClass(
-                userNameColorMode, fallbackName, MatrixClientPeg.get().getRoom(member?.roomId));
+                userNameColorMode,
+                fallbackName,
+                MatrixClientPeg.get().getRoom(member?.roomId),
+            );
         }
 
         let mxidElement;

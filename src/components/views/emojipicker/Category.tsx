@@ -58,13 +58,15 @@ class Category extends React.PureComponent<IProps> {
             <div key={rowIndex}>
                 {emojisForRow.map((emoji) => (
                     <Emoji
-                        key={'hexcode' in emoji ? emoji.hexcode : emoji.shortcodes[0]}
+                        key={"hexcode" in emoji ? emoji.hexcode : emoji.shortcodes[0]}
                         emoji={emoji}
                         selectedEmojis={selectedEmojis}
                         onClick={onClick}
                         onMouseEnter={onMouseEnter}
                         onMouseLeave={onMouseLeave}
-                        disabled={this.props.isEmojiDisabled?.('unicode' in emoji ? emoji.unicode : emoji.shortcodes[0])}
+                        disabled={this.props.isEmojiDisabled?.(
+                            "unicode" in emoji ? emoji.unicode : emoji.shortcodes[0],
+                        )}
                     />
                 ))}
             </div>

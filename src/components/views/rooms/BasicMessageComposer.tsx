@@ -50,7 +50,7 @@ import { getKeyBindingsManager } from "../../../KeyBindingsManager";
 import { ALTERNATE_KEY_NAME, KeyBindingAction } from "../../../accessibility/KeyboardShortcuts";
 import { _t } from "../../../languageHandler";
 import { linkify } from "../../../linkify-matrix";
-import { ICustomEmoji } from '../../../emojipicker/customemoji';
+import { ICustomEmoji } from "../../../emojipicker/customemoji";
 import { SdkContextClass } from "../../../contexts/SDKContext";
 
 // matches emoticons which follow the start of a line or whitespace
@@ -873,14 +873,14 @@ export default class BasicMessageEditor extends React.Component<IProps, IState> 
         });
     }
 
-    public insertEmoji(emoji: ICustomEmoji | IEmoji) {
+    public insertEmoji(emoji: ICustomEmoji | IEmoji): void {
         this.modifiedFlag = true;
         const { model } = this.props;
         const { partCreator } = model;
         const caret = this.getCaret();
         const position = model.positionForOffset(caret.offset, caret.atNodeEnd);
         let emojiPart: Part;
-        if ('unicode' in emoji) {
+        if ("unicode" in emoji) {
             emojiPart = partCreator.emoji(emoji.unicode);
         } else {
             emojiPart = partCreator.customEmoji(emoji.shortcodes[0], emoji.url);
