@@ -284,23 +284,32 @@ export function makeUserPermalink(userId: string): string {
     return getPermalinkConstructor().forUser(userId);
 }
 
-export function makeRoomPermalink(roomId: string): string {
+export function makeRoomPermalink(roomId: string, eventId?: string): string {
     if (!roomId) {
         throw new Error("can't permalink a falsy roomId");
     }
 
     // If the roomId isn't actually a room ID, don't try to list the servers.
     // Aliases are already routable, and don't need extra information.
-    if (roomId[0] !== "!") return getPermalinkConstructor().forRoom(roomId, []);
+    if (roomId[0] !== "!")
+        return eventId
+            ? getPermalinkConstructor().forEvent(roomId, eventId!, [])
+            : getPermalinkConstructor().forRoom(roomId, []);
 
     const client = MatrixClientPeg.get();
     const room = client.getRoom(roomId);
     if (!room) {
-        return getPermalinkConstructor().forRoom(roomId, []);
+        return eventId
+            ? getPermalinkConstructor().forEvent(roomId, eventId!, [])
+            : getPermalinkConstructor().forRoom(roomId, []);
     }
     const permalinkCreator = new RoomPermalinkCreator(room);
     permalinkCreator.load();
-    return permalinkCreator.forShareableRoom();
+    if (eventId) {
+        return permalinkCreator.forEvent(eventId);
+    } else {
+        return permalinkCreator.forShareableRoom();
+    }
 }
 
 export function isPermalinkHost(host: string): boolean {

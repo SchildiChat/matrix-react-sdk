@@ -14,19 +14,27 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { MatrixEvent } from "matrix-js-sdk/src/matrix";
+import { JoinRule, MatrixEvent, Room } from "matrix-js-sdk/src/matrix";
 
-export function loadImageSet(imageSetEvent: MatrixEvent): ICustomEmoji[] {
+export function loadImageSet(imageSetEvent: MatrixEvent, room?: Room): ICustomEmoji[] {
     const loadedImages: ICustomEmoji[] = [];
     const images = imageSetEvent?.getContent().images;
+    let eventId: string | undefined;
+    let roomId: string | undefined;
     if (!images) {
         return [];
+    }
+    if (room?.getJoinRule() === JoinRule.Public) {
+        eventId = imageSetEvent?.getId();
+        roomId = room?.roomId;
     }
     for (const imageKey in images) {
         const imageData = images[imageKey];
         loadedImages.push({
             shortcodes: [imageKey],
             url: imageData.url,
+            roomId: roomId,
+            eventId: eventId,
         });
     }
     return loadedImages;
@@ -36,4 +44,6 @@ export interface ICustomEmoji {
     shortcodes: string[];
     emoticon?: string;
     url: string;
+    roomId?: string;
+    eventId?: string;
 }

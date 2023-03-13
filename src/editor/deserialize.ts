@@ -19,11 +19,12 @@ import { MatrixEvent } from "matrix-js-sdk/src/models/event";
 import { MsgType } from "matrix-js-sdk/src/@types/event";
 
 import { checkBlockNode } from "../HtmlUtils";
-import { getPrimaryPermalinkEntity } from "../utils/permalinks/Permalinks";
+import { getPrimaryPermalinkEntity, parsePermalink } from "../utils/permalinks/Permalinks";
 import { Part, PartCreator, Type } from "./parts";
 import SdkConfig from "../SdkConfig";
 import { textToHtmlRainbow } from "../utils/colour";
 import { stripPlainReply } from "../utils/Reply";
+import { PermalinkParts } from "../utils/permalinks/PermalinkConstructor";
 
 const LIST_TYPES = ["UL", "OL", "LI"];
 
@@ -97,7 +98,13 @@ function parseImage(n: Node, pc: PartCreator, opts: IParseOptions): Part[] {
     const isCustomEmoji = elm.hasAttribute("data-mx-emoticon");
     if (isCustomEmoji) {
         const shortcode = elm.title || elm.alt || ":SHORTCODE_MISSING:";
-        return [pc.customEmoji(shortcode, src)];
+        // parse the link
+        const packUrl = elm.getAttribute("data-mx-pack-url");
+        let permalinkParts: PermalinkParts | null = null;
+        if (packUrl) {
+            permalinkParts = parsePermalink(packUrl);
+        }
+        return [pc.customEmoji(shortcode, src, permalinkParts?.roomIdOrAlias, permalinkParts?.eventId)];
     }
     return pc.plainWithEmoji(`![${escape(alt)}](${src})`);
 }

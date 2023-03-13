@@ -194,7 +194,7 @@ const transformTags: IExtendedSanitizeOptions["transformTags"] = {
         const requestedWidth = Number(attribs.width);
         let requestedHeight = Number(attribs.height);
         if ("data-mx-emoticon" in attribs) {
-            requestedHeight = Math.floor(18*window.devicePixelRatio); // 18 is the display height of a normal small emoji
+            requestedHeight = Math.floor(18 * window.devicePixelRatio); // 18 is the display height of a normal small emoji
         }
         const width = Math.min(requestedWidth || 800, 800);
         const height = Math.min(requestedHeight || 600, 600);
@@ -311,7 +311,7 @@ const sanitizeHtmlParams: IExtendedSanitizeOptions = {
         div: ["data-mx-maths"],
         a: ["href", "name", "target", "rel"], // remote target: custom to matrix
         // img tags also accept width/height, we just map those to max-width & max-height during transformation
-        img: ["src", "alt", "title", "style", "data-mx-emoticon"],
+        img: ["src", "alt", "title", "style", "data-mx-emoticon", "data-mx-pack-url"],
         ol: ["start"],
         code: ["class"], // We don't actually allow all classes, we filter them in transformTags
     },
@@ -596,14 +596,24 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
                 });
                 safeBodyNeedsSerialisation = true;
             }
-            if (isAllHtmlEmoji && !opts.disableBigEmoji) { // Big emoji? Big image URLs.
+            if (isAllHtmlEmoji && !opts.disableBigEmoji) {
+                // Big emoji? Big image URLs.
                 (phtml.root()[0] as cheerio.TagElement).children.forEach((elm) => {
-                    if (elm.name === "img" && "data-mx-emoticon" in elm.attribs && typeof elm.attribs.src === "string") {
-                        elm.attribs.src = elm.attribs.src.replace(/height=[0-9]*/, `height=${Math.floor(48*window.devicePixelRatio)}`) // 48 is the display height of a big emoji
+                    const tagElm = elm as cheerio.TagElement;
+                    if (
+                        tagElm.name === "img" &&
+                        "data-mx-emoticon" in tagElm.attribs &&
+                        typeof tagElm.attribs.src === "string"
+                    ) {
+                        tagElm.attribs.src = tagElm.attribs.src.replace(
+                            /height=[0-9]*/,
+                            `height=${Math.floor(48 * window.devicePixelRatio)}`,
+                        ); // 48 is the display height of a big emoji
                     }
-                })
+                });
             }
-            if (safeBodyNeedsSerialisation) { // SchildiChat: all done editing emojis, can finally serialise the body
+            if (safeBodyNeedsSerialisation) {
+                // SchildiChat: all done editing emojis, can finally serialise the body
                 safeBody = phtml.html();
             }
             if (bodyHasEmoji) {
@@ -633,11 +643,7 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
 
         const match = BIGEMOJI_REGEX.exec(contentBodyTrimmed);
         const matched = match?.[0]?.length === contentBodyTrimmed.length;
-        emojiBody =
-            (matched || isAllHtmlEmoji) &&
-            (strippedBody === safeBody || // replies have the html fallbacks, account for that here
-                content.formatted_body === undefined ||
-                (!content.formatted_body.includes("http:") && !content.formatted_body.includes("https:")));
+        emojiBody = matched || isAllHtmlEmoji;
     }
 
     const className = classNames({

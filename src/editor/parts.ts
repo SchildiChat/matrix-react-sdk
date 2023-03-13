@@ -41,6 +41,8 @@ interface ISerializedPillPart {
     type: Type.AtRoomPill | Type.RoomPill | Type.UserPill | Type.CustomEmoji;
     text: string;
     resourceId?: string;
+    roomId?: string;
+    eventId?: string;
 }
 
 export type SerializedPart = ISerializedPart | ISerializedPillPart;
@@ -87,7 +89,12 @@ interface IPillPart extends Omit<IBasePart, "type" | "resourceId"> {
     resourceId: string;
 }
 
-export type Part = IBasePart | IPillCandidatePart | IPillPart;
+export interface ICustomEmojiPart extends IPillPart {
+    roomId?: string;
+    eventId?: string;
+}
+
+export type Part = IBasePart | IPillCandidatePart | IPillPart | ICustomEmojiPart;
 
 abstract class BasePart {
     protected _text: string;
@@ -418,7 +425,9 @@ export class EmojiPart extends BasePart implements IBasePart {
     }
 }
 
-class CustomEmojiPart extends PillPart implements IPillPart {
+class CustomEmojiPart extends PillPart implements ICustomEmojiPart {
+    public roomId?: string;
+    public eventId?: string;
     protected get className(): string {
         return "mx_CustomEmojiPill mx_Pill";
     }
@@ -434,8 +443,10 @@ class CustomEmojiPart extends PillPart implements IPillPart {
 
         this.setAvatarVars(node, url, this.text[0]);
     }
-    public constructor(shortCode: string, url: string) {
+    public constructor(shortCode: string, url: string, roomId?: string, eventId?: string) {
         super(url, shortCode);
+        this.roomId = roomId;
+        this.eventId = eventId;
     }
     protected acceptsInsertion(chr: string): boolean {
         return false;
@@ -451,6 +462,14 @@ class CustomEmojiPart extends PillPart implements IPillPart {
 
     public get canEdit(): boolean {
         return false;
+    }
+
+    public serialize(): ISerializedPillPart {
+        return {
+            ...super.serialize(),
+            roomId: this.roomId,
+            eventId: this.eventId,
+        };
     }
 }
 
@@ -622,7 +641,7 @@ export class PartCreator {
             case Type.Emoji:
                 return this.emoji(part.text);
             case Type.CustomEmoji:
-                return this.customEmoji(part.text, part.resourceId);
+                return this.customEmoji(part.text, part.resourceId!, part.roomId!, part.eventId!);
             case Type.AtRoomPill:
                 return this.atRoomPill(part.text);
             case Type.PillCandidate:
@@ -701,8 +720,13 @@ export class PartCreator {
         return parts;
     }
 
-    public customEmoji(shortcode: string, url: string): CustomEmojiPart {
-        return new CustomEmojiPart(shortcode, url);
+    public customEmoji(
+        shortcode: string,
+        url: string,
+        roomId?: string | null,
+        eventId?: string | null,
+    ): CustomEmojiPart {
+        return new CustomEmojiPart(shortcode, url, roomId!, eventId!);
     }
 
     public createMentionParts(
