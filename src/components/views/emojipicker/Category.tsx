@@ -73,7 +73,7 @@ class Category extends React.PureComponent<IProps> {
         );
     };
 
-    public render(): JSX.Element {
+    public render(): React.ReactNode {
         const { emojis, name, heightBefore, viewportHeight, scrollTop } = this.props;
         if (!emojis || emojis.length === 0) {
             return null;

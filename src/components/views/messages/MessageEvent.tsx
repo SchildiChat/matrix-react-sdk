@@ -18,7 +18,7 @@ import React, { createRef } from "react";
 import { EventType, MsgType } from "matrix-js-sdk/src/@types/event";
 import { M_BEACON_INFO } from "matrix-js-sdk/src/@types/beacon";
 import { M_LOCATION } from "matrix-js-sdk/src/@types/location";
-import { M_POLL_START } from "matrix-js-sdk/src/@types/polls";
+import { M_POLL_END, M_POLL_START } from "matrix-js-sdk/src/@types/polls";
 import { MatrixEventEvent } from "matrix-js-sdk/src/models/event";
 
 import SettingsStore from "../../../settings/SettingsStore";
@@ -37,10 +37,11 @@ import MVoiceOrAudioBody from "./MVoiceOrAudioBody";
 import MVideoBody from "./MVideoBody";
 import MStickerBody from "./MStickerBody";
 import MPollBody from "./MPollBody";
+import { MPollEndBody } from "./MPollEndBody";
 import MLocationBody from "./MLocationBody";
 import MjolnirBody from "./MjolnirBody";
 import MBeaconBody from "./MBeaconBody";
-import DecryptionFailureBody from "./DecryptionFailureBody";
+import { DecryptionFailureBody } from "./DecryptionFailureBody";
 import { GetRelationsForEvent, IEventTileOps } from "../rooms/EventTile";
 import { VoiceBroadcastBody, VoiceBroadcastInfoEventType, VoiceBroadcastInfoState } from "../../../voice-broadcast";
 
@@ -73,6 +74,8 @@ const baseEvTypes = new Map<string, React.ComponentType<Partial<IBodyProps>>>([
     [EventType.Sticker, MStickerBody],
     [M_POLL_START.name, MPollBody],
     [M_POLL_START.altName, MPollBody],
+    [M_POLL_END.name, MPollEndBody],
+    [M_POLL_END.altName, MPollEndBody],
     [M_BEACON_INFO.name, MBeaconBody],
     [M_BEACON_INFO.altName, MBeaconBody],
 ]);
@@ -146,7 +149,7 @@ export default class MessageEvent extends React.Component<IProps> implements IMe
         this.forceUpdate();
     };
 
-    public render(): JSX.Element {
+    public render(): React.ReactNode {
         const content = this.props.mxEvent.getContent();
         const type = this.props.mxEvent.getType();
         const msgtype = content.msgtype;

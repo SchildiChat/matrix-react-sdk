@@ -163,21 +163,21 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
         this.setState({ customThemeUrl: e.target.value });
     };
 
-    // private renderHighContrastCheckbox(): React.ReactElement<HTMLDivElement> {
+    // private renderHighContrastCheckbox(): React.ReactElement<HTMLDivElement> | undefined {
     //     if (
-    //         !this.state.useSystemTheme && (
-    //             findHighContrastTheme(this.state.theme) ||
-    //             isHighContrastTheme(this.state.theme)
-    //         )
+    //         !this.state.useSystemTheme &&
+    //         (findHighContrastTheme(this.state.theme) || isHighContrastTheme(this.state.theme))
     //     ) {
-    //         return <div>
-    //             <StyledCheckbox
-    //                 checked={isHighContrastTheme(this.state.theme)}
-    //                 onChange={(e) => this.highContrastThemeChanged(e.target.checked)}
-    //             >
-    //                 { _t("Use high contrast") }
-    //             </StyledCheckbox>
-    //         </div>;
+    //         return (
+    //             <div>
+    //                 <StyledCheckbox
+    //                     checked={isHighContrastTheme(this.state.theme)}
+    //                     onChange={(e) => this.highContrastThemeChanged(e.target.checked)}
+    //                 >
+    //                     {_t("Use high contrast")}
+    //                 </StyledCheckbox>
+    //             </div>
+    //         );
     //     }
     // }
 
@@ -331,9 +331,9 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
             </div>
         );
 
-        let customThemeForm: JSX.Element;
+        let customThemeForm: JSX.Element | undefined;
         if (SettingsStore.getValue("feature_custom_themes")) {
-            let messageElement = null;
+            let messageElement: JSX.Element | undefined;
             if (this.state.customThemeMessage.text) {
                 if (this.state.customThemeMessage.isError) {
                     messageElement = <div className="text-error">{this.state.customThemeMessage.text}</div>;
@@ -474,7 +474,7 @@ export default class ThemeChoicePanel extends React.Component<IProps, IState> {
         // );
     }
 
-    // public apparentSelectedThemeId(): string {
+    // public apparentSelectedThemeId(): string | undefined {
     //     if (this.state.useSystemTheme) {
     //         return undefined;
     //     }

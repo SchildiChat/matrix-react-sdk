@@ -1,6 +1,6 @@
 /*
 Copyright 2015 OpenMarket Ltd
-Copyright 2019 The Matrix.org Foundation C.I.C.
+Copyright 2019 - 2023 The Matrix.org Foundation C.I.C.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ export default class SearchResultTile extends React.Component<IProps> {
     // A map of <callId, LegacyCallEventGrouper>
     private callEventGroupers = new Map<string, LegacyCallEventGrouper>();
 
-    public constructor(props, context) {
+    public constructor(props: IProps, context: React.ContextType<typeof RoomContext>) {
         super(props, context);
 
         this.buildLegacyCallEventGroupers(this.props.timeline);
@@ -63,7 +63,7 @@ export default class SearchResultTile extends React.Component<IProps> {
         this.callEventGroupers = buildLegacyCallEventGroupers(this.callEventGroupers, events);
     }
 
-    public render(): JSX.Element {
+    public render(): React.ReactNode {
         const timeline = this.props.timeline;
         const resultEvent = timeline[this.props.ourEventsIndexes[0]];
         const eventId = resultEvent.getId();
@@ -72,7 +72,6 @@ export default class SearchResultTile extends React.Component<IProps> {
         const ret = [<DateSeparator key={ts1 + "-search"} roomId={resultEvent.getRoomId()} ts={ts1} />];
         const isTwelveHour = SettingsStore.getValue("showTwelveHourTimestamps");
         const alwaysShowTimestamps = SettingsStore.getValue("alwaysShowTimestamps");
-        const threadsEnabled = SettingsStore.getValue("feature_threadenabled");
 
         for (let j = 0; j < timeline.length; j++) {
             const mxEv = timeline[j];
@@ -89,13 +88,7 @@ export default class SearchResultTile extends React.Component<IProps> {
                 const continuation =
                     prevEv &&
                     !wantsDateSeparator(prevEv.getDate() || undefined, mxEv.getDate() || undefined) &&
-                    shouldFormContinuation(
-                        prevEv,
-                        mxEv,
-                        this.context?.showHiddenEvents,
-                        threadsEnabled,
-                        TimelineRenderingType.Search,
-                    );
+                    shouldFormContinuation(prevEv, mxEv, this.context?.showHiddenEvents, TimelineRenderingType.Search);
 
                 let lastInSection = true;
                 const nextEv = timeline[j + 1];
@@ -111,7 +104,6 @@ export default class SearchResultTile extends React.Component<IProps> {
                             mxEv,
                             nextEv,
                             this.context?.showHiddenEvents,
-                            threadsEnabled,
                             TimelineRenderingType.Search,
                         );
                 }

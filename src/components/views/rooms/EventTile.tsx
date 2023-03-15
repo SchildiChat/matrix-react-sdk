@@ -35,7 +35,7 @@ import { Layout } from "../../../settings/enums/Layout";
 import { formatTime } from "../../../DateUtils";
 import { MatrixClientPeg } from "../../../MatrixClientPeg";
 import MatrixClientContext from "../../../contexts/MatrixClientContext";
-import DecryptionFailureBody from "../messages/DecryptionFailureBody";
+import { DecryptionFailureBody } from "../messages/DecryptionFailureBody";
 import { E2EState } from "./E2EIcon";
 import RoomAvatar from "../avatars/RoomAvatar";
 import MessageContextMenu from "../context_menus/MessageContextMenu";
@@ -57,7 +57,6 @@ import { IReadReceiptInfo } from "./ReadReceiptMarker";
 import MessageActionBar from "../messages/MessageActionBar";
 import ReactionsRow from "../messages/ReactionsRow";
 import { getEventDisplayInfo } from "../../../utils/EventRenderingUtils";
-import SettingsStore from "../../../settings/SettingsStore";
 import { MessagePreviewStore } from "../../../stores/room-list/MessagePreviewStore";
 import RoomContext, { TimelineRenderingType } from "../../../contexts/RoomContext";
 import { MediaEventHelper } from "../../../utils/MediaEventHelper";
@@ -391,9 +390,7 @@ export class UnwrappedEventTile extends React.Component<EventTileProps, IState> 
             }
         }
 
-        if (SettingsStore.getValue("feature_threadenabled")) {
-            this.props.mxEvent.on(ThreadEvent.Update, this.updateThread);
-        }
+        this.props.mxEvent.on(ThreadEvent.Update, this.updateThread);
 
         client.decryptEventIfNeeded(this.props.mxEvent);
 
@@ -430,9 +427,7 @@ export class UnwrappedEventTile extends React.Component<EventTileProps, IState> 
         if (this.props.showReactions) {
             this.props.mxEvent.removeListener(MatrixEventEvent.RelationsCreated, this.onReactionsCreated);
         }
-        if (SettingsStore.getValue("feature_threadenabled")) {
-            this.props.mxEvent.off(ThreadEvent.Update, this.updateThread);
-        }
+        this.props.mxEvent.off(ThreadEvent.Update, this.updateThread);
     }
 
     public componentDidUpdate(prevProps: Readonly<EventTileProps>, prevState: Readonly<IState>): void {
@@ -460,10 +455,6 @@ export class UnwrappedEventTile extends React.Component<EventTileProps, IState> 
     };
 
     private get thread(): Thread | null {
-        if (!SettingsStore.getValue("feature_threadenabled")) {
-            return null;
-        }
-
         let thread = this.props.mxEvent.getThread();
         /**
          * Accessing the threads value through the room due to a race condition
@@ -627,8 +618,8 @@ export class UnwrappedEventTile extends React.Component<EventTileProps, IState> 
     }
 
     private propsEqual(objA: EventTileProps, objB: EventTileProps): boolean {
-        const keysA = Object.keys(objA);
-        const keysB = Object.keys(objB);
+        const keysA = Object.keys(objA) as Array<keyof EventTileProps>;
+        const keysB = Object.keys(objB) as Array<keyof EventTileProps>;
 
         if (keysA.length !== keysB.length) {
             return false;
@@ -889,7 +880,7 @@ export class UnwrappedEventTile extends React.Component<EventTileProps, IState> 
         );
     }
 
-    public render(): JSX.Element {
+    public render(): React.ReactNode {
         const msgtype = this.props.mxEvent.getContent().msgtype;
         const eventType = this.props.mxEvent.getType();
         const {
@@ -1330,7 +1321,7 @@ export class UnwrappedEventTile extends React.Component<EventTileProps, IState> 
                                 {this.props.mxEvent.isRedacted() ? (
                                     <RedactedBody mxEvent={this.props.mxEvent} />
                                 ) : this.props.mxEvent.isDecryptionFailure() ? (
-                                    <DecryptionFailureBody />
+                                    <DecryptionFailureBody mxEvent={this.props.mxEvent} />
                                 ) : (
                                     MessagePreviewStore.instance.generatePreviewForEvent(this.props.mxEvent)
                                 )}
@@ -1653,7 +1644,7 @@ class E2ePadlock extends React.Component<IE2ePadlockProps, IE2ePadlockState> {
         this.setState({ hover: false });
     };
 
-    public render(): JSX.Element {
+    public render(): React.ReactNode {
         let tooltip = null;
         if (this.state.hover) {
             tooltip = <Tooltip className="mx_EventTile_e2eIcon_tooltip" label={this.props.title} />;
@@ -1685,9 +1676,9 @@ function SentReceipt({ messageState }: ISentReceiptProps): JSX.Element {
         nonCssBadge = <NotificationBadge notification={StaticNotificationState.RED_EXCLAMATION} />;
     }
 
-    let label = _t("Sending your message...");
+    let label = _t("Sending your message…");
     if (messageState === "encrypting") {
-        label = _t("Encrypting your message...");
+        label = _t("Encrypting your message…");
     } else if (isSent) {
         label = _t("Your message was sent");
     } else if (isFailed) {

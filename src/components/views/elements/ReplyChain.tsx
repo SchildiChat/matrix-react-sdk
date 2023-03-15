@@ -206,7 +206,7 @@ export default class ReplyChain extends React.Component<IProps, IState> {
         ).replace("Username", "ReplyChain");
     }
 
-    public render(): JSX.Element {
+    public render(): React.ReactNode {
         let header = null;
         if (this.state.err) {
             header = (

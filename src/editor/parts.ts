@@ -73,6 +73,8 @@ interface IBasePart {
     updateDOMNode(node: Node): void;
     canUpdateDOMNode(node: Node): boolean;
     toDOMNode(): Node;
+
+    merge?(part: Part): boolean;
 }
 
 interface IPillCandidatePart extends Omit<IBasePart, "type" | "createAutoComplete"> {
@@ -230,7 +232,7 @@ abstract class PlainBasePart extends BasePart {
         return document.createTextNode(this.text);
     }
 
-    public merge(part): boolean {
+    public merge(part: Part): boolean {
         if (part.type === this.type) {
             this._text = this.text + part.text;
             return true;
@@ -257,7 +259,7 @@ export class PlainPart extends PlainBasePart implements IBasePart {
 }
 
 export abstract class PillPart extends BasePart implements IPillPart {
-    public constructor(public resourceId: string, label) {
+    public constructor(public resourceId: string, label: string) {
         super(label);
     }
 
@@ -459,9 +461,9 @@ class RoomPillPart extends PillPart {
 
     protected setAvatar(node: HTMLElement): void {
         let initialLetter = "";
-        let avatarUrl = Avatar.avatarUrlForRoom(this.room, 16, 16, "crop");
+        let avatarUrl = Avatar.avatarUrlForRoom(this.room ?? null, 16, 16, "crop");
         if (!avatarUrl) {
-            initialLetter = Avatar.getInitialLetter(this.room?.name || this.resourceId);
+            initialLetter = Avatar.getInitialLetter(this.room?.name || this.resourceId) ?? "";
             avatarUrl = Avatar.defaultAvatarUrlForString(this.room?.roomId ?? this.resourceId);
         }
         this.setAvatarVars(node, avatarUrl, initialLetter);
@@ -494,7 +496,7 @@ class AtRoomPillPart extends RoomPillPart {
 }
 
 class UserPillPart extends PillPart {
-    public constructor(userId, displayName, private member?: RoomMember) {
+    public constructor(userId: string, displayName: string, private member?: RoomMember) {
         super(userId, displayName);
     }
 
@@ -515,7 +517,7 @@ class UserPillPart extends PillPart {
         const avatarUrl = Avatar.avatarUrlForMember(this.member, 16, 16, "crop");
         let initialLetter = "";
         if (avatarUrl === defaultAvatarUrl) {
-            initialLetter = Avatar.getInitialLetter(name);
+            initialLetter = Avatar.getInitialLetter(name) ?? "";
         }
         this.setAvatarVars(node, avatarUrl, initialLetter);
     }
@@ -578,7 +580,7 @@ export class PartCreator {
     public constructor(
         private readonly room: Room,
         private readonly client: MatrixClient,
-        autoCompleteCreator: AutoCompleteCreator = null,
+        autoCompleteCreator: AutoCompleteCreator | null = null,
     ) {
         // pre-create the creator as an object even without callback so it can already be passed
         // to PillCandidatePart (e.g. while deserializing) and set later on
@@ -611,7 +613,7 @@ export class PartCreator {
         return this.plain(text);
     }
 
-    public deserializePart(part: SerializedPart): Part {
+    public deserializePart(part: SerializedPart): Part | undefined {
         switch (part.type) {
             case Type.Plain:
                 return this.plain(part.text);
@@ -651,7 +653,7 @@ export class PartCreator {
     public roomPill(alias: string, roomId?: string): RoomPillPart {
         let room: Room | undefined;
         if (roomId || alias[0] !== "#") {
-            room = this.client.getRoom(roomId || alias);
+            room = this.client.getRoom(roomId || alias) ?? undefined;
         } else {
             room = this.client.getRooms().find((r) => {
                 return r.getCanonicalAlias() === alias || r.getAltAliases().includes(alias);
@@ -734,7 +736,7 @@ export class CommandPartCreator extends PartCreator {
         return new CommandPart(text, this.autoCompleteCreator);
     }
 
-    public deserializePart(part: SerializedPart): Part {
+    public deserializePart(part: SerializedPart): Part | undefined {
         if (part.type === Type.Command) {
             return this.command(part.text);
         } else {

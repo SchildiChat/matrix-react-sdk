@@ -59,7 +59,11 @@ const SORTED_EMOJI: ISortedEmoji[] = EMOJI.sort((a, b) => {
     _orderBy: index,
 }));
 
-function score(query: string, space: string): number {
+function score(query: string, space: string[] | string): number {
+    if (Array.isArray(space)) {
+        return Math.min(...space.map((s) => score(query, s)));
+    }
+
     const index = space.indexOf(query);
     if (index === -1) {
         return Infinity;
@@ -122,7 +126,7 @@ export default class EmojiProvider extends AutocompleteProvider {
             shouldMatchWordsOnly: true,
         });
 
-        this.recentlyUsed = Array.from(new Set(recent.get().map(getEmojiFromUnicode).filter(Boolean)));
+        this.recentlyUsed = Array.from(new Set(recent.get().map(getEmojiFromUnicode).filter(Boolean))) as (IEmoji | ICustomEmoji)[];
     }
 
     public async getCompletions(
@@ -189,7 +193,7 @@ export default class EmojiProvider extends AutocompleteProvider {
                                     <span>{c.emoji.unicode}</span>
                                 </PillCompletion>
                             ),
-                            range,
+                            range: range!,
                         };
                     } else {
                         let mediaUrl;
@@ -210,7 +214,7 @@ export default class EmojiProvider extends AutocompleteProvider {
                                     <img className="mx_customEmoji_image" src={mediaUrl} alt={c.emoji.shortcodes[0]} />
                                 </PillCompletion>
                             ),
-                            range,
+                            range: range!,
                         } as const;
                     }
                 })

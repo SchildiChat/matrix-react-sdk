@@ -106,7 +106,7 @@ export default class ReplyTile extends React.PureComponent<IProps> {
         }
     };
 
-    public render(): JSX.Element {
+    public render(): React.ReactNode {
         const mxEvent = this.props.mxEvent;
         const msgType = mxEvent.getContent().msgtype;
         const evType = mxEvent.getType();

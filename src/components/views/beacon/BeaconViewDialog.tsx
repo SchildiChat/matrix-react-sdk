@@ -125,6 +125,9 @@ const BeaconViewDialog: React.FC<IProps> = ({ initialFocusedBeacon, roomId, matr
         setFocusedBeaconState({ beacon, ts: Date.now() });
     };
 
+    const hasOwnBeacon =
+        liveBeacons.filter((beacon) => beacon?.beaconInfoOwner === matrixClient.getUserId()).length > 0;
+
     return (
         <BaseDialog className="mx_BeaconViewDialog" onFinished={onFinished} fixedWidth={false}>
             <MatrixClientContext.Provider value={matrixClient}>
@@ -136,6 +139,7 @@ const BeaconViewDialog: React.FC<IProps> = ({ initialFocusedBeacon, roomId, matr
                         interactive
                         onError={setMapDisplayError}
                         className="mx_BeaconViewDialog_map"
+                        allowGeolocate={!hasOwnBeacon}
                     >
                         {({ map }: { map: maplibregl.Map }) => (
                             <>
@@ -154,12 +158,12 @@ const BeaconViewDialog: React.FC<IProps> = ({ initialFocusedBeacon, roomId, matr
                 )}
                 {mapDisplayError && <MapError error={mapDisplayError.message as LocationShareError} isMinimised />}
                 {!centerGeoUri && !mapDisplayError && (
-                    <MapFallback data-test-id="beacon-view-dialog-map-fallback" className="mx_BeaconViewDialog_map">
+                    <MapFallback data-testid="beacon-view-dialog-map-fallback" className="mx_BeaconViewDialog_map">
                         <span className="mx_BeaconViewDialog_mapFallbackMessage">{_t("No live locations")}</span>
                         <AccessibleButton
                             kind="primary"
                             onClick={onFinished}
-                            data-test-id="beacon-view-dialog-fallback-close"
+                            data-testid="beacon-view-dialog-fallback-close"
                         >
                             {_t("Close")}
                         </AccessibleButton>
@@ -175,7 +179,7 @@ const BeaconViewDialog: React.FC<IProps> = ({ initialFocusedBeacon, roomId, matr
                     <AccessibleButton
                         kind="primary"
                         onClick={() => setSidebarOpen(true)}
-                        data-test-id="beacon-view-dialog-open-sidebar"
+                        data-testid="beacon-view-dialog-open-sidebar"
                         className="mx_BeaconViewDialog_viewListButton"
                     >
                         <LiveLocationIcon height={12} />

@@ -94,7 +94,7 @@ class Header extends React.PureComponent<IProps> {
         }
     };
 
-    public render(): JSX.Element {
+    public render(): React.ReactNode {
         return (
             <nav
                 className="mx_EmojiPicker_header"

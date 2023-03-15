@@ -33,7 +33,7 @@ interface IProps {
 }
 
 class Emoji extends React.PureComponent<IProps> {
-    public render(): JSX.Element {
+    public render(): React.ReactNode {
         const { onClick, onMouseEnter, onMouseLeave, emoji, selectedEmojis } = this.props;
 
         let emojiElement: JSX.Element;

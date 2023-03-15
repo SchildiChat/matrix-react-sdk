@@ -141,8 +141,8 @@ class LoggedInView extends React.Component<IProps, IState> {
     protected backgroundImageWatcherRef: string;
     protected resizer: Resizer;
 
-    public constructor(props, context) {
-        super(props, context);
+    public constructor(props: IProps) {
+        super(props);
 
         this.state = {
             syncErrorData: undefined,
@@ -241,8 +241,8 @@ class LoggedInView extends React.Component<IProps, IState> {
     };
 
     private createResizer(): Resizer {
-        let panelSize;
-        let panelCollapsed;
+        let panelSize: number;
+        let panelCollapsed: boolean;
         const collapseConfig: ICollapseConfig = {
             // TODO decrease this once Spaces launches as it'll no longer need to include the 56px Community Panel
             toggleSize: 206 - 50,
@@ -364,7 +364,7 @@ class LoggedInView extends React.Component<IProps, IState> {
         const serverNoticeList = RoomListStore.instance.orderedLists[DefaultTagID.ServerNotice];
         if (!serverNoticeList) return;
 
-        const events = [];
+        const events: MatrixEvent[] = [];
         let pinnedEventTs = 0;
         for (const room of serverNoticeList) {
             const pinStateEvent = room.currentState.getStateEvents("m.room.pinned_events", "");
@@ -392,7 +392,7 @@ class LoggedInView extends React.Component<IProps, IState> {
                 e.getContent()["server_notice_type"] === "m.server_notice.usage_limit_reached"
             );
         });
-        const usageLimitEventContent = usageLimitEvent && usageLimitEvent.getContent();
+        const usageLimitEventContent = usageLimitEvent?.getContent<IUsageLimit>();
         this.calculateServerLimitToast(this.state.syncErrorData, usageLimitEventContent);
         this.setState({
             usageLimitEventContent,
@@ -445,13 +445,13 @@ class LoggedInView extends React.Component<IProps, IState> {
     We also listen with a native listener on the document to get keydown events when no element is focused.
     Bubbling is irrelevant here as the target is the body element.
     */
-    private onReactKeyDown = (ev): void => {
+    private onReactKeyDown = (ev: React.KeyboardEvent): void => {
         // events caught while bubbling up on the root element
         // of this component, so something must be focused.
         this.onKeyDown(ev);
     };
 
-    private onNativeKeyDown = (ev): void => {
+    private onNativeKeyDown = (ev: KeyboardEvent): void => {
         // only pass this if there is no focused element.
         // if there is, onKeyDown will be called by the
         // react keydown handler that respects the react bubbling order.
@@ -460,7 +460,7 @@ class LoggedInView extends React.Component<IProps, IState> {
         }
     };
 
-    private onKeyDown = (ev): void => {
+    private onKeyDown = (ev: React.KeyboardEvent | KeyboardEvent): void => {
         let handled = false;
 
         const roomAction = getKeyBindingsManager().getRoomAction(ev);
@@ -594,7 +594,7 @@ class LoggedInView extends React.Component<IProps, IState> {
         ) {
             dis.dispatch<SwitchSpacePayload>({
                 action: Action.SwitchSpace,
-                num: ev.code.slice(5), // Cut off the first 5 characters - "Digit"
+                num: parseInt(ev.code.slice(5), 10), // Cut off the first 5 characters - "Digit"
             });
             handled = true;
         }
@@ -638,13 +638,11 @@ class LoggedInView extends React.Component<IProps, IState> {
      * dispatch a page-up/page-down/etc to the appropriate component
      * @param {Object} ev The key event
      */
-    private onScrollKeyPressed = (ev): void => {
-        if (this._roomView.current) {
-            this._roomView.current.handleScrollKey(ev);
-        }
+    private onScrollKeyPressed = (ev: React.KeyboardEvent | KeyboardEvent): void => {
+        this._roomView.current?.handleScrollKey(ev);
     };
 
-    public render(): JSX.Element {
+    public render(): React.ReactNode {
         let pageElement;
 
         switch (this.props.page_type) {

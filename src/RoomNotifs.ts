@@ -48,7 +48,7 @@ export function getRoomNotifsState(client: MatrixClient, roomId: string): RoomNo
     }
 
     // for everything else, look at the room rule.
-    let roomRule = null;
+    let roomRule: IPushRule | undefined;
     try {
         roomRule = client.getRoomPushRule("global", roomId);
     } catch (err) {
@@ -108,7 +108,7 @@ export function getUnreadNotificationCount(room: Room, type: NotificationCountTy
 
 function setRoomNotifsStateMuted(roomId: string): Promise<any> {
     const cli = MatrixClientPeg.get();
-    const promises = [];
+    const promises: Promise<unknown>[] = [];
 
     // delete the room rule
     const roomRule = cli.getRoomPushRule("global", roomId);
@@ -139,7 +139,7 @@ function setRoomNotifsStateMuted(roomId: string): Promise<any> {
 
 function setRoomNotifsStateUnmuted(roomId: string, newState: RoomNotifState): Promise<any> {
     const cli = MatrixClientPeg.get();
-    const promises = [];
+    const promises: Promise<unknown>[] = [];
 
     const overrideMuteRule = findOverrideMuteRule(roomId);
     if (overrideMuteRule) {

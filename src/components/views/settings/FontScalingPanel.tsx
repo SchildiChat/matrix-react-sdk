@@ -109,7 +109,7 @@ export default class FontScalingPanel extends React.Component<IProps, IState> {
         return { valid: true, feedback: _t("Use between %(min)s pt and %(max)s pt", { min, max }) };
     };
 
-    public render(): JSX.Element {
+    public render(): React.ReactNode {
         const brand = SdkConfig.get().brand;
         const systemFontTooltipContent = _t(
             "Set the name of a font installed on your system & %(brand)s will attempt to use it.",

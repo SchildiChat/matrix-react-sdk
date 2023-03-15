@@ -24,16 +24,16 @@ import { ActionPayload } from "../../dispatcher/payloads";
 import { Theme } from "../enums/Theme";
 
 export default class ThemeWatcher {
-    private lightThemeWatchRef: string;
-    private darkThemeWatchRef: string;
-    private themeInUseWatchRef: string;
-    private dispatcherRef: string;
+    private lightThemeWatchRef: string | null;
+    private darkThemeWatchRef: string | null;
+    private themeInUseWatchRef: string | null;
+    private dispatcherRef: string | null;
 
     private preferDark: MediaQueryList;
     private preferLight: MediaQueryList;
     private preferHighContrast: MediaQueryList;
 
-    private static currentTheme: string;
+    private static currentTheme: string | null;
 
     public constructor() {
         this.lightThemeWatchRef = null;
@@ -68,10 +68,10 @@ export default class ThemeWatcher {
             this.preferLight.removeEventListener("change", this.onChange);
             this.preferHighContrast.removeEventListener("change", this.onChange);
         }
-        SettingsStore.unwatchSetting(this.themeInUseWatchRef);
-        SettingsStore.unwatchSetting(this.darkThemeWatchRef);
-        SettingsStore.unwatchSetting(this.lightThemeWatchRef);
-        dis.unregister(this.dispatcherRef);
+        if (this.themeInUseWatchRef) SettingsStore.unwatchSetting(this.themeInUseWatchRef);
+        if (this.darkThemeWatchRef) SettingsStore.unwatchSetting(this.darkThemeWatchRef);
+        if (this.lightThemeWatchRef) SettingsStore.unwatchSetting(this.lightThemeWatchRef);
+        if (this.dispatcherRef) dis.unregister(this.dispatcherRef);
     }
 
     private onChange = (): void => {

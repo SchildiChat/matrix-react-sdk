@@ -70,7 +70,7 @@ interface ISerializeOpts {
 export function htmlSerializeIfNeeded(
     model: EditorModel,
     { forceHTML = false, useMarkdown = true }: ISerializeOpts = {},
-): string {
+): string | undefined {
     if (!useMarkdown) {
         return escapeHtml(textSerialize(model)).replace(/\n/g, "<br/>");
     }
@@ -79,13 +79,13 @@ export function htmlSerializeIfNeeded(
     return htmlSerializeFromMdIfNeeded(md, { forceHTML });
 }
 
-export function htmlSerializeFromMdIfNeeded(md: string, { forceHTML = false } = {}): string {
+export function htmlSerializeFromMdIfNeeded(md: string, { forceHTML = false } = {}): string | undefined {
     // copy of raw input to remove unwanted math later
     const orig = md;
 
     if (SettingsStore.getValue("feature_latex_maths")) {
-        const patternNames = ["tex", "latex"];
-        const patternTypes = ["display", "inline"];
+        const patternNames = ["tex", "latex"] as const;
+        const patternTypes = ["display", "inline"] as const;
         const patternDefaults = {
             tex: {
                 // detect math with tex delimiters, inline: $...$, display $$...$$
@@ -125,7 +125,7 @@ export function htmlSerializeFromMdIfNeeded(md: string, { forceHTML = false } = 
             patternTypes.forEach(function (patternType) {
                 // get the regex replace pattern from config or use the default
                 const pattern =
-                    (((SdkConfig.get("latex_maths_delims") || {})[patternType] || {})["pattern"] || {})[patternName] ||
+                    SdkConfig.get("latex_maths_delims")?.[patternType]?.["pattern"]?.[patternName] ||
                     patternDefaults[patternName][patternType];
 
                 md = md.replace(RegExp(pattern, "gms"), function (m, p1, p2) {

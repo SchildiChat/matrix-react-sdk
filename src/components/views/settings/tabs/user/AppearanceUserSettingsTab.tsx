@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import React from "react";
+import React, { ChangeEvent, ReactNode } from "react";
 
 import { _t } from "../../../../../languageHandler";
 import SdkConfig from "../../../../../SdkConfig";
@@ -50,8 +50,8 @@ interface IState extends IThemeState {
     layout: Layout;
     // User profile data for the message preview
     userId?: string;
-    displayName: string;
-    avatarUrl: string;
+    displayName?: string;
+    avatarUrl?: string;
 }
 
 export default class AppearanceUserSettingsTab extends React.Component<IProps, IState> {
@@ -68,16 +68,13 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
             themeInUse: SettingsStore.getValue("theme_in_use"),
             roomListStyle: SettingsStore.getValue("roomListStyle"),
             layout: SettingsStore.getValue("layout"),
-            userId: null,
-            displayName: null,
-            avatarUrl: null,
         };
     }
 
     public async componentDidMount(): Promise<void> {
         // Fetch the current user profile for the message preview
         const client = MatrixClientPeg.get();
-        const userId = client.getUserId();
+        const userId = client.getUserId()!;
         const profileInfo = await client.getProfileInfo(userId);
         if (this.unmounted) return;
 
@@ -102,7 +99,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
         this.setState({ layout: layout });
     };
 
-    private renderRoomListSection(): JSX.Element {
+    private renderRoomListSection(): ReactNode {
         const roomListStyleSection = (
             <div className="mx_SettingsTab_multilineRadioSelectors">
                 <label>
@@ -152,7 +149,7 @@ export default class AppearanceUserSettingsTab extends React.Component<IProps, I
         );
     }
 
-    public render(): JSX.Element {
+    public render(): React.ReactNode {
         const brand = SdkConfig.get().brand;
 
         return (

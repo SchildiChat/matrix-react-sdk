@@ -1,5 +1,5 @@
 /*
-Copyright 2022 The Matrix.org Foundation C.I.C.
+Copyright 2022 - 2023 The Matrix.org Foundation C.I.C.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -54,12 +54,12 @@ describe("Polls", () => {
     };
 
     const getPollOption = (pollId: string, optionText: string): Chainable<JQuery> => {
-        return getPollTile(pollId).contains(".mx_MPollBody_option .mx_StyledRadioButton", optionText);
+        return getPollTile(pollId).contains(".mx_PollOption .mx_StyledRadioButton", optionText);
     };
 
     const expectPollOptionVoteCount = (pollId: string, optionText: string, votes: number): void => {
         getPollOption(pollId, optionText).within(() => {
-            cy.get(".mx_MPollBody_optionVoteCount").should("contain", `${votes} vote`);
+            cy.get(".mx_PollOption_optionVoteCount").should("contain", `${votes} vote`);
         });
     };
 
@@ -83,7 +83,6 @@ describe("Polls", () => {
     };
 
     beforeEach(() => {
-        cy.enableLabsFeature("feature_threadenabled");
         cy.window().then((win) => {
             win.localStorage.setItem("mx_lhs_size", "0"); // Collapse left panel for these tests
         });

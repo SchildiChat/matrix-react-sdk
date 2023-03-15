@@ -204,7 +204,7 @@ const transformTags: IExtendedSanitizeOptions["transformTags"] = {
             attribs.style += "height: 100%;";
         }
 
-        attribs.src = mediaFromMxc(src).getThumbnailOfSourceHttp(width, height);
+        attribs.src = mediaFromMxc(src).getThumbnailOfSourceHttp(width, height)!;
         return { tagName, attribs };
     },
     "code": function (tagName: string, attribs: sanitizeHtml.Attributes) {
@@ -228,7 +228,7 @@ const transformTags: IExtendedSanitizeOptions["transformTags"] = {
 
         // Sanitise and transform data-mx-color and data-mx-bg-color to their CSS
         // equivalents
-        const customCSSMapper = {
+        const customCSSMapper: Record<string, string> = {
             "data-mx-color": "color",
             "data-mx-bg-color": "background-color",
             // $customAttributeKey: $cssAttributeKey
@@ -352,7 +352,7 @@ const topicSanitizeHtmlParams: IExtendedSanitizeOptions = {
 };
 
 abstract class BaseHighlighter<T extends React.ReactNode> {
-    public constructor(public highlightClass: string, public highlightLink: string) {}
+    public constructor(public highlightClass: string, public highlightLink?: string) {}
 
     /**
      * apply the highlights to a section of text
@@ -504,7 +504,7 @@ function formatEmojis(message: string, isHtmlMessage: boolean): (JSX.Element | s
 export function bodyToHtml(content: IContent, highlights: Optional<string[]>, opts: IOptsReturnString): string;
 export function bodyToHtml(content: IContent, highlights: Optional<string[]>, opts: IOptsReturnNode): ReactNode;
 export function bodyToHtml(content: IContent, highlights: Optional<string[]>, opts: IOpts = {}): ReactNode | string {
-    const isFormattedBody = content.format === "org.matrix.custom.html" && !!content.formatted_body;
+    const isFormattedBody = content.format === "org.matrix.custom.html" && typeof content.formatted_body === "string";
     let bodyHasEmoji = false;
     let isHtmlMessage = false;
 
@@ -514,7 +514,7 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
     }
 
     let strippedBody: string;
-    let safeBody: string; // safe, sanitised HTML, preferred over `strippedBody` which is fully plaintext
+    let safeBody: string | undefined; // safe, sanitised HTML, preferred over `strippedBody` which is fully plaintext
     let isAllHtmlEmoji = false;
 
     try {
@@ -530,7 +530,7 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
 
         if (opts.stripReplyFallback && formattedBody) formattedBody = stripHTMLReply(formattedBody);
         strippedBody = opts.stripReplyFallback ? stripPlainReply(plainBody) : plainBody;
-        bodyHasEmoji = mightContainEmoji(isFormattedBody ? formattedBody : plainBody);
+        bodyHasEmoji = mightContainEmoji(isFormattedBody ? formattedBody! : plainBody);
 
         const highlighter = safeHighlights?.length
             ? new HtmlHighlighter("mx_EventTile_searchHighlight", opts.highlightLink)
@@ -544,11 +544,11 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
                 // by an attempt to search for 'foobar'.  Then again, the search query probably wouldn't work either
                 // XXX: hacky bodge to temporarily apply a textFilter to the sanitizeParams structure.
                 sanitizeParams.textFilter = function (safeText) {
-                    return highlighter.applyHighlights(safeText, safeHighlights).join("");
+                    return highlighter.applyHighlights(safeText, safeHighlights!).join("");
                 };
             }
 
-            safeBody = sanitizeHtml(formattedBody, sanitizeParams);
+            safeBody = sanitizeHtml(formattedBody!, sanitizeParams);
             const phtml = cheerio.load(safeBody, {
                 // @ts-ignore: The `_useHtmlParser2` internal option is the
                 // simplest way to both parse and render using `htmlparser2`.
@@ -594,7 +594,7 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
                 safeBody = formatEmojis(safeBody, true).join("");
             }
         } else if (highlighter) {
-            safeBody = highlighter.applyHighlights(plainBody, safeHighlights).join("");
+            safeBody = highlighter.applyHighlights(plainBody, safeHighlights!).join("");
         }
     } finally {
         delete sanitizeParams.textFilter;
@@ -616,7 +616,7 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
         contentBodyTrimmed = contentBodyTrimmed.replace(EMOJI_SEPARATOR_REGEX, "");
 
         const match = BIGEMOJI_REGEX.exec(contentBodyTrimmed);
-        const matched = match && match[0] && match[0].length === contentBodyTrimmed.length;
+        const matched = match?.[0]?.length === contentBodyTrimmed.length;
         emojiBody =
             (matched || isAllHtmlEmoji) &&
             (strippedBody === safeBody || // replies have the html fallbacks, account for that here
@@ -630,7 +630,7 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
         "markdown-body": isHtmlMessage && !emojiBody,
     });
 
-    let emojiBodyElements: JSX.Element[];
+    let emojiBodyElements: JSX.Element[] | undefined;
     if (!safeBody && bodyHasEmoji) {
         emojiBodyElements = formatEmojis(strippedBody, false) as JSX.Element[];
     }
@@ -659,7 +659,7 @@ export function topicToHtml(
     allowExtendedHtml = false,
 ): ReactNode {
     if (!SettingsStore.getValue("feature_html_topic")) {
-        htmlTopic = null;
+        htmlTopic = undefined;
     }
 
     let isFormattedTopic = !!htmlTopic;
@@ -667,10 +667,10 @@ export function topicToHtml(
     let safeTopic = "";
 
     try {
-        topicHasEmoji = mightContainEmoji(isFormattedTopic ? htmlTopic : topic);
+        topicHasEmoji = mightContainEmoji(isFormattedTopic ? htmlTopic! : topic);
 
         if (isFormattedTopic) {
-            safeTopic = sanitizeHtml(htmlTopic, allowExtendedHtml ? sanitizeHtmlParams : topicSanitizeHtmlParams);
+            safeTopic = sanitizeHtml(htmlTopic!, allowExtendedHtml ? sanitizeHtmlParams : topicSanitizeHtmlParams);
             if (topicHasEmoji) {
                 safeTopic = formatEmojis(safeTopic, true).join("");
             }
@@ -679,7 +679,7 @@ export function topicToHtml(
         isFormattedTopic = false; // Fall back to plain-text topic
     }
 
-    let emojiBodyElements: ReturnType<typeof formatEmojis>;
+    let emojiBodyElements: ReturnType<typeof formatEmojis> | undefined;
     if (!isFormattedTopic && topicHasEmoji) {
         emojiBodyElements = formatEmojis(topic, false);
     }
