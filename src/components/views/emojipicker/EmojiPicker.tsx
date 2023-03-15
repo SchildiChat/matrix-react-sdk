@@ -93,12 +93,10 @@ class EmojiPicker extends React.Component<IProps, IState> {
         this.recentlyUsed = Array.from(
             new Set(
                 filterBoolean(
-                    recent
-                        .get()
-                        .map((recentKey) => {
-                            return getEmojiFromUnicode(recentKey) || this.shortcodes_to_custom_emoji[recentKey];
-                        })
-                )
+                    recent.get().map((recentKey) => {
+                        return getEmojiFromUnicode(recentKey) || this.shortcodes_to_custom_emoji[recentKey];
+                    }),
+                ),
             ),
         );
         this.allEmojis = {

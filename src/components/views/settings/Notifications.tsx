@@ -472,7 +472,7 @@ export default class Notifications extends React.PureComponent<IProps, IState> {
         this.setState({ soundPack: value });
         await SettingsStore.setValue("soundPack", null, SettingLevel.DEVICE, value);
     };
-    
+
     private setPushRuleActions = async (
         ruleId: IPushRule["rule_id"],
         kind: PushRuleKind,

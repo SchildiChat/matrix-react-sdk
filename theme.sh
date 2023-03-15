@@ -16,11 +16,11 @@ if [[ "$automatic_commit" == [Yy]* ]]; then
     fi
 fi
 
-M_ACCENT="#8BC34A"
+M_ACCENT="#8bc34a"
 M_ACCENT_DEC="139, 195, 74"
-M_ACCENT_DARK="#33691E"
-M_ACCENT_LIGHT="#DCEDC8"
-M_ALERT="#E53935"
+M_ACCENT_DARK="#33691e"
+M_ACCENT_LIGHT="#dcedc8"
+M_ALERT="#e53935"
 M_LINK="#368bd6"
 
 replace_colors() {
@@ -34,7 +34,7 @@ replace_colors() {
         PRESENCE_OFFLINE="#e0e0e0" # not applied because not existing specifically for dark
         MESSAGE_BUBBLE_BACKGROUND="#424242"
         MESSAGE_BUBBLE_BACKGROUND_SELF="#303030"
-        MESSAGE_BUBBLE_BACKGROUND_SELECTED="#3F4931"
+        MESSAGE_BUBBLE_BACKGROUND_SELECTED="#3f4931"
     else
         BG_ACCENT="$M_ACCENT_LIGHT"
         CODEBLOCK_BORDER_COLOR="#00000010"
@@ -43,8 +43,8 @@ replace_colors() {
         PILL_HOVER_COLOR="rgba(0, 0, 0, 0.10)"
         PRESENCE_OFFLINE="#bdbdbd" # for light this should actually be darker
         MESSAGE_BUBBLE_BACKGROUND="#eeeeee"
-        MESSAGE_BUBBLE_BACKGROUND_SELF="#F1F8E9"
-        MESSAGE_BUBBLE_BACKGROUND_SELECTED="#DBEDC6"
+        MESSAGE_BUBBLE_BACKGROUND_SELF="#f1f8e9"
+        MESSAGE_BUBBLE_BACKGROUND_SELECTED="#dbedc6"
     fi
     # Neutral colors
     sed -i 's|#15171b|#212121|gi' "$f"
@@ -146,8 +146,8 @@ replace_colors() {
 
     # e2e colors
     sed -i "s|\\(\$e2e-verified-color: \\).*;|\\1$M_ACCENT;|gi" "$f"
-    sed -i "s|\\(\$e2e-unknown-color: \\).*;|\\1#FFC107;|gi" "$f"
-    sed -i "s|\\(\$e2e-unverified-color: \\).*;|\\1#FFC107;|gi" "$f"
+    sed -i "s|\\(\$e2e-unknown-color: \\).*;|\\1#ffc107;|gi" "$f"
+    sed -i "s|\\(\$e2e-unverified-color: \\).*;|\\1#ffc107;|gi" "$f"
     sed -i "s|\\(\$e2e-warning-color: \\).*;|\\1$M_ALERT;|gi" "$f"
 
     # Message bubbles
