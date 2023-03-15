@@ -48,7 +48,6 @@ import SoundPackContainer from "./SoundPackContainer";
 import { IOOBData, IThreepidInvite } from "../../stores/ThreepidInviteStore";
 import Modal from "../../Modal";
 import { ICollapseConfig } from "../../resizer/distributors/collapse";
-import HostSignupContainer from "../views/host_signup/HostSignupContainer";
 import { getKeyBindingsManager } from "../../KeyBindingsManager";
 import { IOpts } from "../../createRoom";
 import SpacePanel from "../views/spaces/SpacePanel";
@@ -718,7 +717,6 @@ class LoggedInView extends React.Component<IProps, IState> {
                 </div>
                 <PipContainer />
                 <NonUrgentToastContainer />
-                <HostSignupContainer />
                 <SoundPackContainer />
                 {audioFeedArraysForCalls}
             </MatrixClientContext.Provider>

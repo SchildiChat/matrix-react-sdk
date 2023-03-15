@@ -54,20 +54,16 @@ export default class ThemeWatcher {
         this.lightThemeWatchRef = SettingsStore.watchSetting("light_theme", null, this.onChange);
         this.darkThemeWatchRef = SettingsStore.watchSetting("dark_theme", null, this.onChange);
         this.themeInUseWatchRef = SettingsStore.watchSetting("theme_in_use", null, this.onChange);
-        if (this.preferDark.addEventListener) {
-            this.preferDark.addEventListener("change", this.onChange);
-            this.preferLight.addEventListener("change", this.onChange);
-            this.preferHighContrast.addEventListener("change", this.onChange);
-        }
+        this.preferDark.addEventListener("change", this.onChange);
+        this.preferLight.addEventListener("change", this.onChange);
+        this.preferHighContrast.addEventListener("change", this.onChange);
         this.dispatcherRef = dis.register(this.onAction);
     }
 
     public stop(): void {
-        if (this.preferDark.addEventListener) {
-            this.preferDark.removeEventListener("change", this.onChange);
-            this.preferLight.removeEventListener("change", this.onChange);
-            this.preferHighContrast.removeEventListener("change", this.onChange);
-        }
+        this.preferDark.removeEventListener("change", this.onChange);
+        this.preferLight.removeEventListener("change", this.onChange);
+        this.preferHighContrast.removeEventListener("change", this.onChange);
         if (this.themeInUseWatchRef) SettingsStore.unwatchSetting(this.themeInUseWatchRef);
         if (this.darkThemeWatchRef) SettingsStore.unwatchSetting(this.darkThemeWatchRef);
         if (this.lightThemeWatchRef) SettingsStore.unwatchSetting(this.lightThemeWatchRef);

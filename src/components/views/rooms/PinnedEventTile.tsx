@@ -64,7 +64,7 @@ export default class PinnedEventTile extends React.Component<IProps> {
         eventId: string,
         relationType: RelationType | string,
         eventType: EventType | string,
-    ): Relations => {
+    ): Relations | undefined => {
         if (eventId === this.props.event.getId()) {
             return this.relations.get(relationType)?.get(eventType);
         }
@@ -77,7 +77,7 @@ export default class PinnedEventTile extends React.Component<IProps> {
         const roomId = this.props.event.getRoomId();
         const room = this.context.getRoom(roomId);
 
-        let unpinButton = null;
+        let unpinButton: JSX.Element | undefined;
         if (this.props.onUnpinClicked) {
             unpinButton = (
                 <AccessibleTooltipButton

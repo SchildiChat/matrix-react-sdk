@@ -71,7 +71,7 @@ export function determineAvatarPosition(index: number, max: number): IAvatarPosi
     }
 }
 
-export function readReceiptTooltip(members: string[], hasMore: boolean): string | null {
+export function readReceiptTooltip(members: string[], hasMore: boolean): string | undefined {
     if (hasMore) {
         return _t("%(members)s and more", {
             members: members.join(", "),
@@ -83,8 +83,6 @@ export function readReceiptTooltip(members: string[], hasMore: boolean): string 
         });
     } else if (members.length) {
         return members[0];
-    } else {
-        return null;
     }
 }
 
@@ -149,7 +147,7 @@ export function ReadReceiptGroup({
             const { hidden, position } = determineAvatarPosition(index, maxAvatars);
 
             const userId = receipt.userId;
-            let readReceiptInfo: IReadReceiptInfo;
+            let readReceiptInfo: IReadReceiptInfo | undefined;
 
             if (readReceiptMap) {
                 readReceiptInfo = readReceiptMap[userId];
@@ -176,7 +174,7 @@ export function ReadReceiptGroup({
         })
         .reverse();
 
-    let remText: JSX.Element;
+    let remText: JSX.Element | undefined;
     const remainder = readReceipts.length - maxAvatars;
     if (remainder > 0) {
         remText = (

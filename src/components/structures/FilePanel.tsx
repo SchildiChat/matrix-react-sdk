@@ -68,7 +68,7 @@ class FilePanel extends React.Component<IProps, IState> {
 
     private onRoomTimeline = (
         ev: MatrixEvent,
-        room: Room | null,
+        room: Room | undefined,
         toStartOfTimeline: boolean,
         removed: boolean,
         data: IRoomTimelineData,
@@ -80,7 +80,7 @@ class FilePanel extends React.Component<IProps, IState> {
         client.decryptEventIfNeeded(ev);
 
         if (ev.isBeingDecrypted()) {
-            this.decryptingEvents.add(ev.getId());
+            this.decryptingEvents.add(ev.getId()!);
         } else {
             this.addEncryptedLiveEvent(ev);
         }
@@ -88,7 +88,7 @@ class FilePanel extends React.Component<IProps, IState> {
 
     private onEventDecrypted = (ev: MatrixEvent, err?: any): void => {
         if (ev.getRoomId() !== this.props.roomId) return;
-        const eventId = ev.getId();
+        const eventId = ev.getId()!;
 
         if (!this.decryptingEvents.delete(eventId)) return;
         if (err) return;
@@ -105,7 +105,7 @@ class FilePanel extends React.Component<IProps, IState> {
             return;
         }
 
-        if (!this.state.timelineSet.eventIdToTimeline(ev.getId())) {
+        if (!this.state.timelineSet.eventIdToTimeline(ev.getId()!)) {
             this.state.timelineSet.addEventToTimeline(ev, timeline, false);
         }
     }

@@ -29,6 +29,7 @@ import QuickReactions from "./QuickReactions";
 import Category, { ICategory, CategoryKey } from "./Category";
 import AccessibleButton from "../elements/AccessibleButton";
 import { ICustomEmoji, loadImageSet } from "../../../emojipicker/customemoji";
+import { filterBoolean } from "../../../utils/arrays";
 
 export const CATEGORY_HEADER_HEIGHT = 20;
 export const EMOJI_HEIGHT = 35;
@@ -69,7 +70,6 @@ class EmojiPicker extends React.Component<IProps, IState> {
 
         this.state = {
             filter: "",
-            previewEmoji: null,
             scrollTop: 0,
             viewportHeight: 280,
         };
@@ -92,12 +92,13 @@ class EmojiPicker extends React.Component<IProps, IState> {
         // Convert recent emoji characters to emoji data, removing unknowns and duplicates
         this.recentlyUsed = Array.from(
             new Set(
-                recent
-                    .get()
-                    .map((recentKey) => {
-                        return getEmojiFromUnicode(recentKey) || this.shortcodes_to_custom_emoji[recentKey];
-                    })
-                    .filter(Boolean),
+                filterBoolean(
+                    recent
+                        .get()
+                        .map((recentKey) => {
+                            return getEmojiFromUnicode(recentKey) || this.shortcodes_to_custom_emoji[recentKey];
+                        })
+                )
             ),
         );
         this.allEmojis = {
@@ -230,7 +231,7 @@ class EmojiPicker extends React.Component<IProps, IState> {
     private onChangeFilter = (filter: string): void => {
         const lcFilter = filter.toLowerCase().trim(); // filter is case insensitive
         for (const cat of this.categories) {
-            let emojis: Array<IEmoji | ICustomEmoji>;
+            let emojis: (IEmoji | ICustomEmoji)[];
             // If the new filter string includes the old filter string, we don't have to re-filter the whole dataset.
             if (lcFilter.includes(this.state.filter)) {
                 emojis = this.memoizedDataByCategory[cat.id];
@@ -238,10 +239,30 @@ class EmojiPicker extends React.Component<IProps, IState> {
                 emojis = this.allEmojis[cat.id];
             }
             emojis = emojis.filter((emoji) => this.emojiMatchesFilter(emoji, lcFilter));
+            emojis = emojis.sort((a, b) => {
+                const indexA = a.shortcodes[0].indexOf(lcFilter);
+                const indexB = b.shortcodes[0].indexOf(lcFilter);
+
+                // Prioritize emojis containing the filter in its shortcode
+                if (indexA == -1 || indexB == -1) {
+                    return indexB - indexA;
+                }
+
+                // If both emojis start with the filter
+                // put the shorter emoji first
+                if (indexA == 0 && indexB == 0) {
+                    return a.shortcodes[0].length - b.shortcodes[0].length;
+                }
+
+                // Prioritize emojis starting with the filter
+                return indexA - indexB;
+            });
             this.memoizedDataByCategory[cat.id] = emojis;
             cat.enabled = emojis.length > 0;
             // The setState below doesn't re-render the header and we already have the refs for updateVisibility, so...
-            cat.ref.current.disabled = !cat.enabled;
+            if (cat.ref.current) {
+                cat.ref.current.disabled = !cat.enabled;
+            }
         }
         this.setState({ filter });
         // Header underlines need to be updated, but updating requires knowing
@@ -278,9 +299,9 @@ class EmojiPicker extends React.Component<IProps, IState> {
         });
     };
 
-    private onHoverEmojiEnd = (emoji: IEmoji): void => {
+    private onHoverEmojiEnd = (): void => {
         this.setState({
-            previewEmoji: null,
+            previewEmoji: undefined,
         });
     };
 
@@ -293,7 +314,9 @@ class EmojiPicker extends React.Component<IProps, IState> {
     private reactWith = (reaction: string): void => {
         this.props.onChoose({
             label: null,
+            group: null,
             hexcode: null,
+            order: null,
             shortcodes: [],
             unicode: reaction,
         });

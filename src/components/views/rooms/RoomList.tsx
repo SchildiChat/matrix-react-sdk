@@ -122,7 +122,7 @@ const auxButtonContextMenuPosition = (handle: RefObject<HTMLDivElement>): MenuPr
 
 const DmAuxButton: React.FC<IAuxButtonProps> = ({ tabIndex, dispatcher = defaultDispatcher }) => {
     const [menuDisplayed, handle, openMenu, closeMenu] = useContextMenu<HTMLDivElement>();
-    const activeSpace: Room = useEventEmitterState(SpaceStore.instance, UPDATE_SELECTED_SPACE, () => {
+    const activeSpace = useEventEmitterState(SpaceStore.instance, UPDATE_SELECTED_SPACE, () => {
         return SpaceStore.instance.activeSpaceRoom;
     });
 
@@ -132,7 +132,7 @@ const DmAuxButton: React.FC<IAuxButtonProps> = ({ tabIndex, dispatcher = default
     // SC: Just show the button, no menu; add DM does not add DM automatically to space (yet?)
     // eslint-disable-next-line no-constant-condition
     if (activeSpace && (showCreateRooms || showInviteUsers) && false) {
-        let contextMenu: JSX.Element;
+        let contextMenu: JSX.Element | undefined;
         if (menuDisplayed) {
             const canInvite = shouldShowSpaceInvite(activeSpace);
 
@@ -217,7 +217,7 @@ const DmAuxButton: React.FC<IAuxButtonProps> = ({ tabIndex, dispatcher = default
 
 const UntaggedAuxButton: React.FC<IAuxButtonProps> = ({ tabIndex }) => {
     const [menuDisplayed, handle, openMenu, closeMenu] = useContextMenu<HTMLDivElement>();
-    const activeSpace = useEventEmitterState<Room>(SpaceStore.instance, UPDATE_SELECTED_SPACE, () => {
+    const activeSpace = useEventEmitterState<Room | null>(SpaceStore.instance, UPDATE_SELECTED_SPACE, () => {
         return SpaceStore.instance.activeSpaceRoom;
     });
 
@@ -225,12 +225,12 @@ const UntaggedAuxButton: React.FC<IAuxButtonProps> = ({ tabIndex }) => {
     const videoRoomsEnabled = useFeatureEnabled("feature_video_rooms");
     const elementCallVideoRoomsEnabled = useFeatureEnabled("feature_element_call_video_rooms");
 
-    let contextMenuContent: JSX.Element | null = null;
+    let contextMenuContent: JSX.Element | undefined;
     let scAddRoomButton: JSX.Element;
     if ((true || menuDisplayed) && activeSpace) {
         const canAddRooms = activeSpace.currentState.maySendStateEvent(
             EventType.SpaceChild,
-            MatrixClientPeg.get().getUserId(),
+            MatrixClientPeg.get().getUserId()!,
         );
 
         contextMenuContent = (
@@ -545,7 +545,7 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
         SpaceStore.instance.off(UPDATE_SUGGESTED_ROOMS, this.updateSuggestedRooms);
         RoomListStore.instance.off(LISTS_UPDATE_EVENT, this.updateLists);
         SettingsStore.unwatchSetting(this.favouriteMessageWatcher);
-        defaultDispatcher.unregister(this.dispatcherRef);
+        if (this.dispatcherRef) defaultDispatcher.unregister(this.dispatcherRef);
         SettingsStore.unwatchSetting(this.unifiedRoomListWatcherRef);
         SdkContextClass.instance.roomViewStore.off(UPDATE_EVENT, this.onRoomViewStoreUpdate);
     }
@@ -558,7 +558,7 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
 
     private onRoomViewStoreUpdate = (): void => {
         this.setState({
-            currentRoomId: SdkContextClass.instance.roomViewStore.getRoomId(),
+            currentRoomId: SdkContextClass.instance.roomViewStore.getRoomId() ?? undefined,
         });
     };
 
@@ -712,7 +712,7 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
             Object.values(RoomListStore.instance.orderedLists).every((list) => !list?.length);
 
         return TAG_ORDER.map((orderedTagId) => {
-            let extraTiles = null;
+            let extraTiles: ReactComponentElement<typeof ExtraTile>[] | undefined;
             if (orderedTagId === DefaultTagID.Suggested) {
                 extraTiles = this.renderSuggestedRooms();
             } else if (this.state.feature_favourite_messages && orderedTagId === DefaultTagID.SavedItems) {

@@ -39,8 +39,8 @@ export interface ICategory {
 interface IProps {
     id: string;
     name: string;
-    emojis: Array<IEmoji | ICustomEmoji>;
-    selectedEmojis: Set<string>;
+    emojis: (IEmoji | ICustomEmoji)[];
+    selectedEmojis?: Set<string>;
     heightBefore: number;
     viewportHeight: number;
     scrollTop: number;
