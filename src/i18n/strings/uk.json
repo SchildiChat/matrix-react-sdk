@@ -2959,7 +2959,7 @@
     "Unable to find event at that date. (%(code)s)": "Не вдалося знайти подію на цю дату. (%(code)s)",
     "Jump to date (adds /jumptodate and jump to date headers)": "Перейти до дати (додає /jumptodate і переходить до заголовків дати)",
     "This address does not point at this room": "Ця адреса не вказує на цю кімнату",
-    "If you know what you're doing, Element is open-source, be sure to check out our GitHub (https://github.com/vector-im/element-web/) and contribute!": "Якщо ви знаєте, що ви робите, Element — це відкрите програмне забезпечення, обов'язково перегляньте наш GitHub (https://github.com/vector-im/element-web/) та зробіть внесок!",
+    "If you know what you're doing, Element is open-source, be sure to check out our GitHub (https://github.com/vector-im/element-web/) and contribute!": "Якщо ви знаєте, що ви робите, SchildiChat — це відкрите програмне забезпечення, обов'язково перегляньте наш GitHub (https://github.com/vector-im/element-web/) та зробіть внесок!",
     "If someone told you to copy/paste something here, there is a high likelihood you're being scammed!": "Якщо хтось сказав вам скопіювати/вставити щось сюди, є велика ймовірність, що вас обманюють!",
     "Wait!": "Заждіть!",
     "Location": "Місцеперебування",
@@ -3396,7 +3396,7 @@
     "Sign out of this session": "Вийти з цього сеансу",
     "Rename session": "Перейменувати сеанс",
     "Voice broadcast": "Голосові трансляції",
-    "Element Call video rooms": "Відео кімнати Element Call",
+    "Element Call video rooms": "Відео кімнати SchildiChat Call",
     "Voice broadcasts": "Голосові трансляції",
     "You do not have permission to start voice calls": "У вас немає дозволу розпочинати голосові виклики",
     "There's no one here to call": "Тут немає кого викликати",
@@ -3739,8 +3739,8 @@
     "Load more polls": "Завантажити більше опитувань",
     "Verify Session": "Звірити сеанс",
     "Ignore (%(counter)s)": "Ігнорувати (%(counter)s)",
-    "Once invited users have joined Element, you will be able to chat and the room will be end-to-end encrypted": "Після того, як запрошені користувачі приєднаються до Element, ви зможете спілкуватися з ними, а кімната буде захищена наскрізним шифруванням",
-    "Waiting for users to join Element": "Очікування коли користувачі приєднаються до Element",
+    "Once invited users have joined Element, you will be able to chat and the room will be end-to-end encrypted": "Після того, як запрошені користувачі приєднаються до SchildiChat, ви зможете спілкуватися з ними, а кімната буде захищена наскрізним шифруванням",
+    "Waiting for users to join Element": "Очікування коли користувачі приєднаються до SchildiChat",
     "Once everyone has joined, you’ll be able to chat": "Коли хтось приєднається, ви зможете спілкуватись",
     "Invites by email can only be sent one at a time": "Запрошення електронною поштою можна надсилати лише одне за раз"
 }
