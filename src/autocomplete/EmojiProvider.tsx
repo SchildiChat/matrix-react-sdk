@@ -107,13 +107,13 @@ export default class EmojiProvider extends AutocompleteProvider {
         // Global emotes from rooms
         const cli = MatrixClientPeg.get();
         const globalPacks = cli.getAccountData("im.ponies.emote_rooms")?.getContent()?.rooms;
-        for (const key in globalPacks) {
-            const packRoom = cli.getRoom(key);
-            const packRoomImageSetEvents = packRoom?.currentState?.getStateEvents("im.ponies.room_emotes");
-            const moreLoadedImages: ICustomEmoji[] = packRoomImageSetEvents?.flatMap((packRoomImageSetEvents) =>
-                loadImageSet(packRoomImageSetEvents),
-            );
-            loadedImages = [...loadedImages, ...(moreLoadedImages || [])];
+        for (const packRoomId in globalPacks) {
+            const packRoom = cli.getRoom(packRoomId);
+            for (const packRoomStateKey in globalPacks[packRoomId]) {
+                const packRoomImageSetEvents = packRoom?.currentState?.getStateEvents("im.ponies.room_emotes", packRoomStateKey);
+                const moreLoadedImages: ICustomEmoji[] = loadImageSet(packRoomImageSetEvents);
+                loadedImages = [...loadedImages, ...(moreLoadedImages || [])];
+            }
         }
 
         const sortedCustomImages = loadedImages.map((emoji, index) => ({
