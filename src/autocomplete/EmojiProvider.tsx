@@ -101,19 +101,19 @@ export default class EmojiProvider extends AutocompleteProvider {
         });
 
         // Load this room's image sets.
-        const imageSetEvents = room.currentState.getStateEvents("im.ponies.room_emotes");
-        let loadedImages: ICustomEmoji[] = imageSetEvents.flatMap((imageSetEvent) => loadImageSet(imageSetEvent));
+        const imageSetEvents = room?.currentState?.getStateEvents("im.ponies.room_emotes");
+        let loadedImages: ICustomEmoji[] = (imageSetEvents?.flatMap((imageSetEvent) => loadImageSet(imageSetEvent)) || []);
 
         // Global emotes from rooms
         const cli = MatrixClientPeg.get();
         const globalPacks = cli.getAccountData("im.ponies.emote_rooms")?.getContent()?.rooms;
         for (const key in globalPacks) {
             const packRoom = cli.getRoom(key);
-            const packRoomImageSetEvents = packRoom.currentState.getStateEvents("im.ponies.room_emotes");
-            const moreLoadedImages: ICustomEmoji[] = packRoomImageSetEvents.flatMap((packRoomImageSetEvents) =>
+            const packRoomImageSetEvents = packRoom?.currentState?.getStateEvents("im.ponies.room_emotes");
+            const moreLoadedImages: ICustomEmoji[] = packRoomImageSetEvents?.flatMap((packRoomImageSetEvents) =>
                 loadImageSet(packRoomImageSetEvents),
             );
-            loadedImages = [...loadedImages, ...moreLoadedImages];
+            loadedImages = [...loadedImages, ...(moreLoadedImages || [])];
         }
 
         const sortedCustomImages = loadedImages.map((emoji, index) => ({
