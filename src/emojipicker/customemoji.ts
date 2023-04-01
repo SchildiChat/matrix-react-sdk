@@ -18,7 +18,7 @@ import { MatrixEvent } from "matrix-js-sdk/src/matrix";
 
 export function loadImageSet(imageSetEvent: MatrixEvent): ICustomEmoji[] {
     const loadedImages: ICustomEmoji[] = [];
-    const images = imageSetEvent.getContent().images;
+    const images = imageSetEvent?.getContent().images;
     if (!images) {
         return [];
     }
