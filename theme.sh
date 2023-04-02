@@ -40,7 +40,7 @@ replace_colors() {
         CODEBLOCK_BORDER_COLOR="#00000010"
         CODEBLOCK_BACKGROUND_COLOR="#00000010"
         PILL_COLOR="rgba(0, 0, 0, 0.13)"
-        PILL_HOVER_COLOR="rgba(0, 0, 0, 0.10)"
+        PILL_HOVER_COLOR="rgba(0, 0, 0, 0.1)"
         PRESENCE_OFFLINE="#bdbdbd" # for light this should actually be darker
         MESSAGE_BUBBLE_BACKGROUND="#eeeeee"
         MESSAGE_BUBBLE_BACKGROUND_SELF="#f1f8e9"
