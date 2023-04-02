@@ -116,6 +116,15 @@ export default class EmojiProvider extends AutocompleteProvider {
             }
         }
 
+        // Filter out duplicate emotes with the exact same mxc url
+        loadedImages = Array.from(new Set(loadedImages.map((image) => image.url))).map((url) => {
+            const duplicates = loadedImages.filter((image) => image.url === url);
+            return {
+                ...duplicates[0],
+                shortcodes: duplicates.flatMap((dupl) => dupl.shortcodes),
+            };
+        });
+
         const sortedCustomImages = loadedImages.map((emoji, index) => ({
             emoji,
             // Include the index so that we can preserve the original order
