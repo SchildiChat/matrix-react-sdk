@@ -114,7 +114,7 @@ class NotifierClass {
         return TextForEvent.textForEvent(ev);
     }
 
-    private _getEventTextRepresentation(ev: MatrixEvent) {
+    private getEventTextRepresentation(ev: MatrixEvent): string {
         const previewer = new MessageEventPreview();
         const msg = previewer.getTextFor(ev);
         if (msg == null) {
@@ -147,7 +147,7 @@ class NotifierClass {
             // notificationMessageForEvent includes sender,
             // but we already have the sender here
             if (ev.getContent().body && !msgTypeHandlers.hasOwnProperty(ev.getContent().msgtype)) {
-                msg = this._getEventTextRepresentation(ev);
+                msg = this.getEventTextRepresentation(ev);
             }
         } else if (ev.getType() === "m.room.member") {
             // context is all in the message here, we don't need
@@ -158,7 +158,7 @@ class NotifierClass {
             // notificationMessageForEvent includes sender,
             // but we've just out sender in the title
             if (ev.getContent().body && !msgTypeHandlers.hasOwnProperty(ev.getContent().msgtype)) {
-                msg = this._getEventTextRepresentation(ev);
+                msg = this.getEventTextRepresentation(ev);
             }
         }
 
