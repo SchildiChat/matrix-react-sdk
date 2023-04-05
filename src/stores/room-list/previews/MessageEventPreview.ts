@@ -21,7 +21,6 @@ import { IPreview } from "./IPreview";
 import { TagID } from "../models";
 import { _t, sanitizeForTranslation } from "../../../languageHandler";
 import { getSenderName, isSelf, shouldPrefixMessagesIn } from "./utils";
-import { getHtmlText } from "../../../HtmlUtils";
 import { stripHTMLReply, stripPlainReply } from "../../../utils/Reply";
 import { VoiceBroadcastChunkEventType } from "../../../voice-broadcast/types";
 
