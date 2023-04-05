@@ -21,7 +21,6 @@ import { IPreview } from "./IPreview";
 import { TagID } from "../models";
 import { _t, sanitizeForTranslation } from "../../../languageHandler";
 import { getSenderName, isSelf, shouldPrefixMessagesIn } from "./utils";
-import { getHtmlText } from "../../../HtmlUtils";
 import { stripHTMLReply, stripPlainReply } from "../../../utils/Reply";
 import { VoiceBroadcastChunkEventType } from "../../../voice-broadcast/types";
 
@@ -61,9 +60,11 @@ export class MessageEventPreview implements IPreview {
         }
 
         if (hasHtml) {
-            const sanitised = getHtmlText(body.replace(/<br\/?>/gi, "\n")); // replace line breaks before removing them
+            const cleanedLines = body.replace(/<br\/?>/gi, "\n"); // replace line breaks before removing them
             // run it through DOMParser to fixup encoded html entities
-            body = new DOMParser().parseFromString(sanitised, "text/html").documentElement.textContent;
+            const document = new DOMParser().parseFromString(cleanedLines, "text/html").documentElement;
+            document.querySelectorAll("[data-mx-spoiler]").forEach(spoiler => spoiler.textContent = _t("[spoiler]"));
+            body = document.textContent;
         }
 
         body = sanitizeForTranslation(body);

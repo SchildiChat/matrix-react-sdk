@@ -2046,6 +2046,7 @@
     "View chat timeline": "View chat timeline",
     "Room options": "Room options",
     "Join Room": "Join Room",
+    "[spoiler]": "[spoiler]",
     "(~%(count)s results)|other": "(~%(count)s results)",
     "(~%(count)s results)|one": "(~%(count)s result)",
     "Video rooms are a beta feature": "Video rooms are a beta feature",
