@@ -21,6 +21,7 @@ import { IRoomState } from "../../src/components/structures/RoomView";
 import { TimelineRenderingType } from "../../src/contexts/RoomContext";
 import { Layout } from "../../src/settings/enums/Layout";
 import { mkEvent } from "./test-utils";
+import { UserNameColorMode } from "../../src/settings/enums/UserNameColorMode";
 
 export const makeMembershipEvent = (roomId: string, userId: string, membership = "join") =>
     mkEvent({
@@ -68,6 +69,9 @@ export function getRoomContext(room: Room, override: Partial<IRoomState>): IRoom
         canReact: false,
         canSendMessages: false,
         layout: Layout.Group,
+        singleSideBubbles: false,
+        adaptiveSideBubbles: false,
+        userNameColorMode: UserNameColorMode.Uniform,
         lowBandwidth: false,
         alwaysShowTimestamps: false,
         showTwelveHourTimestamps: false,

@@ -21,6 +21,7 @@ import { RoomMember } from "matrix-js-sdk/src/matrix";
 import { Icon as LocationIcon } from "../../../../res/img/element-icons/location.svg";
 import { getUserNameColorClass } from "../../../utils/FormattingUtils";
 import MemberAvatar from "../avatars/MemberAvatar";
+import { UserNameColorMode } from "../../../settings/enums/UserNameColorMode";
 
 interface Props {
     id?: string;
@@ -64,7 +65,7 @@ const OptionalTooltip: React.FC<{
  * Generic location marker
  */
 const Marker = React.forwardRef<HTMLDivElement, Props>(({ id, roomMember, useMemberColor, tooltip }, ref) => {
-    const memberColorClass = useMemberColor && roomMember ? getUserNameColorClass(roomMember.userId) : "";
+    const memberColorClass = useMemberColor && roomMember ? getUserNameColorClass(UserNameColorMode.MXID, roomMember.userId) : "";
     return (
         <div
             ref={ref}

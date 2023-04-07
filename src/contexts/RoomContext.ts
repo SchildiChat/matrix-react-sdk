@@ -18,6 +18,7 @@ import { createContext, useContext } from "react";
 
 import { IRoomState } from "../components/structures/RoomView";
 import { Layout } from "../settings/enums/Layout";
+import { UserNameColorMode } from "../settings/enums/UserNameColorMode";
 
 export enum TimelineRenderingType {
     Room = "Room",
@@ -49,6 +50,7 @@ const RoomContext = createContext<IRoomState>({
     layout: Layout.Group,
     singleSideBubbles: false,
     adaptiveSideBubbles: false,
+    userNameColorMode: UserNameColorMode.Uniform,
     lowBandwidth: false,
     alwaysShowTimestamps: false,
     showTwelveHourTimestamps: false,
