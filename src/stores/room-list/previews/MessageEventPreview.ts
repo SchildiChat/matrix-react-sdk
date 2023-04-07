@@ -63,7 +63,9 @@ export class MessageEventPreview implements IPreview {
             const cleanedLines = body.replace(/<br\/?>/gi, "\n"); // replace line breaks before removing them
             // run it through DOMParser to fixup encoded html entities
             const document = new DOMParser().parseFromString(cleanedLines, "text/html").documentElement;
-            document.querySelectorAll("[data-mx-spoiler]").forEach(spoiler => spoiler.textContent = _t("[spoiler]"));
+            document
+                .querySelectorAll("[data-mx-spoiler]")
+                .forEach((spoiler) => (spoiler.textContent = _t("[spoiler]")));
             body = document.textContent;
         }
 
