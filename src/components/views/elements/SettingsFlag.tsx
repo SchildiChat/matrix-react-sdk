@@ -33,6 +33,7 @@ interface IProps {
     isExplicit?: boolean;
     // XXX: once design replaces all toggles make this the default
     useCheckbox?: boolean;
+    disabled?: boolean;
     hideIfCannotSet?: boolean;
     onChange?(checked: boolean): void;
 }
@@ -111,7 +112,7 @@ export default class SettingsFlag extends React.Component<IProps, IState> {
                 : SettingsStore.getDisplayName(this.props.name, this.props.level)) ?? undefined;
         const description = SettingsStore.getDescription(this.props.name);
         const shouldWarn = SettingsStore.shouldHaveWarning(this.props.name);
-        const disabled = this.state.disabled || !canChange;
+        const disabled = this.props.disabled || this.state.disabled || !canChange;
 
         if (this.props.useCheckbox) {
             return (
