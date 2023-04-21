@@ -38,6 +38,7 @@ export function Emoji({ menuPosition }: EmojiProps): JSX.Element {
                     action: Action.ComposerInsert,
                     text: emoji,
                     timelineRenderingType: roomContext.timelineRenderingType,
+                    emoji: emoji,
                 });
                 return true;
             }}

@@ -29,7 +29,7 @@ import { OverflowMenuContext } from "./MessageComposerButtons";
 interface IEmojiButtonProps {
     addEmoji: (emoji: ICustomEmoji | IEmoji) => boolean;
     menuPosition?: MenuProps;
-    room: Room;
+    room?: Room;
     className?: string;
 }
 
