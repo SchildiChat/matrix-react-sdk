@@ -45,7 +45,7 @@ import * as mockVerification from "../../../../src/verification";
 import Modal from "../../../../src/Modal";
 import { E2EStatus } from "../../../../src/utils/ShieldUtils";
 import { DirectoryMember, startDmOnFirstMessage } from "../../../../src/utils/direct-messages";
-import { flushPromises } from "../../../test-utils";
+import { clearAllModals, flushPromises } from "../../../test-utils";
 
 jest.mock("../../../../src/utils/direct-messages", () => ({
     ...jest.requireActual("../../../../src/utils/direct-messages"),
@@ -112,6 +112,7 @@ const mockClient = mocked({
     setIgnoredUsers: jest.fn(),
     isCryptoEnabled: jest.fn(),
     getUserId: jest.fn(),
+    getSafeUserId: jest.fn(),
     on: jest.fn(),
     off: jest.fn(),
     isSynapseAdministrator: jest.fn().mockResolvedValue(false),
@@ -328,7 +329,7 @@ describe("<DeviceItem />", () => {
     it("with unverified user and device, displays button without a label", () => {
         renderComponent();
 
-        expect(screen.getByRole("button", { name: device.getDisplayName() })).toBeInTheDocument;
+        expect(screen.getByRole("button", { name: device.getDisplayName()! })).toBeInTheDocument;
         expect(screen.queryByText(/trusted/i)).not.toBeInTheDocument();
     });
 
@@ -343,11 +344,12 @@ describe("<DeviceItem />", () => {
         setMockDeviceTrust(true);
         renderComponent();
 
-        expect(screen.getByText(device.getDisplayName())).toBeInTheDocument();
+        expect(screen.getByText(device.getDisplayName()!)).toBeInTheDocument();
         expect(screen.queryByText(/trusted/)).not.toBeInTheDocument();
     });
 
     it("when userId is the same as userId from client, uses isCrossSigningVerified to determine if button is shown", () => {
+        mockClient.getSafeUserId.mockReturnValueOnce(defaultUserId);
         mockClient.getUserId.mockReturnValueOnce(defaultUserId);
         renderComponent();
 
@@ -356,7 +358,7 @@ describe("<DeviceItem />", () => {
 
         // expect to see no button in this case
         expect(screen.queryByRole("button")).not.toBeInTheDocument;
-        expect(screen.getByText(device.getDisplayName())).toBeInTheDocument();
+        expect(screen.getByText(device.getDisplayName()!)).toBeInTheDocument();
     });
 
     it("with verified user and device, displays no button and a 'Trusted' label", () => {
@@ -365,7 +367,7 @@ describe("<DeviceItem />", () => {
         renderComponent();
 
         expect(screen.queryByRole("button")).not.toBeInTheDocument;
-        expect(screen.getByText(device.getDisplayName())).toBeInTheDocument();
+        expect(screen.getByText(device.getDisplayName()!)).toBeInTheDocument();
         expect(screen.getByText("Trusted")).toBeInTheDocument();
     });
 
@@ -373,7 +375,7 @@ describe("<DeviceItem />", () => {
         mockClient.getUser.mockReturnValueOnce(null);
         renderComponent();
 
-        const button = screen.getByRole("button", { name: device.getDisplayName() });
+        const button = screen.getByRole("button", { name: device.getDisplayName()! });
         expect(button).toBeInTheDocument;
         await userEvent.click(button);
 
@@ -387,7 +389,7 @@ describe("<DeviceItem />", () => {
         mockClient.isGuest.mockReturnValueOnce(true);
         renderComponent();
 
-        const button = screen.getByRole("button", { name: device.getDisplayName() });
+        const button = screen.getByRole("button", { name: device.getDisplayName()! });
         expect(button).toBeInTheDocument;
         await userEvent.click(button);
 
@@ -417,7 +419,9 @@ describe("<UserOptionsSection />", () => {
         mockClient.setIgnoredUsers.mockClear();
     });
 
-    afterEach(() => Modal.closeCurrentModal("End of test"));
+    afterEach(async () => {
+        await clearAllModals();
+    });
 
     afterAll(() => {
         inviteSpy.mockRestore();
@@ -429,6 +433,7 @@ describe("<UserOptionsSection />", () => {
     });
 
     it("does not show ignore or direct message buttons when member userId matches client userId", () => {
+        mockClient.getSafeUserId.mockReturnValueOnce(member.userId);
         mockClient.getUserId.mockReturnValueOnce(member.userId);
         renderComponent();
 
@@ -674,6 +679,7 @@ describe("<PowerLevelEditor />", () => {
             content: { users: { [defaultUserId]: startPowerLevel }, users_default: 1 },
         });
         mockRoom.currentState.getStateEvents.mockReturnValue(powerLevelEvent);
+        mockClient.getSafeUserId.mockReturnValueOnce(defaultUserId);
         mockClient.getUserId.mockReturnValueOnce(defaultUserId);
         mockClient.setPowerLevel.mockResolvedValueOnce({ event_id: "123" });
         renderComponent();
@@ -793,7 +799,7 @@ describe("<RoomKickButton />", () => {
             },
         };
 
-        expect(callback(mockRoom)).toBe(null);
+        expect(callback(mockRoom)).toBe(false);
         expect(callback(mockRoom)).toBe(true);
     });
 });
@@ -877,7 +883,7 @@ describe("<BanToggleButton />", () => {
             },
         };
 
-        expect(callback(mockRoom)).toBe(null);
+        expect(callback(mockRoom)).toBe(false);
         expect(callback(mockRoom)).toBe(true);
     });
 
@@ -915,7 +921,7 @@ describe("<BanToggleButton />", () => {
             },
         };
 
-        expect(callback(mockRoom)).toBe(null);
+        expect(callback(mockRoom)).toBe(false);
         expect(callback(mockRoom)).toBe(true);
     });
 });

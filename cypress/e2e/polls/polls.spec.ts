@@ -18,6 +18,8 @@ limitations under the License.
 
 import { HomeserverInstance } from "../../plugins/utils/homeserver";
 import { MatrixClient } from "../../global";
+import { SettingLevel } from "../../../src/settings/SettingLevel";
+import { Layout } from "../../../src/settings/enums/Layout";
 import Chainable = Cypress.Chainable;
 
 const hidePercyCSS = ".mx_MessageTimestamp, .mx_RoomView_myReadMarker { visibility: hidden !important; }";
@@ -116,7 +118,8 @@ describe("Polls", () => {
             cy.get('[aria-label="Poll"]').click();
         });
 
-        cy.get(".mx_CompoundDialog").percySnapshotElement("Polls Composer");
+        // Disabled because flaky - see https://github.com/vector-im/element-web/issues/24688
+        //cy.get(".mx_CompoundDialog").percySnapshotElement("Polls Composer");
 
         const pollParams = {
             title: "Does the polls feature work?",
@@ -312,6 +315,18 @@ describe("Polls", () => {
             cy.get(".mx_RoomView_body .mx_MPollBody_totalVotes").should("contain", "2 votes cast");
             // and thread view
             cy.get(".mx_ThreadView .mx_MPollBody_totalVotes").should("contain", "2 votes cast");
+
+            // Take snapshots of poll on ThreadView
+            cy.setSettingValue("layout", null, SettingLevel.DEVICE, Layout.Bubble);
+            cy.get(".mx_ThreadView .mx_EventTile[data-layout='bubble']").should("be.visible");
+            cy.get(".mx_ThreadView").percySnapshotElement("ThreadView with a poll on bubble layout", {
+                percyCSS: hidePercyCSS,
+            });
+            cy.setSettingValue("layout", null, SettingLevel.DEVICE, Layout.Group);
+            cy.get(".mx_ThreadView .mx_EventTile[data-layout='group']").should("be.visible");
+            cy.get(".mx_ThreadView").percySnapshotElement("ThreadView with a poll on group layout", {
+                percyCSS: hidePercyCSS,
+            });
 
             cy.get(".mx_RoomView_body").within(() => {
                 // vote 'Maybe' in the main timeline poll

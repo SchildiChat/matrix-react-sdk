@@ -44,9 +44,9 @@ export const READ_AVATAR_SIZE = 16;
 interface Props {
     readReceipts: IReadReceiptProps[];
     readReceiptMap: { [userId: string]: IReadReceiptInfo };
-    checkUnmounting: () => boolean;
+    checkUnmounting?: () => boolean;
     suppressAnimation: boolean;
-    isTwelveHour: boolean;
+    isTwelveHour?: boolean;
     maxReadAvatarsPlusN: number;
     maxReadAvatars: number;
     layout?: Layout;
@@ -184,8 +184,8 @@ export function ReadReceiptGroup({
         );
     }
 
-    let contextMenu;
-    if (menuDisplayed) {
+    let contextMenu: JSX.Element | undefined;
+    if (menuDisplayed && button.current) {
         const buttonRect = button.current.getBoundingClientRect();
         contextMenu = (
             <ContextMenu menuClassName="mx_ReadReceiptGroup_popup" onFinished={closeMenu} {...aboveLeftOf(buttonRect)}>
@@ -241,7 +241,7 @@ export function ReadReceiptGroup({
 }
 
 interface ReadReceiptPersonProps extends IReadReceiptProps {
-    isTwelveHour: boolean;
+    isTwelveHour?: boolean;
     onAfterClick?: () => void;
 }
 

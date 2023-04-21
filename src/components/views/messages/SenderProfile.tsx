@@ -46,5 +46,7 @@ export default function SenderProfile({ mxEvent, userNameColorMode, onClick, wit
             emphasizeDisplayName={true}
             withTooltip={withTooltip}
         />
-    ) : null;
+    ) : (
+        <></>
+    );
 }

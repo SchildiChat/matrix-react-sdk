@@ -63,7 +63,7 @@ export interface IStoredLayout {
     // this only applies to the top container currently, and that container
     // will take the highest value among widgets in the container. Clamped
     // to 0-100 and may have minimums imposed on it.
-    height?: number;
+    height?: number | null;
 
     // TODO: [Deferred] Maximizing (fullscreen) widgets by default.
 }
@@ -103,8 +103,9 @@ export class WidgetLayoutStore extends ReadyWatchingStore {
 
     // Map: room Id → container → ContainerValue
     private byRoom: MapWithDefault<string, Map<Container, ContainerValue>> = new MapWithDefault(() => new Map());
-    private pinnedRef: string;
-    private layoutRef: string;
+    private pinnedRef: string | undefined;
+    private layoutRef: string | undefined;
+    private dynamicRef: string | undefined;
 
     private constructor() {
         super(defaultDispatcher);
@@ -132,6 +133,11 @@ export class WidgetLayoutStore extends ReadyWatchingStore {
         this.matrixClient?.on(RoomStateEvent.Events, this.updateRoomFromState);
         this.pinnedRef = SettingsStore.watchSetting("Widgets.pinned", null, this.updateFromSettings);
         this.layoutRef = SettingsStore.watchSetting("Widgets.layout", null, this.updateFromSettings);
+        this.dynamicRef = SettingsStore.watchSetting(
+            "feature_dynamic_room_predecessors",
+            null,
+            this.updateFromSettings,
+        );
         WidgetStore.instance.on(UPDATE_EVENT, this.updateFromWidgetStore);
     }
 
@@ -139,15 +145,17 @@ export class WidgetLayoutStore extends ReadyWatchingStore {
         this.byRoom = new MapWithDefault(() => new Map());
 
         this.matrixClient?.off(RoomStateEvent.Events, this.updateRoomFromState);
-        SettingsStore.unwatchSetting(this.pinnedRef);
-        SettingsStore.unwatchSetting(this.layoutRef);
+        if (this.pinnedRef) SettingsStore.unwatchSetting(this.pinnedRef);
+        if (this.layoutRef) SettingsStore.unwatchSetting(this.layoutRef);
+        if (this.dynamicRef) SettingsStore.unwatchSetting(this.dynamicRef);
         WidgetStore.instance.off(UPDATE_EVENT, this.updateFromWidgetStore);
     }
 
     private updateAllRooms = (): void => {
+        const msc3946ProcessDynamicPredecessor = SettingsStore.getValue("feature_dynamic_room_predecessors");
+        if (!this.matrixClient) return;
         this.byRoom = new MapWithDefault(() => new Map());
-
-        for (const room of this.matrixClient.getVisibleRooms()) {
+        for (const room of this.matrixClient.getVisibleRooms(msc3946ProcessDynamicPredecessor)) {
             this.recalculateRoom(room);
         }
     };
@@ -167,7 +175,13 @@ export class WidgetLayoutStore extends ReadyWatchingStore {
         if (room) this.recalculateRoom(room);
     };
 
-    private updateFromSettings = (settingName: string, roomId: string /* and other stuff */): void => {
+    private updateFromSettings = (
+        _settingName: string,
+        roomId: string | null,
+        _atLevel: SettingLevel,
+        _newValAtLevel: any,
+        _newVal: any,
+    ): void => {
         if (roomId) {
             const room = this.matrixClient?.getRoom(roomId);
             if (room) this.recalculateRoom(room);
@@ -267,7 +281,7 @@ export class WidgetLayoutStore extends ReadyWatchingStore {
             const userWidgetLayout = userLayout?.widgets?.[widget.id];
 
             if (Number.isFinite(userWidgetLayout?.width) || Number.isFinite(widgetLayout?.width)) {
-                const val = userWidgetLayout?.width || widgetLayout?.width;
+                const val = (userWidgetLayout?.width || widgetLayout?.width)!;
                 const normalized = clamp(val, MIN_WIDGET_WIDTH_PCT, 100);
                 widths.push(normalized);
                 doAutobalance = false; // a manual width was specified
@@ -278,7 +292,7 @@ export class WidgetLayoutStore extends ReadyWatchingStore {
             if (widgetLayout?.height || userWidgetLayout?.height) {
                 const defRoomHeight = defaultNumber(widgetLayout?.height, MIN_WIDGET_HEIGHT_PCT);
                 const h = defaultNumber(userWidgetLayout?.height, defRoomHeight);
-                maxHeight = Math.max(maxHeight, clamp(h, MIN_WIDGET_HEIGHT_PCT, 100));
+                maxHeight = Math.max(maxHeight ?? 0, clamp(h, MIN_WIDGET_HEIGHT_PCT, 100));
             }
         }
         if (doAutobalance) {
@@ -352,7 +366,7 @@ export class WidgetLayoutStore extends ReadyWatchingStore {
         return this.byRoom.get(room?.roomId)?.get(container)?.ordered || [];
     }
 
-    public isInContainer(room: Optional<Room>, widget: IApp, container: Container): boolean {
+    public isInContainer(room: Room, widget: IApp, container: Container): boolean {
         return this.getContainerWidgets(room, container).some((w) => w.id === widget.id);
     }
 
@@ -408,7 +422,7 @@ export class WidgetLayoutStore extends ReadyWatchingStore {
         return this.byRoom.get(room.roomId)?.get(container)?.height ?? null; // let the default get returned if needed
     }
 
-    public setContainerHeight(room: Room, container: Container, height?: number): void {
+    public setContainerHeight(room: Room, container: Container, height?: number | null): void {
         const widgets = this.getContainerWidgets(room, container);
         const widths = this.byRoom.get(room.roomId)?.get(container)?.distributions;
         const localLayout: Record<string, IStoredLayout> = {};
@@ -440,7 +454,7 @@ export class WidgetLayoutStore extends ReadyWatchingStore {
                 container: container,
                 width: widths?.[i],
                 index: i,
-                height: height,
+                height,
             };
         });
         this.updateUserLayout(room, localLayout);
@@ -479,7 +493,7 @@ export class WidgetLayoutStore extends ReadyWatchingStore {
         this.updateUserLayout(room, newLayout);
     }
 
-    public hasMaximisedWidget(room?: Room): boolean {
+    public hasMaximisedWidget(room: Room): boolean {
         return this.getContainerWidgets(room, Container.Center).length > 0;
     }
 

@@ -79,18 +79,20 @@ export const makeMapSiteLink = (coords: GeolocationCoordinates): string => {
     );
 };
 
-export const createMapSiteLinkFromEvent = (event: MatrixEvent): string => {
+export const createMapSiteLinkFromEvent = (event: MatrixEvent): string | null => {
     const content = event.getContent();
     const mLocation = content[M_LOCATION.name];
     if (mLocation !== undefined) {
         const uri = mLocation["uri"];
         if (uri !== undefined) {
-            return makeMapSiteLink(parseGeoUri(uri));
+            const geoCoords = parseGeoUri(uri);
+            return geoCoords ? makeMapSiteLink(geoCoords) : null;
         }
     } else {
         const geoUri = content["geo_uri"];
         if (geoUri) {
-            return makeMapSiteLink(parseGeoUri(geoUri));
+            const geoCoords = parseGeoUri(geoUri);
+            return geoCoords ? makeMapSiteLink(geoCoords) : null;
         }
     }
     return null;

@@ -21,8 +21,9 @@ import encrypt, { IEncryptedFile } from "matrix-encrypt-attachment";
 
 import ContentMessages, { UploadCanceledError, uploadFile } from "../src/ContentMessages";
 import { doMaybeLocalRoomAction } from "../src/utils/local-room";
-import { createTestClient } from "./test-utils";
+import { createTestClient, mkEvent } from "./test-utils";
 import { BlurhashEncoder } from "../src/BlurhashEncoder";
+import SettingsStore from "../src/settings/SettingsStore";
 
 jest.mock("matrix-encrypt-attachment", () => ({ encryptAttachment: jest.fn().mockResolvedValue({}) }));
 
@@ -51,6 +52,7 @@ describe("ContentMessages", () => {
 
     beforeEach(() => {
         client = {
+            getSafeUserId: jest.fn().mockReturnValue("@alice:test"),
             sendStickerMessage: jest.fn(),
             sendMessage: jest.fn(),
             isRoomEncrypted: jest.fn().mockReturnValue(false),
@@ -115,9 +117,24 @@ describe("ContentMessages", () => {
             );
         });
 
-        it("should fall back to m.file for invalid image files", async () => {
+        it("should use m.image for PNG files which cannot be parsed but successfully thumbnail", async () => {
             mocked(client.uploadContent).mockResolvedValue({ content_uri: "mxc://server/file" });
             const file = new File([], "fileName", { type: "image/png" });
+            await contentMessages.sendContentToRoom(file, roomId, undefined, client, undefined);
+            expect(client.sendMessage).toHaveBeenCalledWith(
+                roomId,
+                null,
+                expect.objectContaining({
+                    url: "mxc://server/file",
+                    msgtype: "m.image",
+                }),
+            );
+        });
+
+        it("should fall back to m.file for invalid image files", async () => {
+            mocked(client.uploadContent).mockResolvedValue({ content_uri: "mxc://server/file" });
+            const file = new File([], "fileName", { type: "image/jpeg" });
+            mocked(BlurhashEncoder.instance.getBlurhash).mockRejectedValue("NOT_AN_IMAGE");
             await contentMessages.sendContentToRoom(file, roomId, undefined, client, undefined);
             expect(client.sendMessage).toHaveBeenCalledWith(
                 roomId,
@@ -205,6 +222,34 @@ describe("ContentMessages", () => {
             expect(upload.loaded).toBe(123);
             expect(upload.total).toBe(1234);
             await prom;
+        });
+
+        it("properly handles replies", async () => {
+            jest.spyOn(SettingsStore, "getValue").mockImplementation(
+                (settingName) => settingName === "feature_intentional_mentions",
+            );
+
+            mocked(client.uploadContent).mockResolvedValue({ content_uri: "mxc://server/file" });
+            const file = new File([], "fileName", { type: "image/jpeg" });
+            const replyToEvent = mkEvent({
+                type: "m.room.message",
+                user: "@bob:test",
+                room: roomId,
+                content: {},
+                event: true,
+            });
+            await contentMessages.sendContentToRoom(file, roomId, undefined, client, replyToEvent);
+            expect(client.sendMessage).toHaveBeenCalledWith(
+                roomId,
+                null,
+                expect.objectContaining({
+                    "url": "mxc://server/file",
+                    "msgtype": "m.image",
+                    "org.matrix.msc3952.mentions": {
+                        user_ids: ["@bob:test"],
+                    },
+                }),
+            );
         });
     });
 

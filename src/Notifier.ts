@@ -107,9 +107,10 @@ class NotifierClass {
     private toolbarHidden?: boolean;
     private isSyncing?: boolean;
 
-    public notificationMessageForEvent(ev: MatrixEvent): string {
-        if (msgTypeHandlers.hasOwnProperty(ev.getContent().msgtype)) {
-            return msgTypeHandlers[ev.getContent().msgtype](ev);
+    public notificationMessageForEvent(ev: MatrixEvent): string | null {
+        const msgType = ev.getContent().msgtype;
+        if (msgType && msgTypeHandlers.hasOwnProperty(msgType)) {
+            return msgTypeHandlers[msgType](ev);
         }
         return TextForEvent.textForEvent(ev);
     }
@@ -171,7 +172,7 @@ class NotifierClass {
             avatarUrl = Avatar.avatarUrlForMember(ev.sender, 40, 40, "crop");
         }
 
-        const notif = plaf.displayNotification(title, msg, avatarUrl, room, ev);
+        const notif = plaf.displayNotification(title, msg!, avatarUrl, room, ev);
 
         // if displayNotification returns non-null,  the platform supports
         // clearing notifications later, so keep track of this.

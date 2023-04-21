@@ -28,7 +28,7 @@ import { OverflowMenuContext } from "./MessageComposerButtons";
 
 interface IEmojiButtonProps {
     addEmoji: (emoji: ICustomEmoji | IEmoji) => boolean;
-    menuPosition: MenuProps;
+    menuPosition?: MenuProps;
     room: Room;
     className?: string;
 }
@@ -50,7 +50,7 @@ export function EmojiButton({ addEmoji, menuPosition, room, className }: IEmojiB
                 }}
                 managed={false}
             >
-                <EmojiPicker onChoose={addEmoji} showQuickReactions={true} room={room} />
+                <EmojiPicker onChoose={addEmoji} room={room} />
             </ContextMenu>
         );
     }

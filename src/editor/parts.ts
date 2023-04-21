@@ -79,7 +79,7 @@ interface IBasePart {
 
 interface IPillCandidatePart extends Omit<IBasePart, "type" | "createAutoComplete"> {
     type: Type.PillCandidate | Type.Command;
-    createAutoComplete(updateCallback: UpdateCallback): AutocompleteWrapperModel;
+    createAutoComplete(updateCallback: UpdateCallback): AutocompleteWrapperModel | undefined;
 }
 
 interface IPillPart extends Omit<IBasePart, "type" | "resourceId"> {
@@ -275,7 +275,7 @@ export abstract class PillPart extends BasePart implements IPillPart {
         const container = document.createElement("span");
         container.setAttribute("spellcheck", "false");
         container.setAttribute("contentEditable", "false");
-        container.onclick = this.onClick;
+        if (this.onClick) container.onclick = this.onClick;
         container.className = this.className;
         container.appendChild(document.createTextNode(this.text));
         this.setAvatar(container);
@@ -290,7 +290,7 @@ export abstract class PillPart extends BasePart implements IPillPart {
         if (node.className !== this.className) {
             node.className = this.className;
         }
-        if (node.onclick !== this.onClick) {
+        if (this.onClick && node.onclick !== this.onClick) {
             node.onclick = this.onClick;
         }
         this.setAvatar(node);
@@ -535,8 +535,8 @@ class PillCandidatePart extends PlainBasePart implements IPillCandidatePart {
         super(text);
     }
 
-    public createAutoComplete(updateCallback: UpdateCallback): AutocompleteWrapperModel {
-        return this.autoCompleteCreator.create(updateCallback);
+    public createAutoComplete(updateCallback: UpdateCallback): AutocompleteWrapperModel | undefined {
+        return this.autoCompleteCreator.create?.(updateCallback);
     }
 
     protected acceptsInsertion(chr: string, offset: number, inputType: string): boolean {
@@ -571,7 +571,7 @@ export function getAutoCompleteCreator(getAutocompleterComponent: GetAutocomplet
 type AutoCompleteCreator = ReturnType<typeof getAutoCompleteCreator>;
 
 interface IAutocompleteCreator {
-    create(updateCallback: UpdateCallback): AutocompleteWrapperModel;
+    create: ((updateCallback: UpdateCallback) => AutocompleteWrapperModel) | undefined;
 }
 
 export class PartCreator {
@@ -628,9 +628,9 @@ export class PartCreator {
             case Type.PillCandidate:
                 return this.pillCandidate(part.text);
             case Type.RoomPill:
-                return this.roomPill(part.resourceId);
+                return part.resourceId ? this.roomPill(part.resourceId) : undefined;
             case Type.UserPill:
-                return this.userPill(part.text, part.resourceId);
+                return part.resourceId ? this.userPill(part.text, part.resourceId) : undefined;
         }
     }
 

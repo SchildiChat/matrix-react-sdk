@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import React, { useRef, useState, Dispatch, SetStateAction } from "react";
+import React, { useRef, useState, Dispatch, SetStateAction, RefObject } from "react";
 import { Room } from "matrix-js-sdk/src/matrix";
 import { logger } from "matrix-js-sdk/src/logger";
 
@@ -73,7 +73,7 @@ const useExportFormState = (): ExportConfig => {
     const [exportType, setExportType] = useState(config.range ?? ExportType.Timeline);
     const [includeAttachments, setAttachments] = useState(config.includeAttachments ?? false);
     const [numberOfMessages, setNumberOfMessages] = useState<number>(config.numberOfMessages ?? 100);
-    const [sizeLimit, setSizeLimit] = useState<number | null>(config.sizeMb ?? 8);
+    const [sizeLimit, setSizeLimit] = useState<number>(config.sizeMb ?? 8);
 
     return {
         exportFormat,
@@ -104,8 +104,8 @@ const ExportDialog: React.FC<IProps> = ({ room, onFinished }) => {
     } = useExportFormState();
 
     const [isExporting, setExporting] = useState(false);
-    const sizeLimitRef = useRef<Field>();
-    const messageCountRef = useRef<Field>();
+    const sizeLimitRef = useRef() as RefObject<Field>;
+    const messageCountRef = useRef() as RefObject<Field>;
     const [exportProgressText, setExportProgressText] = useState(_t("Processing…"));
     const [displayCancel, setCancelWarning] = useState(false);
     const [exportCancelled, setExportCancelled] = useState(false);
@@ -144,18 +144,18 @@ const ExportDialog: React.FC<IProps> = ({ room, onFinished }) => {
     const onExportClick = async (): Promise<void> => {
         const isValidSize =
             !setSizeLimit ||
-            (await sizeLimitRef.current.validate({
+            (await sizeLimitRef.current?.validate({
                 focused: false,
             }));
 
         if (!isValidSize) {
-            sizeLimitRef.current.validate({ focused: true });
+            sizeLimitRef.current?.validate({ focused: true });
             return;
         }
         if (exportType === ExportType.LastNMessages) {
-            const isValidNumberOfMessages = await messageCountRef.current.validate({ focused: false });
+            const isValidNumberOfMessages = await messageCountRef.current?.validate({ focused: false });
             if (!isValidNumberOfMessages) {
-                messageCountRef.current.validate({ focused: true });
+                messageCountRef.current?.validate({ focused: true });
                 return;
             }
         }
@@ -260,7 +260,7 @@ const ExportDialog: React.FC<IProps> = ({ room, onFinished }) => {
         );
     });
 
-    let messageCount = null;
+    let messageCount: JSX.Element | undefined;
     if (exportType === ExportType.LastNMessages && setNumberOfMessages) {
         messageCount = (
             <Field

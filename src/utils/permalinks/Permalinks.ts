@@ -84,9 +84,9 @@ const ANY_REGEX = /.*/;
 export class RoomPermalinkCreator {
     private roomId: string;
     private highestPlUserId: string | null = null;
-    private populationMap: { [serverName: string]: number } | null = null;
-    private bannedHostsRegexps: RegExp[] | null = null;
-    private allowedHostsRegexps: RegExp[] | null = null;
+    private populationMap: { [serverName: string]: number } = {};
+    private bannedHostsRegexps: RegExp[] = [];
+    private allowedHostsRegexps: RegExp[] = [];
     private _serverCandidates?: string[];
     private started = false;
 
@@ -192,7 +192,7 @@ export class RoomPermalinkCreator {
                             isHostInRegex(domain, this.allowedHostsRegexps)
                         );
                     });
-                    const maxEntry = allowedEntries.reduce(
+                    const maxEntry = allowedEntries.reduce<[string | null, number]>(
                         (max, entry) => {
                             return entry[1] > max[1] ? entry : max;
                         },
@@ -219,12 +219,16 @@ export class RoomPermalinkCreator {
                 const getRegex = (hostname: string): RegExp =>
                     new RegExp("^" + utils.globToRegexp(hostname, false) + "$");
 
-                const denied = aclEvent.getContent<{ deny: string[] }>().deny || [];
-                denied.forEach((h) => bannedHostsRegexps.push(getRegex(h)));
+                const denied = aclEvent.getContent<{ deny: string[] }>().deny;
+                if (Array.isArray(denied)) {
+                    denied.forEach((h) => bannedHostsRegexps.push(getRegex(h)));
+                }
 
-                const allowed = aclEvent.getContent<{ allow: string[] }>().allow || [];
+                const allowed = aclEvent.getContent<{ allow: string[] }>().allow;
                 allowedHostsRegexps = []; // we don't want to use the default rule here
-                allowed.forEach((h) => allowedHostsRegexps.push(getRegex(h)));
+                if (Array.isArray(denied)) {
+                    allowed.forEach((h) => allowedHostsRegexps.push(getRegex(h)));
+                }
             }
         }
         this.bannedHostsRegexps = bannedHostsRegexps;
@@ -325,7 +329,7 @@ export function tryTransformEntityToPermalink(entity: string): string | null {
                 if (permalinkParts.roomIdOrAlias) {
                     const eventIdPart = permalinkParts.eventId ? `/${permalinkParts.eventId}` : "";
                     let pl = matrixtoBaseUrl + `/#/${permalinkParts.roomIdOrAlias}${eventIdPart}`;
-                    if (permalinkParts.viaServers.length > 0) {
+                    if (permalinkParts.viaServers?.length) {
                         pl += new MatrixToPermalinkConstructor().encodeServerCandidates(permalinkParts.viaServers);
                     }
                     return pl;
@@ -372,7 +376,7 @@ export function tryTransformPermalinkToLocalHref(permalink: string): string {
             if (permalinkParts.roomIdOrAlias) {
                 const eventIdPart = permalinkParts.eventId ? `/${permalinkParts.eventId}` : "";
                 permalink = `#/room/${permalinkParts.roomIdOrAlias}${eventIdPart}`;
-                if (permalinkParts.viaServers.length > 0) {
+                if (permalinkParts.viaServers?.length) {
                     permalink += new MatrixToPermalinkConstructor().encodeServerCandidates(permalinkParts.viaServers);
                 }
             } else if (permalinkParts.userId) {
@@ -474,5 +478,5 @@ function isHostnameIpAddress(hostname: string): boolean {
 export const calculateRoomVia = (room: Room): string[] => {
     const permalinkCreator = new RoomPermalinkCreator(room);
     permalinkCreator.load();
-    return permalinkCreator.serverCandidates;
+    return permalinkCreator.serverCandidates ?? [];
 };

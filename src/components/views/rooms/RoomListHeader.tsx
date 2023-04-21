@@ -232,7 +232,7 @@ const RoomListHeader: React.FC<IProps> = ({ onVisibilityChange }) => {
 
         contextMenu = (
             <IconizedContextMenu
-                {...contextMenuBelow(plusMenuHandle.current.getBoundingClientRect())}
+                {...contextMenuBelow(plusMenuHandle.current!.getBoundingClientRect())}
                 onFinished={closePlusMenu}
                 compact
             >
@@ -360,7 +360,7 @@ const RoomListHeader: React.FC<IProps> = ({ onVisibilityChange }) => {
 
         contextMenu = (
             <IconizedContextMenu
-                {...contextMenuBelow(plusMenuHandle.current.getBoundingClientRect())}
+                {...contextMenuBelow(plusMenuHandle.current!.getBoundingClientRect())}
                 onFinished={closePlusMenu}
                 compact
             >

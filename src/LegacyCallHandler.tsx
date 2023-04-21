@@ -458,7 +458,7 @@ export default class LegacyCallHandler extends EventEmitter {
 
     public getAllActiveCallsForPip(roomId: string): MatrixCall[] {
         const room = MatrixClientPeg.get().getRoom(roomId);
-        if (WidgetLayoutStore.instance.hasMaximisedWidget(room)) {
+        if (room && WidgetLayoutStore.instance.hasMaximisedWidget(room)) {
             // This checks if there is space for the call view in the aux panel
             // If there is no space any call should be displayed in PiP
             return this.getAllActiveCalls();
@@ -905,7 +905,7 @@ export default class LegacyCallHandler extends EventEmitter {
 
         const timeUntilTurnCresExpire = MatrixClientPeg.get().getTurnServersExpiry() - Date.now();
         logger.log("Current turn creds expire in " + timeUntilTurnCresExpire + " ms");
-        const call = MatrixClientPeg.get().createCall(mappedRoomId);
+        const call = MatrixClientPeg.get().createCall(mappedRoomId)!;
 
         try {
             this.addCallForRoom(roomId, call);

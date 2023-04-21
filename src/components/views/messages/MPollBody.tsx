@@ -118,17 +118,18 @@ export function pollAlreadyHasVotes(mxEvent: MatrixEvent, getRelationsForEvent?:
 }
 
 export function launchPollEditor(mxEvent: MatrixEvent, getRelationsForEvent?: GetRelationsForEvent): void {
+    const room = MatrixClientPeg.get().getRoom(mxEvent.getRoomId());
     if (pollAlreadyHasVotes(mxEvent, getRelationsForEvent)) {
         Modal.createDialog(ErrorDialog, {
             title: _t("Can't edit poll"),
             description: _t("Sorry, you can't edit a poll after votes have been cast."),
         });
-    } else {
+    } else if (room) {
         Modal.createDialog(
             PollCreateDialog,
             {
-                room: MatrixClientPeg.get().getRoom(mxEvent.getRoomId()),
-                threadId: mxEvent.getThread()?.id ?? null,
+                room,
+                threadId: mxEvent.getThread()?.id,
                 editingMxEvent: mxEvent,
             },
             "mx_CompoundDialog",
@@ -235,7 +236,7 @@ export default class MPollBody extends React.Component<IBodyProps, IState> {
      * @returns userId -> UserVote
      */
     private collectUserVotes(): Map<string, UserVote> {
-        if (!this.state.voteRelations) {
+        if (!this.state.voteRelations || !this.context) {
             return new Map<string, UserVote>();
         }
         return collectUserVotes(allVotes(this.state.voteRelations), this.context.getUserId(), this.state.selected);

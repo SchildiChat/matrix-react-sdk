@@ -399,11 +399,9 @@ export async function canEncryptToAllUsers(client: MatrixClient, userIds: string
     try {
         const usersDeviceMap = await client.downloadKeys(userIds);
 
-        // There are no devices at all.
-        if (usersDeviceMap.size === 0) return false;
-
         for (const devices of usersDeviceMap.values()) {
             if (devices.size === 0) {
+                // This user does not have any encryption-capable devices.
                 return false;
             }
         }
@@ -457,6 +455,7 @@ export async function ensureDMExists(client: MatrixClient, userId: string): Prom
         }
 
         roomId = await createRoom({ encryption, dmUserId: userId, spinner: false, andView: false });
+        if (!roomId) return null;
         await waitForMember(client, roomId, userId);
     }
     return roomId;
