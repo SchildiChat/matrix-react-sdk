@@ -1398,11 +1398,11 @@ export class UnwrappedEventTile extends React.Component<EventTileProps, IState> 
                     const type = this.props.mxEvent.getType();
                     const msgtype = content.msgtype;
 
-                    if (msgtype && mediaBodyTypes.indexOf(msgtype) != -1) {
+                    if (msgtype && mediaBodyTypes.indexOf(msgtype) != -1 && !replyChain) {
                         mediaBody = true;
                     }
 
-                    if (type && mediaEvTypes.indexOf(type) != -1) {
+                    if (type && mediaEvTypes.indexOf(type) != -1 && !replyChain) {
                         mediaBody = true;
                         stickerBody = true;
                     }
