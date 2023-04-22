@@ -21,6 +21,7 @@ import { M_LOCATION } from "matrix-js-sdk/src/@types/location";
 import { M_POLL_END, M_POLL_START } from "matrix-js-sdk/src/@types/polls";
 import { MatrixEventEvent } from "matrix-js-sdk/src/models/event";
 
+import { Layout } from "../../../settings/enums/Layout";
 import SettingsStore from "../../../settings/SettingsStore";
 import { Mjolnir } from "../../../mjolnir/Mjolnir";
 import RedactedBody from "./RedactedBody";
@@ -220,6 +221,7 @@ export default class MessageEvent extends React.Component<IProps> implements IMe
                 onMessageAllowed={this.onTileUpdate}
                 permalinkCreator={this.props.permalinkCreator}
                 mediaEventHelper={this.mediaHelper}
+                layout={this.props.layout}
                 scBubble={this.props.scBubble}
                 scBubbleTimestamp={this.props.scBubbleTimestamp}
                 scBubbleActionBar={this.props.scBubbleActionBar}
@@ -235,4 +237,5 @@ export default class MessageEvent extends React.Component<IProps> implements IMe
 const CaptionBody: React.FunctionComponent<IBodyProps & {OrigBodyType: React.ComponentType<Partial<IBodyProps>>}> = ({OrigBodyType, ...props}) => (<div className="mx_EventTile_content">
     <OrigBodyType {...props}/>
     <TextualBody {...{...props, ref: undefined}}/>
+    {props.layout === Layout.Bubble ? <br /> : null}
 </div>)
