@@ -2542,6 +2542,7 @@
     "Symbols": "Symbols",
     "Flags": "Flags",
     "Room Emoji": "Room Emoji",
+    "React with \"%(reaction)s\"": "React with \"%(reaction)s\"",
     "Categories": "Categories",
     "Quick Reactions": "Quick Reactions",
     "Cancel search": "Cancel search",
