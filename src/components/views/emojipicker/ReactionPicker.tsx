@@ -93,8 +93,8 @@ class ReactionPicker extends React.Component<IProps, IState> {
         });
     };
 
-    private onChoose = (reactionEmoji: IEmoji): boolean => {
-        const reaction = reactionEmoji.unicode;
+    private onChoose = (reactionEmoji: IEmoji | string): boolean => {
+        const reaction = typeof reactionEmoji === 'string' ? reactionEmoji : reactionEmoji.unicode;
         this.componentWillUnmount();
         this.props.onFinished();
         const myReactions = this.getReactions();
