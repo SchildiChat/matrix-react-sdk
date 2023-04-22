@@ -235,4 +235,5 @@ export default class MessageEvent extends React.Component<IProps> implements IMe
 const CaptionBody: React.FunctionComponent<IBodyProps & {OrigBodyType: React.ComponentType<Partial<IBodyProps>>}> = ({OrigBodyType, ...props}) => (<div className="mx_EventTile_content">
     <OrigBodyType {...props}/>
     <TextualBody {...{...props, ref: undefined}}/>
+    <br/>
 </div>)
