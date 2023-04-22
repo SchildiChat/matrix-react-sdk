@@ -22,6 +22,7 @@ limitations under the License.
     border-radius: 500px;
     background-color: $header-panel-bg-color;
     user-select: none;
+    max-width: calc(100% - 40px);
 
     &:hover {
         border-color: $reaction-row-button-hover-border-color;
@@ -37,7 +38,6 @@ limitations under the License.
     }
 
     .mx_ReactionsRowButton_content {
-        max-width: 100px;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
