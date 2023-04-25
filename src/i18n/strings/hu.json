@@ -2956,7 +2956,7 @@
     "Group all your rooms that aren't part of a space in one place.": "Téren kívüli szobák csoportosítása egy helyre.",
     "Spaces are ways to group rooms and people. Alongside the spaces you're in, you can use some pre-built ones too.": "Tér használható szobák és emberek csoportosítására. Azokon kívül amikben benne van használhat előre definiáltakat is.",
     "Jump to date (adds /jumptodate and jump to date headers)": "Időpontra ugrás („/jumptodate”-et és ugrás időpontra fejlécet ad hozzá)",
-    "If you know what you're doing, Element is open-source, be sure to check out our GitHub (https://github.com/vector-im/element-web/) and contribute!": "Ha tudja mit csinál, SchildiChat egy nyílt forráskódú szoftver, nézze meg a GitHubon (https://github.com/vector-im/element-web/) és segítsen!",
+    "If you know what you're doing, Element is open-source, be sure to check out our GitHub (https://github.com/vector-im/element-web/) and contribute!": "Ha tudja mit csinál, Element egy nyílt forráskódú szoftver, nézze meg a GitHubon (https://github.com/vector-im/element-web/) és segítsen!",
     "If someone told you to copy/paste something here, there is a high likelihood you're being scammed!": "Ha valaki azt kéri hogy másoljon/illesszen be itt valamit, nagy esély van rá hogy valaki becsapja!",
     "Wait!": "Várjon!",
     "This address does not point at this room": "Ez a cím nem erre a szobára mutat",
@@ -3732,8 +3732,8 @@
     "If you know a room address, try joining through that instead.": "Ha ismeri a szoba címét próbáljon inkább azzal belépni.",
     "Could not find room": "A szoba nem található",
     "iframe has no src attribute": "az iframe-nek nincs src attribútuma",
-    "Once invited users have joined Element, you will be able to chat and the room will be end-to-end encrypted": "Miután a meghívott felhasználók csatlakoztak az SchildiChathez beszélhet velük és a szoba végpontok között titkosítva lesz",
-    "Waiting for users to join Element": "SchildiChathez csatlakozó felhasználókra várakozás",
+    "Once invited users have joined Element, you will be able to chat and the room will be end-to-end encrypted": "Miután a meghívott felhasználók csatlakoztak az Elementhez beszélhet velük és a szoba végpontok között titkosítva lesz",
+    "Waiting for users to join Element": "Elementhez csatlakozó felhasználókra várakozás",
     "View poll": "Szavazás megtekintése",
     "There are no past polls for the past %(count)s days. Load more polls to view polls for previous months|one": "Nincs aktív szavazás az elmúlt napokból. További szavazások betöltése az előző havi szavazások megjelenítéséhez",
     "There are no past polls for the past %(count)s days. Load more polls to view polls for previous months|other": "%(count)s napja nincs aktív szavazás. További szavazások betöltése az előző havi szavazások megjelenítéséhez",
@@ -3760,9 +3760,5 @@
     "We were unable to find an event looking forwards from %(dateString)s. Try choosing an earlier date.": "Nem sikerült megtalálni az eseményt %(dateString)s után keresve. Próbáljon egy korábbi dátumot kiválasztani.",
     "A network error occurred while trying to find and jump to the given date. Your homeserver might be down or there was just a temporary problem with your internet connection. Please try again. If this continues, please contact your homeserver administrator.": "Hálózati hiba történt az adott dátum keresése és az ahhoz ugrás során. A Matrix-kiszolgálója lehet, hogy nem érhető el, vagy ideiglenes probléma van az internetkapcsolátával. Próbálja újra később. Ha ez továbbra is fennáll, akkor lépjen kapcsolatba a kiszolgáló rendszergazdájával.",
     "Poll history": "Szavazás előzményei",
-    "Enable intentional mentions": "Szándékos megemlítések engedélyezése",
-    "Enable layout with message bubbles": "Üzenetbuborékos elrendezés engedélyezése",
-    "Show message bubbles on one side only": "Üzenetbuborékok megjelenítése csak az egyik oldalon",
-    "Show message bubbles depending on the width either on both sides or only on one side": "Üzenetbuborékok megjelenítése a szélességtől függően mindkét oldalon vagy csak az egyik oldalon",
-    "Normal priority": "Normál prioritás"
+    "Enable intentional mentions": "Szándékos megemlítések engedélyezése"
 }
