@@ -182,12 +182,15 @@ export default class MessageEvent extends React.Component<IProps> implements IMe
         }
 
         // @ts-ignore
-        const hasCaption = [MsgType.Image, MsgType.File, MsgType.Audio, MsgType.Video].includes(msgtype)
-            && content.filename && content.filename !== content.body;
+        const hasCaption =
+            typeof msgtype !== "string" &&
+            [MsgType.Image, MsgType.File, MsgType.Audio, MsgType.Video].includes(msgtype) &&
+            content.filename &&
+            content.filename !== content.body;
         let OrigBodyType;
         if (hasCaption) {
-            OrigBodyType = BodyType
-            BodyType = CaptionBody
+            OrigBodyType = BodyType;
+            BodyType = CaptionBody;
         }
 
         if (SettingsStore.getValue("feature_mjolnir")) {
@@ -234,8 +237,13 @@ export default class MessageEvent extends React.Component<IProps> implements IMe
     }
 }
 
-const CaptionBody: React.FunctionComponent<IBodyProps & {OrigBodyType: React.ComponentType<Partial<IBodyProps>>}> = ({OrigBodyType, ...props}) => (<div className="mx_EventTile_content">
-    <OrigBodyType {...props}/>
-    <TextualBody {...{...props, ref: undefined}}/>
-    {props.layout === Layout.Bubble ? <br /> : null}
-</div>)
+const CaptionBody: React.FunctionComponent<IBodyProps & { OrigBodyType: React.ComponentType<Partial<IBodyProps>> }> = ({
+    OrigBodyType,
+    ...props
+}) => (
+    <div className="mx_EventTile_content">
+        <OrigBodyType {...props} />
+        <TextualBody {...{ ...props, ref: undefined }} />
+        {props.layout === Layout.Bubble ? <br /> : null}
+    </div>
+);

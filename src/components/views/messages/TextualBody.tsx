@@ -662,8 +662,8 @@ export default class TextualBody extends React.Component<IBodyProps, IState> {
         if (isCaption) {
             return (
                 <div className="mx_MTextBody mx_EventTile_caption" onClick={this.onBodyLinkClick}>
-                    { body }
-                    { widgets }
+                    {body}
+                    {widgets}
                 </div>
             );
         }

@@ -103,8 +103,7 @@ export default class LinkPreviewWidget extends React.Component<IProps> {
         }
 
         const thumbHeight =
-            ImageUtils.thumbHeight(p["og:image:width"], p["og:image:height"], imageMaxWidth, imageMaxHeight) ??
-            null; // SC: Don't have height for link preview images that can't load 
+            ImageUtils.thumbHeight(p["og:image:width"], p["og:image:height"], imageMaxWidth, imageMaxHeight) ?? null; // SC: Don't have height for link preview images that can't load
 
         let img: JSX.Element | undefined;
         if (image) {

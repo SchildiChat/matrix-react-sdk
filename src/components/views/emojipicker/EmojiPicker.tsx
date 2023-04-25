@@ -29,7 +29,7 @@ import QuickReactions from "./QuickReactions";
 import Category, { ICategory, CategoryKey } from "./Category";
 import { ICustomEmoji, loadImageSet } from "../../../emojipicker/customemoji";
 import { filterBoolean } from "../../../utils/arrays";
-import AccessibleButton from '../elements/AccessibleButton';
+import AccessibleButton from "../elements/AccessibleButton";
 
 export const CATEGORY_HEADER_HEIGHT = 20;
 export const EMOJI_HEIGHT = 35;
@@ -352,15 +352,11 @@ class EmojiPicker extends React.Component<IProps, IState> {
                         return categoryElement;
                     })}
                 </AutoHideScrollbar>
-                {
-                    (this.props.allowUnlisted && this.state.filter) &&
-                        <AccessibleButton
-                            kind="link"
-                            onClick={() => this.reactWith(this.state.filter)}
-                        >
-                            { _t('React with "%(reaction)s"', { reaction: this.state.filter }) }
-                        </AccessibleButton>
-                }
+                {this.props.allowUnlisted && this.state.filter && (
+                    <AccessibleButton kind="link" onClick={() => this.reactWith(this.state.filter)}>
+                        {_t('React with "%(reaction)s"', { reaction: this.state.filter })}
+                    </AccessibleButton>
+                )}
                 {this.state.previewEmoji ? (
                     <Preview emoji={this.state.previewEmoji} />
                 ) : (

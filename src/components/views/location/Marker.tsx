@@ -65,7 +65,8 @@ const OptionalTooltip: React.FC<{
  * Generic location marker
  */
 const Marker = React.forwardRef<HTMLDivElement, Props>(({ id, roomMember, useMemberColor, tooltip }, ref) => {
-    const memberColorClass = useMemberColor && roomMember ? getUserNameColorClass(UserNameColorMode.MXID, roomMember.userId) : "";
+    const memberColorClass =
+        useMemberColor && roomMember ? getUserNameColorClass(UserNameColorMode.MXID, roomMember.userId) : "";
     return (
         <div
             ref={ref}
