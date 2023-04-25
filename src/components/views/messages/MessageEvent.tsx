@@ -183,8 +183,7 @@ export default class MessageEvent extends React.Component<IProps> implements IMe
 
         // @ts-ignore
         const hasCaption =
-            typeof msgtype !== "string" &&
-            [MsgType.Image, MsgType.File, MsgType.Audio, MsgType.Video].includes(msgtype) &&
+            [MsgType.Image, MsgType.File, MsgType.Audio, MsgType.Video].includes(msgtype as MsgType) &&
             content.filename &&
             content.filename !== content.body;
         let OrigBodyType;
