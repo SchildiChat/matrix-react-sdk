@@ -34,7 +34,7 @@ function cancelQuoting(context: TimelineRenderingType): void {
 }
 
 interface IProps {
-    permalinkCreator: RoomPermalinkCreator;
+    permalinkCreator?: RoomPermalinkCreator;
     userNameColorMode?: UserNameColorMode;
     replyToEvent?: MatrixEvent;
 }

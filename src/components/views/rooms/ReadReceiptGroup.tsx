@@ -308,7 +308,7 @@ interface ISectionHeaderProps {
 }
 
 function SectionHeader({ className, children }: PropsWithChildren<ISectionHeaderProps>): JSX.Element {
-    const ref = useRef<HTMLHeadingElement>();
+    const ref = useRef<HTMLHeadingElement>(null);
     const [onFocus] = useRovingTabIndex(ref);
 
     return (

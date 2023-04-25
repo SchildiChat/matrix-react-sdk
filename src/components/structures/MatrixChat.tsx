@@ -472,11 +472,9 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
         );
     }, 1000);
 
-    private getFallbackHsUrl(): string | null {
+    private getFallbackHsUrl(): string | undefined {
         if (this.props.serverConfig?.isDefault) {
-            return this.props.config.fallback_hs_url ?? null;
-        } else {
-            return null;
+            return this.props.config.fallback_hs_url;
         }
     }
 
@@ -578,7 +576,7 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
                 if (payload.event_type === "m.identity_server") {
                     const fullUrl = payload.event_content ? payload.event_content["base_url"] : null;
                     if (!fullUrl) {
-                        MatrixClientPeg.get().setIdentityServerUrl(null);
+                        MatrixClientPeg.get().setIdentityServerUrl(undefined);
                         localStorage.removeItem("mx_is_access_token");
                         localStorage.removeItem("mx_is_url");
                     } else {
@@ -1230,6 +1228,10 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
      * @returns {string} The room ID of the new room, or null if no room was created
      */
     private async startWelcomeUserChat(): Promise<string | null> {
+        const snakedConfig = new SnakedObject<IConfigOptions>(this.props.config);
+        const welcomeUserId = snakedConfig.get("welcome_user_id");
+        if (!welcomeUserId) return null;
+
         // We can end up with multiple tabs post-registration where the user
         // might then end up with a session and we don't want them all making
         // a chat with the welcome user: try to de-dupe.
@@ -1243,8 +1245,7 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
         }
         await waitFor;
 
-        const snakedConfig = new SnakedObject<IConfigOptions>(this.props.config);
-        const welcomeUserRooms = DMRoomMap.shared().getDMRoomsForUserId(snakedConfig.get("welcome_user_id"));
+        const welcomeUserRooms = DMRoomMap.shared().getDMRoomsForUserId(welcomeUserId);
         if (welcomeUserRooms.length === 0) {
             const roomId = await createRoom({
                 dmUserId: snakedConfig.get("welcome_user_id"),
@@ -1261,7 +1262,7 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
             // user room (it doesn't wait for new data from the server, just
             // the saved sync to be loaded).
             const saveWelcomeUser = (ev: MatrixEvent): void => {
-                if (ev.getType() === EventType.Direct && ev.getContent()[snakedConfig.get("welcome_user_id")]) {
+                if (ev.getType() === EventType.Direct && ev.getContent()[welcomeUserId]) {
                     MatrixClientPeg.get().store.save(true);
                     MatrixClientPeg.get().removeListener(ClientEvent.AccountData, saveWelcomeUser);
                 }

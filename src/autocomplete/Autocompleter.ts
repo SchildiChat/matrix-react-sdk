@@ -39,8 +39,8 @@ export interface ICompletion {
     type?: "at-room" | "command" | "community" | "room" | "user" | "customEmoji";
     completion: string;
     completionId?: string;
-    component?: ReactElement;
-    range?: ISelectionRange;
+    component: ReactElement;
+    range: ISelectionRange;
     command?: string;
     suffix?: string;
     // If provided, apply a LINK entity to the completion with the

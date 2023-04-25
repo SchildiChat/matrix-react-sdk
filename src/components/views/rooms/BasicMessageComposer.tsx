@@ -232,6 +232,7 @@ export default class BasicMessageEditor extends React.Component<IProps, IState> 
     }
 
     private updateEditorState = (selection: Caret, inputType?: string, diff?: IDiff): void => {
+        if (!this.editorRef.current) return;
         renderModel(this.editorRef.current, this.props.model);
         if (selection) {
             // set the caret/selection
@@ -359,6 +360,7 @@ export default class BasicMessageEditor extends React.Component<IProps, IState> 
 
     private onPaste = (event: ClipboardEvent<HTMLDivElement>): boolean | undefined => {
         event.preventDefault(); // we always handle the paste ourselves
+        if (!this.editorRef.current) return;
         if (this.props.onPaste?.(event, this.props.model)) {
             // to prevent double handling, allow props.onPaste to skip internal onPaste
             return true;
@@ -378,7 +380,7 @@ export default class BasicMessageEditor extends React.Component<IProps, IState> 
         }
 
         this.modifiedFlag = true;
-        const range = getRangeForSelection(this.editorRef.current, model, document.getSelection());
+        const range = getRangeForSelection(this.editorRef.current, model, document.getSelection()!);
 
         // If the user is pasting a link, and has a range selected which is not a link, wrap the range with the link
         if (plainText && range.length > 0 && linkify.test(plainText) && !linkify.test(range.text)) {
@@ -389,18 +391,20 @@ export default class BasicMessageEditor extends React.Component<IProps, IState> 
     };
 
     private onInput = (event: Partial<InputEvent>): void => {
+        if (!this.editorRef.current) return;
         // ignore any input while doing IME compositions
         if (this.isIMEComposing) {
             return;
         }
         this.modifiedFlag = true;
-        const sel = document.getSelection();
+        const sel = document.getSelection()!;
         const { caret, text } = getCaretOffsetAndText(this.editorRef.current, sel);
         this.props.model.update(text, event.inputType, caret);
     };
 
     private insertText(textToInsert: string, inputType = "insertText"): void {
-        const sel = document.getSelection();
+        if (!this.editorRef.current) return;
+        const sel = document.getSelection()!;
         const { caret, text } = getCaretOffsetAndText(this.editorRef.current, sel);
         const newText = text.slice(0, caret.offset) + textToInsert + text.slice(caret.offset);
         caret.offset += textToInsert.length;
@@ -469,6 +473,7 @@ export default class BasicMessageEditor extends React.Component<IProps, IState> 
     };
 
     private onSelectionChange = (): void => {
+        if (!this.editorRef.current) return;
         const { isEmpty } = this.props.model;
 
         this.refreshLastCaretIfNeeded();
@@ -487,6 +492,7 @@ export default class BasicMessageEditor extends React.Component<IProps, IState> 
     };
 
     private onKeyDown = (event: React.KeyboardEvent): void => {
+        if (!this.editorRef.current) return;
         const model = this.props.model;
         let handled = false;
 
@@ -498,7 +504,7 @@ export default class BasicMessageEditor extends React.Component<IProps, IState> 
             const selectionRange = getRangeForSelection(
                 this.editorRef.current,
                 this.props.model,
-                document.getSelection(),
+                document.getSelection()!,
             );
             // trim the range as we want it to exclude leading/trailing spaces
             selectionRange.trim();
@@ -746,11 +752,11 @@ export default class BasicMessageEditor extends React.Component<IProps, IState> 
     }
 
     public onFormatAction = (action: Formatting): void => {
-        if (!this.state.useMarkdown) {
+        if (!this.state.useMarkdown || !this.editorRef.current) {
             return;
         }
 
-        const range: Range = getRangeForSelection(this.editorRef.current, this.props.model, document.getSelection());
+        const range: Range = getRangeForSelection(this.editorRef.current, this.props.model, document.getSelection()!);
 
         this.historyManager.ensureLastChangesPushed(this.props.model);
         this.modifiedFlag = true;
@@ -760,7 +766,7 @@ export default class BasicMessageEditor extends React.Component<IProps, IState> 
 
     public render(): React.ReactNode {
         let autoComplete: JSX.Element | undefined;
-        if (this.state.autoComplete) {
+        if (this.state.autoComplete && this.state.query) {
             const query = this.state.query;
             const queryLen = query.length;
             autoComplete = (
@@ -795,8 +801,8 @@ export default class BasicMessageEditor extends React.Component<IProps, IState> 
         const { completionIndex } = this.state;
         const hasAutocomplete = Boolean(this.state.autoComplete);
         let activeDescendant: string | undefined;
-        if (hasAutocomplete && completionIndex >= 0) {
-            activeDescendant = generateCompletionDomId(completionIndex);
+        if (hasAutocomplete && completionIndex! >= 0) {
+            activeDescendant = generateCompletionDomId(completionIndex!);
         }
 
         return (
