@@ -192,7 +192,10 @@ const transformTags: IExtendedSanitizeOptions["transformTags"] = {
         }
 
         const requestedWidth = Number(attribs.width);
-        const requestedHeight = Number(attribs.height);
+        let requestedHeight = Number(attribs.height);
+        if ("data-mx-emoticon" in attribs) {
+            requestedHeight = Math.floor(18*window.devicePixelRatio); // 18 is the display height of a normal small emoji
+        }
         const width = Math.min(requestedWidth || 800, 800);
         const height = Math.min(requestedHeight || 600, 600);
         // specify width/height as max values instead of absolute ones to allow object-fit to do its thing
@@ -559,6 +562,7 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
             const isPlainText = phtml.html() === phtml.root().text();
             isHtmlMessage = !isPlainText;
 
+            let safeBodyNeedsSerialisation = false; // SchildiChat feature to download appropriate thumbnail for emojis: delaying serialisation is needed so emoji attributes can still be altered midway through this function
             if (isHtmlMessage && SettingsStore.getValue("feature_latex_maths")) {
                 // @ts-ignore - The types for `replaceWith` wrongly expect
                 // Cheerio instance to be returned.
@@ -570,7 +574,7 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
                         output: "htmlAndMathml",
                     });
                 });
-                safeBody = phtml.html();
+                safeBodyNeedsSerialisation = true;
             }
             if (isHtmlMessage) {
                 isAllHtmlEmoji = (phtml.root()[0] as cheerio.TagElement).children.every((elm) => {
@@ -590,6 +594,17 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
                     }
                     return true;
                 });
+                safeBodyNeedsSerialisation = true;
+            }
+            if (isAllHtmlEmoji && !opts.disableBigEmoji) { // Big emoji? Big image URLs.
+                (phtml.root()[0] as cheerio.TagElement).children.forEach((elm) => {
+                    if (elm.name === "img" && "data-mx-emoticon" in elm.attribs && typeof elm.attribs.src === "string") {
+                        elm.attribs.src = elm.attribs.src.replace(/height=[0-9]*/, `height=${Math.floor(48*window.devicePixelRatio)}`) // 48 is the display height of a big emoji
+                    }
+                })
+            }
+            if (safeBodyNeedsSerialisation) { // SchildiChat: all done editing emojis, can finally serialise the body
+                safeBody = phtml.html();
             }
             if (bodyHasEmoji) {
                 safeBody = formatEmojis(safeBody, true).join("");
