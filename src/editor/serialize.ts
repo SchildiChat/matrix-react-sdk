@@ -55,7 +55,7 @@ export function mdSerialize(model: EditorModel): string {
             case Type.CustomEmoji:
                 return (
                     html +
-                    `<img data-mx-emoticon height="18" src="${encodeURI(part.resourceId)}"` +
+                    `<img data-mx-emoticon height="32" src="${encodeURI(part.resourceId)}"` +
                     ` title=":${_.escape(part.text)}:" alt=":${_.escape(part.text)}:">`
                 );
         }
