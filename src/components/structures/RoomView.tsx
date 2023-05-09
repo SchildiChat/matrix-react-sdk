@@ -214,6 +214,9 @@ export interface IRoomState {
     readMarkerOutOfViewThresholdMs: number;
     showHiddenEvents: boolean;
     showReadReceipts: boolean;
+    preferHidden: {
+        read_receipts: boolean;
+    }
     showRedactions: boolean;
     showJoinLeaves: boolean;
     showAvatarChanges: boolean;
@@ -429,6 +432,9 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             readMarkerOutOfViewThresholdMs: SettingsStore.getValue("readMarkerOutOfViewThresholdMs"),
             showHiddenEvents: SettingsStore.getValue("showHiddenEventsInTimeline"),
             showReadReceipts: true,
+            preferHidden: {
+                read_receipts: false
+            },
             showRedactions: true,
             showJoinLeaves: true,
             showAvatarChanges: true,
@@ -661,6 +667,10 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             showRightPanel: this.context.rightPanelStore.isOpenForRoom(roomId),
             activeCall: CallStore.instance.getActiveCall(roomId),
         };
+
+        newState.preferHidden = room?.getLiveTimeline().getState(EventTimeline.FORWARDS).getStateEvents("chat.schildi.prefer_hidden", "")?.getContent() || {
+            read_receipts: false
+        }
 
         if (
             this.state.mainSplitContentType !== MainSplitContentType.Timeline &&
@@ -1534,6 +1544,10 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
                 this.setState({ tombstone: this.getRoomTombstone() });
                 break;
 
+            case "chat.schildi.prefer_hidden":
+                this.setState({ preferHidden: ev.getContent() })
+                break;
+
             default:
                 this.updatePermissions(this.state.room);
         }
@@ -2396,7 +2410,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
                 timelineSet={this.state.room.getUnfilteredTimelineSet()}
                 overlayTimelineSet={this.state.virtualRoom?.getUnfilteredTimelineSet()}
                 overlayTimelineSetFilter={isCallEvent}
-                showReadReceipts={this.state.showReadReceipts}
+                showReadReceipts={this.state.showReadReceipts && !this.state.preferHidden.read_receipts}
                 manageReadReceipts={!this.state.isPeeking}
                 sendReadReceiptOnLoad={!this.state.wasContextSwitch}
                 manageReadMarkers={!this.state.isPeeking}
