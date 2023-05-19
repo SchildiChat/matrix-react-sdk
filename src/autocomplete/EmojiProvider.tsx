@@ -103,7 +103,7 @@ export default class EmojiProvider extends AutocompleteProvider {
         // Load this room's image sets.
         const imageSetEvents = room?.currentState?.getStateEvents("im.ponies.room_emotes");
         let loadedImages: ICustomEmoji[] =
-            imageSetEvents?.flatMap((imageSetEvent) => loadImageSet(imageSetEvent)) || [];
+            imageSetEvents?.flatMap((imageSetEvent) => loadImageSet(imageSetEvent, room)) || [];
 
         // Global emotes from rooms
         const cli = MatrixClientPeg.get();
@@ -115,7 +115,7 @@ export default class EmojiProvider extends AutocompleteProvider {
                     "im.ponies.room_emotes",
                     packRoomStateKey,
                 );
-                const moreLoadedImages: ICustomEmoji[] = loadImageSet(packRoomImageSetEvents);
+                const moreLoadedImages: ICustomEmoji[] = loadImageSet(packRoomImageSetEvents, packRoom!);
                 loadedImages = [...loadedImages, ...(moreLoadedImages || [])];
             }
         }
@@ -244,6 +244,7 @@ export default class EmojiProvider extends AutocompleteProvider {
                                     <img className="mx_customEmoji_image" src={mediaUrl} alt={c.emoji.shortcodes[0]} />
                                 </PillCompletion>
                             ),
+                            customEmoji: c.emoji,
                             range: range!,
                         } as const;
                     }

@@ -439,6 +439,13 @@ export default class TextualBody extends React.Component<IBodyProps, IState> {
         let target: HTMLLinkElement | null = e.target as HTMLLinkElement;
         // links processed by linkifyjs have their own handler so don't handle those here
         if (target.classList.contains(linkifyOpts.className as string)) return;
+        // handle clicking packs
+        const packUrl = target.getAttribute("data-mx-pack-url");
+        if (packUrl) {
+            // it could be converted to a localHref -> therefore handle locally
+            e.preventDefault();
+            window.location.hash = tryTransformPermalinkToLocalHref(packUrl);
+        }
         if (target.nodeName !== "A") {
             // Jump to parent as the `<a>` may contain children, e.g. an anchor wrapping an inline code section
             target = target.closest<HTMLLinkElement>("a");

@@ -112,7 +112,14 @@ export default class AutocompleteWrapperModel {
                 // command needs special handling for auto complete, but also renders as plain texts
                 return [(this.partCreator as CommandPartCreator).command(text)];
             case "customEmoji":
-                return [this.partCreator.customEmoji(text, completionId)];
+                return [
+                    this.partCreator.customEmoji(
+                        text,
+                        completionId!,
+                        completion.customEmoji?.roomId,
+                        completion.customEmoji?.eventId,
+                    ),
+                ];
             default:
                 // used for emoji and other plain text completion replacement
                 return this.partCreator.plainWithEmoji(text);

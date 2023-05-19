@@ -76,7 +76,7 @@ class EmojiPicker extends React.Component<IProps, IState> {
         let loadedImages: ICustomEmoji[];
         if (props.room) {
             const imageSetEvents = props.room.currentState.getStateEvents("im.ponies.room_emotes");
-            loadedImages = imageSetEvents.flatMap((imageSetEvent) => loadImageSet(imageSetEvent));
+            loadedImages = imageSetEvents.flatMap((imageSetEvent) => loadImageSet(imageSetEvent, props.room));
         } else {
             loadedImages = [];
         }

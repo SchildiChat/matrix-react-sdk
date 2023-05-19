@@ -21,11 +21,11 @@ import escapeHtml from "escape-html";
 import _ from "lodash";
 
 import Markdown from "../Markdown";
-import { makeGenericPermalink } from "../utils/permalinks/Permalinks";
+import { makeGenericPermalink, makeRoomPermalink } from "../utils/permalinks/Permalinks";
 import EditorModel from "./model";
 import SettingsStore from "../settings/SettingsStore";
 import SdkConfig from "../SdkConfig";
-import { Type } from "./parts";
+import { ICustomEmojiPart, Type } from "./parts";
 
 export function mdSerialize(model: EditorModel): string {
     return model.parts.reduce((html, part) => {
@@ -53,6 +53,18 @@ export function mdSerialize(model: EditorModel): string {
                     `[${part.text.replace(/[[\\\]]/g, (c) => "\\" + c)}](${makeGenericPermalink(part.resourceId)})`
                 );
             case Type.CustomEmoji:
+                if ((part as ICustomEmojiPart).roomId) {
+                    const permalink = makeRoomPermalink(
+                        (part as ICustomEmojiPart).roomId!,
+                        (part as ICustomEmojiPart).eventId,
+                    );
+                    return (
+                        html +
+                        `<img data-mx-emoticon height="18" src="${encodeURI(part.resourceId)}"` +
+                        ` data-mx-pack-url="${permalink}"` +
+                        ` title=":${_.escape(part.text)}:" alt=":${_.escape(part.text)}:">`
+                    );
+                }
                 return (
                     html +
                     `<img data-mx-emoticon height="32" src="${encodeURI(part.resourceId)}"` +

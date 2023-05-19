@@ -28,6 +28,7 @@ import AutocompleteProvider, { ICommand } from "./AutocompleteProvider";
 import SpaceProvider from "./SpaceProvider";
 import { TimelineRenderingType } from "../contexts/RoomContext";
 import { filterBoolean } from "../utils/arrays";
+import { ICustomEmoji } from "../emojipicker/customemoji";
 
 export interface ISelectionRange {
     beginning?: boolean; // whether the selection is in the first block of the editor or not
@@ -46,6 +47,7 @@ export interface ICompletion {
     // If provided, apply a LINK entity to the completion with the
     // data = { url: href }.
     href?: string;
+    customEmoji?: ICustomEmoji;
 }
 
 const PROVIDERS = [UserProvider, RoomProvider, EmojiProvider, NotifProvider, CommandProvider, SpaceProvider];

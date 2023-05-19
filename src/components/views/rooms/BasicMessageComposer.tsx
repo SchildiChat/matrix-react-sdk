@@ -900,7 +900,7 @@ export default class BasicMessageEditor extends React.Component<IProps, IState> 
         if ("unicode" in emoji) {
             emojiPart = partCreator.emoji(emoji.unicode);
         } else {
-            emojiPart = partCreator.customEmoji(emoji.shortcodes[0], emoji.url);
+            emojiPart = partCreator.customEmoji(emoji.shortcodes[0], emoji.url, emoji.roomId, emoji.eventId);
         }
         model.transform(() => {
             const addedLen = model.insert([emojiPart], position);
