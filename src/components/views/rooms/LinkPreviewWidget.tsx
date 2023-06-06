@@ -133,13 +133,26 @@ export default class LinkPreviewWidget extends React.Component<IProps> {
         const needsTooltip = PlatformPeg.get()?.needsUrlTooltips() && this.props.link !== title;
 
         // Youtube video player embed
-        const youtubeRegex = /^https?:\/\/(m[.]|www[.])?(youtube[.]com\/watch[?]v=|youtu[.]be\/)([\w-]+)(\S+)?$/;
-        if (this.props.youtubeEmbedPlayer && this.props.link.match(youtubeRegex)) {
+        // e.g. https://youtube.com/watch?v=L4K0-y_JVAo&t=12
+        const youtubeNormalRegex = /^https?:\/\/(m\.|www\.)?youtube(-nocookie)?\.com\/watch\?v=([\w-]+)(\S+)?$/;
+
+        // e.g. https://youtu.be/WrBGZ-L_u7Y?t=12
+        const shortenedYoutubeLinkRegex = /^https?:\/\/youtu\.be\/([\w-]+)(\S+)?$/;
+
+        // Examples:
+        // https://www.youtube.com/shorts/ooAwCOP67GQ
+        // https://youtube.com/live/AOfoaosd
+        // https://www.youtube-nocookie.com/embed/WrBGZ-L_u7Y
+        const youtubeMiscRegex = /^https?:\/\/(m\.|www\.)?youtube(-nocookie)?\.com\/(shorts|live|embed)\/([\w-]+)(\S+)?$/;
+
+        if (this.props.youtubeEmbedPlayer && (this.props.link.match(youtubeNormalRegex) || this.props.link.match(shortenedYoutubeLinkRegex) || this.props.link.match(youtubeMiscRegex))) {
             let videoID: string;
-            if (this.props.link.includes("watch?v=")) {
-                videoID = this.props.link.split("watch?v=")[1].split("&")[0];
-            } else if (this.props.link.includes("youtu.be/")) {
-                videoID = this.props.link.split("youtu.be/")[1].split("&")[0];
+            if (this.props.link.match(youtubeNormalRegex)) {
+                videoID = this.props.link.match(youtubeNormalRegex)[3];
+            } else if (this.props.link.match(shortenedYoutubeLinkRegex)) {
+                videoID = this.props.link.match(shortenedYoutubeLinkRegex)[1];
+            } else if (this.props.link.match(youtubeMiscRegex)) {
+                videoID = this.props.link.match(youtubeMiscRegex)[4];
             }
 
             const restrictedDims = suggestedVideoSize(SettingsStore.getValue("Images.size") as ImageSize, {
