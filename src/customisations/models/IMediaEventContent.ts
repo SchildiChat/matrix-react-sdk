@@ -100,6 +100,13 @@ export function prepEventContentAsMedia(content: Partial<IMediaEventContent>): I
             mxc: content.file.url,
             file: content.file,
         };
+    } else if (content["m.relates_to"]?.key?.startsWith("mxc://")) {
+        // Fallback to key, since some clients only set the key to the mxc:// url while omitting the actual url field for reactions
+        return {
+            thumbnail,
+            mxc: content["m.relates_to"]?.key,
+            file: content.file,
+        };
     }
 
     throw new Error("Invalid file provided: cannot determine MXC URI. Has it been redacted?");

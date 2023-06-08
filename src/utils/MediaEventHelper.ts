@@ -118,6 +118,10 @@ export class MediaEventHelper implements IDestroyable {
         const mediaMsgTypes: string[] = [MsgType.Video, MsgType.Audio, MsgType.Image, MsgType.File];
         if (mediaMsgTypes.includes(content.msgtype!)) return true;
         if (typeof content.url === "string") return true;
+        if (event.getType() === EventType.Reaction && content["m.relates_to"]?.key?.startsWith("mxc://")) {
+            // Some clients only send mxc url as key, without setting the url field
+            return true;
+        }
 
         // Finally, it's probably not media
         return false;
