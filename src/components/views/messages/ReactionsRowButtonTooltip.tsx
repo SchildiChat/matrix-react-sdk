@@ -32,6 +32,16 @@ interface IProps {
     visible: boolean;
 }
 
+const getCustomReactionName = (reactionEvents: Set<MatrixEvent>) => {
+    for (const event of reactionEvents) {
+        if (event.event.content?.["com.beeper.reaction.shortcode"]) {
+            return event.event.content?.["com.beeper.reaction.shortcode"];
+        }
+    }
+
+    return '';
+};
+
 export default class ReactionsRowButtonTooltip extends React.PureComponent<IProps> {
     public static contextType = MatrixClientContext;
     public context!: React.ContextType<typeof MatrixClientContext>;
@@ -48,7 +58,7 @@ export default class ReactionsRowButtonTooltip extends React.PureComponent<IProp
                 const name = member?.name ?? reactionEvent.getSender()!;
                 senders.push(name);
             }
-            const shortName = unicodeToShortcode(content);
+            const shortName = unicodeToShortcode(content) || getCustomReactionName(reactionEvents);
             tooltipLabel = (
                 <div>
                     {_t(
