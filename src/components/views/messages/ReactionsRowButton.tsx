@@ -135,8 +135,8 @@ export default class ReactionsRowButton extends React.PureComponent<IProps, ISta
                     <img
                         className="mx_ReactionsRowButton_content"
                         src={MatrixClientPeg.get().mxcUrlToHttp(content)}
-                        width="16"
-                        height="16"
+                        width="20"
+                        height="20"
                     />
                 ) : (
                     <span className="mx_ReactionsRowButton_content" aria-hidden="true">
