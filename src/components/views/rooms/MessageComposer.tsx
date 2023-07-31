@@ -64,6 +64,7 @@ import { setUpVoiceBroadcastPreRecording } from "../../../voice-broadcast/utils/
 import { SdkContextClass } from "../../../contexts/SDKContext";
 import { VoiceBroadcastInfoState } from "../../../voice-broadcast";
 import { createCantStartVoiceMessageBroadcastDialog } from "../dialogs/CantStartVoiceMessageBroadcastDialog";
+import { UIFeature } from "../../../settings/UIFeature";
 
 let instanceCount = 0;
 
@@ -640,7 +641,9 @@ export class MessageComposer extends React.Component<IProps, IState> {
                                     relation={this.props.relation}
                                     onRecordStartEndClick={this.onRecordStartEndClick}
                                     setStickerPickerOpen={this.setStickerPickerOpen}
-                                    showLocationButton={!window.electron}
+                                    showLocationButton={
+                                        !window.electron && SettingsStore.getValue(UIFeature.LocationSharing)
+                                    }
                                     showPollsButton={this.state.showPollsButton}
                                     showStickersButton={this.showStickersButton}
                                     collapseButtons={this.state.collapseButtons}

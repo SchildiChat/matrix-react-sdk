@@ -24,6 +24,7 @@ import { logger } from "matrix-js-sdk/src/logger";
 import { RoomStateEvent } from "matrix-js-sdk/src/models/room-state";
 import { M_BEACON_INFO } from "matrix-js-sdk/src/@types/beacon";
 import { isSupportedReceiptType } from "matrix-js-sdk/src/utils";
+import { Optional } from "matrix-events-sdk";
 
 import shouldHideEvent from "../../shouldHideEvent";
 import { wantsDateSeparator } from "../../DateUtils";
@@ -317,7 +318,11 @@ export default class MessagePanel extends React.Component<IProps, IState> {
             this.calculateRoomMembersCount();
         }
 
-        if (prevProps.readMarkerVisible && this.props.readMarkerEventId !== prevProps.readMarkerEventId) {
+        if (
+            prevProps.readMarkerVisible &&
+            prevProps.readMarkerEventId &&
+            this.props.readMarkerEventId !== prevProps.readMarkerEventId
+        ) {
             const ghostReadMarkers = this.state.ghostReadMarkers;
             ghostReadMarkers.push(prevProps.readMarkerEventId);
             this.setState({
@@ -446,10 +451,8 @@ export default class MessagePanel extends React.Component<IProps, IState> {
      * node (specifically, the bottom of it) will be positioned. If omitted, it
      * defaults to 0.
      */
-    public scrollToEvent(eventId: string, pixelOffset: number, offsetBase: number): void {
-        if (this.scrollPanel.current) {
-            this.scrollPanel.current.scrollToToken(eventId, pixelOffset, offsetBase);
-        }
+    public scrollToEvent(eventId: string, pixelOffset?: number, offsetBase?: number): void {
+        this.scrollPanel.current?.scrollToToken(eventId, pixelOffset, offsetBase);
     }
 
     public scrollToEventIfNeeded(eventId: string): void {
@@ -600,16 +603,16 @@ export default class MessagePanel extends React.Component<IProps, IState> {
         return { nextEventAndShouldShow, nextTile };
     }
 
-    private get pendingEditItem(): string | undefined {
+    private get pendingEditItem(): string | null {
         if (!this.props.room) {
-            return undefined;
+            return null;
         }
 
         try {
             return localStorage.getItem(editorRoomKey(this.props.room.roomId, this.context.timelineRenderingType));
         } catch (err) {
             logger.error(err);
-            return undefined;
+            return null;
         }
     }
 
@@ -828,7 +831,7 @@ export default class MessagePanel extends React.Component<IProps, IState> {
         return ret;
     }
 
-    public wantsDateSeparator(prevEvent: MatrixEvent | null, nextEventDate: Date): boolean {
+    public wantsDateSeparator(prevEvent: MatrixEvent | null, nextEventDate: Optional<Date>): boolean {
         if (this.context.timelineRenderingType === TimelineRenderingType.ThreadsList) {
             return false;
         }
@@ -897,6 +900,7 @@ export default class MessagePanel extends React.Component<IProps, IState> {
 
             const existingReceipts = receiptsByEvent.get(lastShownEventId) || [];
             const newReceipts = this.getReadReceiptsForEvent(event);
+            if (!newReceipts) continue;
             receiptsByEvent.set(lastShownEventId, existingReceipts.concat(newReceipts));
 
             // Record these receipts along with their last shown event ID for
@@ -919,7 +923,7 @@ export default class MessagePanel extends React.Component<IProps, IState> {
             if (receiptsByUserId.get(userId)) {
                 continue;
             }
-            const { lastShownEventId, receipt } = this.readReceiptsByUserId.get(userId);
+            const { lastShownEventId, receipt } = this.readReceiptsByUserId.get(userId)!;
             const existingReceipts = receiptsByEvent.get(lastShownEventId) || [];
             receiptsByEvent.set(lastShownEventId, existingReceipts.concat(receipt));
             receiptsByUserId.set(userId, { lastShownEventId, receipt });
@@ -1187,7 +1191,7 @@ class CreationGrouper extends BaseGrouper {
             const ts = createEvent.event.getTs();
             ret.push(
                 <li key={ts + "~"}>
-                    <DateSeparator roomId={createEvent.event.getRoomId()} ts={ts} />
+                    <DateSeparator roomId={createEvent.event.getRoomId()!} ts={ts} />
                 </li>,
             );
         }
@@ -1232,7 +1236,7 @@ class CreationGrouper extends BaseGrouper {
                 key="roomcreationsummary"
                 events={this.events}
                 onToggle={panel.onHeightChanged} // Update scroll state
-                summaryMembers={[ev.sender]}
+                summaryMembers={ev.sender ? [ev.sender] : undefined}
                 summaryText={summaryText}
                 layout={this.panel.props.layout}
             >
@@ -1339,7 +1343,7 @@ class MainGrouper extends BaseGrouper {
             const ts = this.events[0].getTs();
             ret.push(
                 <li key={ts + "~"}>
-                    <DateSeparator roomId={this.events[0].getRoomId()} ts={ts} />
+                    <DateSeparator roomId={this.events[0].getRoomId()!} ts={ts} />
                 </li>,
             );
         }

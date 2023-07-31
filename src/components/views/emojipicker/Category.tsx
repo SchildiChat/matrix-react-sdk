@@ -22,6 +22,7 @@ import LazyRenderList from "../elements/LazyRenderList";
 import { DATA_BY_CATEGORY, IEmoji } from "../../../emoji";
 import Emoji from "./Emoji";
 import { ICustomEmoji } from "../../../emojipicker/customemoji";
+import { ButtonEvent } from "../elements/AccessibleButton";
 
 const OVERFLOW_ROWS = 3;
 
@@ -44,10 +45,23 @@ interface IProps {
     heightBefore: number;
     viewportHeight: number;
     scrollTop: number;
-    onClick(emoji: IEmoji | ICustomEmoji): void;
+    onClick(ev: ButtonEvent, emoji: IEmoji | ICustomEmoji): void;
     onMouseEnter(emoji: IEmoji | ICustomEmoji): void;
     onMouseLeave(emoji: IEmoji | ICustomEmoji): void;
     isEmojiDisabled?: (unicode: string) => boolean;
+}
+
+function hexEncode(str: string): string {
+    let hex: string;
+    let i: number;
+
+    let result = "";
+    for (i = 0; i < str.length; i++) {
+        hex = str.charCodeAt(i).toString(16);
+        result += ("000" + hex).slice(-4);
+    }
+
+    return result;
 }
 
 class Category extends React.PureComponent<IProps> {
@@ -55,7 +69,7 @@ class Category extends React.PureComponent<IProps> {
         const { onClick, onMouseEnter, onMouseLeave, selectedEmojis, emojis } = this.props;
         const emojisForRow = emojis.slice(rowIndex * 8, (rowIndex + 1) * 8).filter((val) => val);
         return (
-            <div key={rowIndex}>
+            <div key={rowIndex} role="row">
                 {emojisForRow.map((emoji) => (
                     <Emoji
                         key={"hexcode" in emoji ? emoji.hexcode : emoji.shortcodes[0]}
@@ -67,6 +81,8 @@ class Category extends React.PureComponent<IProps> {
                         disabled={this.props.isEmojiDisabled?.(
                             "unicode" in emoji ? emoji.unicode : emoji.shortcodes[0],
                         )}
+                        id={`mx_EmojiPicker_item_${this.props.id}_${hexEncode("unicode" in emoji ? emoji.unicode : emoji.shortcodes[0])}`}
+                        role="gridcell"
                     />
                 ))}
             </div>
@@ -105,7 +121,6 @@ class Category extends React.PureComponent<IProps> {
             >
                 <h2 className="mx_EmojiPicker_category_label">{name}</h2>
                 <LazyRenderList
-                    element="ul"
                     className="mx_EmojiPicker_list"
                     itemHeight={EMOJI_HEIGHT}
                     items={rows}
@@ -114,6 +129,7 @@ class Category extends React.PureComponent<IProps> {
                     overflowItems={OVERFLOW_ROWS}
                     overflowMargin={0}
                     renderItem={this.renderEmojiRow}
+                    role="grid"
                 />
             </section>
         );

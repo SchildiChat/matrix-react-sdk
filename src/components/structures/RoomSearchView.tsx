@@ -52,7 +52,6 @@ interface Props {
     promise: Promise<ISearchResults>;
     abortController?: AbortController;
     resizeNotifier: ResizeNotifier;
-    permalinkCreator: RoomPermalinkCreator;
     className: string;
     layout?: Layout;
     singleSideBubbles?: boolean;
@@ -70,7 +69,6 @@ export const RoomSearchView = forwardRef<ScrollPanel, Props>(
             promise,
             abortController,
             resizeNotifier,
-            permalinkCreator,
             className,
             layout,
             singleSideBubbles,
@@ -85,6 +83,15 @@ export const RoomSearchView = forwardRef<ScrollPanel, Props>(
         const [highlights, setHighlights] = useState<string[] | null>(null);
         const [results, setResults] = useState<ISearchResults | null>(null);
         const aborted = useRef(false);
+        // A map from room ID to permalink creator
+        const permalinkCreators = useRef(new Map<string, RoomPermalinkCreator>()).current;
+
+        useEffect(() => {
+            return () => {
+                permalinkCreators.forEach((pc) => pc.stop());
+                permalinkCreators.clear();
+            };
+        }, [permalinkCreators]);
 
         const handleSearchResult = useCallback(
             (searchPromise: Promise<ISearchResults>): Promise<boolean> => {
@@ -234,7 +241,7 @@ export const RoomSearchView = forwardRef<ScrollPanel, Props>(
             const result = results.results[i];
 
             const mxEv = result.context.getEvent();
-            const roomId = mxEv.getRoomId();
+            const roomId = mxEv.getRoomId()!;
             const room = client.getRoom(roomId);
             if (!room) {
                 // if we do not have the room in js-sdk stores then hide it as we cannot easily show it
@@ -298,6 +305,13 @@ export const RoomSearchView = forwardRef<ScrollPanel, Props>(
                 mergedTimeline = result.context.getTimeline();
                 ourEventsIndexes = [];
                 ourEventsIndexes.push(result.context.getOurEventIndex());
+            }
+
+            let permalinkCreator = permalinkCreators.get(roomId);
+            if (!permalinkCreator) {
+                permalinkCreator = new RoomPermalinkCreator(room);
+                permalinkCreator.start();
+                permalinkCreators.set(roomId, permalinkCreator);
             }
 
             ret.push(

@@ -40,17 +40,14 @@ export function EmojiButton({ addEmoji, menuPosition, room, className }: IEmojiB
     let contextMenu: React.ReactElement | null = null;
     if (menuDisplayed && button.current) {
         const position = menuPosition ?? aboveLeftOf(button.current.getBoundingClientRect());
+        const onFinished = (): void => {
+            closeMenu();
+            overflowMenuCloser?.();
+        };
 
         contextMenu = (
-            <ContextMenu
-                {...position}
-                onFinished={() => {
-                    closeMenu();
-                    overflowMenuCloser?.();
-                }}
-                managed={false}
-            >
-                <EmojiPicker onChoose={addEmoji} room={room} />
+            <ContextMenu {...position} onFinished={onFinished} managed={false}>
+                <EmojiPicker onChoose={addEmoji} room={room} onFinished={onFinished} />
             </ContextMenu>
         );
     }

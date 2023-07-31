@@ -18,18 +18,21 @@ limitations under the License.
 import React from "react";
 import { logger } from "matrix-js-sdk/src/logger";
 
-import { MenuItem } from "../../structures/ContextMenu";
 import { IEmoji } from "../../../emoji";
 import { ICustomEmoji } from "../../../emojipicker/customemoji";
 import { mediaFromMxc } from "../../../customisations/Media";
+import { ButtonEvent } from "../elements/AccessibleButton";
+import { RovingAccessibleButton } from "../../../accessibility/RovingTabIndex";
 
 interface IProps {
     emoji: IEmoji | ICustomEmoji;
     selectedEmojis?: Set<string>;
-    onClick(emoji: IEmoji | ICustomEmoji): void;
+    onClick(ev: ButtonEvent, emoji: IEmoji | ICustomEmoji): void;
     onMouseEnter(emoji: IEmoji | ICustomEmoji): void;
     onMouseLeave(emoji: IEmoji | ICustomEmoji): void;
     disabled?: boolean;
+    id?: string;
+    role?: string;
 }
 
 class Emoji extends React.PureComponent<IProps> {
@@ -38,7 +41,7 @@ class Emoji extends React.PureComponent<IProps> {
 
         let emojiElement: JSX.Element;
         if ("unicode" in emoji) {
-            const isSelected = selectedEmojis && selectedEmojis.has(emoji.unicode);
+            const isSelected = selectedEmojis?.has(emoji.unicode);
             emojiElement = (
                 <div className={`mx_EmojiPicker_item ${isSelected ? "mx_EmojiPicker_item_selected" : ""}`}>
                     {emoji.unicode}
@@ -63,17 +66,18 @@ class Emoji extends React.PureComponent<IProps> {
         emojiElement;
 
         return (
-            <MenuItem
-                element="li"
-                onClick={() => onClick(emoji)}
+            <RovingAccessibleButton
+                id={this.props.id}
+                onClick={(ev) => onClick(ev, emoji)}
                 onMouseEnter={() => onMouseEnter(emoji)}
                 onMouseLeave={() => onMouseLeave(emoji)}
                 className="mx_EmojiPicker_item_wrapper"
-                label={"unicode" in emoji ? emoji.unicode : emoji.shortcodes[0]}
                 disabled={this.props.disabled}
+                role={this.props.role}
+                focusOnMouseOver
             >
                 {emojiElement}
-            </MenuItem>
+            </RovingAccessibleButton>
         );
     }
 }

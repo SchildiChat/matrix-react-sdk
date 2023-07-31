@@ -209,7 +209,7 @@ export default class RightPanel extends React.Component<IProps, IState> {
                 break;
 
             case RightPanelPhases.PinnedMessages:
-                if (SettingsStore.getValue("feature_pinning")) {
+                if (this.props.room && SettingsStore.getValue("feature_pinning")) {
                     card = (
                         <PinnedMessagesCard
                             room={this.props.room}
@@ -221,17 +221,19 @@ export default class RightPanel extends React.Component<IProps, IState> {
                 }
                 break;
             case RightPanelPhases.Timeline:
-                card = (
-                    <TimelineCard
-                        classNames="mx_ThreadPanel mx_TimelineCard"
-                        room={this.props.room}
-                        timelineSet={this.props.room.getUnfilteredTimelineSet()}
-                        resizeNotifier={this.props.resizeNotifier}
-                        onClose={this.onClose}
-                        permalinkCreator={this.props.permalinkCreator}
-                        e2eStatus={this.props.e2eStatus}
-                    />
-                );
+                if (this.props.room) {
+                    card = (
+                        <TimelineCard
+                            classNames="mx_ThreadPanel mx_TimelineCard"
+                            room={this.props.room}
+                            timelineSet={this.props.room.getUnfilteredTimelineSet()}
+                            resizeNotifier={this.props.resizeNotifier}
+                            onClose={this.onClose}
+                            permalinkCreator={this.props.permalinkCreator}
+                            e2eStatus={this.props.e2eStatus}
+                        />
+                    );
+                }
                 break;
             case RightPanelPhases.FilePanel:
                 card = (
@@ -245,19 +247,21 @@ export default class RightPanel extends React.Component<IProps, IState> {
                 break;
 
             case RightPanelPhases.ThreadView:
-                card = (
-                    <ThreadView
-                        room={this.props.room}
-                        resizeNotifier={this.props.resizeNotifier}
-                        onClose={this.onClose}
-                        mxEvent={cardState?.threadHeadEvent}
-                        initialEvent={cardState?.initialEvent}
-                        isInitialEventHighlighted={cardState?.isInitialEventHighlighted}
-                        initialEventScrollIntoView={cardState?.initialEventScrollIntoView}
-                        permalinkCreator={this.props.permalinkCreator}
-                        e2eStatus={this.props.e2eStatus}
-                    />
-                );
+                if (this.props.room) {
+                    card = (
+                        <ThreadView
+                            room={this.props.room}
+                            resizeNotifier={this.props.resizeNotifier}
+                            onClose={this.onClose}
+                            mxEvent={cardState?.threadHeadEvent}
+                            initialEvent={cardState?.initialEvent}
+                            isInitialEventHighlighted={cardState?.isInitialEventHighlighted}
+                            initialEventScrollIntoView={cardState?.initialEventScrollIntoView}
+                            permalinkCreator={this.props.permalinkCreator}
+                            e2eStatus={this.props.e2eStatus}
+                        />
+                    );
+                }
                 break;
 
             case RightPanelPhases.ThreadPanel:
@@ -272,18 +276,22 @@ export default class RightPanel extends React.Component<IProps, IState> {
                 break;
 
             case RightPanelPhases.RoomSummary:
-                card = (
-                    <RoomSummaryCard
-                        room={this.props.room}
-                        onClose={this.onClose}
-                        // whenever RightPanel is passed a room it is passed a permalinkcreator
-                        permalinkCreator={this.props.permalinkCreator!}
-                    />
-                );
+                if (this.props.room) {
+                    card = (
+                        <RoomSummaryCard
+                            room={this.props.room}
+                            onClose={this.onClose}
+                            // whenever RightPanel is passed a room it is passed a permalinkcreator
+                            permalinkCreator={this.props.permalinkCreator!}
+                        />
+                    );
+                }
                 break;
 
             case RightPanelPhases.Widget:
-                card = <WidgetCard room={this.props.room} widgetId={cardState?.widgetId} onClose={this.onClose} />;
+                if (this.props.room) {
+                    card = <WidgetCard room={this.props.room} widgetId={cardState?.widgetId} onClose={this.onClose} />;
+                }
                 break;
         }
 
