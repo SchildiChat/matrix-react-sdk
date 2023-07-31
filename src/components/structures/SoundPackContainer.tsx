@@ -75,6 +75,10 @@ export default class SoundPackContainer extends React.Component<IProps, IState> 
                     <source src={`media/${this.state.soundPack}/busy.ogg`} type="audio/ogg" />
                     <source src={`media/${this.state.soundPack}/busy.mp3`} type="audio/mpeg" />
                 </audio>
+                <audio id="errorAudio">
+                    <source src={`media/${this.state.soundPack}/error.ogg`} type="audio/ogg" />
+                    <source src={`media/${this.state.soundPack}/error.mp3`} type="audio/mpeg" />
+                </audio>
             </div>
         );
     }
