@@ -271,7 +271,6 @@ export const RoomGeneralContextMenu: React.FC<RoomGeneralContextMenuProps> = ({
 
     return (
         <IconizedContextMenu {...props} onFinished={onFinished} className="mx_RoomGeneralContextMenu" compact>
-            
             <IconizedContextMenuOptionList>
                 {markUnreadOption}
                 {!roomTags.includes(DefaultTagID.Archived) && (

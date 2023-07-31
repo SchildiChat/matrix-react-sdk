@@ -81,7 +81,9 @@ class Category extends React.PureComponent<IProps> {
                         disabled={this.props.isEmojiDisabled?.(
                             "unicode" in emoji ? emoji.unicode : emoji.shortcodes[0],
                         )}
-                        id={`mx_EmojiPicker_item_${this.props.id}_${hexEncode("unicode" in emoji ? emoji.unicode : emoji.shortcodes[0])}`}
+                        id={`mx_EmojiPicker_item_${this.props.id}_${hexEncode(
+                            "unicode" in emoji ? emoji.unicode : emoji.shortcodes[0],
+                        )}`}
                         role="gridcell"
                     />
                 ))}
