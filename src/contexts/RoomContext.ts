@@ -58,6 +58,7 @@ const RoomContext = createContext<IRoomState>({
     readMarkerOutOfViewThresholdMs: 30000,
     showHiddenEvents: false,
     showReadReceipts: true,
+    schildichatHideUIReadReceipts: false,
     showRedactions: true,
     showJoinLeaves: true,
     showAvatarChanges: true,
