@@ -22,16 +22,21 @@ import { _t } from "../../../languageHandler";
 import { getBlobSafeMimeType } from "../../../utils/blobs";
 import BaseDialog from "./BaseDialog";
 import DialogButtons from "../elements/DialogButtons";
+import StyledCheckbox from "../elements/StyledCheckbox";
 import { fileSize } from "../../../utils/FileUtils";
 
 interface IProps {
     file: File;
     currentIndex: number;
     totalFiles: number;
-    onFinished: (uploadConfirmed: boolean, uploadAll?: boolean) => void;
+    onFinished: (uploadConfirmed: boolean, uploadAll?: boolean, contentWarning?: boolean) => void;
 }
 
-export default class UploadConfirmDialog extends React.Component<IProps> {
+interface IState {
+    isContentWarning: boolean;
+}
+
+export default class UploadConfirmDialog extends React.Component<IProps, IState> {
     private readonly objectUrl: string;
     private readonly mimeType: string;
 
@@ -48,10 +53,18 @@ export default class UploadConfirmDialog extends React.Component<IProps> {
         this.mimeType = getBlobSafeMimeType(props.file.type);
         const blob = new Blob([props.file], { type: this.mimeType });
         this.objectUrl = URL.createObjectURL(blob);
+
+        this.state = {
+            isContentWarning: false,
+        }
     }
 
     public componentWillUnmount(): void {
         if (this.objectUrl) URL.revokeObjectURL(this.objectUrl);
+    }
+
+    private toggleContentWarning = (): void => {
+        this.setState({ isContentWarning: !this.state.isContentWarning });
     }
 
     private onCancelClick = (): void => {
@@ -59,11 +72,11 @@ export default class UploadConfirmDialog extends React.Component<IProps> {
     };
 
     private onUploadClick = (): void => {
-        this.props.onFinished(true);
+        this.props.onFinished(true, false, this.state.isContentWarning);
     };
 
     private onUploadAllClick = (): void => {
-        this.props.onFinished(true, true);
+        this.props.onFinished(true, true, this.state.isContentWarning);
     };
 
     public render(): React.ReactNode {
@@ -121,6 +134,10 @@ export default class UploadConfirmDialog extends React.Component<IProps> {
                         </div>
                     </div>
                 </div>
+
+                <StyledCheckbox checked={this.state.isContentWarning} onChange={() => this.toggleContentWarning()}>
+                    Spoiler
+                </StyledCheckbox>
 
                 <DialogButtons
                     primaryButton={_t("Upload")}

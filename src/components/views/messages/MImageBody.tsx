@@ -83,13 +83,12 @@ export default class MImageBody extends React.Component<IBodyProps, IState> {
             imgError: false,
             imgLoaded: false,
             hover: false,
-            showImage: SettingsStore.getValue("showImages"),
+            showImage: SettingsStore.getValue("showImages") && !this.props.mxEvent.getContent()["m.content_warning"],
             placeholder: Placeholder.NoImage,
         };
     }
 
     protected showImage(): void {
-        localStorage.setItem("mx_ShowImage_" + this.props.mxEvent.getId(), "true");
         this.setState({ showImage: true });
         this.downloadImage();
     }
@@ -338,13 +337,16 @@ export default class MImageBody extends React.Component<IBodyProps, IState> {
         this.unmounted = false;
 
         const showImage =
-            this.state.showImage || localStorage.getItem("mx_ShowImage_" + this.props.mxEvent.getId()) === "true";
+            this.state.showImage;
 
         if (showImage) {
             // noinspection JSIgnoredPromiseFromCall
             this.downloadImage();
             this.setState({ showImage: true });
-        } // else don't download anything because we don't want to display anything.
+        } else {
+            // don't download anything because we don't want to display anything.
+            this.setState({ contentUrl: this.getContentUrl() }); // doing this ensures wrapImage() gets called later, which adds the needed onClick handler
+        }
 
         // Add a 150ms timer for blurhash to first appear.
         if (this.props.mxEvent.getContent().info?.[BLURHASH_FIELD]) {

@@ -26,6 +26,7 @@ import { BLURHASH_FIELD } from "../../../utils/image-media";
 import { IMediaEventContent } from "../../../customisations/models/IMediaEventContent";
 import { IBodyProps } from "./IBodyProps";
 import MFileBody from "./MFileBody";
+import { HiddenImagePlaceholder } from "./MImageBody";
 import { ImageSize, suggestedSize as suggestedVideoSize } from "../../../settings/enums/ImageSize";
 import RoomContext, { TimelineRenderingType } from "../../../contexts/RoomContext";
 import MediaProcessingError from "./shared/MediaProcessingError";
@@ -38,6 +39,7 @@ interface IState {
     fetchingData: boolean;
     posterLoading: boolean;
     blurhashUrl: string | null;
+    showVideo: boolean;
 }
 
 export default class MVideoBody extends React.PureComponent<IBodyProps, IState> {
@@ -58,6 +60,7 @@ export default class MVideoBody extends React.PureComponent<IBodyProps, IState> 
             error: null,
             posterLoading: false,
             blurhashUrl: null,
+            showVideo: true,
         };
     }
 
@@ -174,6 +177,7 @@ export default class MVideoBody extends React.PureComponent<IBodyProps, IState> 
                         decryptedUrl: `data:${mimetype},`,
                         decryptedThumbnailUrl: thumbnailUrl || `data:${mimetype},`,
                         decryptedBlob: null,
+                        showVideo: !content?.["m.content_warning"],
                     });
                 }
             } catch (err) {
@@ -183,6 +187,11 @@ export default class MVideoBody extends React.PureComponent<IBodyProps, IState> 
                     error: err,
                 });
             }
+        } else { // not encrypted
+            const content = this.props.mxEvent.getContent<IMediaEventContent>();
+            this.setState({
+                showVideo: !content?.["m.content_warning"],
+            })
         }
     }
 
@@ -231,6 +240,19 @@ export default class MVideoBody extends React.PureComponent<IBodyProps, IState> 
         if (this.props.forExport) return null;
         return this.showFileBody && <MFileBody {...this.props} showGenericPlaceholder={false} />;
     };
+
+    protected showVideo(): void {
+        this.setState({ showVideo: true });
+    }
+
+    protected onClick = (ev: React.MouseEvent): void => {
+        if (ev.button === 0 && !ev.metaKey) {
+            if (!this.state.showVideo) {
+                this.showVideo();
+                ev.preventDefault();
+            }
+        }
+    }
 
     public render(): React.ReactNode {
         const content = this.props.mxEvent.getContent();
@@ -287,7 +309,8 @@ export default class MVideoBody extends React.PureComponent<IBodyProps, IState> 
         const fileBody = this.getFileBody();
         return (
             <span className="mx_MVideoBody">
-                <div className="mx_MVideoBody_container" style={{ maxWidth, maxHeight, aspectRatio }}>
+                <div className="mx_MVideoBody_container" onClick={ev => this.onClick(ev)} style={{ maxWidth, maxHeight, aspectRatio }}>
+                {this.state.showVideo ?
                     <video
                         className="mx_MVideoBody"
                         ref={this.videoRef}
@@ -303,6 +326,8 @@ export default class MVideoBody extends React.PureComponent<IBodyProps, IState> 
                         poster={poster}
                         onPlay={this.videoOnPlay}
                     />
+                    :
+                    <HiddenImagePlaceholder />}
                     {spaceFiller}
                 </div>
                 {fileBody}
