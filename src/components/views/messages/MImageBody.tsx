@@ -83,7 +83,7 @@ export default class MImageBody extends React.Component<IBodyProps, IState> {
             imgError: false,
             imgLoaded: false,
             hover: false,
-            showImage: SettingsStore.getValue("showImages") && !this.props.mxEvent.getContent()["m.content_warning"],
+            showImage: SettingsStore.getValue("showImages") && !this.props.mxEvent.getContent()["town.robin.msc3725.content_warning"],
             placeholder: Placeholder.NoImage,
         };
     }

@@ -498,7 +498,7 @@ export default class ContentMessages {
 
         // Attach content warning
         if (contentWarning) {
-            content["m.content_warning"] = {
+            content["town.robin.msc3725.content_warning"] = {
                 type: "m.spoiler" // Since the UI checkbox is labelled "Spoiler"
             }
         }

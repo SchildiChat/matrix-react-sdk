@@ -177,7 +177,7 @@ export default class MVideoBody extends React.PureComponent<IBodyProps, IState> 
                         decryptedUrl: `data:${mimetype},`,
                         decryptedThumbnailUrl: thumbnailUrl || `data:${mimetype},`,
                         decryptedBlob: null,
-                        showVideo: !content?.["m.content_warning"],
+                        showVideo: !content?.["town.robin.msc3725.content_warning"],
                     });
                 }
             } catch (err) {
@@ -190,7 +190,7 @@ export default class MVideoBody extends React.PureComponent<IBodyProps, IState> 
         } else { // not encrypted
             const content = this.props.mxEvent.getContent<IMediaEventContent>();
             this.setState({
-                showVideo: !content?.["m.content_warning"],
+                showVideo: !content?.["town.robin.msc3725.content_warning"],
             })
         }
     }
