@@ -415,6 +415,7 @@ export default class ContentMessages {
         for (let i = 0; i < okFiles.length; ++i) {
             const file = okFiles[i];
             const loopPromiseBefore = promBefore;
+            let shouldContentWarning = false;
 
             if (!uploadAll) {
                 const { finished } = Modal.createDialog(UploadConfirmDialog, {
@@ -422,7 +423,8 @@ export default class ContentMessages {
                     currentIndex: i,
                     totalFiles: okFiles.length,
                 });
-                const [shouldContinue, shouldUploadAll] = await finished;
+                const [shouldContinue, shouldUploadAll, contentWarning] = await finished;
+                shouldContentWarning = contentWarning;
                 if (!shouldContinue) break;
                 if (shouldUploadAll) {
                     uploadAll = true;
@@ -436,6 +438,7 @@ export default class ContentMessages {
                     relation,
                     matrixClient,
                     replyToEvent ?? undefined,
+                    shouldContentWarning,
                     loopPromiseBefore,
                 ),
             );
@@ -481,6 +484,7 @@ export default class ContentMessages {
         relation: IEventRelation | undefined,
         matrixClient: MatrixClient,
         replyToEvent: MatrixEvent | undefined,
+        contentWarning?: boolean,
         promBefore?: Promise<any>,
     ): Promise<void> {
         const fileName = file.name || _t("Attachment");
@@ -491,6 +495,13 @@ export default class ContentMessages {
             },
             msgtype: MsgType.File, // set more specifically later
         };
+
+        // Attach content warning
+        if (contentWarning) {
+            content["town.robin.msc3725.content_warning"] = {
+                type: "m.spoiler" // Since the UI checkbox is labelled "Spoiler"
+            }
+        }
 
         // Attach mentions, which really only applies if there's a replyToEvent.
         attachMentions(matrixClient.getSafeUserId(), content, null, replyToEvent);
