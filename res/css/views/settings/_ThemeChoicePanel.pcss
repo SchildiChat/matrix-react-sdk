@@ -19,82 +19,47 @@ limitations under the License.
     color: $primary-content;
 }
 
-.mx_ThemeChoicePanel {
+.mx_ThemeChoicePanel_themeSelectors {
     color: $primary-content;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 
-    > .mx_ThemeSelectors {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        margin-top: -10px;
+    > .mx_StyledRadioButton {
+        padding: $font-16px;
+        box-sizing: border-box;
+        border-radius: $border-radius-10px;
+        width: 150px;
 
-        > .mx_StyledRadioButton {
-            padding: $font-5px $font-10px;
-            box-sizing: border-box;
-            border-radius: $border-radius-10px;
-            width: 150px;
+        background: $quinary-content;
+        opacity: 0.4;
 
-            min-height: 5rem;
-            display: flex;
-            align-items: center;
+        flex-shrink: 1;
+        flex-grow: 0;
 
-            background: $quinary-content;
-            opacity: 0.4;
+        margin-right: 15px;
+        margin-top: 10px;
 
-            flex-shrink: 1;
-            flex-grow: 0;
+        font-weight: var(--font-semi-bold);
 
-            margin-right: 10px;
-            margin-top: 10px;
+        > span {
+            justify-content: center;
+        }
+    }
 
-            font-weight: var(--font-semi-bold);
+    > .mx_StyledRadioButton_enabled {
+        opacity: 1;
 
-            .mx_StyledRadioButton_content {
-                margin-right: 0;
-            }
-
-            .mx_StyledRadioButton_spacer {
-                display: none;
-            }
-
-            > span {
-                justify-content: center;
-            }
+        /* These colors need to be hardcoded because they don't change with the theme */
+        &.mx_ThemeSelector_light {
+            background-color: #fafafa;
+            color: #303030;
         }
 
-        > .mx_StyledRadioButton_enabled {
-            opacity: 1;
-
-            /* These colors need to be hardcoded because they don't change with the theme */
-            &.mx_ThemeSelector_light {
-                background-color: #fafafa;
-                color: #2e2f32;
-            }
-
-            &.mx_ThemeSelector_dark {
-                /* 5% lightened version of 181b21 */
-                background-color: #303030;
-                color: #ffffff;
-
-                > input > div {
-                    border-color: $input-darker-bg-color;
-                    > div {
-                        border-color: $input-darker-bg-color;
-                    }
-                }
-            }
-
-            &.mx_ThemeSelector_black {
-                background-color: #000000;
-                color: #fafafa;
-
-                > input > div {
-                    border-color: $input-darker-bg-color;
-                    > div {
-                        border-color: $input-darker-bg-color;
-                    }
-                }
-            }
+        &.mx_ThemeSelector_dark {
+            /* 5% lightened version of 181b21 */
+            background-color: #303030;
+            color: #ffffff;
         }
     }
 }

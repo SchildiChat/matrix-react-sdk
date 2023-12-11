@@ -77,14 +77,13 @@ export function formatCryptoKey(key: string): string {
  *
  * @return {number}
  */
-export function hashCode(str: string): number {
+export function hashCode(str?: string): number {
     let hash = 0;
-    let i;
-    let chr;
-    if (str.length === 0) {
+    let chr: number;
+    if (!str?.length) {
         return hash;
     }
-    for (i = 0; i < str.length; i++) {
+    for (let i = 0; i < str.length; i++) {
         chr = str.charCodeAt(i);
         hash = (hash << 5) - hash + chr;
         hash |= 0;

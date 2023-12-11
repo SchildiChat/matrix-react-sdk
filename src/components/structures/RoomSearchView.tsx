@@ -142,6 +142,7 @@ export const RoomSearchView = forwardRef<ScrollPanel, Props>(
 
                             setHighlights(highlights);
                             setResults({ ...results }); // copy to force a refresh
+                            return false;
                         },
                         (error) => {
                             if (aborted.current) {
@@ -196,7 +197,7 @@ export const RoomSearchView = forwardRef<ScrollPanel, Props>(
             }
 
             debuglog("requesting more search results");
-            const searchPromise = searchPagination(results);
+            const searchPromise = searchPagination(client, results);
             return handleSearchResult(searchPromise);
         };
 

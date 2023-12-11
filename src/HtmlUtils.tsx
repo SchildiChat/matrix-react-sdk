@@ -19,16 +19,16 @@ limitations under the License.
 
 import React, { LegacyRef, ReactElement, ReactNode } from "react";
 import sanitizeHtml from "sanitize-html";
-import cheerio from "cheerio";
 import classNames from "classnames";
 import EMOJIBASE_REGEX from "emojibase-regex";
-import { merge, split } from "lodash";
+import { merge } from "lodash";
 import katex from "katex";
 import { decode } from "html-entities";
 import { IContent } from "matrix-js-sdk/src/models/event";
 import { Optional } from "matrix-events-sdk";
 import _Linkify from "linkify-react";
 import escapeHtml from "escape-html";
+import GraphemeSplitter from "grapheme-splitter";
 
 import {
     _linkifyElement,
@@ -467,14 +467,18 @@ const emojiToJsxSpan = (emoji: string, key: number): JSX.Element => (
  * @returns if isHtmlMessage is true, returns an array of strings, otherwise return an array of React Elements for emojis
  * and plain text for everything else
  */
-function formatEmojis(message: string | undefined, isHtmlMessage: boolean): (JSX.Element | string)[] {
+export function formatEmojis(message: string | undefined, isHtmlMessage?: false): JSX.Element[];
+export function formatEmojis(message: string | undefined, isHtmlMessage: true): string[];
+export function formatEmojis(message: string | undefined, isHtmlMessage: boolean): (JSX.Element | string)[] {
     const emojiToSpan = isHtmlMessage ? emojiToHtmlSpan : emojiToJsxSpan;
     const result: (JSX.Element | string)[] = [];
+    if (!message) return result;
+
     let text = "";
     let key = 0;
 
-    // We use lodash's grapheme splitter to avoid breaking apart compound emojis
-    for (const char of split(message, "")) {
+    const splitter = new GraphemeSplitter();
+    for (const char of splitter.iterateGraphemes(message)) {
         if (EMOJIBASE_REGEX.test(char)) {
             if (text) {
                 result.push(text);
@@ -553,33 +557,25 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
             }
 
             safeBody = sanitizeHtml(formattedBody!, sanitizeParams);
-            const phtml = cheerio.load(safeBody, {
-                // @ts-ignore: The `_useHtmlParser2` internal option is the
-                // simplest way to both parse and render using `htmlparser2`.
-                _useHtmlParser2: true,
-                decodeEntities: false,
-            });
-            const isPlainText = phtml.html() === phtml.root().text();
+            const phtml = new DOMParser().parseFromString(safeBody, "text/html");
+            const isPlainText = phtml.body.innerHTML === phtml.body.textContent;
             isHtmlMessage = !isPlainText;
 
             let safeBodyNeedsSerialisation = false; // SchildiChat feature to download appropriate thumbnail for emojis: delaying serialisation is needed so emoji attributes can still be altered midway through this function
             if (isHtmlMessage && SettingsStore.getValue("feature_latex_maths")) {
-                // @ts-ignore - The types for `replaceWith` wrongly expect
-                // Cheerio instance to be returned.
-                phtml('div, span[data-mx-maths!=""]').replaceWith(function (i, e) {
-                    return katex.renderToString(decode(phtml(e).attr("data-mx-maths")), {
+                [...phtml.querySelectorAll<HTMLElement>("div, span[data-mx-maths]")].forEach((e) => {
+                    e.outerHTML = katex.renderToString(decode(e.getAttribute("data-mx-maths")), {
                         throwOnError: false,
-                        // @ts-ignore - `e` can be an Element, not just a Node
-                        displayMode: e.name == "div",
+                        displayMode: e.tagName == "DIV",
                         output: "htmlAndMathml",
                     });
                 });
                 safeBodyNeedsSerialisation = true;
             }
             if (isHtmlMessage) {
-                isAllHtmlEmoji = (phtml.root()[0] as cheerio.TagElement).children.every((elm) => {
-                    if (elm.type === "text") {
-                        let elmText = elm.data;
+                isAllHtmlEmoji = [...phtml.children].every((elm) => {
+                    if (elm.nodeType === Node.TEXT_NODE) {
+                        let elmText = elm.textContent;
 
                         // Remove zero width joiner, zero width spaces and other spaces in body
                         // text. This ensures that emojis with spaces in between or that are made
@@ -589,8 +585,8 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
 
                         const match = BIGEMOJI_REGEX.exec(elmText);
                         return match && match[0] && match[0].length === elmText.length;
-                    } else if (elm.type == "tag") {
-                        return elm.name === "img" && "data-mx-emoticon" in elm.attribs;
+                    } else if (elm.nodeType == Node.ELEMENT_NODE) {
+                        return elm.tagName.toLowerCase() === "img" && "data-mx-emoticon" in elm.attributes;
                     }
                     return true;
                 });
@@ -598,13 +594,13 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
             }
             if (isAllHtmlEmoji && !opts.disableBigEmoji) {
                 // Big emoji? Big image URLs.
-                (phtml.root()[0] as cheerio.TagElement).children.forEach((elm) => {
+                [...phtml.children].forEach((elm) => {
                     if (
-                        elm.name === "img" &&
-                        "data-mx-emoticon" in elm.attribs &&
-                        typeof elm.attribs.src === "string"
+                        elm.tagName.toLowerCase() === "img" &&
+                        "data-mx-emoticon" in elm.attributes &&
+                        typeof elm.attributes["src"] === "string"
                     ) {
-                        elm.attribs.src = elm.attribs.src.replace(
+                        elm.attributes["src"] = elm.attributes["src"].replace(
                             /height=[0-9]*/,
                             `height=${Math.floor(48 * window.devicePixelRatio)}`,
                         ); // 48 is the display height of a big emoji
@@ -613,7 +609,7 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
             }
             if (safeBodyNeedsSerialisation) {
                 // SchildiChat: all done editing emojis, can finally serialise the body
-                safeBody = phtml.html();
+                safeBody = phtml.body.innerHTML;
             }
             if (bodyHasEmoji) {
                 safeBody = formatEmojis(safeBody, true).join("");
@@ -625,14 +621,10 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
         delete sanitizeParams.textFilter;
     }
 
-    const contentBody = safeBody ?? strippedBody;
-    if (opts.returnString) {
-        return contentBody;
-    }
-
     let emojiBody = false;
-    if (!opts.disableBigEmoji) {
-        let contentBodyTrimmed = bodyHasEmoji && contentBody !== undefined ? contentBody.trim() : "";
+    if (!opts.disableBigEmoji && bodyHasEmoji) {
+        const contentBody = safeBody ?? strippedBody;
+        let contentBodyTrimmed = contentBody !== undefined ? contentBody.trim() : "";
 
         // Remove zero width joiner, zero width spaces and other spaces in body
         // text. This ensures that emojis with spaces in between or that are made
@@ -647,6 +639,15 @@ export function bodyToHtml(content: IContent, highlights: Optional<string[]>, op
             (strippedBody === safeBody || // replies have the html fallbacks, account for that here
                 content.formatted_body === undefined ||
                 (!content.formatted_body.includes("http:") && !content.formatted_body.includes("https:")));
+    }
+
+    if (isFormattedBody && bodyHasEmoji && safeBody) {
+        // This has to be done after the emojiBody check above as to not break big emoji on replies
+        safeBody = formatEmojis(safeBody, true).join("");
+    }
+
+    if (opts.returnString) {
+        return safeBody ?? strippedBody;
     }
 
     const className = classNames({
@@ -704,7 +705,7 @@ export function topicToHtml(
         isFormattedTopic = false; // Fall back to plain-text topic
     }
 
-    let emojiBodyElements: ReturnType<typeof formatEmojis> | undefined;
+    let emojiBodyElements: JSX.Element[] | undefined;
     if (!isFormattedTopic && topicHasEmoji) {
         emojiBodyElements = formatEmojis(topic, false);
     }

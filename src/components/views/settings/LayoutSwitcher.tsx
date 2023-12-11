@@ -26,6 +26,7 @@ import { _t } from "../../../languageHandler";
 import { Layout } from "../../../settings/enums/Layout";
 import { SettingLevel } from "../../../settings/SettingLevel";
 import SettingsFlag from "../elements/SettingsFlag";
+import SettingsSubsection from "./shared/SettingsSubsection";
 
 interface IProps {
     userId?: string;
@@ -71,8 +72,7 @@ export default class LayoutSwitcher extends React.Component<IProps, IState> {
 
         return (
             <>
-                <div className="mx_SettingsTab_heading">{_t("Message layout")}</div>
-                <div className="mx_SettingsTab_section mx_LayoutSwitcher">
+                <SettingsSubsection heading={_t("Message layout")}>
                     <div className="mx_LayoutSwitcher_RadioButtons">
                         <label className={ircClasses}>
                             <EventTilePreview
@@ -151,7 +151,7 @@ export default class LayoutSwitcher extends React.Component<IProps, IState> {
                             />
                         ) : null}
                     </div>
-                </div>
+                </SettingsSubsection>
             </>
         );
     }

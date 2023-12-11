@@ -15,22 +15,37 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-.mx_LayoutSwitcher {
-    margin-top: -16px;
+.mx_LayoutSwitcher_RadioButtons {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    width: 100%;
 
-    .mx_LayoutSwitcher_RadioButtons {
+    color: $primary-content;
+
+    > .mx_LayoutSwitcher_RadioButton {
+        flex-grow: 0;
+        flex-shrink: 1;
         display: flex;
-        flex-direction: row;
-        gap: 12px;
+        flex-direction: column;
 
-        color: $primary-content;
-        margin-top: 16px;
+        flex-basis: 33%;
+        min-width: 0;
 
-        > .mx_LayoutSwitcher_RadioButton {
-            flex-grow: 0;
-            flex-shrink: 1;
+        border: 1px solid $quinary-content;
+        border-radius: 10px;
+
+        .mx_EventTile_msgOption,
+        .mx_MessageActionBar {
+            display: none;
+        }
+
+        .mx_LayoutSwitcher_RadioButton_preview {
+            flex-grow: 1;
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            pointer-events: none;
 
             width: 300px;
             min-width: 0;
@@ -70,11 +85,12 @@ limitations under the License.
         }
 
         .mx_StyledRadioButton {
-            border-top: 1px solid $quinary-content;
+            flex-grow: 0;
+            padding: 10px;
         }
 
-        .mx_StyledRadioButton_checked {
-            background-color: rgba($accent, 0.08);
+        .mx_EventTile_content {
+            margin-right: 0;
         }
 
         .mx_EventTile {
@@ -91,6 +107,9 @@ limitations under the License.
             .mx_EventTile_line {
                 max-width: 90%;
             }
+        }
+        .mx_EventTile_line {
+            max-width: 90%;
         }
     }
 

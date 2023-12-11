@@ -31,6 +31,9 @@ import { RoomListStyle } from "../../../../../settings/enums/RoomListStyle";
 import FontScalingPanel from "../../FontScalingPanel";
 import ThemeChoicePanel from "../../ThemeChoicePanel";
 import ImageSizePanel from "../../ImageSizePanel";
+import SettingsTab from "../SettingsTab";
+import { SettingsSection } from "../../shared/SettingsSection";
+import SettingsSubsection, { SettingsSubsectionText } from "../../shared/SettingsSubsection";
 
 interface IProps {}
 

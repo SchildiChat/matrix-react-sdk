@@ -66,13 +66,18 @@ limitations under the License.
         flex-direction: column;
         justify-content: center;
 
-        .mx_RoomTile_title,
         .mx_RoomTile_subtitle {
-            width: 100%;
+            align-items: center;
+            color: $secondary-content;
+            display: flex;
+            gap: $spacing-4;
+            line-height: $font-18px;
+        }
 
-            /* Ellipsize any text overflow */
-            text-overflow: ellipsis;
+        .mx_RoomTile_title,
+        .mx_RoomTile_subtitle_text {
             overflow: hidden;
+            text-overflow: ellipsis;
             white-space: nowrap;
 
             /* for rtl */
@@ -88,6 +93,7 @@ limitations under the License.
             }
         }
 
+<<<<<<< HEAD
         .mx_RoomTile_subtitle {
             line-height: $font-18px;
             color: $secondary-content;
@@ -97,6 +103,8 @@ limitations under the License.
     .mx_RoomTile_menuButton {
         right: 2.8rem;
 
+=======
+>>>>>>> v3.73.0
         .mx_RoomTile_titleWithSubtitle {
             margin-top: -3px; /* shift the title up a bit more */
         }

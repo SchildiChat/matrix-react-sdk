@@ -70,12 +70,12 @@ export interface EventTileTypeProps {
     scBubble?: boolean;
     scBubbleActionBar?: JSX.Element;
     scBubbleTimestamp?: JSX.Element;
-    onHeightChanged: () => void;
+    onHeightChanged?: () => void;
     forExport?: boolean;
     getRelationsForEvent?: GetRelationsForEvent;
     editState?: EditorStateTransfer;
     replacingEventId?: string;
-    permalinkCreator: RoomPermalinkCreator;
+    permalinkCreator?: RoomPermalinkCreator;
     callEventGrouper?: LegacyCallEventGrouper;
     isSeeingThroughMessageHiddenForModeration?: boolean;
     timestamp?: JSX.Element;

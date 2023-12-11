@@ -28,6 +28,7 @@ import { SettingLevel } from "../../../settings/SettingLevel";
 import { _t } from "../../../languageHandler";
 import SdkConfig from "../../../SdkConfig";
 import { clamp } from "../../../utils/numbers";
+import SettingsSubsection from "./shared/SettingsSubsection";
 
 interface IProps {}
 
@@ -119,8 +120,7 @@ export default class FontScalingPanel extends React.Component<IProps, IState> {
 
         return (
             <>
-                <div className="mx_SettingsTab_heading">{_t("Font size and typeface")}</div>
-                <div className="mx_SettingsTab_section mx_FontScalingPanel_fontScaling">
+                <SettingsSubsection heading={_t("Font size and typeface")} stretchContent data-testid="mx_FontScalingPanel">
                     <div className="mx_FontScalingPanel_fontSlider">
                         <div className="mx_FontScalingPanel_fontSlider_smallText">Aa</div>
                         <Slider
@@ -193,7 +193,7 @@ export default class FontScalingPanel extends React.Component<IProps, IState> {
                             />
                         </div>
                     </div>
-                </div>
+                </SettingsSubsection>
             </>
         );
     }

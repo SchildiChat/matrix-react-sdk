@@ -35,6 +35,7 @@ import { UserNameColorMode } from "../../../settings/enums/UserNameColorMode";
 import { ViewRoomPayload } from "../../../dispatcher/payloads/ViewRoomPayload";
 import { renderReplyTile } from "../../../events/EventTileFactory";
 import { GetRelationsForEvent } from "../rooms/EventTile";
+import { MatrixClientPeg } from "../../../MatrixClientPeg";
 
 interface IProps {
     mxEvent: MatrixEvent;
@@ -112,6 +113,7 @@ export default class ReplyTile extends React.PureComponent<IProps> {
         const evType = mxEvent.getType();
 
         const { hasRenderer, isInfoMessage, isSeeingThroughMessageHiddenForModeration } = getEventDisplayInfo(
+            MatrixClientPeg.get(),
             mxEvent,
             false /* Replies are never hidden, so this should be fine */,
         );

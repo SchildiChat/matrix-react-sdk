@@ -142,7 +142,7 @@ class NotifierClass {
         let msg = this.notificationMessageForEvent(ev);
         if (!msg) return;
 
-        let title;
+        let title: string | undefined;
         if (!ev.sender || room.name === ev.sender.name) {
             title = room.name;
             // notificationMessageForEvent includes sender,
@@ -162,6 +162,8 @@ class NotifierClass {
                 msg = this.getEventTextRepresentation(ev);
             }
         }
+
+        if (!title) return;
 
         if (!this.isBodyEnabled()) {
             msg = "";
@@ -207,8 +209,14 @@ class NotifierClass {
 
         // Ideally in here we could use MSC1310 to detect the type of file, and reject it.
 
+        const url = mediaFromMxc(content.url).srcHttp;
+        if (!url) {
+            logger.warn("Something went wrong when generating src http url for mxc");
+            return null;
+        }
+
         return {
-            url: mediaFromMxc(content.url).srcHttp,
+            url,
             name: content.name,
             type: content.type,
             size: content.size,

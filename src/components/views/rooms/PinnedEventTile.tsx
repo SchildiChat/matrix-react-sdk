@@ -72,6 +72,10 @@ export default class PinnedEventTile extends React.Component<IProps> {
 
     public render(): React.ReactNode {
         const sender = this.props.event.getSender();
+        
+        if (!sender) {
+            throw new Error("Pinned event unexpectedly has no sender");
+        }
 
         // SC: required for userNameColorMode
         const roomId = this.props.event.getRoomId();
