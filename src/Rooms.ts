@@ -147,7 +147,7 @@ export function isRoomMarkedAsUnread(room: Room): boolean {
 }
 
 export async function setRoomMarkedAsUnread(room: Room, value = true): Promise<void> {
-    await MatrixClientPeg.get().setRoomAccountData(room.roomId, MARKED_UNREAD_TYPE.name, {
+    await room.client.setRoomAccountData(room.roomId, MARKED_UNREAD_TYPE.name, {
         unread: value,
     });
 }
