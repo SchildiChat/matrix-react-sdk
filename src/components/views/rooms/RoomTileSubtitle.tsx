@@ -21,7 +21,7 @@ import { MessagePreview } from "../../../stores/room-list/MessagePreviewStore";
 import { Call } from "../../../models/Call";
 import { RoomTileCallSummary } from "./RoomTileCallSummary";
 import { VoiceBroadcastRoomSubtitle } from "../../../voice-broadcast";
-import { Icon as ThreadIcon } from "../../../../res/img/compound/thread-16px.svg";
+import { Icon as ThreadIcon } from "../../../../res/img/compound/thread-12px.svg";
 
 interface Props {
     call: Call | null;
@@ -57,7 +57,7 @@ export const RoomTileSubtitle: React.FC<Props> = ({
             "mx_RoomTile_subtitle--thread-reply": messagePreview.isThreadReply,
         });
 
-        const icon = messagePreview.isThreadReply ? <ThreadIcon className="mx_Icon mx_Icon_16" /> : null;
+        const icon = messagePreview.isThreadReply ? <ThreadIcon className="mx_Icon mx_Icon_12" /> : null;
 
         return (
             <div className={className} id={messagePreviewId(roomId)} title={messagePreview.text}>
