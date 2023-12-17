@@ -43,7 +43,7 @@ export abstract class OrderingAlgorithm {
     }
 
     public get isMutedToBottom(): boolean {
-        return this.sortingAlgorithm === SortAlgorithm.Recent;
+        return this.sortingAlgorithm === SortAlgorithm.Recent && false;
     }
 
     /**
