@@ -18,9 +18,9 @@ limitations under the License.
     --activeBackground-color: $panel-actions;
     --activeBorder-color: $primary-content;
     --activeBorder-transparent-gap: 1px;
-    --gutterSize: 16px;
-    --height-nested: 24px;
-    --height-topLevel: 32px;
+    --gutterSize: 1.6rem;
+    --height-nested: 2.4rem;
+    --height-topLevel: 3.2rem;
 
     background-color: $spacePanel-bg-color;
     flex: 0 0 auto;
@@ -236,9 +236,9 @@ limitations under the License.
         .mx_BaseAvatar_image,
         .mx_BaseAvatar_initial {
             border-radius: 8px;
-            width: $topLevelHeight !important;
-            height: $topLevelHeight !important;
-            line-height: $topLevelHeight !important;
+            width: var(--height-topLevel) !important;
+            height: var(--height-topLevel) !important;
+            line-height: var(--height-topLevel) !important;
         }
 
         .mx_SpaceButton_menuButton {
@@ -293,9 +293,9 @@ limitations under the License.
                 .mx_BaseAvatar_image,
                 .mx_BaseAvatar_initial {
                     border-radius: 8px;
-                    width: $nestedHeight !important;
-                    height: $nestedHeight !important;
-                    line-height: $nestedHeight !important;
+                    width: var(--height-nested) !important;
+                    height: var(--height-nested) !important;
+                    line-height: var(--height-nested) !important;
                 }
             }
 
