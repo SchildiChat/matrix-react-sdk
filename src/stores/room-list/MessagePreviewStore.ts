@@ -68,10 +68,12 @@ const PREVIEWS: Record<
         isState: false,
         previewer: new StickerEventPreview(),
     },
+    /*
     "m.reaction": {
         isState: false,
         previewer: new ReactionEventPreview(),
     },
+    */
     [M_POLL_START.name]: {
         isState: false,
         previewer: new PollStartEventPreview(),
@@ -87,7 +89,7 @@ const PREVIEWS: Record<
 };
 
 // The maximum number of events we're willing to look back on to get a preview.
-const MAX_EVENTS_BACKWARDS = 50;
+const MAX_EVENTS_BACKWARDS = 500;
 
 // type merging ftw
 type TAG_ANY = "im.vector.any"; // eslint-disable-line @typescript-eslint/naming-convention
