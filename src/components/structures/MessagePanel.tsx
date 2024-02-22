@@ -25,6 +25,7 @@ import { RoomStateEvent } from "matrix-js-sdk/src/models/room-state";
 import { M_BEACON_INFO } from "matrix-js-sdk/src/@types/beacon";
 import { isSupportedReceiptType } from "matrix-js-sdk/src/utils";
 import { Optional } from "matrix-events-sdk";
+import { MatrixClient } from "matrix-js-sdk/src/matrix";
 
 import shouldHideEvent from "../../shouldHideEvent";
 import { wantsDateSeparator } from "../../DateUtils";
@@ -74,6 +75,7 @@ const groupedStateEvents = [
 export function shouldFormContinuation(
     prevEvent: MatrixEvent | null,
     mxEvent: MatrixEvent,
+    matrixClient: MatrixClient,
     showHiddenEvents: boolean,
     timelineRenderingType?: TimelineRenderingType,
 ): boolean {
@@ -111,7 +113,7 @@ export function shouldFormContinuation(
     }
 
     // if we don't have tile for previous event then it was shown by showHiddenEvents and has no SenderProfile
-    if (!haveRendererForEvent(prevEvent, showHiddenEvents)) return false;
+    if (!haveRendererForEvent(prevEvent, matrixClient, showHiddenEvents)) return false;
 
     return true;
 }
@@ -483,7 +485,7 @@ export default class MessagePanel extends React.Component<IProps, IState> {
             }
         }
 
-        if (MatrixClientPeg.get().isUserIgnored(mxEv.getSender()!)) {
+        if (MatrixClientPeg.safeGet().isUserIgnored(mxEv.getSender()!)) {
             return false; // ignored = no show (only happens if the ignore happens after an event was received)
         }
 
@@ -491,7 +493,7 @@ export default class MessagePanel extends React.Component<IProps, IState> {
             return true;
         }
 
-        if (!haveRendererForEvent(mxEv, this.showHiddenEvents)) {
+        if (!haveRendererForEvent(mxEv, MatrixClientPeg.safeGet(), this.showHiddenEvents)) {
             return false; // no tile = no show
         }
 
@@ -746,6 +748,7 @@ export default class MessagePanel extends React.Component<IProps, IState> {
             ret.push(dateSeparator);
         }
 
+        const cli = MatrixClientPeg.safeGet();
         let lastInSection = true;
         if (nextEventWithTile) {
             const nextEv = nextEventWithTile;
@@ -753,14 +756,14 @@ export default class MessagePanel extends React.Component<IProps, IState> {
             lastInSection =
                 willWantDateSeparator ||
                 mxEv.getSender() !== nextEv.getSender() ||
-                getEventDisplayInfo(MatrixClientPeg.get(), nextEv, this.showHiddenEvents).isInfoMessage ||
-                !shouldFormContinuation(mxEv, nextEv, this.showHiddenEvents, this.context.timelineRenderingType);
+                getEventDisplayInfo(cli, nextEv, this.showHiddenEvents).isInfoMessage ||
+                !shouldFormContinuation(mxEv, nextEv, cli, this.showHiddenEvents, this.context.timelineRenderingType);
         }
 
         // is this a continuation of the previous message?
         const continuation =
             !wantsDateSeparator &&
-            shouldFormContinuation(prevEvent, mxEv, this.showHiddenEvents, this.context.timelineRenderingType);
+            shouldFormContinuation(prevEvent, mxEv, cli, this.showHiddenEvents, this.context.timelineRenderingType);
 
         const eventId = mxEv.getId()!;
         const highlight = eventId === this.props.highlightedEventId;
@@ -789,7 +792,7 @@ export default class MessagePanel extends React.Component<IProps, IState> {
 
         // We only want to consider "last successful" if the event is sent by us, otherwise of course
         // it's successful: we received it.
-        isLastSuccessful = isLastSuccessful && mxEv.getSender() === MatrixClientPeg.get().getUserId();
+        isLastSuccessful = isLastSuccessful && mxEv.getSender() === MatrixClientPeg.safeGet().getUserId();
 
         const callEventGrouper = this.props.callEventGroupers.get(mxEv.getContent().call_id);
         // use txnId as key if available so that we don't remount during sending
@@ -846,7 +849,7 @@ export default class MessagePanel extends React.Component<IProps, IState> {
     // Get a list of read receipts that should be shown next to this event
     // Receipts are objects which have a 'userId', 'roomMember' and 'ts'.
     private getReadReceiptsForEvent(event: MatrixEvent): IReadReceiptProps[] | null {
-        const myUserId = MatrixClientPeg.get().credentials.userId;
+        const myUserId = MatrixClientPeg.safeGet().credentials.userId;
 
         // get list of read receipts, sorted most recent first
         const { room } = this.props;
@@ -869,7 +872,7 @@ export default class MessagePanel extends React.Component<IProps, IState> {
             if (!r.userId || !isSupportedReceiptType(r.type) || r.userId === myUserId) {
                 return; // ignore non-read receipts and receipts from self.
             }
-            if (MatrixClientPeg.get().isUserIgnored(r.userId)) {
+            if (MatrixClientPeg.safeGet().isUserIgnored(r.userId)) {
                 return; // ignore ignored users
             }
             const member = room.getMember(r.userId);
@@ -1314,7 +1317,7 @@ class MainGrouper extends BaseGrouper {
     public add({ event: ev, shouldShow }: EventAndShouldShow): void {
         if (ev.getType() === EventType.RoomMember) {
             // We can ignore any events that don't actually have a message to display
-            if (!hasText(ev, MatrixClientPeg.get(), this.panel.showHiddenEvents)) return;
+            if (!hasText(ev, MatrixClientPeg.safeGet(), this.panel.showHiddenEvents)) return;
         }
         this.readMarker = this.readMarker || this.panel.readMarkerForEvent(ev.getId()!, ev === this.lastShownEvent);
         if (!this.panel.showHiddenEvents && !shouldShow) {

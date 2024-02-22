@@ -302,7 +302,7 @@ class TimelinePanel extends React.Component<IProps, IState> {
             readMarkerEventId: this.initialReadMarkerId,
             backPaginating: false,
             forwardPaginating: false,
-            clientSyncState: MatrixClientPeg.get().getSyncState(),
+            clientSyncState: MatrixClientPeg.safeGet().getSyncState(),
             isTwelveHour: SettingsStore.getValue("showTwelveHourTimestamps"),
             alwaysShowTimestamps: SettingsStore.getValue("alwaysShowTimestamps"),
             readMarkerInViewThresholdMs: SettingsStore.getValue("readMarkerInViewThresholdMs"),
@@ -310,7 +310,7 @@ class TimelinePanel extends React.Component<IProps, IState> {
         };
 
         this.dispatcherRef = dis.register(this.onAction);
-        const cli = MatrixClientPeg.get();
+        const cli = MatrixClientPeg.safeGet();
         cli.on(RoomEvent.Timeline, this.onRoomTimeline);
         cli.on(RoomEvent.TimelineReset, this.onRoomTimelineReset);
         cli.on(RoomEvent.Redaction, this.onRoomRedaction);
@@ -799,7 +799,7 @@ class TimelinePanel extends React.Component<IProps, IState> {
                     // read-marker when a remote echo of an event we have just sent takes
                     // more than the timeout on userActiveRecently.
                     //
-                    const myUserId = MatrixClientPeg.get().credentials.userId;
+                    const myUserId = MatrixClientPeg.safeGet().credentials.userId;
                     callRMUpdated = false;
                     if (ev.getSender() !== myUserId && !UserActivity.sharedInstance().userActiveRecently()) {
                         updatedState.readMarkerVisible = true;
@@ -892,7 +892,7 @@ class TimelinePanel extends React.Component<IProps, IState> {
         if (!this.hasTimelineSetFor(member.roomId)) return;
 
         // ignore events for other users
-        if (member.userId != MatrixClientPeg.get().credentials?.userId) return;
+        if (member.userId != MatrixClientPeg.safeGet().credentials?.userId) return;
 
         // We could skip an update if the power level change didn't cross the
         // threshold for `VISIBILITY_CHANGE_TYPE`.
@@ -1301,7 +1301,7 @@ class TimelinePanel extends React.Component<IProps, IState> {
         }
 
         // now think about advancing it
-        const myUserId = MatrixClientPeg.get().credentials.userId;
+        const myUserId = MatrixClientPeg.safeGet().credentials.userId;
         for (i++; i < events.length; i++) {
             const ev = events[i];
             if (ev.getSender() !== myUserId) {
@@ -1582,7 +1582,7 @@ class TimelinePanel extends React.Component<IProps, IState> {
      * @param {boolean?} scrollIntoView whether to scroll the event into view.
      */
     private loadTimeline(eventId?: string, pixelOffset?: number, offsetBase?: number, scrollIntoView = true): void {
-        const cli = MatrixClientPeg.get();
+        const cli = MatrixClientPeg.safeGet();
         this.timelineWindow = new TimelineWindow(cli, this.props.timelineSet, { windowLimit: this.props.timelineCap });
         this.overlayTimelineWindow = this.props.overlayTimelineSet
             ? new TimelineWindow(cli, this.props.overlayTimelineSet, { windowLimit: this.props.timelineCap })
@@ -1651,12 +1651,12 @@ class TimelinePanel extends React.Component<IProps, IState> {
             // dialog, let's jump to the end of the timeline. If we weren't,
             // something has gone badly wrong and rather than causing a loop of
             // undismissable dialogs, let's just give up.
-            if (eventId) {
+            if (eventId && this.props.timelineSet.room) {
                 onFinished = () => {
                     // go via the dispatcher so that the URL is updated
                     dis.dispatch<ViewRoomPayload>({
                         action: Action.ViewRoom,
-                        room_id: this.props.timelineSet.room.roomId,
+                        room_id: this.props.timelineSet.room!.roomId,
                         metricsTrigger: undefined, // room doesn't change
                     });
                 };
@@ -1776,7 +1776,7 @@ class TimelinePanel extends React.Component<IProps, IState> {
         arrayFastClone(events)
             .reverse()
             .forEach((event) => {
-                const client = MatrixClientPeg.get();
+                const client = MatrixClientPeg.safeGet();
                 client.decryptEventIfNeeded(event);
             });
 
@@ -1824,7 +1824,7 @@ class TimelinePanel extends React.Component<IProps, IState> {
      * such events were found, then it returns 0.
      */
     private checkForPreJoinUISI(events: MatrixEvent[]): number {
-        const cli = MatrixClientPeg.get();
+        const cli = MatrixClientPeg.safeGet();
         const room = this.props.timelineSet.room;
 
         const isThreadTimeline = [TimelineRenderingType.Thread, TimelineRenderingType.ThreadsList].includes(
@@ -1949,7 +1949,7 @@ class TimelinePanel extends React.Component<IProps, IState> {
         const messagePanelNode = ReactDOM.findDOMNode(messagePanel) as Element;
         if (!messagePanelNode) return null; // sometimes this happens for fresh rooms/post-sync
         const wrapperRect = messagePanelNode.getBoundingClientRect();
-        const myUserId = MatrixClientPeg.get().credentials.userId;
+        const myUserId = MatrixClientPeg.safeGet().credentials.userId;
 
         const isNodeInView = (node?: HTMLElement): boolean => {
             if (node) {
@@ -1993,7 +1993,8 @@ class TimelinePanel extends React.Component<IProps, IState> {
                 !!ev.status || // local echo
                 (ignoreOwn && ev.getSender() === myUserId); // own message
             const isWithoutTile =
-                !haveRendererForEvent(ev, this.context?.showHiddenEvents) || shouldHideEvent(ev, this.context);
+                !haveRendererForEvent(ev, MatrixClientPeg.safeGet(), this.context?.showHiddenEvents) ||
+                shouldHideEvent(ev, this.context);
 
             if (isWithoutTile || !node) {
                 // don't start counting if the event should be ignored,
@@ -2125,7 +2126,7 @@ class TimelinePanel extends React.Component<IProps, IState> {
         // forwards, otherwise if somebody hits the bottom of the loaded
         // events when viewing historical messages, we get stuck in a loop
         // of paginating our way through the entire history of the room.
-        const stickyBottom = !this.timelineWindow.canPaginate(EventTimeline.FORWARDS);
+        const stickyBottom = !this.timelineWindow?.canPaginate(EventTimeline.FORWARDS);
 
         // If the state is PREPARED or CATCHUP, we're still waiting for the js-sdk to sync with
         // the HS and fetch the latest events, so we are effectively forward paginating.
@@ -2149,7 +2150,7 @@ class TimelinePanel extends React.Component<IProps, IState> {
                 canBackPaginate={this.state.canBackPaginate && this.state.firstVisibleEventIndex === 0}
                 showUrlPreview={this.props.showUrlPreview}
                 showReadReceipts={this.props.showReadReceipts}
-                ourUserId={MatrixClientPeg.get().getSafeUserId()}
+                ourUserId={MatrixClientPeg.safeGet().getSafeUserId()}
                 stickyBottom={stickyBottom}
                 onScroll={this.onMessageListScroll}
                 onFillRequest={this.onMessageListFillRequest}

@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+@import url("@vector-im/compound-design-tokens/assets/web/css/compound-design-tokens.css");
 @import "./_font-sizes.pcss";
 @import "./_font-weights.pcss";
 @import "./_border-radii.pcss";
@@ -725,6 +726,15 @@ legend {
 // uniform
 .mx_Username_color_accent {
     color: $accent;
+}
+
+.mx_AppWarning,
+.mx_AppPermission {
+    text-align: center;
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
 }
 
 @define-mixin ProgressBarColour $colour {

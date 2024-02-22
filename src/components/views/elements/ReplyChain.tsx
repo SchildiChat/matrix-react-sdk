@@ -98,7 +98,7 @@ export default class ReplyChain extends React.Component<IProps, IState> {
     }
 
     private get matrixClient(): MatrixClient {
-        return MatrixClientPeg.get();
+        return MatrixClientPeg.safeGet();
     }
 
     public componentDidMount(): void {

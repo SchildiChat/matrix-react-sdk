@@ -81,7 +81,6 @@ interface IState {
     currentRoomId?: string;
     suggestedRooms: ISuggestedRoom[];
     unifiedRoomList: boolean;
-    feature_favourite_messages: boolean;
 }
 
 export const TAG_ORDER: TagID[] = [
@@ -232,7 +231,7 @@ const UntaggedAuxButton: React.FC<IAuxButtonProps> = ({ tabIndex }) => {
     if ((true || menuDisplayed) && activeSpace) {
         const canAddRooms = activeSpace.currentState.maySendStateEvent(
             EventType.SpaceChild,
-            MatrixClientPeg.get().getUserId()!,
+            MatrixClientPeg.safeGet().getSafeUserId(),
         );
 
         contextMenuContent = (
@@ -512,7 +511,6 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
     private dispatcherRef?: string;
     private readonly unifiedRoomListWatcherRef: string;
     private treeRef = createRef<HTMLDivElement>();
-    private favouriteMessageWatcher?: string;
 
     public static contextType = MatrixClientContext;
     public context!: React.ContextType<typeof MatrixClientContext>;
@@ -524,7 +522,6 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
             sublists: {},
             suggestedRooms: SpaceStore.instance.suggestedRooms,
             unifiedRoomList: SettingsStore.getValue("unifiedRoomList"),
-            feature_favourite_messages: SettingsStore.getValue("feature_favourite_messages"),
         };
 
         this.unifiedRoomListWatcherRef = SettingsStore.watchSetting(
@@ -539,20 +536,12 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
         SdkContextClass.instance.roomViewStore.on(UPDATE_EVENT, this.onRoomViewStoreUpdate);
         SpaceStore.instance.on(UPDATE_SUGGESTED_ROOMS, this.updateSuggestedRooms);
         RoomListStore.instance.on(LISTS_UPDATE_EVENT, this.updateLists);
-        this.favouriteMessageWatcher = SettingsStore.watchSetting(
-            "feature_favourite_messages",
-            null,
-            (...[, , , value]) => {
-                this.setState({ feature_favourite_messages: value });
-            },
-        );
         this.updateLists(); // trigger the first update
     }
 
     public componentWillUnmount(): void {
         SpaceStore.instance.off(UPDATE_SUGGESTED_ROOMS, this.updateSuggestedRooms);
         RoomListStore.instance.off(LISTS_UPDATE_EVENT, this.updateLists);
-        if (this.favouriteMessageWatcher) SettingsStore.unwatchSetting(this.favouriteMessageWatcher);
         if (this.dispatcherRef) defaultDispatcher.unregister(this.dispatcherRef);
         SettingsStore.unwatchSetting(this.unifiedRoomListWatcherRef);
         SdkContextClass.instance.roomViewStore.off(UPDATE_EVENT, this.onRoomViewStoreUpdate);
@@ -690,29 +679,6 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
             );
         });
     }
-    private renderFavoriteMessagesList(): ReactComponentElement<typeof ExtraTile>[] {
-        const avatar = (
-            <RoomAvatar
-                oobData={{
-                    name: "Favourites",
-                }}
-                width={32}
-                height={32}
-                resizeMethod="crop"
-            />
-        );
-
-        return [
-            <ExtraTile
-                isMinimized={this.props.isMinimized}
-                isSelected={false}
-                displayName="Favourite Messages"
-                avatar={avatar}
-                onClick={() => ""}
-                key="favMessagesTile_key"
-            />,
-        ];
-    }
 
     private renderSublists(): React.ReactElement[] {
         // show a skeleton UI if the user is in no rooms and they are not filtering and have no suggested rooms
@@ -724,8 +690,6 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
             let extraTiles: ReactComponentElement<typeof ExtraTile>[] | undefined;
             if (orderedTagId === DefaultTagID.Suggested) {
                 extraTiles = this.renderSuggestedRooms();
-            } else if (this.state.feature_favourite_messages && orderedTagId === DefaultTagID.SavedItems) {
-                extraTiles = this.renderFavoriteMessagesList();
             }
 
             const aesthetics = TAG_AESTHETICS[orderedTagId];
