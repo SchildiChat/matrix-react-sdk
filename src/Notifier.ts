@@ -92,7 +92,7 @@ const msgTypeHandlers: Record<string, (event: MatrixEvent) => string | null> = {
             return null;
         }
 
-        return TextForEvent.textForEvent(event);
+        return TextForEvent.textForEvent(event, MatrixClientPeg.get());
     },
 };
 
@@ -112,7 +112,7 @@ class NotifierClass {
         if (msgType && msgTypeHandlers.hasOwnProperty(msgType)) {
             return msgTypeHandlers[msgType](ev);
         }
-        return TextForEvent.textForEvent(ev);
+        return TextForEvent.textForEvent(ev, MatrixClientPeg.get());
     }
 
     private getEventTextRepresentation(ev: MatrixEvent): string {

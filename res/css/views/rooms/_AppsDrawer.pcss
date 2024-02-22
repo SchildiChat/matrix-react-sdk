@@ -266,6 +266,19 @@ limitations under the License.
         width: 100%;
         height: 100%;
     }
+
+    /* const loadingElement */
+    .mx_AppTileBody_fadeInSpinner {
+        /* place spinner and the message at the center of mx_AppTileBody */
+        height: 100%;
+        width: 100%;
+
+        font-weight: bold; /* message next to the spinner */
+        animation-fill-mode: backwards;
+        animation-duration: 200ms;
+        animation-delay: 500ms;
+        animation-name: mx_AppTileBody_fadeInSpinnerAnimation;
+    }
 }
 
 .mx_AppTileBody {
@@ -320,9 +333,13 @@ limitations under the License.
     /* match bg of border so that the cut corners have the right fill */
     background-color: $widget-body-bg-color !important;
     border-radius: $border-radius-8px;
+
+    iframe {
+        display: none;
+    }
 }
 
-@keyframes mx_AppTile_loading_fadeInSpinnerAnimation {
+@keyframes mx_AppTileBody_fadeInSpinnerAnimation {
     from {
         opacity: 0;
     }

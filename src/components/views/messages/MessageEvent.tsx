@@ -231,6 +231,7 @@ export default class MessageEvent extends React.Component<IProps> implements IMe
                 getRelationsForEvent={this.props.getRelationsForEvent}
                 isSeeingThroughMessageHiddenForModeration={this.props.isSeeingThroughMessageHiddenForModeration}
                 OrigBodyType={OrigBodyType}
+                inhibitInteraction={this.props.inhibitInteraction}
             />
         ) : null;
     }

@@ -193,6 +193,10 @@ export interface EventTileProps {
     // Specifies whether youtube embed player is enabled
     youtubeEmbedPlayer?: boolean;
 
+    scBubble?: boolean;
+    scBubbleActionBar?: JSX.Element;
+    scBubbleTimestamp?: JSX.Element;
+
     // whether or not to show read receipts
     showReadReceipts?: boolean;
 
