@@ -172,7 +172,7 @@ const RoomListHeader: React.FC<IProps> = ({ onVisibilityChange }) => {
         contextMenu = (
             <ContextMenuComponent
                 {...contextMenuBelow(mainMenuHandle.current.getBoundingClientRect())}
-                space={activeSpace}
+                space={activeSpace!}
                 onFinished={closeMainMenu}
                 hideHeader={true}
             />

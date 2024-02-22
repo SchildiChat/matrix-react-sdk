@@ -105,10 +105,11 @@ const PinnedMessagesCard: React.FC<IProps> = ({ room, onClose, userNameColorMode
     const readPinnedEvents = useReadPinnedEvents(room);
 
     useEffect(() => {
+        if (!cli || cli.isGuest()) return; // nothing to do
         const newlyRead = pinnedEventIds.filter((id) => !readPinnedEvents.has(id));
         if (newlyRead.length > 0) {
             // clear out any read pinned events which no longer are pinned
-            cli?.setRoomAccountData(room.roomId, ReadPinsEventId, {
+            cli.setRoomAccountData(room.roomId, ReadPinsEventId, {
                 event_ids: pinnedEventIds,
             });
         }
@@ -181,7 +182,7 @@ const PinnedMessagesCard: React.FC<IProps> = ({ room, onClose, userNameColorMode
                         </div>
                     </div>
 
-                    <Heading size="h4" className="mx_PinnedMessagesCard_empty_header">
+                    <Heading size="4" className="mx_PinnedMessagesCard_empty_header">
                         {_t("Nothing pinned, yet")}
                     </Heading>
                     {_t(
@@ -228,7 +229,7 @@ const PinnedMessagesCard: React.FC<IProps> = ({ room, onClose, userNameColorMode
         <BaseCard
             header={
                 <div className="mx_BaseCard_header_title">
-                    <Heading size="h4" className="mx_BaseCard_header_title_heading">
+                    <Heading size="4" className="mx_BaseCard_header_title_heading">
                         {_t("Pinned messages")}
                     </Heading>
                 </div>

@@ -51,6 +51,7 @@ import { SoundPack } from "./enums/SoundPack";
 import RustCryptoSdkController from "./controllers/RustCryptoSdkController";
 import ServerSupportUnstableFeatureController from "./controllers/ServerSupportUnstableFeatureController";
 import { WatchManager } from "./WatchManager";
+import { CustomTheme } from "../theme";
 
 export const defaultWatchManager = new WatchManager();
 
@@ -98,6 +99,7 @@ export enum LabGroup {
 export enum Features {
     VoiceBroadcast = "feature_voice_broadcast",
     VoiceBroadcastForceSmallChunks = "feature_voice_broadcast_force_small_chunks",
+    NotificationSettings2 = "feature_notification_settings2",
     OidcNativeFlow = "feature_oidc_native_flow",
 }
 
@@ -116,7 +118,15 @@ export const labGroupNames: Record<LabGroup, string> = {
     [LabGroup.Developer]: _td("Developer"),
 };
 
-export type SettingValueType = boolean | number | string | number[] | string[] | Record<string, unknown> | null;
+export type SettingValueType =
+    | boolean
+    | number
+    | string
+    | number[]
+    | string[]
+    | Record<string, unknown>
+    | Record<string, unknown>[]
+    | null;
 
 export interface IBaseSetting<T extends SettingValueType = SettingValueType> {
     isFeature?: false | undefined;
@@ -225,6 +235,28 @@ export const SETTINGS: { [setting: string]: ISetting } = {
             requiresRefresh: true,
         },
     },
+    [Features.NotificationSettings2]: {
+        isFeature: true,
+        labsGroup: LabGroup.Experimental,
+        supportedLevels: LEVELS_FEATURE,
+        displayName: _td("New Notification Settings"),
+        default: false,
+        betaInfo: {
+            title: _td("Notification Settings"),
+            caption: () => (
+                <>
+                    <p>
+                        {_t(
+                            "Introducing a simpler way to change your notification settings. Customize your %(brand)s, just the way you like.",
+                            {
+                                brand: SdkConfig.get().brand,
+                            },
+                        )}
+                    </p>
+                </>
+            ),
+        },
+    },
     "feature_exploring_public_spaces": {
         isFeature: true,
         labsGroup: LabGroup.Spaces,
@@ -322,7 +354,7 @@ export const SETTINGS: { [setting: string]: ISetting } = {
     },
     "useOnlyCurrentProfiles": {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
-        displayName: _td("Show current avatar and name for users in message history"),
+        displayName: _td("Show current profile picture and name for users in message history"),
         default: false,
     },
     "mjolnirRooms": {
@@ -417,6 +449,15 @@ export const SETTINGS: { [setting: string]: ISetting } = {
         controller: new ReloadOnChangeController(),
         default: false,
     },
+    "feature_allow_screen_share_only_mode": {
+        isFeature: true,
+        supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS_WITH_CONFIG,
+        description: _td("Under active development."),
+        labsGroup: LabGroup.VoiceAndVideo,
+        displayName: _td("Allow screen share only mode"),
+        controller: new ReloadOnChangeController(),
+        default: false,
+    },
     "feature_location_share_live": {
         isFeature: true,
         labsGroup: LabGroup.Messaging,
@@ -466,6 +507,18 @@ export const SETTINGS: { [setting: string]: ISetting } = {
     "baseFontSize": {
         displayName: _td("Font size"),
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
+        default: "",
+        controller: new FontSizeController(),
+    },
+    /**
+     * With the transition to Compound we are moving to a base font size
+     * of 16px. We're taking the opportunity to move away from the `baseFontSize`
+     * setting that had a 5px offset.
+     *
+     */
+    "baseFontSizeV2": {
+        displayName: _td("Font size"),
+        supportedLevels: [SettingLevel.DEVICE],
         default: FontWatcher.DEFAULT_SIZE,
         controller: new FontSizeController(),
     },
@@ -525,6 +578,13 @@ export const SETTINGS: { [setting: string]: ISetting } = {
             ["org.matrix.msc3952_intentional_mentions"],
         ]),
     },
+    "feature_ask_to_join": {
+        default: false,
+        displayName: _td("Enable ask to join"),
+        isFeature: true,
+        labsGroup: LabGroup.Rooms,
+        supportedLevels: LEVELS_FEATURE,
+    },
     "useCompactLayout": {
         supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS,
         displayName: _td("Use a more compact 'Modern' layout"),
@@ -549,7 +609,7 @@ export const SETTINGS: { [setting: string]: ISetting } = {
     },
     "showAvatarChanges": {
         supportedLevels: LEVELS_ROOM_SETTINGS_WITH_ROOM,
-        displayName: _td("Show avatar changes"),
+        displayName: _td("Show profile picture changes"),
         default: true,
         invertedSettingName: "hideAvatarChanges",
     },
@@ -688,7 +748,7 @@ export const SETTINGS: { [setting: string]: ISetting } = {
     },
     "custom_themes": {
         supportedLevels: LEVELS_ACCOUNT_SETTINGS,
-        default: [],
+        default: [] as CustomTheme[],
     },
     "userNameColorModeDM": {
         supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS_WITH_CONFIG,
