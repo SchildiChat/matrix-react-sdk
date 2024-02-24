@@ -16,8 +16,8 @@ limitations under the License.
 
 /* Note: the room tile expects to be in a flexbox column container */
 .mx_RoomTile {
-    margin-bottom: 0.4rem;
-    padding: 0.4rem;
+    margin-bottom: 4px;
+    padding: 4px;
     position: relative;
 
     /* The tile is also a flexbox row itself */
@@ -37,17 +37,17 @@ limitations under the License.
 
     .mx_DecoratedRoomAvatar,
     .mx_RoomTile_avatarContainer {
-        margin-right: 1rem;
+        margin-right: 10px;
 
         .mx_BaseAvatar_initial {
-            width: 4.8rem !important;
-            line-height: 4.8rem !important;
-            font-size: 3.12rem !important;
+            width: 48px !important;
+            line-height: 48px !important;
+            font-size: 31.2px !important;
         }
 
         .mx_BaseAvatar_image {
-            width: 4.8rem !important;
-            height: 4.8rem !important;
+            width: 48px !important;
+            height: 48px !important;
         }
     }
 
@@ -59,7 +59,7 @@ limitations under the License.
         min-width: 0;
         flex-basis: 0;
         flex-grow: 1;
-        margin-right: 0.8rem; /* spacing to buttons/badges */
+        margin-right: 8px; /* spacing to buttons/badges */
 
         /* Create a new column layout flexbox for the title parts */
         display: flex;
@@ -95,7 +95,6 @@ limitations under the License.
             }
         }
 
-<<<<<<< HEAD
         .mx_RoomTile_subtitle {
             line-height: $font-18px;
             color: $secondary-content;
@@ -103,21 +102,19 @@ limitations under the License.
     }
 
     .mx_RoomTile_menuButton {
-        right: 2.8rem;
+        right: 28px;
 
-=======
->>>>>>> v3.73.0
         .mx_RoomTile_titleWithSubtitle {
             margin-top: -2px; /* shift the title up a bit more */
         }
     }
 
     .mx_RoomTile_notificationsButton {
-        right: 0.4rem;
+        right: 4px;
     }
 
     .mx_RoomTile_badgeContainer {
-        height: 1.6rem;
+        height: 16px;
         /* don't set width so that it takes no space when there is no badge to show */
         margin: auto 0; /* vertically align */
 
@@ -126,36 +123,36 @@ limitations under the License.
         align-items: center;
 
         .mx_NotificationBadge {
-            margin-right: 0.2rem; /* centering */
+            margin-right: 2px; /* centering */
         }
 
         .mx_NotificationBadge_dot {
             /* make the smaller dot occupy the same width for centering */
-            margin-left: 0.5rem;
-            margin-right: 0.7rem;
+            margin-left: 5px;
+            margin-right: 7px;
         }
     }
 
     /* The context menu buttons are hidden by default */
     .mx_RoomTile_menuButton,
     .mx_RoomTile_notificationsButton {
-        width: 2rem;
-        min-width: 2rem; /* yay flex */
-        height: 2rem;
+        width: 20px;
+        min-width: 20px; /* yay flex */
+        height: 20px;
         margin-top: auto;
         margin-bottom: auto;
         position: absolute;
         display: none;
-        top: calc(50% - 1rem);
+        top: calc(50% - 10px);
         background: $roomlist-bg-color;
         border-radius: 500px;
 
         &::before {
-            top: 0.2rem;
-            left: 0.2rem;
+            top: 2px;
+            left: 2px;
             content: "";
-            width: 1.6rem;
-            height: 1.6rem;
+            width: 16px;
+            height: 16px;
             position: absolute;
             mask-position: center;
             mask-size: contain;
@@ -202,34 +199,34 @@ limitations under the License.
 }
 
 .mx_RoomList_Roomy .mx_RoomTile {
-    height: 5.6rem;
+    height: 56px;
 
     .mx_DecoratedRoomAvatar,
     .mx_RoomTile_avatarContainer {
         .mx_BaseAvatar_initial {
-            width: 4.8rem !important;
-            line-height: 4.8rem !important;
-            font-size: 3.12rem !important;
+            width: 48px !important;
+            line-height: 48px !important;
+            font-size: 31.2px !important;
         }
 
         .mx_BaseAvatar_image {
-            width: 4.8rem !important;
-            height: 4.8rem !important;
+            width: 48px !important;
+            height: 48px !important;
         }
     }
 
     .mx_RoomTile_titleContainer {
-        max-height: 4.8rem; /* same as avatar */
+        max-height: 48px; /* same as avatar */
 
         .mx_RoomTile_subtitle {
-            font-size: 1.3rem;
-            line-height: 1.6rem;
-            max-height: calc(2 * 1.6rem);
+            font-size: 13px;
+            line-height: 16px;
+            max-height: calc(2 * 16px);
             white-space: unset;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
-            margin-bottom: -0.3rem; /* shift the preview down a bit more */
+            margin-bottom: -3px; /* shift the preview down a bit more */
             overflow: hidden; /* get rid of tiny top of hidden next lines */
         }
 
@@ -240,62 +237,62 @@ limitations under the License.
         }
 
         .mx_RoomTile_titleWithSubtitle {
-            margin-top: -0.4rem; /* shift the name up a bit more */
+            margin-top: -4px; /* shift the name up a bit more */
         }
     }
 }
 
 .mx_RoomList_Intermediate .mx_RoomTile {
-    height: 4rem;
+    height: 40px;
 
     .mx_DecoratedRoomAvatar,
     .mx_RoomTile_avatarContainer {
         .mx_BaseAvatar_initial {
-            width: 3.2rem !important;
-            line-height: 3.2rem !important;
-            font-size: 2.08rem !important;
+            width: 32px !important;
+            line-height: 32px !important;
+            font-size: 20.8px !important;
         }
 
         .mx_BaseAvatar_image {
-            width: 3.2rem !important;
-            height: 3.2rem !important;
+            width: 32px !important;
+            height: 32px !important;
         }
     }
 
     .mx_RoomTile_titleContainer {
-        max-height: 3.2rem; /* same as avatar */
+        max-height: 32px; /* same as avatar */
 
         .mx_RoomTile_subtitle {
-            font-size: 1.3rem;
-            line-height: 1.8rem;
-            max-height: 1.8rem;
-            margin-bottom: -0.4rem; /* shift the preview down a bit more */
+            font-size: 13px;
+            line-height: 18px;
+            max-height: 18px;
+            margin-bottom: -4px; /* shift the preview down a bit more */
         }
 
         .mx_RoomTile_titleWithSubtitle {
-            margin-top: -0.4rem; /* shift the name up a bit more */
+            margin-top: -4px; /* shift the name up a bit more */
         }
     }
 }
 
 .mx_RoomList_Compact .mx_RoomTile {
-    height: 2.6rem;
-    padding-top: 0.2rem;
-    padding-bottom: 0.2rem;
+    height: 26px;
+    padding-top: 2px;
+    padding-bottom: 2px;
 
     .mx_DecoratedRoomAvatar,
     .mx_RoomTile_avatarContainer {
-        margin-right: 0.4rem;
+        margin-right: 4px;
 
         .mx_BaseAvatar_initial {
-            width: 2.2rem !important;
-            line-height: 2.2rem !important;
-            font-size: 1.43rem !important;
+            width: 220px !important;
+            line-height: 220px !important;
+            font-size: 14.3px !important;
         }
 
         .mx_BaseAvatar_image {
-            width: 2.2rem !important;
-            height: 2.2rem !important;
+            width: 220px !important;
+            height: 220px !important;
         }
     }
 
@@ -304,18 +301,18 @@ limitations under the License.
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        margin-right: 0.4rem; /* spacing to buttons/badges */
+        margin-right: 4px; /* spacing to buttons/badges */
 
         .mx_RoomTile_title,
         .mx_RoomTile_subtitle {
             display: inline;
             text-overflow: unset;
-            margin: 0 0.2rem;
+            margin: 0 2px;
         }
 
         .mx_RoomTile_title {
-            font-size: 1.4rem;
-            line-height: 2.2rem;
+            font-size: 14px;
+            line-height: 22px;
         }
 
         .mx_RoomTile_title.mx_RoomTile_titleHasUnreadEvents {
@@ -323,8 +320,8 @@ limitations under the License.
         }
 
         .mx_RoomTile_subtitle {
-            font-size: 1.3rem;
-            line-height: 2.2rem;
+            font-size: 13px;
+            line-height: 22px;
         }
     }
 }

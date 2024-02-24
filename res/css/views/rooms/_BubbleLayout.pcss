@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-$left-gutter: 5.4rem;
+$left-gutter: 54px;
 
 .sc_BubbleLayout {
     /* ---- Overrides ---- */
@@ -128,7 +128,7 @@ $left-gutter: 5.4rem;
 
         .sc_EventTile_bubbleArea_info {
             /* For toggle */
-            max-width: 72rem;
+            max-width: 720px;
         }
     }
 
@@ -390,7 +390,7 @@ $left-gutter: 5.4rem;
                 top: unset;
                 bottom: 0;
                 border-top-left-radius: $border-radius-8px;
-                font-size: 1.2rem;
+                font-size: 12px;
                 padding: 6px 9px;
                 width: unset;
                 line-height: 1;
@@ -456,7 +456,7 @@ $left-gutter: 5.4rem;
 
     .mx_MPollBody {
         .mx_MessageTimestamp {
-            margin-inline-start: 1rem;
+            margin-inline-start: 10px;
         }
     }
 
@@ -506,7 +506,7 @@ $left-gutter: 5.4rem;
     .sc_EventTile_bubbleArea {
         /* No full width for both-side bubbles only */
         width: 84%;
-        max-width: 88rem;
+        max-width: 880px;
         padding: 0px;
         margin-bottom: 0;
     }
@@ -590,7 +590,7 @@ $left-gutter: 5.4rem;
                     width: unset;
                     text-align: unset;
                     display: inline;
-                    font-size: 1.2rem;
+                    font-size: 12px;
                 }
 
                 &:dir(rtl) {
@@ -611,7 +611,7 @@ $left-gutter: 5.4rem;
                     position: unset;
                     text-align: unset;
                     display: inline;
-                    font-size: 1.2rem;
+                    font-size: 12px;
                 }
 
                 &:dir(rtl) {
@@ -910,7 +910,7 @@ $left-gutter: 5.4rem;
             text-align: start;
             background-color: transparent;
             box-shadow: inset 0px 0px 0px 1px rgba($roomtopic-color, 0.15);
-            margin-bottom: 3rem;
+            margin-bottom: 30px;
 
             &::before,
             &::after {
@@ -936,22 +936,22 @@ $left-gutter: 5.4rem;
 
         .sc_EventTile_bubbleArea_info {
             width: 80%;
-            max-width: 72rem;
+            max-width: 720px;
         }
 
         .sc_EventTile_bubbleLine {
-            max-width: 104rem;
+            max-width: 1040px;
         }
 
         .mx_NewRoomIntro {
-            max-width: calc(104rem - $left-gutter);
+            max-width: calc(1040px - $left-gutter);
         }
 
         .sc_EventTile_bubbleLine_info,
         .mx_DateSeparator,
         .mx_GenericEventListSummary,
         .mx_RoomView_MessageList > li > .mx_Spinner {
-            max-width: calc($left-gutter + 104rem);
+            max-width: calc($left-gutter + 1040px);
         }
     }
 }
