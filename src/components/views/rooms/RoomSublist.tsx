@@ -103,7 +103,6 @@ interface IState {
     isExpanded: boolean; // used for the for expand of the sublist when the room list is being filtered
     height: number;
     rooms: Room[];
-    baseFontSize: number; // SC: fucking resizeable doesn't like rem
     roomsLoading: boolean;
 }
 
@@ -132,17 +131,12 @@ export default class RoomSublist extends React.Component<IProps, IState> {
             isExpanded: !this.layout.isCollapsed,
             height: 0, // to be fixed in a moment, we need `rooms` to calculate this.
             rooms: arrayFastClone(RoomListStore.instance.orderedLists[this.props.tagId] || []),
-            baseFontSize: SettingsStore.getValue("baseFontSize"),
             roomsLoading: false,
         };
         // Why Object.assign() and not this.state.height? Because TypeScript says no.
         this.state = Object.assign(this.state, { height: this.calculateInitialHeight() });
 
-        this.settingWatchers = [
-            SettingsStore.watchSetting("baseFontSize", null, (...[, , , value]) =>
-                this.setState({ baseFontSize: value as number }),
-            ),
-        ];
+        this.settingWatchers = [];
     }
 
     private calculateInitialHeight(): number {
@@ -872,9 +866,9 @@ export default class RoomSublist extends React.Component<IProps, IState> {
                 <React.Fragment>
                     {/* fucking resizeable doesn't like rem */}
                     <Resizable
-                        size={{ height: (this.state.height / 10) * this.state.baseFontSize } as any}
-                        minHeight={(minTilesPx / 10) * this.state.baseFontSize}
-                        maxHeight={(maxTilesPx / 10) * this.state.baseFontSize}
+                        size={{ height: this.state.height } as any}
+                        minHeight={minTilesPx}
+                        maxHeight={maxTilesPx}
                         onResizeStart={this.onResizeStart}
                         onResizeStop={this.onResizeStop}
                         onResize={this.onResize}
