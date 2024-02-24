@@ -99,6 +99,24 @@ $left-gutter: 54px;
         }
     }
 
+    .mx_GenericEventListSummary {
+        .mx_MatrixChat_useCompactLayout & {
+            .mx_TextualEvent.mx_GenericEventListSummary_summary {
+                font-size: $font-14px;
+            }
+        }
+    
+        /* Make all state events one order smaller than the other events */
+        .mx_EventTile {
+            font-size: $font-14px;
+        }
+    }
+
+    .mx_TextualEvent.mx_GenericEventListSummary_summary {
+        font-size: $font-14px;
+        display: inline-flex;
+    }
+
     .mx_EventTile_continuation {
         padding-top: 0 !important;
     }
