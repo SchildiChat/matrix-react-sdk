@@ -62,7 +62,21 @@ interface Props {
 // XXX: todo: merge overlapping results somehow?
 // XXX: why doesn't searching on name work?
 export const RoomSearchView = forwardRef<ScrollPanel, Props>(
-    ({ term, scope, promise, abortController, resizeNotifier, layout, singleSideBubbles, userNameColorMode,className, onUpdate }: Props, ref) => {
+    (
+        {
+            term,
+            scope,
+            promise,
+            abortController,
+            resizeNotifier,
+            layout,
+            singleSideBubbles,
+            userNameColorMode,
+            className,
+            onUpdate,
+        }: Props,
+        ref,
+    ) => {
         const client = useContext(MatrixClientContext);
         const roomContext = useContext(RoomContext);
         const [inProgress, setInProgress] = useState(true);

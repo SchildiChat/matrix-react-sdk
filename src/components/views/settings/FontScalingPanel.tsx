@@ -117,7 +117,11 @@ export default class FontScalingPanel extends React.Component<IProps, IState> {
 
         return (
             <>
-                <SettingsSubsection heading={_t("Font size and typeface")} stretchContent data-testid="mx_FontScalingPanel">
+                <SettingsSubsection
+                    heading={_t("Font size and typeface")}
+                    stretchContent
+                    data-testid="mx_FontScalingPanel"
+                >
                     <div className="mx_FontScalingPanel_fontSlider">
                         <div className="mx_FontScalingPanel_fontSlider_smallText">Aa</div>
                         <Slider

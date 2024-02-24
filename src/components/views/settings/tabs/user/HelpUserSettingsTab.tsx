@@ -136,7 +136,11 @@ export default class HelpUserSettingsTab extends React.Component<IProps, IState>
                     <ul>
                         <li>
                             The{" "}
-                            <ExternalLink href="themes/element/img/backgrounds/ocean.jpg" rel="noreferrer noopener" target="_blank">
+                            <ExternalLink
+                                href="themes/element/img/backgrounds/ocean.jpg"
+                                rel="noreferrer noopener"
+                                target="_blank"
+                            >
                                 {" "}
                                 default cover photo
                             </ExternalLink>{" "}
@@ -149,7 +153,11 @@ export default class HelpUserSettingsTab extends React.Component<IProps, IState>
                                 here
                             </ExternalLink>{" "}
                             used under the terms of the&nbsp;
-                            <ExternalLink href="https://pixabay.com/de/service/license/" rel="noreferrer noopener" target="_blank">
+                            <ExternalLink
+                                href="https://pixabay.com/de/service/license/"
+                                rel="noreferrer noopener"
+                                target="_blank"
+                            >
                                 Pixabay License
                             </ExternalLink>
                             .
