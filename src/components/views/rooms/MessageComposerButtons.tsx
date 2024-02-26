@@ -118,7 +118,7 @@ const MessageComposerButtons: React.FC<IProps> = (props: IProps) => {
             voiceRecordingButton(props, narrow),
             startVoiceBroadcastButton(props),
             props.showPollsButton && pollButton(room, props.relation),
-            showLocationButton(props, room, roomId, matrixClient),
+            showLocationButton(props, room, matrixClient),
         ];
     } else {
         mainButtons = [
