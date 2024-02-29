@@ -21,9 +21,29 @@ limitations under the License.
                 line-height: var(--line-height); /* Unify the line-height value for IRC layout. The value is applied by default to everything under data-layout="irc", enabling declarations with more specificity to override the value as this is not enforced with "!important" */
             }
 
+            .mx_DisambiguatedProfile {
+                /* Align elements to the end side */
+                display: block;
+                text-align: end;
+
+                &:hover {
+                    background-color: $event-selected-color;
+                }
+
+                > .mx_DisambiguatedProfile_displayName {
+                    padding-inline-end: var(--right-padding); /* Add padding between displayName and mx_EventTile_line */
+                }
+
+                > .mx_DisambiguatedProfile_mxid {
+                    padding-inline-start: 0; /* Remove the value specified on upstream since var(--right-padding) is specified for mx_DisambiguatedProfile_displayName above */
+                }
+            }
+
             .mx_ReplyChain {
                 .mx_DisambiguatedProfile {
                     --cpd-font-body-md-regular: var(--line-height); /* Fix the line-height value specified with Compound for IRC layout */
+
+                    display: unset; /* Unset the inherited value */
                 }
             }
         }
