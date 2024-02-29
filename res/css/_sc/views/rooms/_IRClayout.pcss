@@ -14,7 +14,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-/* ReplyTile on IRC layout */
+@define-mixin sc_DisambiguatedProfile {
+    .mx_DisambiguatedProfile {
+        /* Align elements to the end side */
+        display: block;
+        text-align: end;
+
+        &:hover {
+            background-color: $event-selected-color;
+        }
+
+        > .mx_DisambiguatedProfile_displayName {
+            padding-inline-end: var(--right-padding); /* Add padding between displayName and mx_EventTile_line */
+        }
+
+        > .mx_DisambiguatedProfile_mxid {
+            padding-inline-start: 0; /* Remove the value specified on upstream since var(--right-padding) is specified for mx_DisambiguatedProfile_displayName above */
+        }
+    }
+}
+
 @define-mixin sc_ReplyTile {
     .mx_ReplyChain {
         .mx_DisambiguatedProfile {
@@ -25,30 +44,11 @@ limitations under the License.
     }
 }
 
-/* EventTile on IRC layout */
 @define-mixin sc_EventTile {
     .mx_EventTile {
         &[data-layout="irc"] {
             * {
                 line-height: var(--line-height); /* Unify the line-height value for IRC layout. The value is applied by default to everything under data-layout="irc", enabling declarations with more specificity to override the value as this is not enforced with "!important" */
-            }
-
-            .mx_DisambiguatedProfile {
-                /* Align elements to the end side */
-                display: block;
-                text-align: end;
-
-                &:hover {
-                    background-color: $event-selected-color;
-                }
-
-                > .mx_DisambiguatedProfile_displayName {
-                    padding-inline-end: var(--right-padding); /* Add padding between displayName and mx_EventTile_line */
-                }
-
-                > .mx_DisambiguatedProfile_mxid {
-                    padding-inline-start: 0; /* Remove the value specified on upstream since var(--right-padding) is specified for mx_DisambiguatedProfile_displayName above */
-                }
             }
 
             .mx_EventTile_bigEmoji {
@@ -62,6 +62,7 @@ limitations under the License.
                 }
             }
 
+            @mixin sc_DisambiguatedProfile;
             @mixin sc_ReplyTile;
         }
     }
