@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+
 @define-mixin sc_EventTile {
     .mx_EventTile {
         &[data-layout="irc"] {
@@ -36,6 +37,17 @@ limitations under the License.
 
                 > .mx_DisambiguatedProfile_mxid {
                     padding-inline-start: 0; /* Remove the value specified on upstream since var(--right-padding) is specified for mx_DisambiguatedProfile_displayName above */
+                }
+            }
+
+            .mx_EventTile_bigEmoji {
+                /* Double the line height */
+                --big-emoji-font-size: calc(var(--line-height) * 2);
+                --big-emoji-line-height: calc(var(--line-height) * 2);
+                line-height: calc(var(--line-height) * 2);
+
+                .mx_Emoji {
+                    line-height: unset;
                 }
             }
 
