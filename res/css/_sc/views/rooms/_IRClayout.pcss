@@ -68,6 +68,18 @@ limitations under the License.
     }
 }
 
+@define-mixin sc_GenericEventListSummary {
+    .mx_GenericEventListSummary {
+        .mx_GenericEventListSummary_avatars {
+            line-height: 14px; /* Same size as avatar height */
+
+            > * {
+                line-height: inherit; /* Same size as avatar height */
+            }
+        }
+    }
+}
+
 .mx_IRCLayout {
     --cpd-font-line-height-regular: var(--irc-line-height); /* Unify the line-height value for IRC layout */
 
@@ -76,4 +88,5 @@ limitations under the License.
     }
 
     @mixin sc_EventTile;
+    @mixin sc_GenericEventListSummary;
 }
