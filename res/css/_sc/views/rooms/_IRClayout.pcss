@@ -62,6 +62,14 @@ limitations under the License.
                 }
             }
 
+            .mx_EventTile_content {
+                .markdown-body {
+                    code:not(pre *) {
+                        padding-block: 0; /* Remove block padding to avoid line height overflow */
+                    }
+                }
+            }
+
             @mixin sc_DisambiguatedProfile;
             @mixin sc_ReplyTile;
         }
