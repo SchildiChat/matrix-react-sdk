@@ -14,6 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-/* TODO: replace @import with @mixin once multiple CSS files are created for customization in order to keep styling modular */
-@import "./views/rooms/_EventTile.pcss";
-@import "./views/rooms/_IRClayout.pcss";
+@define-mixin sc_EventTile_content {
+    .mx_EventTile_content {
+        .markdown-body .mx_EventTile_collapsedCodeBlock code {
+            background-color: unset; /* Remove duplicated background color */
+        }
+    }
+}
+
+.mx_EventTile {
+    @mixin sc_EventTile_content;
+}
