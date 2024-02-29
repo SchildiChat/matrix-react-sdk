@@ -14,7 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+/* ReplyTile on IRC layout */
+@define-mixin sc_ReplyTile {
+    .mx_ReplyChain {
+        .mx_DisambiguatedProfile {
+            --cpd-font-body-md-regular: var(--line-height); /* Fix the line-height value specified with Compound for IRC layout */
 
+            display: unset; /* Unset the inherited value */
+        }
+    }
+}
+
+/* EventTile on IRC layout */
 @define-mixin sc_EventTile {
     .mx_EventTile {
         &[data-layout="irc"] {
@@ -51,13 +62,7 @@ limitations under the License.
                 }
             }
 
-            .mx_ReplyChain {
-                .mx_DisambiguatedProfile {
-                    --cpd-font-body-md-regular: var(--line-height); /* Fix the line-height value specified with Compound for IRC layout */
-
-                    display: unset; /* Unset the inherited value */
-                }
-            }
+            @mixin sc_ReplyTile;
         }
     }
 }
