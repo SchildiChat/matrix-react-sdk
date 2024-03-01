@@ -34,6 +34,9 @@ limitations under the License.
         display: block;
         text-align: end;
 
+        /* Set $accent as default color, in order to make ellipsis rendered with the accent color (green, by default) */
+        color: $accent;
+
         &:hover {
             background-color: $event-selected-color;
         }
@@ -43,6 +46,7 @@ limitations under the License.
         }
 
         > .mx_DisambiguatedProfile_mxid {
+            color: $primary-content; /* Override the color specified above to make the mxid rendered as $primary-content (black, by default) */
             padding-inline-start: 0; /* Remove the value specified on upstream since var(--right-padding) is specified for mx_DisambiguatedProfile_displayName above */
         }
     }
