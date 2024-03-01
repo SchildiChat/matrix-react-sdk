@@ -48,6 +48,15 @@ limitations under the License.
     }
 }
 
+@define-mixin sc_BaseAvatar {
+    /* Need to use important to override the js provided height and width values. */
+    .mx_BaseAvatar,
+    .mx_BaseAvatar > * {
+        height: $font-14px !important;
+        width: $font-14px !important;
+    }
+}
+
 @define-mixin sc_ReplyTile {
     .mx_ReplyChain {
         .mx_DisambiguatedProfile {
@@ -99,6 +108,7 @@ limitations under the License.
             }
 
             @mixin sc_DisambiguatedProfile;
+            @mixin sc_BaseAvatar;
             @mixin sc_borderRadius;
             @mixin sc_ReplyTile;
         }
@@ -124,6 +134,8 @@ limitations under the License.
                     top: 0px; /* Remove the value specified by the upstream as this is no longer needed */
                 }
             }
+
+            @mixin sc_BaseAvatar;
         }
     }
 }
