@@ -14,17 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-@import "./_ReplyTile.pcss";
-
-@define-mixin sc_EventTile_content {
-    .mx_EventTile_content {
-        .markdown-body .mx_EventTile_collapsedCodeBlock code {
-            background-color: unset; /* Remove duplicated background color */
+@define-mixin mx_ReplyTile {
+    .mx_ReplyTile {
+        &.mx_ReplyTile_inline > a {
+            align-items: flex-start; /* Fix avatar's position on emote in ReplyTile */
         }
     }
-}
-
-.mx_EventTile {
-    @mixin mx_ReplyTile;
-    @mixin sc_EventTile_content;
 }
