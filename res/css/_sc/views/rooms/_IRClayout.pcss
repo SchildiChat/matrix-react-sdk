@@ -51,6 +51,16 @@ limitations under the License.
                 line-height: var(--line-height); /* Unify the line-height value for IRC layout. The value is applied by default to everything under data-layout="irc", enabling declarations with more specificity to override the value as this is not enforced with "!important" */
             }
 
+            .mx_EventTile_line {
+                .mx_EventTile_e2eIcon,
+                .mx_TextualEvent,
+                .mx_ViewSourceEvent,
+                .mx_MTextBody {
+                    /* Cancel the padding specified by the upstream as it is taken care of by padding var(--EventTile_irc_line-padding-block) */
+                    padding: unset;
+                }
+            }
+
             .mx_EventTile_bigEmoji {
                 /* Double the line height */
                 --big-emoji-font-size: calc(var(--line-height) * 2);
@@ -70,6 +80,10 @@ limitations under the License.
                 }
             }
 
+            > * {
+                padding-block: var(--EventTile_irc_line-padding-block); /* Unify block padding value of anything directly under mx_EventTile */
+            }
+
             @mixin sc_DisambiguatedProfile;
             @mixin sc_ReplyTile;
         }
@@ -78,11 +92,22 @@ limitations under the License.
 
 @define-mixin sc_GenericEventListSummary {
     .mx_GenericEventListSummary {
-        .mx_GenericEventListSummary_avatars {
-            line-height: 14px; /* Same size as avatar height */
+        &[data-layout="irc"] {
+            .mx_GenericEventListSummary_avatars {
+                line-height: 14px; /* Same size as avatar height */
 
-            > * {
-                line-height: inherit; /* Same size as avatar height */
+                > * {
+                    line-height: inherit; /* Same size as avatar height */
+                }
+            }
+
+            .mx_EventTile_line .mx_RedactedBody {
+                line-height: var(--line-height); /* Unify the line-height value for IRC layout by overwriting the line-height value specified on upstream _EventTile.pcss */
+
+                &::before {
+                    height: var(--line-height); /* Set the line height value to the trash icon */
+                    top: 0px; /* Remove the value specified by the upstream as this is no longer needed */
+                }
             }
         }
     }
