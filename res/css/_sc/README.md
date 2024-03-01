@@ -24,4 +24,4 @@ Even if the properties are styled with `!important` by the upstream to cover reg
 
 The way in which the upstream project generates concatenated CSS files has been very stable (essentially same since at least 2018. See: https://github.com/matrix-org/matrix-react-sdk/commits/develop/res/css/rethemendex.sh), so we should be able to depend on the current way how it works for a reasonable time.
 
-**Warning: running `rethemendex` breaks cascading!** Manual editing is required for now.
+**Please do not forget to update `_customization.pcss`** if you have added other CSS files for customization. Please mind where to import the files as it affects how styles cascade. Never import them alphabetically.
