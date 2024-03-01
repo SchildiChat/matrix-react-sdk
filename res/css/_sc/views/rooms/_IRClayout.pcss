@@ -57,12 +57,23 @@ limitations under the License.
     }
 }
 
-@define-mixin sc_ReplyTile {
-    .mx_ReplyChain {
-        .mx_DisambiguatedProfile {
-            --cpd-font-body-md-regular: var(--line-height); /* Fix the line-height value specified with Compound for IRC layout */
+@define-mixin sc_ReplyChain {
+    .mx_ReplyChain_wrapper {
+        /* "In reply to" line */
+        blockquote:first-of-type {
+            padding-bottom: 2px; /* Add padding between "In reply to" line and the replied content */
+        }
 
-            display: unset; /* Unset the inherited value */
+        .mx_ReplyChain {
+            .mx_ReplyTile {
+                padding-block: unset; /* Unset the inherited value */
+            }
+
+            .mx_DisambiguatedProfile {
+                --cpd-font-body-md-regular: var(--line-height); /* Fix the line-height value specified with Compound for IRC layout */
+
+                display: unset; /* Unset the inherited value */
+            }
         }
     }
 }
@@ -110,7 +121,7 @@ limitations under the License.
             @mixin sc_DisambiguatedProfile;
             @mixin sc_BaseAvatar;
             @mixin sc_borderRadius;
-            @mixin sc_ReplyTile;
+            @mixin sc_ReplyChain;
         }
     }
 }
