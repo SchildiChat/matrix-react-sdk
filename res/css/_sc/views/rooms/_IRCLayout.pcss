@@ -55,6 +55,16 @@ limitations under the License.
         height: $font-14px !important;
         width: $font-14px !important;
     }
+
+    /* Fill the pill with the avatar */
+    /* TODO: Adjust the size for IRC layout */
+    .mx_Pill {
+        .mx_BaseAvatar,
+        .mx_BaseAvatar > * {
+            height: $font-16px !important; /* override the value specified above */
+            width: $font-16px !important; /* override the value specified above */
+        }
+    }
 }
 
 @define-mixin sc_ReplyChain {
