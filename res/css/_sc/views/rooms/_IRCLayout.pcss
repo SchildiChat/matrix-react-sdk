@@ -28,6 +28,31 @@ limitations under the License.
     }
 }
 
+@define-mixin sc_DisambiguatedProfile_visibility {
+    .mx_DisambiguatedProfile {
+        > .mx_DisambiguatedProfile_mxid {
+            display: none;
+        }
+
+        &:hover {
+            > .mx_DisambiguatedProfile_mxid {
+                display: unset;
+            }
+        }
+    }
+
+    .mx_ReplyChain_wrapper .mx_ReplyChain .mx_DisambiguatedProfile {
+        /* Stop mxid from moving avatar up on ReplyChain by resetting display
+           value "none" defined above, in order to make visibility declaration
+           effective */
+        /* Mind difference of avatar placement between on upstream's
+           mx_EventTile and mx_ReplyTile_sender */
+        > .mx_DisambiguatedProfile_mxid {
+            display: unset;
+        }
+    }
+}
+
 @define-mixin sc_DisambiguatedProfile {
     .mx_DisambiguatedProfile {
         /* Align elements to the end side */
@@ -50,6 +75,8 @@ limitations under the License.
             padding-inline-start: 0; /* Remove the value specified on upstream since var(--right-padding) is specified for mx_DisambiguatedProfile_displayName above */
         }
     }
+
+    @mixin sc_DisambiguatedProfile_visibility;
 }
 
 @define-mixin sc_BaseAvatar {
@@ -84,9 +111,7 @@ limitations under the License.
             }
 
             .mx_DisambiguatedProfile {
-                --cpd-font-body-md-regular: var(--line-height); /* Fix the line-height value specified with Compound for IRC layout */
-
-                display: unset; /* Unset the inherited value */
+                --cpd-font-line-height-regular: var(--line-height); /* Fix the line-height value specified with Compound for IRC layout */
             }
         }
     }
