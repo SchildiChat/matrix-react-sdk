@@ -14,6 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+@define-mixin mx_ReplyChain_disambiguatedProfile {
+    .mx_ReplyChain .mx_DisambiguatedProfile:hover {
+        overflow: hidden; /* Override "overflow: visible" specified by the upstream */
+    }
+}
+
 /* This mixin defines border radius for corders */
 @define-mixin sc_borderRadius {
     .mx_DisambiguatedProfile {
@@ -100,6 +106,8 @@ limitations under the License.
 
 @define-mixin sc_ReplyChain {
     .mx_ReplyChain_wrapper {
+        @mixin mx_ReplyChain_disambiguatedProfile;
+
         /* "In reply to" line */
         blockquote:first-of-type {
             padding-bottom: 2px; /* Add padding between "In reply to" line and the replied content */
