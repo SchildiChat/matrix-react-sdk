@@ -1,0 +1,65 @@
+/*
+Copyright 2024 Suguru Hirahara
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+/* Hide avatars on IRC layout except ones on read receipt group */
+@define-mixin sc_IRCLayout__hideAvatar {
+     --icon-width: 0px; /* Align vertically */
+
+    .mx_EventTile {
+        &[data-layout="irc"] {
+            .mx_EventTile_avatar,
+            .mx_BaseAvatar {
+                display: none;
+            }
+
+            /* Display avatars on read receipt group as it can be set to hidden via Settings */
+            .mx_ReadReceiptGroup {
+                .mx_EventTile_avatar,
+                .mx_BaseAvatar {
+                    display: unset;
+                }
+            }
+        }
+
+        /* Align EventTile_info vertically with other lines */
+        &.mx_EventTile_info {
+            /* var(--icon-width) and var(--right-padding) are not necessary
+               because we do not have to take icon width ant its spacing into consideration */
+            --EventTile_irc_line_info-margin-inline-start: var(--name-width);
+        }
+    }
+
+    .mx_GenericEventListSummary {
+        &[data-layout="irc"] {
+            /* For collapsed GELS */
+            .mx_GenericEventListSummary_avatars {
+                display: none;
+            }
+
+            /* For expanded GELS */
+            .mx_EventTile_avatar,
+            .mx_BaseAvatar {
+                display: none;
+            }
+
+            > .mx_EventTile_line {
+                /* This is required to align collapsed GELS with other elements horizontally
+                   as we need only one var(--right-padding) here */
+                padding-inline-start: calc(var(--name-width) + var(--icon-width) + var(--MessageTimestamp-width) + 1 * var(--right-padding));
+            }
+        }
+    }
+}
