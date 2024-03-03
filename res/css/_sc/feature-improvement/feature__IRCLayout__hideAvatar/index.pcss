@@ -19,7 +19,7 @@ limitations under the License.
      --icon-width: 0px; /* Align vertically */
 
     .mx_EventTile {
-        &[data-layout="irc"] {
+        &[data-layout="irc"][data-avatar="false"] {
             .mx_EventTile_avatar,
             .mx_BaseAvatar {
                 display: none;
@@ -43,7 +43,7 @@ limitations under the License.
     }
 
     .mx_GenericEventListSummary {
-        &[data-layout="irc"] {
+        &[data-layout="irc"][data-avatar="false"] {
             /* For collapsed GELS */
             .mx_GenericEventListSummary_avatars {
                 display: none;

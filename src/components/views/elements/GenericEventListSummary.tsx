@@ -76,6 +76,7 @@ const GenericEventListSummary: React.FC<IProps> = ({
                 data-scroll-tokens={eventIds}
                 data-expanded={true}
                 data-layout={layout}
+                data-avatar={false} // [sc]
             >
                 <ol className="mx_GenericEventListSummary_unstyledList">{children}</ol>
             </li>
@@ -139,6 +140,7 @@ const GenericEventListSummary: React.FC<IProps> = ({
             data-expanded={expanded + ""}
             data-layout={layout}
             data-testid={testId}
+            data-avatar={false} // [sc]
         >
             <AccessibleButton
                 kind="link_inline"
