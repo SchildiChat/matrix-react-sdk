@@ -26,7 +26,7 @@ import { DeepReadonly, Defaultize } from "./@types/common";
 // see element-web config.md for docs, or the IConfigOptions interface for dev docs
 export const DEFAULTS: DeepReadonly<IConfigOptions> = {
     brand: "SchildiChat",
-    help_url: "https://element.io/help",
+    help_url: "https://schildi.chat/faq/",
     help_encryption_url: "https://element.io/help#encryption",
     integrations_ui_url: "https://scalar.vector.im/",
     integrations_rest_url: "https://scalar.vector.im/api",
