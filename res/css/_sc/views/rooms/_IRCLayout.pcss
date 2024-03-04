@@ -35,6 +35,9 @@ limitations under the License.
 }
 
 @define-mixin sc_DisambiguatedProfile_visibility {
+    /* On the upstream, appearance of mxid on disambiguatedProfile is managed by
+       "visibility" property. Since it renders mxid hiding it and pushes
+       displayName to the left side, we need to use display property instead. */
     .mx_DisambiguatedProfile {
         > .mx_DisambiguatedProfile_mxid {
             display: none;
