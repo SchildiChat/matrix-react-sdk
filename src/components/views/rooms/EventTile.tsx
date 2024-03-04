@@ -1256,6 +1256,7 @@ export class UnwrappedEventTile extends React.Component<EventTileProps, IState> 
                         "data-has-reply": !!replyChain,
                         "data-layout": this.props.layout,
                         "data-self": isOwnEvent,
+                        "data-avatar": "false", // [sc]
                         "data-event-id": this.props.mxEvent.getId(),
                         "onMouseEnter": () => this.setState({ hover: true }),
                         "onMouseLeave": () => this.setState({ hover: false }),
@@ -1312,6 +1313,7 @@ export class UnwrappedEventTile extends React.Component<EventTileProps, IState> 
                         "data-shape": this.context.timelineRenderingType,
                         "data-self": isOwnEvent,
                         "data-has-reply": !!replyChain,
+                        "data-avatar": "false", // [sc]
                         "onMouseEnter": () => this.setState({ hover: true }),
                         "onMouseLeave": () => this.setState({ hover: false }),
                         "onClick": (ev: MouseEvent) => {
@@ -1488,6 +1490,7 @@ export class UnwrappedEventTile extends React.Component<EventTileProps, IState> 
                             "data-self": isOwnEvent,
                             "data-event-id": this.props.mxEvent.getId(),
                             "data-has-reply": !!replyChain,
+                            "data-avatar": "false", // [sc]
                             "onMouseEnter": () => this.setState({ hover: true }),
                             "onMouseLeave": () => this.setState({ hover: false }),
                         },
@@ -1555,6 +1558,7 @@ export class UnwrappedEventTile extends React.Component<EventTileProps, IState> 
                             "data-self": isOwnEvent,
                             "data-event-id": this.props.mxEvent.getId(),
                             "data-has-reply": !!replyChain,
+                            "data-avatar": "false", // [sc]
                             "onMouseEnter": () => this.setState({ hover: true }),
                             "onMouseLeave": () => this.setState({ hover: false }),
                         },
