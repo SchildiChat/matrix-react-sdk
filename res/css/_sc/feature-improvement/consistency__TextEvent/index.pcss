@@ -17,11 +17,13 @@ limitations under the License.
 /* Fix upstream's style inconsistencies among mx_TextualEvent, mx_RedactedBody, and mx_DecryptionFailureBody */
 /* See https://github.com/SchildiChat/schildichat-desktop/issues/240 */
 
+@import "./views/rooms/_EventTile.pcss";
 @import "./views/messages/_DecryptionFailureBody.pcss";
 @import "./views/messages/_TextualEvent.pcss";
 @import "./views/messages/_RedactedBody.pcss";
 
 @define-mixin consistency__TextEvent {
+    @mixin EventTile_color;
     @mixin DecryptionFailureBody;
     @mixin TextualEvent;
     @mixin RedactedBody;
