@@ -57,3 +57,21 @@ limitations under the License.
         }
     }
 }
+
+/* Specify text color with color property instead of opacity for properties
+   which start with mx_M */
+@define-mixin EventTile_line_M {
+    .mx_EventTile_line {
+        [class^="mx_M"] {
+            opacity: unset;
+        }
+
+        .mx_MNoticeBody {
+            /* See #fdroid:f-droid.org/$jrVZxdvY2NqNYvXigQ_sTZNeOadpOuFGFsraHy8GR3Y for an example */
+            .mx_EventTile_body.markdown-body {
+                /* !important flag is required as it is used on the upstream */
+                color: $tertiary-content !important;
+            }
+        }
+    }
+}
