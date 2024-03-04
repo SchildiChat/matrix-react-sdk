@@ -14,15 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-/* Fix upstream's style inconsistencies among mx_TextualEvent, mx_RedactedBody, and mx_DecryptionFailureBody */
-/* See https://github.com/SchildiChat/schildichat-desktop/issues/240 */
-
-@import "./views/messages/_DecryptionFailureBody.pcss";
-@import "./views/messages/_TextualEvent.pcss";
-@import "./views/messages/_RedactedBody.pcss";
-
-@define-mixin consistency__TextEvent {
-    @mixin DecryptionFailureBody;
-    @mixin TextualEvent;
-    @mixin RedactedBody;
+@define-mixin RedactedBody {
+    .mx_RedactedBody {
+        color: $tertiary-content;
+        font: var(--cpd-font-body-sm-regular);
+    }
 }
