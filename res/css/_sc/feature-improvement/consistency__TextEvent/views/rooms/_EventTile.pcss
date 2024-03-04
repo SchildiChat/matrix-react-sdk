@@ -14,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-/* Specify text color with color property instead of opacity. Note this mixin is
-   applied to GELS as well */
+/* Specify text color with color property instead of opacity.
+   Note this mixin is applied to GELS as well. */
 @define-mixin EventTile_color {
     :where(.mx_EventTile_info, .mx_GenericEventListSummary) {
         /* Get rid of opacity values for coloring from CSS files as it is very
@@ -37,6 +37,22 @@ limitations under the License.
             /* Revert the color value of call event */
             .mx_CallEvent_wrapper {
                 color: initial;
+            }
+        }
+    }
+}
+
+/* Specify font for consistency */
+@define-mixin EventTile_font {
+    :where(.mx_EventTile_info, .mx_GenericEventListSummary) {
+        --font: var(--cpd-font-body-sm-regular); /* Replace with js when needed */
+
+        .mx_EventTile_line {
+            /* Set the same font to the element directly below it. This way,
+               it is possible to avoid applying the font value to elements
+               inside it, such as code element in mx_ViewSourceEvent. */
+            > * {
+                font: var(--font);
             }
         }
     }

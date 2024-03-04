@@ -19,12 +19,9 @@ limitations under the License.
 
 @import "./views/rooms/_EventTile.pcss";
 @import "./views/messages/_DecryptionFailureBody.pcss";
-@import "./views/messages/_TextualEvent.pcss";
-@import "./views/messages/_RedactedBody.pcss";
 
 @define-mixin consistency__TextEvent {
     @mixin EventTile_color;
+    @mixin EventTile_font;
     @mixin DecryptionFailureBody;
-    @mixin TextualEvent;
-    @mixin RedactedBody;
 }
