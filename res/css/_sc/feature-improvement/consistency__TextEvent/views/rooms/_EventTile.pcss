@@ -16,7 +16,7 @@ limitations under the License.
 
 /* Specify text color with color property instead of opacity.
    Note this mixin is applied to GELS as well. */
-@define-mixin EventTile_color {
+@define-mixin EventTile_line_color {
     :where(.mx_EventTile_info, .mx_GenericEventListSummary) {
         /* Get rid of opacity values for coloring from CSS files as it is very
            confusing and makes it difficult to maintain consistency.
@@ -43,7 +43,7 @@ limitations under the License.
 }
 
 /* Specify font for consistency */
-@define-mixin EventTile_font {
+@define-mixin EventTile_line_font {
     :where(.mx_EventTile_info, .mx_GenericEventListSummary) {
         --font: var(--cpd-font-body-sm-regular); /* Replace with js when needed */
 

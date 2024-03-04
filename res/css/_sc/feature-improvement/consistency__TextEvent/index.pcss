@@ -14,14 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-/* Fix upstream's style inconsistencies among mx_TextualEvent, mx_RedactedBody, and mx_DecryptionFailureBody */
+/* Fix upstream's style inconsistencies among text events and mx_DecryptionFailureBody */
 /* See https://github.com/SchildiChat/schildichat-desktop/issues/240 */
 
 @import "./views/rooms/_EventTile.pcss";
 @import "./views/messages/_DecryptionFailureBody.pcss";
 
 @define-mixin consistency__TextEvent {
-    @mixin EventTile_color;
-    @mixin EventTile_font;
+    @mixin EventTile_line_color;
+    @mixin EventTile_line_font;
     @mixin DecryptionFailureBody;
 }
