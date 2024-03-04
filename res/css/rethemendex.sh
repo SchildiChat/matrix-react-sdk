@@ -8,8 +8,17 @@ cd `dirname $0`
     # we used to have exclude /themes from the find at this point.
     # as themes are no longer a spurious subdirectory of css/, we don't
     # need it any more.
-    find . -iname _\*.pcss | fgrep -v _components.pcss | LC_ALL=C sort |
+    #
+    # Exclude "_sc" folder dedicated for our custom CSS files from being included
+    # to alphabetic sorting which causes cascading mess. Please note that CSS files
+    # inside the folder are imported at the end.
+    find . -iname _\*.pcss -not -path "./_sc/*" | fgrep -v _components.pcss | LC_ALL=C sort |
         while read i; do
             echo "@import \"$i\";"
         done
+
+        # Import the CSS file dedicated for customization to let our declarations
+        # inside it override the styles specified by the upstream project.
+        echo "\n/* Customization for SchildiChat */";
+        echo "@import \"./_sc/_customization.pcss\";";
 } > _components.pcss

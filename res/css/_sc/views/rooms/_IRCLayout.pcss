@@ -1,0 +1,213 @@
+/*
+Copyright 2024 Suguru Hirahara
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+@define-mixin mx_ReplyChain_disambiguatedProfile {
+    .mx_ReplyChain .mx_DisambiguatedProfile:hover {
+        overflow: hidden; /* Override "overflow: visible" specified by the upstream */
+    }
+}
+
+/* This mixin defines border radius for corders */
+@define-mixin sc_borderRadius {
+    .mx_DisambiguatedProfile {
+        border-start-start-radius: var(--sc-border-radius-8px, 3px);
+        border-end-start-radius: var(--sc-border-radius-8px, 3px);
+
+        /* This removes top left and bottom left corders from mx_EventTile_line, if just mx_DisambiguatedProfile is hovered. This enables the highlight line straight without being dent by those corners. Please note that they do appear if just mx_EventTile_line is hovered. */
+        &:hover ~ .mx_EventTile_line {
+            border-start-start-radius: 0;
+            border-end-start-radius: 0;
+        }
+    }
+}
+
+@define-mixin sc_DisambiguatedProfile_visibility {
+    /* On the upstream, appearance of mxid on disambiguatedProfile is managed by
+       "visibility" property. Since it renders mxid hiding it and pushes
+       displayName to the left side, we need to use display property instead. */
+    .mx_DisambiguatedProfile {
+        > .mx_DisambiguatedProfile_mxid {
+            display: none;
+        }
+
+        &:hover {
+            > .mx_DisambiguatedProfile_mxid {
+                display: unset;
+            }
+        }
+    }
+
+    .mx_ReplyChain_wrapper .mx_ReplyChain .mx_DisambiguatedProfile {
+        /* Stop mxid from moving avatar up on ReplyChain by resetting display
+           value "none" defined above, in order to make visibility declaration
+           effective */
+        /* Mind difference of avatar placement between on upstream's
+           mx_EventTile and mx_ReplyTile_sender */
+        > .mx_DisambiguatedProfile_mxid {
+            display: unset;
+        }
+    }
+}
+
+@define-mixin sc_DisambiguatedProfile {
+    .mx_DisambiguatedProfile {
+        /* Align elements to the end side */
+        display: block;
+        text-align: end;
+
+        /* Set $accent as default color, in order to make ellipsis rendered with the accent color (green, by default) */
+        color: $accent;
+
+        &:hover {
+            background-color: $event-selected-color;
+        }
+
+        > .mx_DisambiguatedProfile_displayName {
+            padding-inline-end: var(--right-padding); /* Add padding between displayName and mx_EventTile_line */
+        }
+
+        > .mx_DisambiguatedProfile_mxid {
+            color: $primary-content; /* Override the color specified above to make the mxid rendered as $primary-content (black, by default) */
+            padding-inline-start: 0; /* Remove the value specified on upstream since var(--right-padding) is specified for mx_DisambiguatedProfile_displayName above */
+        }
+    }
+
+    @mixin sc_DisambiguatedProfile_visibility;
+}
+
+@define-mixin sc_BaseAvatar {
+    /* Need to use important to override the js provided height and width values. */
+    .mx_BaseAvatar,
+    .mx_BaseAvatar > * {
+        height: $font-14px !important;
+        width: $font-14px !important;
+    }
+
+    /* Fill the pill with the avatar */
+    /* TODO: Adjust the size for IRC layout */
+    .mx_Pill {
+        .mx_BaseAvatar,
+        .mx_BaseAvatar > * {
+            height: $font-16px !important; /* override the value specified above */
+            width: $font-16px !important; /* override the value specified above */
+        }
+    }
+}
+
+@define-mixin sc_ReplyChain {
+    .mx_ReplyChain_wrapper {
+        @mixin mx_ReplyChain_disambiguatedProfile;
+
+        /* "In reply to" line */
+        blockquote:first-of-type {
+            padding-bottom: 2px; /* Add padding between "In reply to" line and the replied content */
+        }
+
+        .mx_ReplyChain {
+            .mx_ReplyTile {
+                padding-block: unset; /* Unset the inherited value */
+            }
+
+            .mx_DisambiguatedProfile {
+                --cpd-font-line-height-regular: var(--line-height); /* Fix the line-height value specified with Compound for IRC layout */
+            }
+        }
+    }
+}
+
+@define-mixin sc_EventTile {
+    .mx_EventTile {
+        &[data-layout="irc"] {
+            * {
+                line-height: var(--line-height); /* Unify the line-height value for IRC layout. The value is applied by default to everything under data-layout="irc", enabling declarations with more specificity to override the value as this is not enforced with "!important" */
+            }
+
+            .mx_EventTile_line {
+                .mx_EventTile_e2eIcon,
+                .mx_TextualEvent,
+                .mx_ViewSourceEvent,
+                .mx_MTextBody {
+                    /* Cancel the padding specified by the upstream as it is taken care of by padding var(--EventTile_irc_line-padding-block) */
+                    padding: unset;
+                }
+            }
+
+            .mx_EventTile_bigEmoji {
+                /* Double the line height */
+                --big-emoji-font-size: calc(var(--line-height) * 2);
+                --big-emoji-line-height: calc(var(--line-height) * 2);
+                line-height: calc(var(--line-height) * 2);
+
+                .mx_Emoji {
+                    line-height: unset;
+                }
+            }
+
+            .mx_EventTile_content {
+                .markdown-body {
+                    code:not(pre *) {
+                        padding-block: 0; /* Remove block padding to avoid line height overflow */
+                    }
+                }
+            }
+
+            > * {
+                padding-block: var(--EventTile_irc_line-padding-block); /* Unify block padding value of anything directly under mx_EventTile */
+            }
+
+            @mixin sc_DisambiguatedProfile;
+            @mixin sc_BaseAvatar;
+            @mixin sc_borderRadius;
+            @mixin sc_ReplyChain;
+        }
+    }
+}
+
+@define-mixin sc_GenericEventListSummary {
+    .mx_GenericEventListSummary {
+        &[data-layout="irc"] {
+            .mx_GenericEventListSummary_avatars {
+                line-height: 14px; /* Same size as avatar height */
+
+                > * {
+                    line-height: inherit; /* Same size as avatar height */
+                }
+            }
+
+            .mx_EventTile_line .mx_RedactedBody {
+                line-height: var(--line-height); /* Unify the line-height value for IRC layout by overwriting the line-height value specified on upstream _EventTile.pcss */
+
+                &::before {
+                    height: var(--line-height); /* Set the line height value to the trash icon */
+                    top: 0px; /* Remove the value specified by the upstream as this is no longer needed */
+                }
+            }
+
+            @mixin sc_BaseAvatar;
+        }
+    }
+}
+
+.mx_IRCLayout {
+    --cpd-font-line-height-regular: var(--irc-line-height); /* Unify the line-height value for IRC layout */
+
+    * {
+        line-height: var(--line-height); /* Unify the line-height value for IRC layout. The value is applied by default to everything under data-layout="irc", enabling declarations with more specificity to override the value as this is not enforced with "!important" */
+    }
+
+    @mixin sc_EventTile;
+    @mixin sc_GenericEventListSummary;
+}
