@@ -24,7 +24,7 @@ limitations under the License.
 @define-mixin consistency__TextEvent {
     /* Applied to IRC, modern layout, and the right panel */
     /* Not applied to Bubble layout, which has its own class name with sc_ */
-    :where(.mx_RoomView_body[data-layout="irc"], .mx_RoomView_body[data-layout="group"], .mx_RightPanel) {
+    :is(.mx_RoomView_body:where([data-layout="irc"], [data-layout="group"]), .mx_RightPanel) {
         @mixin DisambiguatedProfile;
         @mixin EventTile_line_M;
         @mixin EventTile_line_color;
