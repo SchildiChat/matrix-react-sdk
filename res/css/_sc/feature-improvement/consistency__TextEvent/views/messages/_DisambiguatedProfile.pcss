@@ -14,8 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-@import "../../feature-improvement/consistency__TextEvent/index.pcss";
-
-.mx_IRCLayout {
-    @mixin consistency__TextEvent; /* For now, this is applied to IRC layout only */
+@define-mixin DisambiguatedProfile {
+    .mx_DisambiguatedProfile {
+        .mx_DisambiguatedProfile_mxid {
+            opacity: unset; /* Match mx_TextualEvent */
+            color: $tertiary-content;
+        }
+    }
 }

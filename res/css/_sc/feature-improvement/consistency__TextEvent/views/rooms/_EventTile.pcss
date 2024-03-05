@@ -17,7 +17,9 @@ limitations under the License.
 /* Specify text color with color property instead of opacity.
    Note this mixin is applied to GELS as well. */
 @define-mixin EventTile_line_color {
-    :where(.mx_EventTile_info, .mx_GenericEventListSummary) {
+    /* Use :is to win against the specificity of
+       mx_EventTile_content.mx_ViewSourceEvent for example */
+    :is(.mx_EventTile_info, .mx_GenericEventListSummary) {
         /* Get rid of opacity values for coloring from CSS files as it is very
            confusing and makes it difficult to maintain consistency.
            See: https://github.com/SchildiChat/schildichat-desktop/issues/241 */
@@ -44,7 +46,7 @@ limitations under the License.
 
 /* Specify font for consistency */
 @define-mixin EventTile_line_font {
-    :where(.mx_EventTile_info, .mx_GenericEventListSummary) {
+    :is(.mx_EventTile_info, .mx_GenericEventListSummary) {
         --font: var(--cpd-font-body-sm-regular); /* Replace with js when needed */
 
         .mx_EventTile_line {

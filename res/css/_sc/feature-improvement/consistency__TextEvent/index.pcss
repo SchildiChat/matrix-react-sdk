@@ -19,10 +19,16 @@ limitations under the License.
 
 @import "./views/rooms/_EventTile.pcss";
 @import "./views/messages/_DecryptionFailureBody.pcss";
+@import "./views/messages/_DisambiguatedProfile.pcss";
 
 @define-mixin consistency__TextEvent {
-    @mixin EventTile_line_M;
-    @mixin EventTile_line_color;
-    @mixin EventTile_line_font;
-    @mixin DecryptionFailureBody;
+    /* Applied to IRC, modern layout, and the right panel */
+    /* Not applied to Bubble layout, which has its own class name with sc_ */
+    :where(.mx_RoomView_body[data-layout="irc"], .mx_RoomView_body[data-layout="group"], .mx_RightPanel) {
+        @mixin DisambiguatedProfile;
+        @mixin EventTile_line_M;
+        @mixin EventTile_line_color;
+        @mixin EventTile_line_font;
+        @mixin DecryptionFailureBody;
+    }
 }
