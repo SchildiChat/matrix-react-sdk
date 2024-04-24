@@ -219,6 +219,7 @@ export interface IRoomState {
     readMarkerOutOfViewThresholdMs: number;
     showHiddenEvents: boolean;
     showReadReceipts: boolean;
+    schildichatHideUIReadReceipts: boolean;
     showRedactions: boolean;
     showJoinLeaves: boolean;
     showAvatarChanges: boolean;
@@ -431,6 +432,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             readMarkerOutOfViewThresholdMs: SettingsStore.getValue("readMarkerOutOfViewThresholdMs"),
             showHiddenEvents: SettingsStore.getValue("showHiddenEventsInTimeline"),
             showReadReceipts: true,
+            schildichatHideUIReadReceipts: false,
             showRedactions: true,
             showJoinLeaves: true,
             showAvatarChanges: true,
@@ -668,6 +670,11 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
                 : false,
             activeCall: roomId ? CallStore.instance.getActiveCall(roomId) : null,
         };
+
+        newState.schildichatHideUIReadReceipts =
+            room?.getLiveTimeline().getState(EventTimeline.FORWARDS)
+            .getStateEvents("chat.schildi.hide_ui", "read_receipts")?.getContent()?.hidden
+            || false;
 
         if (
             this.state.mainSplitContentType !== MainSplitContentType.Timeline &&
@@ -1567,6 +1574,14 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
                 this.setState({ tombstone: this.getRoomTombstone() });
                 break;
 
+            case "chat.schildi.hide_ui":
+                switch (ev.getStateKey()) {
+                    case "read_receipts":
+                         this.setState({ schildichatHideUIReadReceipts: ev.getContent()?.hidden })
+                         break;
+                }
+                break;
+
             default:
                 this.updatePermissions(this.state.room);
         }
@@ -2420,7 +2435,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
                 timelineSet={this.state.room.getUnfilteredTimelineSet()}
                 overlayTimelineSet={this.state.virtualRoom?.getUnfilteredTimelineSet()}
                 overlayTimelineSetFilter={isCallEvent}
-                showReadReceipts={this.state.showReadReceipts}
+                showReadReceipts={(this.state.showReadReceipts && !this.state.schildichatHideUIReadReceipts) || this.state.showHiddenEvents}
                 manageReadReceipts={!this.state.isPeeking}
                 sendReadReceiptOnLoad={!this.state.wasContextSwitch}
                 manageReadMarkers={!this.state.isPeeking}

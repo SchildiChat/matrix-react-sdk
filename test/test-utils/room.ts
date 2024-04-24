@@ -80,6 +80,7 @@ export function getRoomContext(room: Room, override: Partial<IRoomState>): IRoom
         readMarkerOutOfViewThresholdMs: 30000,
         showHiddenEvents: false,
         showReadReceipts: true,
+        schildichatHideUIReadReceipts: false,
         showRedactions: true,
         showJoinLeaves: true,
         showAvatarChanges: true,
