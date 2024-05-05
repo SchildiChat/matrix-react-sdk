@@ -191,6 +191,14 @@ export interface IFeature extends Omit<IBaseSetting<boolean>, "isFeature"> {
 export type ISetting = IBaseSetting | IFeature;
 
 export const SETTINGS: { [setting: string]: ISetting } = {
+    // SC settings start
+    "unifiedRoomList": {
+        supportedLevels: LEVELS_ACCOUNT_SETTINGS,
+        displayName: _td("Show people and rooms in a combined list"),
+        default: true,
+        controller: new ReloadOnChangeController(),
+    },
+    // SC settings end
     "feature_video_rooms": {
         isFeature: true,
         labsGroup: LabGroup.VoiceAndVideo,
