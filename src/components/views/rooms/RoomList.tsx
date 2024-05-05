@@ -72,11 +72,13 @@ interface IState {
     sublists: ITagMap;
     currentRoomId?: string;
     suggestedRooms: ISuggestedRoom[];
+    unifiedRoomList: boolean;
 }
 
 export const TAG_ORDER: TagID[] = [
     DefaultTagID.Invite,
     DefaultTagID.Favourite,
+    DefaultTagID.Unified,
     DefaultTagID.DM,
     DefaultTagID.Untagged,
     DefaultTagID.Conference,
@@ -89,6 +91,7 @@ export const TAG_ORDER: TagID[] = [
     // but we'd have to make sure that rooms you weren't in were hidden.
 ];
 const ALWAYS_VISIBLE_TAGS: TagID[] = [DefaultTagID.DM, DefaultTagID.Untagged];
+const ALWAYS_VISIBLE_UNIFIED_TAGS: TagID[] = [DefaultTagID.Unified];
 
 interface ITagAesthetics {
     sectionLabel: TranslationKey;
@@ -366,6 +369,17 @@ const UntaggedAuxButton: React.FC<IAuxButtonProps> = ({ tabIndex }) => {
     return null;
 };
 
+const UnifiedAuxButton: React.FC<IAuxButtonProps> = (iAuxButtonProps: IAuxButtonProps) => {
+    return (
+        <>
+            {/* eslint-disable-next-line new-cap */}
+            {DmAuxButton(iAuxButtonProps)}
+            {/* eslint-disable-next-line new-cap */}
+            {UntaggedAuxButton(iAuxButtonProps)}
+        </>
+    );
+};
+
 const TAG_AESTHETICS: TagAestheticsMap = {
     [DefaultTagID.Invite]: {
         sectionLabel: _td("action|invites_list"),
@@ -382,6 +396,12 @@ const TAG_AESTHETICS: TagAestheticsMap = {
         isInvite: false,
         defaultHidden: false,
         AuxButtonComponent: DmAuxButton,
+    },
+    [DefaultTagID.Unified]: {
+        sectionLabel: _td("Normal priority"),
+        isInvite: false,
+        defaultHidden: false,
+        AuxButtonComponent: UnifiedAuxButton,
     },
     [DefaultTagID.Conference]: {
         sectionLabel: _td("voip|metaspace_video_rooms|conference_room_section"),
@@ -421,6 +441,7 @@ const TAG_AESTHETICS: TagAestheticsMap = {
 
 export default class RoomList extends React.PureComponent<IProps, IState> {
     private dispatcherRef?: string;
+    private readonly unifiedRoomListWatcherRef: string;
     private treeRef = createRef<HTMLDivElement>();
 
     public static contextType = MatrixClientContext;
@@ -432,7 +453,14 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
         this.state = {
             sublists: {},
             suggestedRooms: SpaceStore.instance.suggestedRooms,
+            unifiedRoomList: SettingsStore.getValue("unifiedRoomList"),
         };
+
+        this.unifiedRoomListWatcherRef = SettingsStore.watchSetting(
+            "unifiedRoomList",
+            null,
+            this.onUnifiedRoomListChange,
+        );
     }
 
     public componentDidMount(): void {
@@ -447,8 +475,15 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
         SpaceStore.instance.off(UPDATE_SUGGESTED_ROOMS, this.updateSuggestedRooms);
         RoomListStore.instance.off(LISTS_UPDATE_EVENT, this.updateLists);
         if (this.dispatcherRef) defaultDispatcher.unregister(this.dispatcherRef);
+        SettingsStore.unwatchSetting(this.unifiedRoomListWatcherRef);
         SdkContextClass.instance.roomViewStore.off(UPDATE_EVENT, this.onRoomViewStoreUpdate);
     }
+
+    private onUnifiedRoomListChange = (): void => {
+        this.setState({
+            unifiedRoomList: SettingsStore.getValue("unifiedRoomList"),
+        });
+    };
 
     private onRoomViewStoreUpdate = (): void => {
         this.setState({
@@ -590,7 +625,9 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
             const aesthetics = TAG_AESTHETICS[orderedTagId];
             if (!aesthetics) throw new Error(`Tag ${orderedTagId} does not have aesthetics`);
 
-            let alwaysVisible = ALWAYS_VISIBLE_TAGS.includes(orderedTagId);
+            let alwaysVisible = (
+                this.state.unifiedRoomList ? ALWAYS_VISIBLE_UNIFIED_TAGS : ALWAYS_VISIBLE_TAGS
+            ).includes(orderedTagId);
             if (
                 (this.props.activeSpace === MetaSpace.Favourites && orderedTagId !== DefaultTagID.Favourite) ||
                 (this.props.activeSpace === MetaSpace.People && orderedTagId !== DefaultTagID.DM) ||
