@@ -514,7 +514,7 @@ export const SETTINGS: { [setting: string]: ISetting } = {
         description: _td("labs|render_reaction_images_description"),
         supportedLevels: LEVELS_DEVICE_ONLY_SETTINGS_WITH_CONFIG_PRIORITISED,
         supportedLevelsAreOrdered: true,
-        default: false,
+        default: true,
     },
     /**
      * With the transition to Compound we are moving to a base font size
