@@ -1,3 +1,5 @@
+res/css/sc-*.css
+
 /.npmrc
 /*.log
 package-lock.json
